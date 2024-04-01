@@ -1,6 +1,6 @@
 if(keyboard_check_pressed(vk_enter)) {
-    keyboard_string = "";
-	// TODO: Handle submt
+	get_enemy_controller().handle_submit_answer(message)
+	keyboard_string = "";
 } else {
 	message = keyboard_string;
 }

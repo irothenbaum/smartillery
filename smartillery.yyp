@@ -38,6 +38,8 @@
     {"id":{"name":"spr_input","path":"sprites/spr_input/spr_input.yy",},},
     {"id":{"name":"spr_player","path":"sprites/spr_player/spr_player.yy",},},
     {"id":{"name":"obj_enemy_controller","path":"objects/obj_enemy_controller/obj_enemy_controller.yy",},},
+    {"id":{"name":"scr_constants","path":"scripts/scr_constants/scr_constants.yy",},},
+    {"id":{"name":"scr_utilities","path":"scripts/scr_utilities/scr_utilities.yy",},},
     {"id":{"name":"spr_rock_big","path":"sprites/spr_rock_big/spr_rock_big.yy",},},
     {"id":{"name":"obj_input","path":"objects/obj_input/obj_input.yy",},},
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},

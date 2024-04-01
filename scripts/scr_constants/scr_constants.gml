@@ -1,0 +1,1 @@
+#macro TIME_BONUS_PERIOD 30000

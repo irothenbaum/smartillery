@@ -1,0 +1,1 @@
+image_angle += sin(degtorad(rotate_to - image_angle)) * rotate_speed;
