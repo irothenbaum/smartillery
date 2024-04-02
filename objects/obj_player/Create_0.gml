@@ -3,6 +3,8 @@ rotate_idle_speed = 6;
 rotate_speed = rotate_idle_speed;
 rotate_to = 270;
 image_angle = rotate_to;
+x = room_width / 2
+y = room_height / 2
 
 function fire_at_instance(_inst) {
 	debug("HIT", _inst);

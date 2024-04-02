@@ -1,6 +1,6 @@
 spawn_time = current_time
 point_value = 10
-speed = 2;
+speed = 1;
 equation = "";
 
 function register_hit(_answer) {
@@ -10,9 +10,10 @@ function register_hit(_answer) {
 	get_enemy_controller().handle_enemy_killed(self)
 }
 
-function generate_equation() {
-	get_enemy_controller().reserve_answer(11, self)
-	equation = "3 + 8"
+function initialize_new_equation() {
+	var _values = generate_equation_and_answer()
+	get_enemy_controller().reserve_answer(_values.answer, self)
+	equation = _values.equation
 }
 
 
@@ -21,7 +22,7 @@ function initalize() {
 	do {
 		try {
 			_attempts--;
-			generate_equation();
+			initialize_new_equation();
 		} catch (_err) {
 			debug(_err)
 			if (_err != "Answer in use") {

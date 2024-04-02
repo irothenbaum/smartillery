@@ -1,8 +1,8 @@
 // might be fun to make this configurable
-var _seed = 12345123456;
+var _seed = 132435345;
 random_set_seed(_seed);
 
-current_wave = 1;
+current_wave = 4;
 wave_ready = true;
 global.score = 0;
 
