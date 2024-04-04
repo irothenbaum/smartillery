@@ -1,0 +1,1 @@
+enemy_start_approach(self)

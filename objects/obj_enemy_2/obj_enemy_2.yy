@@ -1,7 +1,7 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_enemy_1",
+  "name": "obj_enemy_2",
   "eventList": [
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,},
@@ -32,8 +32,8 @@
   "properties": [],
   "solid": false,
   "spriteId": {
-    "name": "spr_rock_small",
-    "path": "sprites/spr_rock_small/spr_rock_small.yy",
+    "name": "spr_rock_big",
+    "path": "sprites/spr_rock_big/spr_rock_big.yy",
   },
   "spriteMaskId": null,
   "visible": true,

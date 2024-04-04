@@ -12,14 +12,15 @@ function fire_at_instance(_inst) {
 		// do nothing
 		return
 	}
+	alarm[0] = -1
 	aiming_at_instance = _inst
 	rotate_speed = rotate_aim_speed;
 	rotate_to = point_direction(x, y, _inst.x, _inst.y);
 }
 
-function execute_hit() {
+function execute_hit_target() {
 	if (not aiming_at_instance) {
-		debug("This shouldn't happen")
+		debug("This shouldn't happen -- execute_hit_target -> not aiming_at_instance")
 		return
 	}
 	
@@ -28,4 +29,8 @@ function execute_hit() {
 	
 	// after a few seconds, reset to vertical postion
 	alarm[0] = game_get_speed(gamespeed_fps) * (MESSAGE_SHOW_DURATION * 0.7)
+}
+
+function execute_take_damage() {
+	
 }

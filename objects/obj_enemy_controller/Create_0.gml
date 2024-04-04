@@ -1,5 +1,4 @@
 can_spawn = false;
-wave_number = 0;
 enemy_count = 0;
 spawned_count = 0;
 // these values are things that can be solved by the obj_input
@@ -7,20 +6,20 @@ spawned_count = 0;
 active_answers = {};
 
 /// @func init()
-/// @param {Real} _wave
 /// @returns {undefined}
-function init_wave(_wave) {
+function init_wave() {
 	can_spawn = false;
+	var _current_wave = get_current_wave_number()
+	debug("INITTING", _current_wave)
 	// we want each wave to progress the same way regardless of play so we reset the random seed deterministically
-	random_set_seed(get_game_controller().game_seed + _wave);
-	wave_number = _wave
-	enemy_count = _wave * 2;
+	random_set_seed(get_game_controller().game_seed + _current_wave);
+	enemy_count = _current_wave * 2;
 	spawned_count = 0;
 	
 	// draw the wave text
 	var _controller = instance_create_layer(x, y, "Instances", obj_center_text);
 	with (_controller) {
-		set_text("Beginning Wave #" + string(other.wave_number));
+		set_text("Beginning Wave #" + string(_current_wave));
 		align = ALIGN_CENTER;
 		y = room_height * 0.25;
 	}
@@ -32,6 +31,11 @@ function init_wave(_wave) {
 /// @func spawn_enemy()
 /// @return {Id.Instance}
 function spawn_enemy() {
+	can_spawn = false
+	// todo: maybe a log or something?
+	// at wave 20 they'll spawn just half a second apart
+	alarm[0] = game_get_speed(gamespeed_fps) * (10 / get_current_wave_number())
+	
 	// out of bounds margin
 	var _oob_margin = 100
 	
@@ -46,7 +50,7 @@ function spawn_enemy() {
 	spawned_count++;
 	
 	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, "Instances", obj_enemy_1);
-	enemy_initialize(_new_enemy, wave_number)
+	enemy_initialize(_new_enemy)
 	return _new_enemy
 }
 
@@ -82,13 +86,4 @@ function handle_submit_answer(_answer) {
 	get_player().fire_at_instance(_instance);
 	release_answer(_answer);
 	return true;
-}
-
-
-/// @func handle_enemy_killed(_enemy)
-/// @param {Id.Instance} _enemy
-/// @return {undefined}
-function handle_enemy_killed(_enemy) {
-	var _time_bonus = calculate_time_bonus((current_time - _enemy.spawn_time) / 1000)
-	global.score += _enemy.point_value + _time_bonus
 }
