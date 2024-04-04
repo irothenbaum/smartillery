@@ -1,0 +1,1 @@
+enemy_stop_approach(seelf)

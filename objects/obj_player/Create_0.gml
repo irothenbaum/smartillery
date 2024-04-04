@@ -1,23 +1,31 @@
-rotate_aim_speed = 60;
-rotate_idle_speed = 6;
+rotate_aim_speed = 360 // in degrees per second
+rotate_idle_speed = 90 // in degrees per frame
 rotate_speed = rotate_idle_speed;
-rotate_to = 270;
+rotate_to = 90;
+aiming_at_instance = undefined
 image_angle = rotate_to;
 x = room_width / 2
 y = room_height / 2
 
 function fire_at_instance(_inst) {
-	debug("HIT", _inst);
 	if (!_inst) {
 		// do nothing
 		return
 	}
+	aiming_at_instance = _inst
 	rotate_speed = rotate_aim_speed;
-	rotate_towards_instance(_inst)
-	_inst.register_hit()
-	alarm_set(0, 3000)
+	rotate_to = point_direction(x, y, _inst.x, _inst.y);
 }
 
-function rotate_towards_instance(_inst) {
-	rotate_to = point_direction(x, y, _inst.x, _inst.y);
+function execute_hit() {
+	if (not aiming_at_instance) {
+		debug("This shouldn't happen")
+		return
+	}
+	
+	aiming_at_instance.register_hit()
+	aiming_at_instance = undefined
+	
+	// after a few seconds, reset to vertical postion
+	alarm[0] = game_get_speed(gamespeed_fps) * (MESSAGE_SHOW_DURATION * 0.7)
 }

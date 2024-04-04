@@ -30,9 +30,30 @@ function get_player() {
 	return _player
 }
 
-/// @func calculate_time_bonus(_lifetime)
-/// @param {Real} _lifetime
+/// @func calculate_time_bonus(_lifetime) 
+/// @param {Real} _lifetime // in seconds
 /// @return {Real}
 function calculate_time_bonus(_lifetime) {
 	return TIME_BONUS_PERIOD - (_lifetime / TIME_BONUS_PERIOD);
+}
+
+/// @func count_all_enemies()
+/// @return {Real}
+function count_all_enemies() {
+	return 0 + instance_number(obj_enemy_1)
+}
+
+function for_each_enemy() {
+	var _i = 0
+	var _enemy1 = instance_number(obj_enemy_1)
+	for (; _i < _enemy1; _i++) {
+		script_execute(argument[0], instance_find(obj_enemy_1, _i), _i)
+	}
+	
+	// at this point _i = how many enemy type 1s there are,
+	// without resetting we continue to enemy2 so that the overall index is persisted
+	var _enemy2 = instance_number(obj_enemy_2)
+	for (; _i < _enemy2; _i++) {
+		script_execute(argument[0], instance_find(obj_enemy_2, _i - _enemy1), _i)
+	}
 }

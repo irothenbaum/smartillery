@@ -1,6 +1,7 @@
-function generate_equation(_answer, _max) {
-	// only allow division if the answer is less than one fourth of _max
-	var _dice = irandom(_answer < _max * 0.25 ? 3 : 2)
+function generate_equation(_answer, _max, _difficulty = 0) {
+	var _max_sides = _difficulty 
+	// only allow division if the answer is less than one fourth of _max and difficulty is 3
+	var _dice = irandom(_difficulty == MAX_MATH_DIFFICULTY ? (_answer > _max * 0.25 ? 3 : 2) : _difficulty)
 	var _term1 = 0;
 	var _term2 = 0;
 	var _operation = "";
@@ -28,7 +29,7 @@ function generate_equation(_answer, _max) {
 	}
 	
 	return {
-		equation: string(_term1)+ " " + _operation + " " + string(_term2) + " = " + string(_answer),
+		equation: string(_term1)+ " " + _operation + " " + string(_term2), // + " = " + string(_answer),
 		answer: _answer
 	}
 }
@@ -37,7 +38,7 @@ function generate_answer(_max) {
 	return irandom(_max);
 }
 
-function generate_equation_and_answer() {
-	_answer = generate_answer(MAX_ANSWER_VALUE)
-	return generate_equation(_answer, MAX_ANSWER_VALUE)
+function generate_equation_and_answer(_max, _difficulty) {
+	_answer = generate_answer(_max)
+	return generate_equation(_answer, _max, _difficulty)
 }

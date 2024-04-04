@@ -1,0 +1,1 @@
+get_game_controller().mark_wave_completed()

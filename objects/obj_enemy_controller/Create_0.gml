@@ -1,3 +1,4 @@
+can_spawn = false;
 wave_number = 0;
 enemy_count = 0;
 spawned_count = 0;
@@ -9,11 +10,23 @@ active_answers = {};
 /// @param {Real} _wave
 /// @returns {undefined}
 function init_wave(_wave) {
-	debug("wave init ");
+	can_spawn = false;
+	// we want each wave to progress the same way regardless of play so we reset the random seed deterministically
+	random_set_seed(get_game_controller().game_seed + _wave);
 	wave_number = _wave
 	enemy_count = _wave * 2;
-	debug(_wave, wave_number, enemy_count);
 	spawned_count = 0;
+	
+	// draw the wave text
+	var _controller = instance_create_layer(x, y, "Instances", obj_center_text);
+	with (_controller) {
+		set_text("Beginning Wave #" + string(other.wave_number));
+		align = ALIGN_CENTER;
+		y = room_height * 0.25;
+	}
+	
+	// hide the wave text after some duration
+	alarm_set(0, MESSAGE_SHOW_DURATION * game_get_speed(gamespeed_fps));
 }
 
 /// @func spawn_enemy()
@@ -22,7 +35,6 @@ function spawn_enemy() {
 	// out of bounds margin
 	var _oob_margin = 100
 	
-	debug("Spawning enemy");
 	var _pos_x = irandom(room_width)
 	var _pos_y = irandom(room_height)
 	
@@ -33,7 +45,9 @@ function spawn_enemy() {
 	
 	spawned_count++;
 	
-	return instance_create_layer(_pos_x, _pos_y, "Instances", obj_enemy_1);
+	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, "Instances", obj_enemy_1);
+	enemy_initialize(_new_enemy, wave_number)
+	return _new_enemy
 }
 
 /// @func reserve_answer(_ans, _inst)
@@ -75,6 +89,6 @@ function handle_submit_answer(_answer) {
 /// @param {Id.Instance} _enemy
 /// @return {undefined}
 function handle_enemy_killed(_enemy) {
-	var _time_bonus = calculate_time_bonus(current_time - _enemy.spawn_time)
+	var _time_bonus = calculate_time_bonus((current_time - _enemy.spawn_time) / 1000)
 	global.score += _enemy.point_value + _time_bonus
 }
