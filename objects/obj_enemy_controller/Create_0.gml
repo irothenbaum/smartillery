@@ -17,7 +17,7 @@ function init_wave() {
 	spawned_count = 0;
 	
 	// draw the wave text
-	var _controller = instance_create_layer(x, y, "Instances", obj_center_text);
+	var _controller = instance_create_layer(x, y, "Instances", obj_text_title);
 	with (_controller) {
 		set_text("Beginning Wave #" + string(_current_wave));
 		align = ALIGN_CENTER;

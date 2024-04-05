@@ -39,7 +39,7 @@ function get_current_wave_number() {
 /// @param {Real} _lifetime // in seconds
 /// @return {Real}
 function calculate_time_bonus(_lifetime) {
-	return TIME_BONUS_PERIOD - (_lifetime / TIME_BONUS_PERIOD);
+	return 1 - (_lifetime / TIME_BONUS_PERIOD);
 }
 
 /// @func count_all_enemies()
