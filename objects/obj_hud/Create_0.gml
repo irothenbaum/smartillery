@@ -1,7 +1,7 @@
 margin = 20
 
 pos_score = {
-	x: room_width - margin,
+	x: room_width - 2 * margin,
 	y: margin,
 	align: ALIGN_RIGHT
 }
@@ -25,25 +25,7 @@ pos_ultimate = {
 }
 
 
-function draw_text_with_alignment(_obj, _text) {
-	var _y = _obj.y
-	var _x = _obj.x
-	
-	switch (_obj.align) {
-		case ALIGN_CENTER:
-			_x -= string_width(_text) / 2 
-			break
-			
-		case ALIGN_RIGHT:
-			_x -= string_width(_text)
-			break
-			
-		case ALIGN_LEFT:
-		default: 
-			// do nothing
-			break
-	}
-	
+function draw_text_obj(_obj, _text) {
 	draw_set_font(fnt_large)
-	draw_text(_x, _y, _text);
+	draw_text_with_alignment(_obj.x, _obj.y, _text, _obj.align)
 }

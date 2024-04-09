@@ -75,3 +75,66 @@ function for_each_enemy() {
 		script_execute(argument[0], _instances[_i], _i)
 	}
 }
+
+function toggle_pause(_status) {
+	var _layer = layer_get_id(LAYER_INSTANCES);
+	var _instances = layer_get_all_elements(_layer);
+	var _instance_count = array_length(_instances)
+	
+	debug("Turning pause " + (_status ? "ON" : "OFF") + " for " + string(_instance_count) + " instances")
+	var _alarm_length = 12
+	
+	for (var _i = 0; _i < _instance_count; _i++) {
+		var _inst = layer_instance_get_instance(_instances[_i])
+		debug(_instances[_i], _inst)
+		
+		with (_inst) {
+			debug("Status: ", _status)
+			if (_status) {
+				// memoize our pre-pause values
+				paused_speed = speed
+				paused_image_speed = image_speed
+				paused_alarms = []
+				
+				// disable movement and animation
+				speed = 0
+				image_speed = 0
+				
+				for (var _j = 0; _j < _alarm_length; _j++) {
+					if (alarm[_j] > 0) {
+						// save the alarm state
+						paused_alarms[_j] = alarm[_j]
+					
+						debug("Turning off alarm " + string(_j))
+						// turn off the alarm
+						alarm[_j] = -1
+					} else {
+						paused_alarms[_j] = 0
+					}
+				}
+			} else {
+				// if paused alarms was not set, then this object was not around when we first paused
+				// probably was an ultimate or something
+				if (!variable_instance_exists(self, "paused_alarms")) {
+					debug("INSTANCE NOT PAUSED", self)
+					continue
+				}
+				debug("unpausing instance", self)
+				// restore pre-pause values
+				speed = paused_speed
+				image_speed = paused_image_speed
+				
+				for (var _j = 0; _j < _alarm_length; _j++) {
+					if (paused_alarms[_j] > 0) {
+						alarm[_j] = paused_alarms[_j]
+					}
+				}
+				
+				// remove all out paused states
+				paused_speed = undefined
+				paused_image_speed  = undefined
+				paused_alarms = undefined
+			}
+		}
+	}
+}

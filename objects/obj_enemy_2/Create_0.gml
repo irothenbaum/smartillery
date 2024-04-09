@@ -7,18 +7,18 @@ approach_speed = 1
 needed_rest = 0
 point_value = 20
 
-times_hit = 0
+health = 1
 
 function explode_and_destroy() {
 	instance_destroy();
-	instance_create_layer(x, y, "Instances", obj_fx_explosion);
+	instance_create_layer(x, y, LAYER_INSTANCES, obj_fx_enemy_explode);
 }
 
-function register_hit() {
-	if (times_hit > 0) {
-		times_hit--;
+function register_hit(_insta_kill = false) {
+	if (health > 0 && !_insta_kill) {
+		health--;
 		enemy_generate_question(self)
-		instance_create_layer(x, y, "Instances", obj_fx_damage);
+		instance_create_layer(x, y, LAYER_INSTANCES, obj_fx_enemy_damage);
 		// force stop for 1 second
 		enemy_stop_approach(self, 1)
 		return

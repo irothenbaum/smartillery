@@ -14,27 +14,31 @@
 
 	// they must also implement these functions:
 	function explode_and_destroy() {} // remove instance and create particle system explosion
-	function register_hit() {} // report hit by player
+	function register_hit(_insta_kill=false) {} // report hit by player
 	function handle_hit_player() {} // report collided with player
 */
 
 
+// TODO: This approach logic should be refactored to not use the current_time at all (due to complications with Pause modes). 
+// Instead, we will take a pre-defined number of pauses. Each one resuming towards a point AROUND the player
+// nutul we complete the last pause - starting the final approach - in which case we head FOR the player
 function enemy_start_approach(_e) {
 	with (_e) {
-		
+		debug("start approach", needed_rest)
 		speed = approach_speed
 	
 		// if the rest we need is less than 1 second remaining, we just skip it
 		if (needed_rest >= 1) {
 			// must walk at least 3 seconds, up to the time to solve (minus 3)
 			var _next_approach_amount = irandom_range(2, (remaining_time_to_solve - needed_rest) - 2)
-			alarms[0] = game_get_speed(gamespeed_fps) * _next_approach_amount
+			alarm[0] = game_get_speed(gamespeed_fps) * _next_approach_amount
 		}
 		// else, we keep approaching until we reach it
 	}
 }
 
 function enemy_stop_approach(_e, _force_wait_time = 0) {
+	debug("stop approach")
 	with (_e) {
 		speed = 0;
 		var _alive_time = current_time - spawn_time
@@ -52,7 +56,7 @@ function enemy_stop_approach(_e, _force_wait_time = 0) {
 		// prevent needed rest from going below  0
 		needed_rest = max(0, needed_rest)
 		
-		alarms[1] = game_get_speed(gamespeed_fps) * max(0, _next_rest_amount)
+		alarm[1] = game_get_speed(gamespeed_fps) * max(0, _next_rest_amount)
 	}
 }
 
@@ -125,4 +129,3 @@ function enemy_step(_e) {
 		}
 	}
 }
-

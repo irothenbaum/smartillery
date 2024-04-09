@@ -1,0 +1,1 @@
+strike_nearest_enemy()

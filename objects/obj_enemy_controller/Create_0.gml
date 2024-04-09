@@ -17,7 +17,7 @@ function init_wave() {
 	spawned_count = 0;
 	
 	// draw the wave text
-	var _controller = instance_create_layer(x, y, "Instances", obj_text_title);
+	var _controller = instance_create_layer(x, y, LAYER_HUD, obj_text_title);
 	with (_controller) {
 		set_text("Beginning Wave #" + string(_current_wave));
 		align = ALIGN_CENTER;
@@ -49,7 +49,7 @@ function spawn_enemy() {
 	
 	spawned_count++;
 	
-	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, "Instances", obj_enemy_1);
+	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, obj_enemy_1);
 	enemy_initialize(_new_enemy)
 	return _new_enemy
 }
@@ -77,8 +77,9 @@ function release_answer(_ans) {
 /// @param {String} _answer
 /// @return {Bool}
 function handle_submit_answer(_answer) {
-	if (!struct_exists(active_answers, _answer)) {
-		return false;
+	var _answer_in_use = struct_exists(active_answers, _answer)
+	if (get_game_controller().is_ulting() || !_answer_in_use) {
+		return get_game_controller().handle_submit_code(_answer);
 	}
 	
 	var _instance = active_answers[$ _answer];

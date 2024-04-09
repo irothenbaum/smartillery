@@ -11,8 +11,8 @@ streak_score = 0;
 streak = 0;
 point_streak = 5;
 health_streak = 10;
-ultimate_streak = 20;
 used_streak = 0;
+inst_ultimate = undefined;
 
 function get_effective_streak() {
 	return streak - used_streak
@@ -25,7 +25,7 @@ function has_point_streak() {
 
 /// @returns {Bool}
 function has_ultimate() {
-	return get_effective_streak() >= ultimate_streak
+	return get_effective_streak() >= ULTIMATE_COST
 }
 
 function mark_wave_completed() {
@@ -33,7 +33,8 @@ function mark_wave_completed() {
 		instance_destroy(get_enemy_controller())
 	}
 	current_wave++;
-	var _controller = instance_create_layer(x, y, "Instances", obj_enemy_controller);
+	// Even those the enemy controller is a controller, 
+	var _controller = instance_create_layer(x, y, LAYER_INSTANCES, obj_enemy_controller);
 	with (_controller) {
 		init_wave()
 	}
@@ -55,7 +56,7 @@ function handle_game_over() {
 	
 	// TODO: Make this it's own object that can render results and restart button
 	// draw the game over text
-	var _controller = instance_create_layer(x, y, "Instances", obj_text_title);
+	var _controller = instance_create_layer(x, y, LAYER_HUD, obj_text_title);
 	with (_controller) {
 		set_text("Game Over", 9999999);
 		align = ALIGN_CENTER;
@@ -99,21 +100,51 @@ function handle_player_damaged(_enemy) {
 
 
 function draw_point_indicators(_x, _y, _base, _time, _streak) {
-	var _base_inst = instance_create_layer(_x, _y, "Instances", obj_text_score_increase)
+	var _base_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase)
 	_base_inst.set_amount(_base, c_white, fnt_large)
 	_y -= 20
 	
 	if (_time) {
-		var _time_inst = instance_create_layer(_x, _y, "Instances", obj_text_score_increase)
+		var _time_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase)
 		_time_inst.set_amount(_time, c_aqua)
 		_y -= 20
 	}
 	
 	if (_streak) {	
-		var _streak_inst = instance_create_layer(_x, _y, "Instances", obj_text_score_increase)
+		var _streak_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase)
 		_streak_inst.set_amount(_streak, c_orange)
 	}
 }
+
+
+/// @param {String} _code
+/// @returns {Bool}
+function handle_submit_code(_code) {
+	if (inst_ultimate) { 
+		return inst_ultimate.handle_submit_code(_code)
+	} else if (_code == LAUNCH_CODE) {
+		activate_ultimate()
+		return true
+	} else {
+		return false
+	}
+}
+
+function activate_ultimate() {
+	inst_ultimate = instance_create_layer(x, y, LAYER_HUD, obj_ultimate_interface)
+	used_streak += ULTIMATE_COST
+	toggle_pause(true)
+}
+
+function mark_ultimate_used() {
+	inst_ultimate = undefined
+	toggle_pause(false)
+}
+
+function is_ulting() {
+	return !is_undefined(inst_ultimate)
+}
+
 
 // start off marking wave completed so game can start
 mark_wave_completed();

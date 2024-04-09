@@ -9,7 +9,7 @@ point_value = 10
 
 function explode_and_destroy() {
 	instance_destroy();
-	instance_create_layer(x, y, "Instances", obj_fx_explosion);
+	instance_create_layer(x, y, LAYER_INSTANCES, obj_fx_enemy_explode);
 }
 
 function register_hit() {
