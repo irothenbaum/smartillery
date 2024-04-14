@@ -2,7 +2,7 @@
 	// this code is an example Create script for an enemy class object
 	
 	// all enemies must implement these private variables:
-	spawn_time = current_time
+	spawn_time = get_play_time()
 	firing_position = undefined
 	shooting = false
 	equation = "";
@@ -15,6 +15,9 @@
 	function explode_and_destroy() {} // remove instance and create particle system explosion
 	function register_hit(_insta_kill=false) {} // report hit by player
 	function fire_shot() {} // shoot at player
+	
+	// must call this
+	enemy_initialize(self)
 */
 
 
@@ -35,15 +38,15 @@ function enemy_start_approach(_e) {
 	}
 }
 
-function enemy_draw(_e) {
+function enemy_draw(_e) {	
 	with (_e) {
 		draw_self();
-		draw_set_valign(fa_middle);
 		draw_set_font(fnt_large);
 		draw_set_colour(c_white);
-		var _offset_y = sprite_height / 2 + string_height(equation)
+		var _string = global.paused ? "******" : equation
+		var _offset_y = sprite_height / 2 + string_height(_string)
 		var _y = y > room_height / 2 ? y - _offset_y : y + _offset_y
-		draw_text(x - string_width(equation) / 2, _y, equation);
+		draw_text_with_alignment(x, _y, _string, ALIGN_CENTER);
 	}
 }
 
@@ -81,9 +84,6 @@ function enemy_generate_question(_e) {
 function enemy_initialize(_e) {
 	with (_e) {
 		enemy_generate_question(self)
-	
-		// we reset spawn time so we can calculate the time bonus correctly
-		spawn_time = current_time
 		enemy_start_approach(self)
 	}
 }

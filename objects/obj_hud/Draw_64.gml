@@ -24,7 +24,7 @@ draw_progress_bar(
 	_health_ratio, 
 	_health_ratio < 0.3 ? c_red : (_health_ratio < 0.6 ? c_yellow : c_lime)
 )
-var _ultimate_ratio = draw_ultimate / (global.ultimate_requirement * _ult_scale)
+var _ultimate_ratio = round_ext(draw_ultimate / (global.ultimate_requirement * _ult_scale), 0.1)
 draw_progress_bar(
 	pos_ultimate.x - pos_ultimate.width / 2, 
 	pos_ultimate.y, 

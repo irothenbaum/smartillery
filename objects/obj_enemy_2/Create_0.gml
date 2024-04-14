@@ -1,4 +1,4 @@
-spawn_time = current_time
+spawn_time = get_play_time()
 shooting = false
 fire_distance = 100
 firing_position = undefined
@@ -31,3 +31,5 @@ function fire_shot() {
 	get_player().execute_take_damage(100)
 	alarm[0] = 2 * game_get_speed(gamespeed_fps)
 }
+
+enemy_initialize(self)

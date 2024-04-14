@@ -30,6 +30,11 @@ function get_player() {
 	return _player
 }
 
+function get_input() {
+	var _input = instance_find(obj_input, 0)
+	return _input
+}
+
 /// returns {Real}
 function get_current_wave_number() {
 	return get_game_controller().current_wave
@@ -76,12 +81,22 @@ function for_each_enemy() {
 	}
 }
 
+/// @param {Bool} [_status] 
 function toggle_pause(_status) {
+	global.paused = bool(_status) ? _status : !global.paused
+	
+	if (global.paused) {
+		global.pause_start = current_time
+	} else {
+		global.total_paused_time += current_time - global.pause_start
+		global.pause_start = undefined
+	}
+	
 	var _layer = layer_get_id(LAYER_INSTANCES);
 	var _instances = layer_get_all_elements(_layer);
-	var _instance_count = array_length(_instances)
+	var _instance_count = array_length(_instances)	
 	
-	debug("Turning pause " + (_status ? "ON" : "OFF") + " for " + string(_instance_count) + " instances")
+	debug("Turning pause " + (global.paused ? "ON" : "OFF") + " for " + string(_instance_count) + " instances")
 	var _alarm_length = 12
 	
 	for (var _i = 0; _i < _instance_count; _i++) {
@@ -89,8 +104,8 @@ function toggle_pause(_status) {
 		debug(_instances[_i], _inst)
 		
 		with (_inst) {
-			debug("Status: ", _status)
-			if (_status) {
+			debug("Status: ", global.paused)
+			if (global.paused) {
 				// memoize our pre-pause values
 				paused_speed = speed
 				paused_image_speed = image_speed
@@ -104,8 +119,6 @@ function toggle_pause(_status) {
 					if (alarm[_j] > 0) {
 						// save the alarm state
 						paused_alarms[_j] = alarm[_j]
-					
-						debug("Turning off alarm " + string(_j))
 						// turn off the alarm
 						alarm[_j] = -1
 					} else {
@@ -116,10 +129,8 @@ function toggle_pause(_status) {
 				// if paused alarms was not set, then this object was not around when we first paused
 				// probably was an ultimate or something
 				if (!variable_instance_exists(self, "paused_alarms")) {
-					debug("INSTANCE NOT PAUSED", self)
 					continue
 				}
-				debug("unpausing instance", self)
 				// restore pre-pause values
 				speed = paused_speed
 				image_speed = paused_image_speed
@@ -137,8 +148,18 @@ function toggle_pause(_status) {
 			}
 		}
 	}
+
+}
+
+/// @return {Real}
+function get_play_time() {
+	return current_time - global.total_paused_time
 }
 
 function math_determine_max_from_wave(_wave) {
 	return BASE_ANSWER_VALUE + (5 * floor(_wave / 2))
+}
+
+function round_ext(_val, _round_to) {
+	return round(_val / _round_to) * _round_to
 }

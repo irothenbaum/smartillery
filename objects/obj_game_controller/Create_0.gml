@@ -1,3 +1,5 @@
+draw_set_valign(fa_middle);
+
 // might be fun to make this configurable
 game_seed = 132435345;
 random_set_seed(game_seed);
@@ -70,7 +72,7 @@ function handle_enemy_killed(_enemy) {
 	streak++
 	ultimate_charge++
 	// up to 50% time bonus
-	var _time_bonus = floor(_enemy.point_value * calculate_time_bonus((current_time - _enemy.spawn_time) / 1000) * 0.5)
+	var _time_bonus = floor(_enemy.point_value * calculate_time_bonus((get_play_time() - _enemy.spawn_time) / 1000) * 0.5)
 	// streak is + 30% of base
 	var _streak_score = has_point_streak() ? floor(_enemy.point_value * 0.3) : 0;
 	
@@ -121,19 +123,12 @@ function activate_ultimate() {
 		return
 	}
 	inst_ultimate = instance_create_layer(x, y, LAYER_HUD, obj_ultimate_interface)
-	inst_launch_time = current_time
+	inst_launch_time = get_play_time()
 	ultimate_charge = 0
 	toggle_pause(true)
 }
 
 function mark_ultimate_used() {
-	// in order to maintain the time bonus, we need to adjust all enemyies' spawn time
-	// to account for the duration the ult interface was active
-	for_each_enemy(function(_e) {
-		with (_e) {
-			spawn_time += (current_time - other.inst_launch_time)
-		}
-	})
 	inst_ultimate = undefined
 	inst_launch_time = undefined
 	toggle_pause(false)
@@ -142,7 +137,6 @@ function mark_ultimate_used() {
 function is_ulting() {
 	return !is_undefined(inst_ultimate)
 }
-
 
 // start off marking wave completed so game can start
 mark_wave_completed();

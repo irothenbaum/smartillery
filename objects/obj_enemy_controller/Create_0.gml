@@ -22,7 +22,7 @@ function init_wave() {
 		align: ALIGN_CENTER,
 		y: room_height * 0.25,
 		duration: 5,
-		on_render: function(_bounds) {
+		on_render: function(_bounds) {			
 			var _copy = []
 			array_copy(_copy, 0, global.operations_order, 0, array_length(global.operations_order))
 			array_resize(_copy, floor(get_current_wave_number() / WAVE_DIFFICULTY_STEP) + 1)
@@ -66,9 +66,8 @@ function spawn_enemy() {
 	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? room_width + _oob_margin : _pos_x);
 	
 	spawned_count++;
-	
+
 	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, obj_enemy_1);
-	enemy_initialize(_new_enemy)
 	return _new_enemy
 }
 
