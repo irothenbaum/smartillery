@@ -3,35 +3,32 @@ game_seed = 132435345;
 random_set_seed(game_seed);
 
 current_wave = 0;
-health = 1;
-score = 0;
-unit_score = 0;
-bonus_score = 0;
-streak_score = 0;
-streak = 0;
-point_streak = 5;
-health_streak = 10;
-used_streak = 0;
-inst_ultimate = undefined;
+game_score = 0;
+unit_score = 0; // base score
+bonus_score = 0; // time bonus
+streak_score = 0; // streak bonus
 
-function get_effective_streak() {
-	return streak - used_streak
-}
+streak = 0;
+ultimate_charge = 0;
+inst_ultimate = undefined;
+inst_launch_time = undefined;
+
 
 function has_point_streak() {
-	return get_effective_streak() >= point_streak
+	return streak >= POINT_STREAK_REQUIREMENT
 }
 
 
 /// @returns {Bool}
 function has_ultimate() {
-	return get_effective_streak() >= ULTIMATE_COST
+	return ultimate_charge >= global.ultimate_requirement
 }
 
 function mark_wave_completed() {
 	if (get_enemy_controller()) {	
 		instance_destroy(get_enemy_controller())
 	}
+	get_player().my_health = global.max_health
 	current_wave++;
 	// Even those the enemy controller is a controller, 
 	var _controller = instance_create_layer(x, y, LAYER_INSTANCES, obj_enemy_controller);
@@ -42,9 +39,6 @@ function mark_wave_completed() {
 }
 
 function handle_game_over() {
-	// destroy the enemy controller
-	instance_destroy(get_enemy_controller())
-	
 	function explode_enemy(_e, _index) {
 		with (_e) {
 			explode_and_destroy();
@@ -54,21 +48,27 @@ function handle_game_over() {
 	// destroy all enemies
 	for_each_enemy(explode_enemy)
 	
+	// destroy the enemy controller and user input
+	var _input = instance_find(obj_input, 0)
+	instance_destroy(_input)
+	instance_destroy(get_enemy_controller())
+	
 	// TODO: Make this it's own object that can render results and restart button
 	// draw the game over text
-	var _controller = instance_create_layer(x, y, LAYER_HUD, obj_text_title);
-	with (_controller) {
-		set_text("Game Over", 9999999);
-		align = ALIGN_CENTER;
-		y = room_height * 0.25;
-	}
+	var _controller = instance_create_layer(x, y, LAYER_HUD, obj_text_title, {
+		message: "Game Over",
+		align: ALIGN_CENTER,
+		y: room_height * 0.25,
+		duration: 9999999 
+	})
 }
 
 /// @func handle_enemy_killed(_enemy)
 /// @param {Id.Instance} _enemy
 /// @return {undefined}
 function handle_enemy_killed(_enemy) {
-	streak++;
+	streak++
+	ultimate_charge++
 	// up to 50% time bonus
 	var _time_bonus = floor(_enemy.point_value * calculate_time_bonus((current_time - _enemy.spawn_time) / 1000) * 0.5)
 	// streak is + 30% of base
@@ -76,26 +76,10 @@ function handle_enemy_killed(_enemy) {
 	
 	draw_point_indicators(_enemy.x, _enemy.y, _enemy.point_value, _time_bonus, _streak_score)
 	
-	// using streak not _effective_streak beacuse we don't want to give them extra health
-	if (streak == health_streak) {
-		// TODO: animate this somehow
-		health++
-	}
-	
 	unit_score += _enemy.point_value
 	streak_score += _streak_score
 	bonus_score += _time_bonus
-	score += _enemy.point_value + _time_bonus + _streak_score
-}
-
-function handle_player_damaged(_enemy) {
-	health--
-	streak = 0
-	used_streak = 0
-	
-	if (health <= 0) {
-		handle_game_over()
-	}
+	game_score += _enemy.point_value + _time_bonus + _streak_score
 }
 
 
@@ -126,18 +110,32 @@ function handle_submit_code(_code) {
 		activate_ultimate()
 		return true
 	} else {
+		// this was simply an inccorect submission, streak goes to 0
+		streak = 0
 		return false
 	}
 }
 
 function activate_ultimate() {
+	if (!has_ultimate()) {
+		return
+	}
 	inst_ultimate = instance_create_layer(x, y, LAYER_HUD, obj_ultimate_interface)
-	used_streak += ULTIMATE_COST
+	inst_launch_time = current_time
+	ultimate_charge = 0
 	toggle_pause(true)
 }
 
 function mark_ultimate_used() {
+	// in order to maintain the time bonus, we need to adjust all enemyies' spawn time
+	// to account for the duration the ult interface was active
+	for_each_enemy(function(_e) {
+		with (_e) {
+			spawn_time += (current_time - other.inst_launch_time)
+		}
+	})
 	inst_ultimate = undefined
+	inst_launch_time = undefined
 	toggle_pause(false)
 }
 

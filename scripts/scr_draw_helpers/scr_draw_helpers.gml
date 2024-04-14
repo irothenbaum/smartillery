@@ -3,12 +3,13 @@
 /// @param {Read} _x1
 /// @param {Read} _y1
 /// @param {Read} _progress -- [0,1]
-function draw_progress_bar(_x, _y, _x1, _y1, _progress) {
+/// @param {Color} _color
+function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color = c_lime) {
 	draw_set_color(c_grey)
 	draw_rectangle(_x, _y, _x1, _y1, false)
-	draw_set_color(c_lime)
+	draw_set_color(_color)
 	var _x_diff = _x1 - _x
-	draw_rectangle(_x, _y, _x + (_progress * _x_diff), _y1, false)
+	draw_rectangle(_x, _y, _x + (min(max(0,_progress), 1) * _x_diff), _y1, false)
 	
 	return {
 		x0: _x,

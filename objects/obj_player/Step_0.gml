@@ -1,4 +1,3 @@
-// image_angle += sin(degtorad(rotate_to - image_angle)) * rotate_speed;
 var _angle_dif = angle_difference(rotate_to, image_angle)
 var _abs_angle_dif = abs(_angle_dif)
 var _rotate_step = rotate_speed / game_get_speed(gamespeed_fps)

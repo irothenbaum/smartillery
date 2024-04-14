@@ -138,3 +138,7 @@ function toggle_pause(_status) {
 		}
 	}
 }
+
+function math_determine_max_from_wave(_wave) {
+	return BASE_ANSWER_VALUE + (5 * floor(_wave / 2))
+}

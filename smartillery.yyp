@@ -41,6 +41,7 @@
     {"id":{"name":"spr_input","path":"sprites/spr_input/spr_input.yy",},},
     {"id":{"name":"spr_player","path":"sprites/spr_player/spr_player.yy",},},
     {"id":{"name":"obj_text_score_increase","path":"objects/obj_text_score_increase/obj_text_score_increase.yy",},},
+    {"id":{"name":"obj_fx_player_damage","path":"objects/obj_fx_player_damage/obj_fx_player_damage.yy",},},
     {"id":{"name":"obj_enemy_controller","path":"objects/obj_enemy_controller/obj_enemy_controller.yy",},},
     {"id":{"name":"obj_fx_ultimate_strike","path":"objects/obj_fx_ultimate_strike/obj_fx_ultimate_strike.yy",},},
     {"id":{"name":"scr_constants","path":"scripts/scr_constants/scr_constants.yy",},},

@@ -4,12 +4,19 @@
 #macro ALIGN_CENTER "center"
 #macro ALIGN_LEFT "left"
 #macro ALIGN_RIGHT "right"
-#macro MAX_MATH_DIFFICULTY 3
+
+global.max_health = 100
+global.ultimate_requirement = 30
 
 #macro LAUNCH_CODE "000"
-#macro ULTIMATE_COST 100
+#macro POINT_STREAK_REQUIREMENT 5
 
 
 #macro LAYER_INSTANCES "Instances"
 #macro LAYER_CONTROLLERS "Controllers"
 #macro LAYER_HUD "HUD"
+
+global.operations_order = ["+", "-", "x", "/", "^", "^"]
+#macro MAX_MATH_DIFFICULTY 5
+
+#macro WAVE_DIFFICULTY_STEP 5

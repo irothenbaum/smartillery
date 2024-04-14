@@ -1,10 +1,11 @@
 spawn_time = current_time
+shooting = false
+fire_distance = 50
+firing_position = undefined
 equation = "";
+answer = "";
 speed = 0;
-time_to_solve = 20
-remaining_time_to_solve = time_to_solve
 approach_speed = 1
-needed_rest = 0
 point_value = 10
 
 function explode_and_destroy() {
@@ -13,11 +14,12 @@ function explode_and_destroy() {
 }
 
 function register_hit() {
+	get_enemy_controller().release_answer(answer);
 	explode_and_destroy()
 	get_game_controller().handle_enemy_killed(self)
 }
 
-function handle_hit_player() {
-	explode_and_destroy()
-	get_game_controller().handle_player_damaged(self)
+function fire_shot() {
+	get_player().execute_take_damage(50)
+	alarm[0] = 2 * game_get_speed(gamespeed_fps)
 }

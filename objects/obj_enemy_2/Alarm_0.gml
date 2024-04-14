@@ -1,1 +1,1 @@
-enemy_stop_approach(self)
+fire_shot()
