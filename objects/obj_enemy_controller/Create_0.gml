@@ -21,7 +21,7 @@ function init_wave() {
 		message: "Beginning Wave #" + string(_current_wave),
 		align: ALIGN_CENTER,
 		y: room_height * 0.25,
-		duration: 5,
+		duration: global.scene_transition_duration,
 		on_render: function(_bounds) {			
 			var _copy = []
 			array_copy(_copy, 0, global.operations_order, 0, array_length(global.operations_order))

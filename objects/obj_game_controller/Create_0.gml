@@ -15,6 +15,8 @@ ultimate_charge = 0;
 inst_ultimate = undefined;
 inst_launch_time = undefined;
 
+is_scene_transitioning = false;
+
 
 function has_point_streak() {
 	return streak >= POINT_STREAK_REQUIREMENT
@@ -37,6 +39,9 @@ function mark_wave_completed() {
 	with (_controller) {
 		init_wave()
 	}
+	
+	alarm[0] = 1 * game_get_speed(gamespeed_fps)
+	alarm[1] = (global.scene_transition_duration - 2) * game_get_speed(gamespeed_fps)
 	return _controller
 }
 

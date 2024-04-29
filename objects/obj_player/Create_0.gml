@@ -1,10 +1,17 @@
-rotate_aim_speed = 360 // in degrees per second
+_u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
+body_color = [1.0, 1.0, 0.5, 1.0];
+turret_color = [0.5, 1.0, 1.0, 1.0];
+recoil_amount = 0
+
+rotate_aim_speed = 720 // in degrees per second
 rotate_idle_speed = 90 // in degrees per frame
 rotate_speed = rotate_idle_speed
 rotate_to = 90;
 my_health = global.max_health
 aiming_at_instance = undefined
 image_angle = rotate_to;
+direction = 90
+x = room_width / 2
 x = room_width / 2
 y = room_height / 2
 
@@ -25,6 +32,7 @@ function execute_hit_target() {
 		return
 	}
 	
+	recoil_amount = 20
 	aiming_at_instance.register_hit()
 	aiming_at_instance = undefined
 	

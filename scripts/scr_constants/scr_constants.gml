@@ -9,6 +9,7 @@ global.max_health = 100
 global.ultimate_requirement = 30
 global.total_paused_time = 0
 global.paused = false
+global.scene_transition_duration = 6
 
 #macro LAUNCH_CODE "000"
 #macro POINT_STREAK_REQUIREMENT 5

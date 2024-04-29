@@ -1,16 +1,16 @@
 {
   "resourceType": "GMRoom",
   "resourceVersion": "1.0",
-  "name": "Waves",
+  "name": "rm_waves",
   "creationCodeFile": "",
   "inheritCode": false,
   "inheritCreationOrder": false,
   "inheritLayers": false,
   "instanceCreationOrder": [
-    {"name":"inst_35871631","path":"rooms/Waves/Waves.yy",},
-    {"name":"inst_2DCADFDA","path":"rooms/Waves/Waves.yy",},
-    {"name":"inst_687CDEC4","path":"rooms/Waves/Waves.yy",},
-    {"name":"inst_7963F043","path":"rooms/Waves/Waves.yy",},
+    {"name":"inst_35871631","path":"rooms/rm_waves/rm_waves.yy",},
+    {"name":"inst_2DCADFDA","path":"rooms/rm_waves/rm_waves.yy",},
+    {"name":"inst_687CDEC4","path":"rooms/rm_waves/rm_waves.yy",},
+    {"name":"inst_7963F043","path":"rooms/rm_waves/rm_waves.yy",},
   ],
   "isDnd": false,
   "layers": [
