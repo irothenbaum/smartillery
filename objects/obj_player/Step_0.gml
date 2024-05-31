@@ -13,4 +13,3 @@ if (recoil_amount > 0.01) {
 } else {
 	recoil_amount = 0
 }
-	

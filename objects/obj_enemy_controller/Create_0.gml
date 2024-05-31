@@ -27,10 +27,10 @@ function init_wave() {
 			array_copy(_copy, 0, global.operations_order, 0, array_length(global.operations_order))
 			array_resize(_copy, floor(get_current_wave_number() / WAVE_DIFFICULTY_STEP) + 1)
 			draw_set_font(fnt_base)
-			draw_text_with_alignment(_bounds.x0, _bounds.y1, "Operations: " + array_reduce(_copy, function(_aggr, _o) {
+			draw_text_with_alignment(_bounds.x0, _bounds.y1 + 10, "Operations: " + array_reduce(_copy, function(_aggr, _o) {
 				return _aggr + " " + _o 
 			}, ""), ALIGN_LEFT)
-			draw_text_with_alignment(_bounds.x1, _bounds.y1, "Max: " + string(math_determine_max_from_wave(get_current_wave_number())), ALIGN_RIGHT)
+			draw_text_with_alignment(_bounds.x1, _bounds.y1 + 10, "Max: " + string(math_determine_max_from_wave(get_current_wave_number())), ALIGN_RIGHT)
 			
 			var _current_wave = get_current_wave_number()
 			if (_current_wave % WAVE_DIFFICULTY_STEP == 1) {
@@ -60,14 +60,26 @@ function spawn_enemy() {
 	var _pos_x = irandom(room_width)
 	var _pos_y = irandom(room_height)
 	
+	// the no spawn zone is the middle 33%, so if pos_x is in that range, we shift it
+	var _no_spawn_marker = room_width * 0.33
+	if (_pos_x > _no_spawn_marker && _pos_x < _no_spawn_marker * 2) {
+		var _distance_to_center = _pos_x - (room_width / 2)
+		// if _distance_to_center is negative, then pos_x is to the right of center, in the middle 33%.
+		// this basically shifts our x position back into either the first or 3rd swction respctive to its position in the second
+		_pos_x = _distance_to_center < 0 ? 2 * (_no_spawn_marker + abs(_distance_to_center)) : _no_spawn_marker - (_distance_to_center * 2)
+	}
+	
 	// quad 1 is TOP, 2 is RIGHT, 3 is BOTTOM, 0 is LEFT
 	var _quad = irandom(3)
 	_pos_y = _quad == 1 ? -_oob_margin : (_quad == 3 ? room_height + _oob_margin : _pos_y);
 	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? room_width + _oob_margin : _pos_x);
 	
+	// enemy 2 types only start appearing after wave 3 and only ~once every 6 enemies
+	var _enemy_type = (true || (get_current_wave_number() > 3 && irandom(5) == 0)) ? obj_enemy_2 : obj_enemy_1
+	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, _enemy_type);
+	
 	spawned_count++;
-
-	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, obj_enemy_1);
+	
 	return _new_enemy
 }
 

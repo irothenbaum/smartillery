@@ -30,15 +30,16 @@ function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT) {
 	var _str_width = string_width(_text)
 	var _str_height = string_height(_text)
 	
-	// we always vertically center the text so no need to do y -= string_height / 2
+	// we always draw the 
+	_bound.y0 = _y - (_str_height / 2)
 			
 	switch (_align) {
 		case ALIGN_CENTER:
-			_bound.x0 = _x - string_width(_text) / 2 
+			_bound.x0 = _x - _str_width / 2 
 			break
 			
 		case ALIGN_RIGHT:
-			_bound.x0 = _x - string_width(_text)
+			_bound.x0 = _x - _str_width
 			break
 			
 		case ALIGN_LEFT:

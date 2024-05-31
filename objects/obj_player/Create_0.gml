@@ -1,10 +1,11 @@
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
-body_color = [1.0, 1.0, 0.5, 1.0];
-turret_color = [0.5, 1.0, 1.0, 1.0];
+body_color = [1.0, 1.0, 1.0, 1.0];
+turret_color = [1.0, 0, 0, 1.0];
 recoil_amount = 0
+max_recoil_amount = 20
 
 rotate_aim_speed = 720 // in degrees per second
-rotate_idle_speed = 90 // in degrees per frame
+rotate_idle_speed = 90 // in degrees per second
 rotate_speed = rotate_idle_speed
 rotate_to = 90;
 my_health = global.max_health
@@ -32,7 +33,7 @@ function execute_hit_target() {
 		return
 	}
 	
-	recoil_amount = 20
+	recoil_amount = max_recoil_amount
 	aiming_at_instance.register_hit()
 	aiming_at_instance = undefined
 	

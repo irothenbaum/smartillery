@@ -38,13 +38,13 @@ function enemy_start_approach(_e) {
 	}
 }
 
-function enemy_draw(_e) {	
+function enemy_draw_equation(_e) {	
 	with (_e) {
-		draw_self();
 		draw_set_font(fnt_large);
 		draw_set_colour(c_white);
 		var _string = global.paused ? "******" : equation
-		var _offset_y = sprite_height / 2 + string_height(_string)
+		// logically should be sprite_height / 2, but we scale the enemy image to .5 so it becomes / 4
+		var _offset_y = sprite_height / 4 + string_height(_string)
 		var _y = y > room_height / 2 ? y - _offset_y : y + _offset_y
 		draw_text_with_alignment(x, _y, _string, ALIGN_CENTER);
 	}

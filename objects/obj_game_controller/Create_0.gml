@@ -1,10 +1,10 @@
-draw_set_valign(fa_middle);
+draw_set_halign(fa_left);
 
 // might be fun to make this configurable
 game_seed = 132435345;
 random_set_seed(game_seed);
 
-current_wave = 0;
+current_wave = 2;
 game_score = 0;
 unit_score = 0; // base score
 bonus_score = 0; // time bonus
