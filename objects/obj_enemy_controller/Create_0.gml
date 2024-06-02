@@ -75,8 +75,8 @@ function spawn_enemy() {
 	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? room_width + _oob_margin : _pos_x);
 	
 	// enemy 2 types only start appearing after wave 3 and only ~once every 6 enemies
-	var _enemy_type = (true || (get_current_wave_number() > 3 && irandom(5) == 0)) ? obj_enemy_2 : obj_enemy_1
-	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, _enemy_type);
+	var _spawn_enemy_2 = (get_current_wave_number() > 3 && irandom(5) == 0)
+	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, _spawn_enemy_2 ? obj_enemy_2 : obj_enemy_1);
 	
 	spawned_count++;
 	
@@ -94,7 +94,6 @@ function reserve_answer(_ans, _inst) {
 	active_answers[$ _ans] = _inst;
 }
 
-
 /// @func release_answer(_ans)
 /// @param {String} _ans
 /// @return {undefined}
@@ -106,8 +105,7 @@ function release_answer(_ans) {
 /// @param {String} _answer
 /// @return {Bool}
 function handle_submit_answer(_answer) {
-	var _answer_in_use = struct_exists(active_answers, _answer)
-	if (get_game_controller().is_ulting() || !_answer_in_use) {
+	if (get_game_controller().is_ulting() || !is_answer_active(_answer)) {
 		return get_game_controller().handle_submit_code(_answer);
 	}
 	
@@ -115,4 +113,8 @@ function handle_submit_answer(_answer) {
 	
 	get_player().fire_at_instance(_instance);
 	return true;
+}
+
+function is_answer_active(_answer) {
+	return struct_exists(active_answers, _answer)
 }

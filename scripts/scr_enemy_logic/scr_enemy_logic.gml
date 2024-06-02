@@ -21,23 +21,6 @@
 */
 
 
-function enemy_start_approach(_e) {
-	with(_e) {
-		var _player = get_player()
-		var _shifted_degrees = irandom_range(5, 30)
-		if (irandom(1) == 1) {
-			// possibly shift counter clockwise
-			_shifted_degrees = _shifted_degrees * -1
-		}
-		var _player_halo_direction = point_direction(_player.x, _player.y, x, y) + _shifted_degrees
-		firing_position = {
-			x: _player.x + lengthdir_x(fire_distance, _player_halo_direction),
-			y: _player.y + lengthdir_y(fire_distance, _player_halo_direction)
-		}
-		speed = approach_speed
-	}
-}
-
 function enemy_draw_equation(_e) {	
 	with (_e) {
 		draw_set_font(fnt_large);
@@ -84,21 +67,6 @@ function enemy_generate_question(_e) {
 function enemy_initialize(_e) {
 	with (_e) {
 		enemy_generate_question(self)
-		enemy_start_approach(self)
-	}
-}
-
-function enemy_step(_e) {
-	with (_e) {
-		var _player = get_player()
-		if (!is_undefined(firing_position)) {
-			direction = point_direction(x, y, firing_position.x, firing_position.y)
-			
-			if(!shooting && distance_to_point(firing_position.x, firing_position.y) < 10) {
-				shooting = true
-				speed = 0
-				fire_shot()
-			}
-		}
+		speed = approach_speed
 	}
 }

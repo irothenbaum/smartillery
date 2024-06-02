@@ -16,6 +16,8 @@ x = room_width / 2
 x = room_width / 2
 y = room_height / 2
 
+image_scale = 0.8
+
 function fire_at_instance(_inst) {
 	if (!_inst) {
 		// do nothing

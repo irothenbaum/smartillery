@@ -13,6 +13,8 @@ function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color = c_lime) {
 	
 	return _final_format({
 		x0: _x,
+		
+		
 		y0: _y,
 		x1: _x1,
 		y1: _y1,

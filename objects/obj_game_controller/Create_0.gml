@@ -14,7 +14,7 @@ streak = 0;
 ultimate_charge = 0;
 inst_ultimate = undefined;
 inst_launch_time = undefined;
-
+is_game_over = false;
 is_scene_transitioning = false;
 
 
@@ -52,6 +52,8 @@ function handle_game_over() {
 		}
 	}
 	
+	is_game_over = true;
+	
 	// destroy all enemies
 	for_each_enemy(explode_enemy)
 	
@@ -74,6 +76,10 @@ function handle_game_over() {
 /// @param {Id.Instance} _enemy
 /// @return {undefined}
 function handle_enemy_killed(_enemy) {
+	// we don'tcount enemy points when the game is over
+	if (is_game_over) {
+		return 
+	}
 	streak++
 	ultimate_charge++
 	// up to 50% time bonus
