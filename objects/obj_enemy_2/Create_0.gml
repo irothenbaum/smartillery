@@ -33,10 +33,10 @@ function explode_and_destroy() {
 }
 
 function register_hit(_insta_kill = false) {
+	instance_create_layer(x, y, LAYER_INSTANCES, obj_fx_enemy_damage);
 	get_enemy_controller().release_answer(answer);
 	if (my_health > 0 && !_insta_kill) {
 		my_health--;
-		instance_create_layer(x, y, LAYER_INSTANCES, obj_fx_enemy_damage);
 		// pause the approach
 		speed = 0
 		equation = "*"

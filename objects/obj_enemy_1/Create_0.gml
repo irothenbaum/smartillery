@@ -21,6 +21,7 @@ direction = point_direction(x, y, target_location_x, target_location_y) +  30 //
 
 function explode_and_destroy() {
 	instance_destroy();
+	instance_create_layer(x, y, LAYER_INSTANCES, obj_fx_enemy_damage);
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_fx_enemy_explode);
 	get_game_controller().handle_enemy_killed(self)
 }
@@ -30,9 +31,13 @@ function register_hit() {
 	explode_and_destroy()
 }
 
-function fire_shot() {
+function collide_with_player() {
 	get_player().execute_take_damage(35)
 	explode_and_destroy()
+}
+
+function collide_with_explosion() {
+	register_hit()
 }
 
 enemy_initialize(self)

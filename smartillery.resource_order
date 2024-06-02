@@ -33,6 +33,7 @@
     {"name":"obj_menu_controller","order":1,"path":"objects/obj_menu_controller/obj_menu_controller.yy",},
     {"name":"obj_text_title","order":1,"path":"objects/obj_text_title/obj_text_title.yy",},
     {"name":"obj_ultimate_interface","order":1,"path":"objects/obj_ultimate_interface/obj_ultimate_interface.yy",},
+    {"name":"par_sparks","order":1,"path":"particles/par_sparks/par_sparks.yy",},
     {"name":"rm_menu","order":1,"path":"rooms/rm_menu/rm_menu.yy",},
     {"name":"scr_constants","order":1,"path":"scripts/scr_constants/scr_constants.yy",},
     {"name":"scr_draw_helpers","order":6,"path":"scripts/scr_draw_helpers/scr_draw_helpers.yy",},

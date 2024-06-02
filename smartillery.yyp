@@ -58,6 +58,7 @@
     {"id":{"name":"obj_ultimate_interface","path":"objects/obj_ultimate_interface/obj_ultimate_interface.yy",},},
     {"id":{"name":"obj_ultimate","path":"objects/obj_ultimate/obj_ultimate.yy",},},
     {"id":{"name":"par_shockwave","path":"particles/par_shockwave/par_shockwave.yy",},},
+    {"id":{"name":"par_sparks","path":"particles/par_sparks/par_sparks.yy",},},
     {"id":{"name":"rm_menu","path":"rooms/rm_menu/rm_menu.yy",},},
     {"id":{"name":"rm_waves","path":"rooms/rm_waves/rm_waves.yy",},},
     {"id":{"name":"scr_constants","path":"scripts/scr_constants/scr_constants.yy",},},

@@ -88,7 +88,7 @@ function spawn_enemy() {
 /// @param {Id.Instance} _inst
 /// @return {undefined}
 function reserve_answer(_ans, _inst) {
-	if (struct_exists(active_answers, _ans)) {
+	if (is_answer_active(_ans)) {
 		throw "Answer in use";
 	}
 	active_answers[$ _ans] = _inst;
@@ -98,7 +98,7 @@ function reserve_answer(_ans, _inst) {
 /// @param {String} _ans
 /// @return {undefined}
 function release_answer(_ans) {
-	delete active_answers[$ _ans];
+	struct_remove(active_answers, _ans)
 }
 
 /// @func handle_submit_answer(_answer)
