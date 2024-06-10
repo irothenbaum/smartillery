@@ -25,7 +25,7 @@ function enemy_draw_equation(_e) {
 	with (_e) {
 		draw_set_font(fnt_large);
 		draw_set_colour(c_white);
-		var _string = global.paused ? "******" : equation
+		var _string = global.paused ? "******" : (equation == "" ? "-- - --" : equation)
 		// logically should be sprite_height / 2, but we scale the enemy image to .5 so it becomes / 4
 		var _offset_y = sprite_height / 4 + string_height(_string)
 		var _y = y > room_height / 2 ? y - _offset_y : y + _offset_y
@@ -43,17 +43,20 @@ function enemy_generate_question(_e) {
 			try {
 				_attempts--;
 				// every 5 levels
-				var _values = generate_equation_and_answer(_max, min(MAX_MATH_DIFFICULTY, ceil(_wave / WAVE_DIFFICULTY_STEP)))
+				var _values = generate_equation_and_answer(_max, min(MAX_MATH_DIFFICULTY, floor(_wave / WAVE_DIFFICULTY_STEP)))
 				get_enemy_controller().reserve_answer(_values.answer, self)
 				equation = _values.equation
 				answer = _values.answer
 			} catch (_err) {
 				debug(_err)
 				if (_err != "Answer in use") {
+					debug("ENCOUNTERED ERROR:", _err)
 					throw _err
 				}
 			}
 		} until (equation != "" || _attempts <= 0)
+	
+		debug("Generated equation:", equation, answer)
 	
 		if (equation == "") {
 			instance_destroy();

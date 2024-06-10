@@ -4,7 +4,7 @@ draw_set_halign(fa_left);
 game_seed = 132435345;
 random_set_seed(game_seed);
 
-current_wave = 2;
+current_wave = 3;
 game_score = 0;
 unit_score = 0; // base score
 bonus_score = 0; // time bonus

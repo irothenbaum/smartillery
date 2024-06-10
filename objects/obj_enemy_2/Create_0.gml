@@ -39,7 +39,7 @@ function register_hit(_insta_kill = false) {
 		my_health--;
 		// pause the approach
 		speed = 0
-		equation = "*"
+		equation = ""
 		// restart approach in 3 seconds
 		alarm[1] = 3 * game_get_speed(gamespeed_fps)
 		alarm[0] = -1;

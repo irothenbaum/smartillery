@@ -6,7 +6,7 @@ if (keyboard_check_pressed(vk_escape)) {
 		} else if (!other.is_ulting()) {
 			toggle_pause()
 		} else {
-			debug ("Cannot pause during ult")
+			debug("Cannot pause during ult")
 		}
 	}
 }

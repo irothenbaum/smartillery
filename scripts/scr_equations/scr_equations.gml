@@ -10,10 +10,12 @@ function get_allowed_operations_for_answer(_answer, _max) {
 }
 
 function generate_equation(_answer, _max, _difficulty = 0) {
-	var _max_sides = _difficulty 
-	
 	var _dice = undefined
 	var _allowed_operations = get_allowed_operations_for_answer(_answer, _max)
+	
+	debug("Generating equation for values a: " + string(_answer) + " m: " + string(_max) + " d: " + string(_difficulty))
+	debug("Allowed operations:", _allowed_operations)
+	
 	var _breaker = 10;
 	do {
 		 _breaker --

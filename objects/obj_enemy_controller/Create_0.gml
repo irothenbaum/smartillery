@@ -22,19 +22,20 @@ function init_wave() {
 		align: ALIGN_CENTER,
 		y: room_height * 0.25,
 		duration: global.scene_transition_duration,
-		on_render: function(_bounds) {			
+		on_render: function(_bounds) {
+			var _current_wave = get_current_wave_number()
+			var _wave_over_step = floor(_current_wave / WAVE_DIFFICULTY_STEP)
 			var _copy = []
 			array_copy(_copy, 0, global.operations_order, 0, array_length(global.operations_order))
-			array_resize(_copy, floor(get_current_wave_number() / WAVE_DIFFICULTY_STEP) + 1)
+			array_resize(_copy, _wave_over_step + 1)
 			draw_set_font(fnt_base)
 			draw_text_with_alignment(_bounds.x0, _bounds.y1 + 10, "Operations: " + array_reduce(_copy, function(_aggr, _o) {
 				return _aggr + " " + _o 
 			}, ""), ALIGN_LEFT)
 			draw_text_with_alignment(_bounds.x1, _bounds.y1 + 10, "Max: " + string(math_determine_max_from_wave(get_current_wave_number())), ALIGN_RIGHT)
 			
-			var _current_wave = get_current_wave_number()
-			if (_current_wave % WAVE_DIFFICULTY_STEP == 1) {
-				var _new_operation_index = floor(_current_wave / WAVE_DIFFICULTY_STEP)
+			if (_current_wave % WAVE_DIFFICULTY_STEP == 0) {
+				var _new_operation_index = _wave_over_step
 				var _new_operation = global.operations_order[_new_operation_index]
 				draw_set_font(fnt_large)
 				draw_text_with_alignment(room_width / 2, _bounds.y1 + 40, "New operation: " + _new_operation, ALIGN_CENTER)
@@ -74,6 +75,7 @@ function spawn_enemy() {
 	_pos_y = _quad == 1 ? -_oob_margin : (_quad == 3 ? room_height + _oob_margin : _pos_y);
 	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? room_width + _oob_margin : _pos_x);
 	
+	// TODO: once we do bosses, this current wave > 3 will match the boss level (s)
 	// enemy 2 types only start appearing after wave 3 and only ~once every 6 enemies
 	var _spawn_enemy_2 = (get_current_wave_number() > 3 && irandom(5) == 0)
 	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, _spawn_enemy_2 ? obj_enemy_2 : obj_enemy_1);
