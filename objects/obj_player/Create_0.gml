@@ -1,6 +1,4 @@
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
-body_color = [1.0, 1.0, 1.0, 1.0];
-turret_color = [1.0, 0, 0, 1.0];
 recoil_amount = 0
 max_recoil_amount = 20
 
@@ -16,7 +14,9 @@ x = room_width / 2
 x = room_width / 2
 y = room_height / 2
 
-image_scale = 0.8
+image_scale = 0.4
+image_xscale = image_scale;
+image_yscale = image_scale;
 
 function fire_at_instance(_inst) {
 	if (!_inst) {

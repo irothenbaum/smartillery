@@ -3,8 +3,8 @@ shooting = false
 equation = "";
 answer = "";
 speed = 0;
-image_xscale = 0.5
-image_yscale = 0.5
+image_xscale = 0.25
+image_yscale = 0.25
 approach_speed = 1.2
 point_value = 10
 rotate_speed = (irandom(1) == 0 ? -1 : 1) * (irandom(20) + 5) / 10

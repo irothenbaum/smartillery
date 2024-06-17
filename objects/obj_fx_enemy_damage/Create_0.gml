@@ -3,5 +3,5 @@ ps = draw_particle_enemy_damage(x, y)
 alarm[0] = 1 * game_get_speed(gamespeed_fps)
 
 function destroy_ps() {
-	part_system_destroy(ps)
+	array_foreach(ps, part_system_destroy)
 }

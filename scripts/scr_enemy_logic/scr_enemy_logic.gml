@@ -27,7 +27,7 @@ function enemy_draw_equation(_e) {
 		draw_set_colour(c_white);
 		var _string = global.paused ? "******" : (equation == "" ? "-- - --" : equation)
 		// logically should be sprite_height / 2, but we scale the enemy image to .5 so it becomes / 4
-		var _offset_y = sprite_height / 4 + string_height(_string)
+		var _offset_y = 20 + string_height(_string)
 		var _y = y > room_height / 2 ? y - _offset_y : y + _offset_y
 		draw_text_with_alignment(x, _y, _string, ALIGN_CENTER);
 	}

@@ -10,6 +10,8 @@ global.ultimate_requirement = 30
 global.total_paused_time = 0
 global.paused = false
 global.scene_transition_duration = 6
+global.body_color = color_to_array(c_white);
+global.turret_color = color_to_array(c_white);
 
 #macro LAUNCH_CODE "000"
 #macro POINT_STREAK_REQUIREMENT 5

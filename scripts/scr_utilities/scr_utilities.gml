@@ -163,3 +163,40 @@ function math_determine_max_from_wave(_wave) {
 function round_ext(_val, _round_to) {
 	return round(_val / _round_to) * _round_to
 }
+
+
+function is_spot_in_bounds(_x, _y, _bounds) {
+	return _bounds.x0 < _x and _bounds.x1 > _x and _bounds.y0 < _y and _bounds.y1 > _y
+}
+
+/// @description color_to_array( color);
+/// @param _color
+// Converts GML color constants to rgb float array
+function color_to_array() {
+	var hex = [];
+	var ret = [];
+	var quotient = argument0;
+
+	// Convert to hex
+	for( var i = 0; quotient != 0; ++i){
+		hex[i] = quotient % 16;
+		quotient = floor( quotient / 16);
+	}
+
+	// Make sure this is a color code
+	while(array_length(hex) < 6){
+		hex[array_length(hex)] = 0;
+	}
+	if(array_length(hex) > 6){
+		show_error( "Unknown color: " + string( argument0), true);
+		return -1;
+	}
+
+	// Convert hex to RGB
+	for( var i = 0; i < 3; ++i){
+		ret[i] = hex[i * 2 + 1] * 16 + hex[i * 2];
+		ret[i] /= 255; // Change from 255 to float
+	}
+
+	return ret;
+}
