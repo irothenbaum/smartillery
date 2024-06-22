@@ -52,5 +52,5 @@ function execute_take_damage(_damage_amount) {
 	if (my_health <= 0) {
 		get_game_controller().handle_game_over()
 	}
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_fx_player_damage)
+	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_shockwave})
 }

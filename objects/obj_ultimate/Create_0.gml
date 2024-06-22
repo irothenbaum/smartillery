@@ -39,7 +39,7 @@ function strike_nearest_enemy() {
 		}
 	}
 	
-	instance_create_layer(_target.x, _target.y, LAYER_INSTANCES, obj_fx_ultimate_strike)
+	instance_create_layer(_target.x, _target.y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_ultimate_strike})
 	with(_target) {
 		register_hit(true)
 	}

@@ -1,1 +1,0 @@
-collide_with_explosion()

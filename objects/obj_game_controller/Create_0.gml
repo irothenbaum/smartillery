@@ -7,7 +7,6 @@ random_set_seed(game_seed);
 current_wave = 3;
 game_score = 0;
 unit_score = 0; // base score
-bonus_score = 0; // time bonus
 streak_score = 0; // streak bonus
 
 streak = 0;
@@ -62,14 +61,7 @@ function handle_game_over() {
 	instance_destroy(_input)
 	instance_destroy(get_enemy_controller())
 	
-	// TODO: Make this it's own object that can render results and restart button
-	// draw the game over text
-	var _controller = instance_create_layer(x, y, LAYER_HUD, obj_text_title, {
-		message: "Game Over",
-		align: ALIGN_CENTER,
-		y: room_height * 0.25,
-		duration: 9999999 
-	})
+	var _game_over_message = instance_create_layer(x, y, LAYER_HUD, obj_game_over)
 }
 
 /// @func handle_enemy_killed(_enemy)
@@ -82,30 +74,21 @@ function handle_enemy_killed(_enemy) {
 	}
 	streak++
 	ultimate_charge++
-	// up to 50% time bonus
-	var _time_bonus = floor(_enemy.point_value * calculate_time_bonus((get_play_time() - _enemy.spawn_time) / 1000) * 0.5)
 	// streak is + 30% of base
 	var _streak_score = has_point_streak() ? floor(_enemy.point_value * 0.3) : 0;
 	
-	draw_point_indicators(_enemy.x, _enemy.y, _enemy.point_value, _time_bonus, _streak_score)
+	draw_point_indicators(_enemy.x, _enemy.y, _enemy.point_value, _streak_score)
 	
 	unit_score += _enemy.point_value
 	streak_score += _streak_score
-	bonus_score += _time_bonus
-	game_score += _enemy.point_value + _time_bonus + _streak_score
+	game_score += _enemy.point_value + _streak_score
 }
 
 
-function draw_point_indicators(_x, _y, _base, _time, _streak) {
+function draw_point_indicators(_x, _y, _base, _streak) {
 	var _base_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase)
 	_base_inst.set_amount(_base, c_white, fnt_large)
 	_y -= 20
-	
-	if (_time) {
-		var _time_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase)
-		_time_inst.set_amount(_time, c_aqua)
-		_y -= 20
-	}
 	
 	if (_streak) {	
 		var _streak_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase)

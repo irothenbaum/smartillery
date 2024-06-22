@@ -1,16 +1,16 @@
 {
   "$GMObject":"",
-  "%Name":"obj_fx_ultimate_strike",
+  "%Name":"obj_particle_effect",
   "eventList":[
     {"$GMEvent":"","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":2,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_fx_ultimate_strike",
+  "name":"obj_particle_effect",
   "overriddenProperties":[],
   "parent":{
-    "name":"ultimates",
-    "path":"folders/Objects/ultimates.yy",
+    "name":"drawing",
+    "path":"folders/Objects/drawing.yy",
   },
   "parentObjectId":null,
   "persistent":false,
@@ -26,7 +26,9 @@
   "physicsShape":1,
   "physicsShapePoints":[],
   "physicsStartAwake":true,
-  "properties":[],
+  "properties":[
+    {"$GMObjectProperty":"v1","%Name":"effect","filters":[],"listItems":[],"multiselect":false,"name":"effect","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":4,},
+  ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
