@@ -43,7 +43,7 @@ function draw_particle_debirs(x,y, _number = 3) {
 	part_type_colour3(_ptype1, $FFFFFF, $FFFFFF, $000000);
 	part_type_alpha3(_ptype1, 1, 1, 1);
 	part_type_blend(_ptype1, true);
-	part_type_life(_ptype1, 180, 180);
+	part_type_life(_ptype1, 240, 240);
 
 	var _pemit1 = part_emitter_create(_ps);
 	part_emitter_region(_ps, _pemit1, -32, 32, -32, 32, ps_shape_rectangle, ps_distr_invgaussian);
@@ -83,8 +83,11 @@ function draw_particle_sparks(x,y, _number = 12) {
 }
 
 function destroy_particle(_p) {
+	if (is_undefined(_p)) {
+		return
+	}
 	if (is_array(_p)) {
-		array_foreach(_p, part_system_destroy)
+		array_foreach(_p, destroy_particle)
 	} else {
 		part_system_destroy(_p)
 	}

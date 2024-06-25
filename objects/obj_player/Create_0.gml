@@ -9,7 +9,7 @@ rotate_to = 90;
 my_health = global.max_health
 aiming_at_instance = undefined
 image_angle = rotate_to;
-direction = 90
+direction = 90 // point upwards
 x = room_width / 2
 x = room_width / 2
 y = room_height / 2
@@ -35,6 +35,10 @@ function execute_hit_target() {
 		return
 	}
 	
+	// Muzzle Flash
+	var _muzzle = get_turret_muzzle()
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: aiming_at_instance.x, target_y: aiming_at_instance.y, width: 12})
+	
 	recoil_amount = max_recoil_amount
 	aiming_at_instance.register_hit()
 	aiming_at_instance = undefined
@@ -53,4 +57,13 @@ function execute_take_damage(_damage_amount) {
 		get_game_controller().handle_game_over()
 	}
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_shockwave})
+}
+
+function get_turret_muzzle() {
+	// this is hardcoded, but somehow a property of the turret sprite size * image_scale
+	var _turret_length = 58
+	return {
+		x: x + lengthdir_x(_turret_length, image_angle),
+		y: y + lengthdir_y(_turret_length, image_angle)
+	}
 }

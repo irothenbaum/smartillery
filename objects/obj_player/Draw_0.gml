@@ -18,4 +18,3 @@ shader_set_uniform_f_array(_u_color, global.turret_color);
 draw_sprite_ext(spr_player_turret, 0, _turret_x, _turret_y, _turret_scale * image_scale, image_scale, image_angle, c_white, 1)
 
 shader_reset();
-

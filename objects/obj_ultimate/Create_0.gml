@@ -6,7 +6,7 @@ alarm[1] = 3 * game_get_speed(gamespeed_fps)
 function execute(_num_strikes) {
 	number_of_strikes = _num_strikes
 	
-	// TODO: run fyover animation
+	// TODO: run flyover animation
 	
 	// wait one second, then start bombing
 	alarm[0] = 1 * game_get_speed(gamespeed_fps)
