@@ -2,9 +2,9 @@ spawn_time = get_play_time()
 shooting = false
 equation = "";
 answer = "";
-speed = 0;
-image_xscale = 0.25
-image_yscale = 0.25
+image_scale = 0.25
+image_xscale = image_scale
+image_yscale = image_scale
 approach_speed = 1.6
 point_value = 10
 rotate_speed = (irandom(1) == 0 ? -1 : 1) * (irandom(20) + 5) / 10
@@ -17,7 +17,7 @@ start_position_x = x
 start_position_y = y
 turning_towards = false
 direction = point_direction(x, y, target_location_x, target_location_y) +  30 // * _scale
-
+speed = approach_speed
 
 function explode_and_destroy() {
 	instance_destroy();
@@ -35,8 +35,5 @@ function collide_with_player() {
 	explode_and_destroy()
 }
 
-function collide_with_explosion() {
-	register_hit()
-}
 
-enemy_initialize(self)
+enemy_generate_question(self)

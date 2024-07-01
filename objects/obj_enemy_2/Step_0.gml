@@ -4,6 +4,11 @@ if (recoil_amount > 0.01) {
 	recoil_amount = 0
 }
 
+if (!is_undefined(shift_position)) {
+	x = (x + shift_position.x) / 2
+	y = (y + shift_position.y) / 2
+}
+
 var _player = get_player();
 image_angle = point_direction(x, y, _player.x, _player.y)	
 

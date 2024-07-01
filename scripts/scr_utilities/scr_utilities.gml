@@ -53,11 +53,19 @@ function get_all_enemy_instances() {
 	var _instances = []
 	var _enemy1 = instance_number(obj_enemy_1)
 	var _enemy2 = instance_number(obj_enemy_2)
+	var _enemy3 = instance_number(obj_enemy_3)
+	var _enemy4 = instance_number(obj_enemy_4)
 	for (var _i = 0; _i < _enemy1; _i++) {
 		array_push(_instances, instance_find(obj_enemy_1, _i))
 	}
 	for (var _i = 0; _i < _enemy2; _i++) {
 		array_push(_instances, instance_find(obj_enemy_2, _i))
+	}
+	for (var _i = 0; _i < _enemy3; _i++) {
+		array_push(_instances, instance_find(obj_enemy_3, _i))
+	}
+	for (var _i = 0; _i < _enemy4; _i++) {
+		array_push(_instances, instance_find(obj_enemy_4, _i))
 	}
 	
 	return _instances
@@ -157,7 +165,8 @@ function get_play_time() {
 }
 
 function math_determine_max_from_wave(_wave) {
-	return BASE_ANSWER_VALUE + (5 * floor(_wave / 2))
+	// 20 is basically the min if it will ever be
+	return 20 + (5 * floor(_wave / 2))
 }
 
 function round_ext(_val, _round_to) {

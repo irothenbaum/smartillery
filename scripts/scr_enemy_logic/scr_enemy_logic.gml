@@ -3,21 +3,15 @@
 	
 	// all enemies must implement these private variables:
 	spawn_time = get_play_time()
-	firing_position = undefined
-	shooting = false
 	equation = "";
-	speed = 0;
-	approach_speed = 1
 	point_value = 10
-
 
 	// they must also implement these functions:
 	function explode_and_destroy() {} // remove instance and create particle system explosion
 	function register_hit(_insta_kill=false) {} // report hit by player
-	function fire_shot() {} // shoot at player
 	
 	// must call this
-	enemy_initialize(self)
+	enemy_generate_question(self)
 */
 
 
@@ -43,7 +37,7 @@ function enemy_generate_question(_e) {
 			try {
 				_attempts--;
 				// every 5 levels
-				var _values = generate_equation_and_answer(_max, min(MAX_MATH_DIFFICULTY, floor(_wave / WAVE_DIFFICULTY_STEP)))
+				var _values = generate_equation_and_answer(_max, min(global.max_math_difficulty, floor(_wave / global.wave_difficulty_step)))
 				get_enemy_controller().reserve_answer(_values.answer, self)
 				equation = _values.equation
 				answer = _values.answer
@@ -63,13 +57,5 @@ function enemy_generate_question(_e) {
 			debug("Could not create equation");
 			return
 		}
-	}
-}
-
-
-function enemy_initialize(_e) {
-	with (_e) {
-		enemy_generate_question(self)
-		speed = approach_speed
 	}
 }

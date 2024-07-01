@@ -7,5 +7,5 @@ if (spawned_count < enemy_count) {
 		}
 	}
 } else if (count_all_enemies() == 0 and !alarm[1]) {
-	alarm[1] = MESSAGE_SHOW_DURATION * game_get_speed(gamespeed_fps)
+	alarm[1] = 4 * game_get_speed(gamespeed_fps)
 }

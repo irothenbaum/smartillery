@@ -1,9 +1,9 @@
 shader_set(sh_hue_shift);
 
-shader_set_uniform_f_array(_u_color, global.body_color);
+shader_set_uniform_f_array(_u_color, color_to_array(global.body_color));
 draw_sprite_ext(spr_player_body, 0, x, y, image_scale, image_scale, 90, c_white, 1)
 
-shader_set_uniform_f_array(_u_color, global.turret_color);
+shader_set_uniform_f_array(_u_color, color_to_array(global.turret_color));
 draw_sprite_ext(spr_player_turret, 0, x, y, image_scale, image_scale, 90, c_white, 1)
 
 shader_reset();

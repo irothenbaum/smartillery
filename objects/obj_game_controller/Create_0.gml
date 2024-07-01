@@ -18,7 +18,7 @@ is_scene_transitioning = false;
 
 
 function has_point_streak() {
-	return streak >= POINT_STREAK_REQUIREMENT
+	return streak >= global.point_streak_requirement
 }
 
 
@@ -100,9 +100,9 @@ function draw_point_indicators(_x, _y, _base, _streak) {
 /// @param {String} _code
 /// @returns {Bool}
 function handle_submit_code(_code) {
-	if (inst_ultimate) { 
+	if (is_ulting()) { 
 		return inst_ultimate.handle_submit_code(_code)
-	} else if (_code == LAUNCH_CODE) {
+	} else if (_code == global.launch_code) {
 		activate_ultimate()
 		return true
 	} else {

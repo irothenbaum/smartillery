@@ -1,4 +1,4 @@
-colors = [c_white, c_aqua, c_lime, c_orange, c_purple, c_red]
+colors = [c_ltgrey, c_aqua, c_lime, c_orange, c_purple, c_red]
 color_count = array_length(colors)
 selected_color = 0
 box_size = 40

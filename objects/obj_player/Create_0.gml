@@ -1,6 +1,10 @@
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 recoil_amount = 0
 max_recoil_amount = 20
+hide_self = false;
+
+body_color_arr = color_to_array(global.body_color)
+turret_color_arr = color_to_array(global.turret_color)
 
 rotate_aim_speed = 720 // in degrees per second
 rotate_idle_speed = 90 // in degrees per second
@@ -44,7 +48,7 @@ function execute_hit_target() {
 	aiming_at_instance = undefined
 	
 	// after a few seconds, reset to vertical postion
-	alarm[0] = game_get_speed(gamespeed_fps) * (MESSAGE_SHOW_DURATION * 0.7)
+	alarm[0] = game_get_speed(gamespeed_fps) * 3
 }
 
 function execute_take_damage(_damage_amount) {

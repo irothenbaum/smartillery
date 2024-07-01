@@ -1,9 +1,8 @@
 spawn_time = get_play_time()
 shooting = false
-fire_distance = 100
+fire_distance = 150
 firing_position = undefined
 equation = "";
-speed = 0;
 image_scale = 0.25
 image_xscale = image_scale
 image_yscale = image_scale
@@ -12,6 +11,8 @@ point_value = 20
 my_health = 1
 recoil_amount = 0
 max_recoil_amount = 10
+shift_position = undefined
+speed = approach_speed;
 
 
 // here we establish where we'll be heading and firing from
@@ -44,6 +45,12 @@ function register_hit(_insta_kill = false) {
 		// restart approach in 3 seconds
 		alarm[1] = 3 * game_get_speed(gamespeed_fps)
 		alarm[0] = -1;
+		var _player = get_player()
+		var _dir_to_player = point_direction(_player.x, _player.y, x,y)
+		shift_position = {
+			x: x + lengthdir_x(20, _dir_to_player),
+			y: y + lengthdir_y(20, _dir_to_player)
+		}
 		return
 	}
 	// my_health <= 0 || insta_kill
@@ -57,4 +64,4 @@ function fire_shot() {
 	alarm[0] = 2 * game_get_speed(gamespeed_fps)
 }
 
-enemy_initialize(self)
+enemy_generate_question(self)

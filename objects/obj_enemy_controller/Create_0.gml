@@ -17,14 +17,13 @@ function init_wave() {
 	spawned_count = 0;
 	
 	// draw the wave text
-	instance_create_layer(x, y, LAYER_HUD, obj_text_title, {
+	instance_create_layer(x, room_height * 0.25, LAYER_HUD, obj_text_title, {
 		message: "Beginning Wave #" + string(_current_wave),
 		align: ALIGN_CENTER,
-		y: room_height * 0.25,
 		duration: global.scene_transition_duration,
 		on_render: function(_bounds) {
 			var _current_wave = get_current_wave_number()
-			var _wave_over_step = floor(_current_wave / WAVE_DIFFICULTY_STEP)
+			var _wave_over_step = floor(_current_wave / global.wave_difficulty_step)
 			var _copy = []
 			array_copy(_copy, 0, global.operations_order, 0, array_length(global.operations_order))
 			array_resize(_copy, _wave_over_step + 1)
@@ -34,7 +33,7 @@ function init_wave() {
 			}, ""), ALIGN_LEFT)
 			draw_text_with_alignment(_bounds.x1, _bounds.y1 + 10, "Max: " + string(math_determine_max_from_wave(get_current_wave_number())), ALIGN_RIGHT)
 			
-			if (_current_wave % WAVE_DIFFICULTY_STEP == 0) {
+			if (_current_wave % global.wave_difficulty_step == 0) {
 				var _new_operation_index = _wave_over_step
 				var _new_operation = global.operations_order[_new_operation_index]
 				draw_set_font(fnt_large)
@@ -44,7 +43,7 @@ function init_wave() {
 	})
 	
 	// hide the wave text after some duration
-	alarm_set(0, MESSAGE_SHOW_DURATION * game_get_speed(gamespeed_fps));
+	alarm_set(0, 4 * game_get_speed(gamespeed_fps));
 }
 
 /// @func spawn_enemy()
@@ -75,10 +74,18 @@ function spawn_enemy() {
 	_pos_y = _quad == 1 ? -_oob_margin : (_quad == 3 ? room_height + _oob_margin : _pos_y);
 	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? room_width + _oob_margin : _pos_x);
 	
-	// TODO: once we do bosses, this current wave > 3 will match the boss level (s)
-	// enemy 2 types only start appearing after wave 3 and only ~once every 6 enemies
-	var _spawn_enemy_2 = (get_current_wave_number() > 3 && irandom(5) == 0)
-	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, _spawn_enemy_2 ? obj_enemy_2 : obj_enemy_1);
+	
+	var _max_enemy = 1 + floor(get_current_wave_number() / global.wave_difficulty_step)
+	
+	var _next_enemy_type
+	if (_max_enemy >= 3 && irandom(10) == 1) {
+		_next_enemy_type = obj_enemy_3
+	} else if (_max_enemy >= 2 && irandom(6) == 1) {
+		_next_enemy_type = obj_enemy_2
+	} else {
+		_next_enemy_type = obj_enemy_1
+	}
+	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, _next_enemy_type);
 	
 	spawned_count++;
 	

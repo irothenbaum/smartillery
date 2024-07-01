@@ -113,6 +113,10 @@ function draw_particle_enemy_2_destroy(x, y) {
 	return [draw_particle_shockwave(x, y), draw_particle_sparks(x, y, 18), draw_particle_debirs(x, y, 5)]
 }
 
+function draw_particle_enemy_3_destroy(x, y) {
+	return [draw_particle_shockwave(x, y), draw_particle_sparks(x, y, 18), draw_particle_debirs(x, y, 5)]
+}
+
 function draw_particle_ultimate_strike(x, y,) {
 	return [draw_particle_shockwave(x, y, 1.5), draw_particle_sparks(x, y, 18)]
 }

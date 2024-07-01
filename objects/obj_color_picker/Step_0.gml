@@ -21,6 +21,6 @@ if mouse_check_button_pressed(mb_left) {
 if (_next_selected != selected_color) {
 	selected_color = _next_selected
 	if (typeof(on_select) == "method") {
-		on_select(color_to_array(colors[selected_color]))
+		on_select(colors[selected_color])
 	}
 }
