@@ -1,3 +1,4 @@
+_u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 spawn_time = get_play_time()
 shooting = false
 fire_distance = 150

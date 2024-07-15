@@ -22,11 +22,12 @@ function init_wave() {
 		align: ALIGN_CENTER,
 		duration: global.scene_transition_duration,
 		on_render: function(_bounds) {
+			var _number_of_operations = array_length(global.operations_order)
 			var _current_wave = get_current_wave_number()
 			var _wave_over_step = floor(_current_wave / global.wave_difficulty_step)
 			var _copy = []
-			array_copy(_copy, 0, global.operations_order, 0, array_length(global.operations_order))
-			array_resize(_copy, _wave_over_step + 1)
+			array_copy(_copy, 0, global.operations_order, 0, _number_of_operations)
+			array_resize(_copy, min(_wave_over_step+1, _number_of_operations))
 			draw_set_font(fnt_base)
 			draw_text_with_alignment(_bounds.x0, _bounds.y1 + 10, "Operations: " + array_reduce(_copy, function(_aggr, _o) {
 				return _aggr + " " + _o 
@@ -34,7 +35,7 @@ function init_wave() {
 			draw_text_with_alignment(_bounds.x1, _bounds.y1 + 10, "Max: " + string(math_determine_max_from_wave(get_current_wave_number())), ALIGN_RIGHT)
 			
 			if (_current_wave % global.wave_difficulty_step == 0) {
-				var _new_operation_index = _wave_over_step
+				var _new_operation_index = min(_number_of_operations-1, _wave_over_step)
 				var _new_operation = global.operations_order[_new_operation_index]
 				draw_set_font(fnt_large)
 				draw_text_with_alignment(room_width / 2, _bounds.y1 + 40, "New operation: " + _new_operation, ALIGN_CENTER)
@@ -42,8 +43,8 @@ function init_wave() {
 		}
 	})
 	
-	// hide the wave text after some duration
-	alarm_set(0, 4 * game_get_speed(gamespeed_fps));
+	// hide the wave text after 3/4 of the scene tansition
+	alarm_set(0, global.scene_transition_duration * 0.75 * game_get_speed(gamespeed_fps));
 }
 
 /// @func spawn_enemy()
@@ -78,13 +79,16 @@ function spawn_enemy() {
 	var _max_enemy = 1 + floor(get_current_wave_number() / global.wave_difficulty_step)
 	
 	var _next_enemy_type
-	if (_max_enemy >= 3 && irandom(10) == 1) {
+	if (_max_enemy >= 4 && irandom(10) == 1) {
+		_next_enemy_type = obj_enemy_4
+	} else if (_max_enemy >= 3 && irandom(8) == 1) {
 		_next_enemy_type = obj_enemy_3
 	} else if (_max_enemy >= 2 && irandom(6) == 1) {
 		_next_enemy_type = obj_enemy_2
 	} else {
 		_next_enemy_type = obj_enemy_1
 	}
+	
 	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, _next_enemy_type);
 	
 	spawned_count++;

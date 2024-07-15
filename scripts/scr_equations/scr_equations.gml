@@ -2,14 +2,15 @@ function get_allowed_operations_for_answer(_answer, _max) {
 	return [
 		true, // can always do addition
 		_answer < _max, // subtraction only allowed if answer is less than max
-		_answer > 0, // we don't want our equation to multiply to 0
-		_answer <= _max * 0.25, // only allow division if the answer is less than one fourth of _max,
+		_answer > 1, // we want multiplication equations to be >= 2
+		_answer > 0 && _answer <= _max * 0.25, // only allow division if the answer is less than one fourth of _max,
 		_answer >= 4, // the lowest power we'll consider is 2^2
 		_answer >= 4, // the lowest power we'll consider is 2^2
 	]
 }
 
 function generate_equation(_answer, _max, _difficulty = 0) {
+	_difficulty = min(_difficulty, array_length(global.operations_order) - 1)
 	var _dice = undefined
 	var _allowed_operations = get_allowed_operations_for_answer(_answer, _max)
 	
@@ -65,7 +66,7 @@ function generate_equation(_answer, _max, _difficulty = 0) {
 		} else {
 			var _answer_diff = _answer - _expo_answer
 			// on difficulty 5 we include the difference
-			_equation_override = _equation_override + (_answer_diff < 0 ? " - " : " + ") + abs(_answer_diff)
+			_equation_override = _equation_override + (_answer_diff < 0 ? " - " : " + ") + string(abs(_answer_diff))
 		}
 	}
 	

@@ -1,4 +1,4 @@
-_u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
+  _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 recoil_amount = 0
 max_recoil_amount = 20
 hide_self = false;

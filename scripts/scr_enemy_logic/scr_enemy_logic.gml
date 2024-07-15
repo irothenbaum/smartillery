@@ -36,7 +36,6 @@ function enemy_generate_question(_e) {
 		do {
 			try {
 				_attempts--;
-				// every 5 levels
 				var _values = generate_equation_and_answer(_max, min(global.max_math_difficulty, floor(_wave / global.wave_difficulty_step)))
 				get_enemy_controller().reserve_answer(_values.answer, self)
 				equation = _values.equation
