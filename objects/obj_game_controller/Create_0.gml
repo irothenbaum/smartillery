@@ -16,11 +16,10 @@ inst_launch_time = undefined;
 is_game_over = false;
 is_scene_transitioning = false;
 
-
+/// @returns {Bool}
 function has_point_streak() {
 	return streak >= global.point_streak_requirement
 }
-
 
 /// @returns {Bool}
 function has_ultimate() {
@@ -72,8 +71,10 @@ function handle_enemy_killed(_enemy) {
 	if (is_game_over) {
 		return 
 	}
+	
 	streak++
 	ultimate_charge++
+	
 	// streak is + 30% of base
 	var _streak_score = has_point_streak() ? floor(_enemy.point_value * 0.3) : 0;
 	
@@ -113,7 +114,7 @@ function handle_submit_code(_code) {
 }
 
 function activate_ultimate() {
-	if (!has_ultimate()) {
+	if (!has_ultimate() || is_scene_transitioning) {
 		return
 	}
 	inst_ultimate = instance_create_layer(x, y, LAYER_HUD, obj_ultimate_interface)

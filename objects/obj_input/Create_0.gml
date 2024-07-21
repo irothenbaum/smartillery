@@ -1,4 +1,5 @@
 message = "";
 x = room_width / 2
-y = room_height / 2 + 60
-min_box_width = 40
+y = 100
+min_box_width = 80
+streak_ratio = 0

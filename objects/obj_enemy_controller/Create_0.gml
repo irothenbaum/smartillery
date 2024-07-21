@@ -10,41 +10,13 @@ active_answers = {};
 function init_wave() {
 	can_spawn = false;
 	var _current_wave = get_current_wave_number()
-	debug("INITTING", _current_wave)
 	// we want each wave to progress the same way regardless of play so we reset the random seed deterministically
 	random_set_seed(get_game_controller().game_seed + _current_wave);
 	enemy_count = _current_wave * 2;
 	spawned_count = 0;
 	
-	// draw the wave text
-	instance_create_layer(x, room_height * 0.25, LAYER_HUD, obj_text_title, {
-		message: "Beginning Wave #" + string(_current_wave),
-		align: ALIGN_CENTER,
-		duration: global.scene_transition_duration,
-		on_render: function(_bounds) {
-			var _number_of_operations = array_length(global.operations_order)
-			var _current_wave = get_current_wave_number()
-			var _wave_over_step = floor(_current_wave / global.wave_difficulty_step)
-			var _copy = []
-			array_copy(_copy, 0, global.operations_order, 0, _number_of_operations)
-			array_resize(_copy, min(_wave_over_step+1, _number_of_operations))
-			draw_set_font(fnt_base)
-			draw_text_with_alignment(_bounds.x0, _bounds.y1 + 10, "Operations: " + array_reduce(_copy, function(_aggr, _o) {
-				return _aggr + " " + _o 
-			}, ""), ALIGN_LEFT)
-			draw_text_with_alignment(_bounds.x1, _bounds.y1 + 10, "Max: " + string(math_determine_max_from_wave(get_current_wave_number())), ALIGN_RIGHT)
-			
-			if (_current_wave % global.wave_difficulty_step == 0) {
-				var _new_operation_index = min(_number_of_operations-1, _wave_over_step)
-				var _new_operation = global.operations_order[_new_operation_index]
-				draw_set_font(fnt_large)
-				draw_text_with_alignment(room_width / 2, _bounds.y1 + 40, "New operation: " + _new_operation, ALIGN_CENTER)
-			}
-		}
-	})
-	
-	// hide the wave text after 3/4 of the scene tansition
-	alarm_set(0, global.scene_transition_duration * 0.75 * game_get_speed(gamespeed_fps));
+	instance_create_layer(x, y, LAYER_HUD, obj_next_wave_text)
+	alarm[0] = global.scene_transition_duration * 0.75 * game_get_speed(gamespeed_fps);
 }
 
 /// @func spawn_enemy()

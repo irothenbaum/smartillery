@@ -43,7 +43,7 @@ function draw_particle_debirs(x,y, _number = 3) {
 	part_type_colour3(_ptype1, $FFFFFF, $FFFFFF, $000000);
 	part_type_alpha3(_ptype1, 1, 1, 1);
 	part_type_blend(_ptype1, true);
-	part_type_life(_ptype1, 240, 240);
+	part_type_life(_ptype1, 8 * game_get_speed(gamespeed_fps), 8 * game_get_speed(gamespeed_fps));
 
 	var _pemit1 = part_emitter_create(_ps);
 	part_emitter_region(_ps, _pemit1, -32, 32, -32, 32, ps_shape_rectangle, ps_distr_invgaussian);

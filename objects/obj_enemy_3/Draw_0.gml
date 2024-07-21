@@ -3,17 +3,16 @@ if (!is_undefined(shift_position)) {
 	y = (y + shift_position.y) / 2
 }
 
-var _draw_color = c_white
-var _shade_color = normal_color
+var _draw_color = normal_color
+var _draw_color_arr = normal_color_arr
 var _shadows_to_draw = floor(speed)
-if (speed == 0) {
-	// TODO: spinning stars or whatever, this is stunned
-	_draw_color = c_red
-	_shade_color = stunned_color
+if (speed == 0 && floor(current_time % 400) < 200) {
+	_draw_color = stunned_color
+	_draw_color_arr = stunned_color_arr
 }
 
 shader_set(sh_hue_shift);
-shader_set_uniform_f_array(_u_color, _shade_color);
+shader_set_uniform_f_array(_u_color, _draw_color_arr);
 for (var _i = _shadows_to_draw; _i > 0; _i--) {
 	var _distance = 8 * (_i - _shadows_to_draw)
 	// we do - instead of + because we want it behind us

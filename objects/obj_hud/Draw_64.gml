@@ -24,7 +24,7 @@ draw_progress_bar(
 	_health_ratio, 
 	_health_ratio < 0.3 ? c_red : (_health_ratio < 0.6 ? c_yellow : c_lime)
 )
-var _ultimate_ratio = round_ext(draw_ultimate / (global.ultimate_requirement * _ult_scale), 0.1)
+var _ultimate_ratio = draw_ultimate / (global.ultimate_requirement * _ult_scale)
 draw_progress_bar(
 	pos_ultimate.x - pos_ultimate.width / 2, 
 	pos_ultimate.y, 
@@ -34,7 +34,5 @@ draw_progress_bar(
 	get_game_controller().has_ultimate() ? c_aqua: c_white
 )
 
-if (_game_controller.has_point_streak()) {
-	draw_set_colour(c_aqua);
-}
+draw_set_colour(c_white);
 draw_text_obj(pos_score, "Score: " + string(get_game_controller().game_score));

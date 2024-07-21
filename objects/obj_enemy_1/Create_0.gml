@@ -21,11 +21,11 @@ speed = approach_speed
 function explode_and_destroy() {
 	instance_destroy();
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_1_destroy});
-	get_game_controller().handle_enemy_killed(self)
 }
 
 function register_hit() {
 	get_enemy_controller().release_answer(answer);
+	get_game_controller().handle_enemy_killed(self);
 	explode_and_destroy()
 }
 

@@ -13,7 +13,6 @@ direction = point_direction(x, y, _player.x, _player.y)
 function explode_and_destroy() {
 	instance_destroy();
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_3_destroy});
-	get_game_controller().handle_enemy_killed(self)
 }
 
 function register_hit(_insta_kill=false) {
@@ -29,6 +28,7 @@ function register_hit(_insta_kill=false) {
 	}
 	
 	get_enemy_controller().release_answer(answer);
+	get_game_controller().handle_enemy_killed(self)
 	explode_and_destroy()
 }
 

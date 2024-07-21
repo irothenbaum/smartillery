@@ -22,6 +22,8 @@ image_scale = 0.4
 image_xscale = image_scale;
 image_yscale = image_scale;
 
+screen_shake = instance_create_layer(x,y, LAYER_INSTANCES, obj_screen_shake)
+
 function fire_at_instance(_inst) {
 	if (!_inst) {
 		// do nothing
@@ -61,6 +63,14 @@ function execute_take_damage(_damage_amount) {
 		get_game_controller().handle_game_over()
 	}
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_shockwave})
+	
+   with (screen_shake)
+   {
+      shake = true;
+      shake_time = 0.2 * game_get_speed(gamespeed_fps);
+      shake_magnitude = 4;
+      shake_fade = 0.5;
+   }
 }
 
 function get_turret_muzzle() {

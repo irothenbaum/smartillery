@@ -2,6 +2,7 @@ message = ""
 color = c_white
 font = fnt_base
 vspeed = -3
+decrease_opacity = false
 
 function set_amount(_amt, _color, _font) {
 	color = is_undefined(_color) ? color : _color 
