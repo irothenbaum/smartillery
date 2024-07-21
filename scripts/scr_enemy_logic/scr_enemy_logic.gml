@@ -31,12 +31,11 @@ function enemy_generate_question(_e) {
 	_wave = get_current_wave_number()
 	
 	with (_e) {
-		var _max = math_determine_max_from_wave(_wave)
 		var _attempts = 10;
 		do {
 			try {
 				_attempts--;
-				var _values = generate_equation_and_answer(_max, min(global.max_math_difficulty, floor(_wave / global.wave_difficulty_step)))
+				var _values = global.is_math_mode ? generate_equation_and_answer(_wave) : generate_text_and_answer(_wave)
 				get_enemy_controller().reserve_answer(_values.answer, self)
 				equation = _values.equation
 				answer = _values.answer

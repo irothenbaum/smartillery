@@ -17,6 +17,8 @@ global.launch_code = "000"
 global.point_streak_requirement = 5
 global.operations_order = ["+", "-", "x", "/", "^", "^"]
 global.max_math_difficulty = array_length(global.operations_order)
-
+global.is_math_mode = true
+global.min_word_length = 4
+global.max_word_length = 11
 global.total_paused_time = 0
 global.paused = false

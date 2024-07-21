@@ -1,4 +1,4 @@
-// explode on game over alarm
+/// @description explode on game over alarm
 var _player = get_player()
 var _scatter_size = 40
 

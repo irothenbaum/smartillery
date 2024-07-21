@@ -23,9 +23,6 @@ function init_wave() {
 /// @return {Id.Instance}
 function spawn_enemy() {
 	can_spawn = false
-	// todo: maybe a log or something?
-	// at wave 20 they'll spawn just half a second apart
-	alarm[0] = game_get_speed(gamespeed_fps) * (10 / get_current_wave_number())
 	
 	// out of bounds margin
 	var _oob_margin = 100
@@ -50,18 +47,25 @@ function spawn_enemy() {
 	
 	var _max_enemy = 1 + floor(get_current_wave_number() / global.wave_difficulty_step)
 	
+	var _spawn_value
 	var _next_enemy_type
 	if (_max_enemy >= 4 && irandom(10) == 1) {
 		_next_enemy_type = obj_enemy_4
+		_spawn_value = 3
 	} else if (_max_enemy >= 3 && irandom(8) == 1) {
 		_next_enemy_type = obj_enemy_3
+		_spawn_value = 2
 	} else if (_max_enemy >= 2 && irandom(6) == 1) {
 		_next_enemy_type = obj_enemy_2
+		_spawn_value = 1
 	} else {
 		_next_enemy_type = obj_enemy_1
+		_spawn_value = 1
 	}
 	
 	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, _next_enemy_type);
+	// at round 20 they'll spawn half a second apart
+	alarm[0] = game_get_speed(gamespeed_fps) * _spawn_value * (global.wave_difficulty_step / _max_enemy)
 	
 	spawned_count++;
 	

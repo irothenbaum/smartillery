@@ -1,7 +1,7 @@
 draw_set_halign(fa_left);
 
 // might be fun to make this configurable
-game_seed = 132435345;
+game_seed = game_seed || 132435345;
 random_set_seed(game_seed);
 
 current_wave = 0;
@@ -72,9 +72,6 @@ function handle_enemy_killed(_enemy) {
 		return 
 	}
 	
-	streak++
-	ultimate_charge++
-	
 	// streak is + 30% of base
 	var _streak_score = has_point_streak() ? floor(_enemy.point_value * 0.3) : 0;
 	
@@ -83,6 +80,9 @@ function handle_enemy_killed(_enemy) {
 	unit_score += _enemy.point_value
 	streak_score += _streak_score
 	game_score += _enemy.point_value + _streak_score
+	
+	streak++
+	ultimate_charge++
 }
 
 

@@ -82,7 +82,46 @@ function generate_answer(_max) {
 	return irandom(_max);
 }
 
-function generate_equation_and_answer(_max, _difficulty) {
-	_answer = generate_answer(_max)
+function math_determine_max_from_wave(_wave) {
+	// 20 is basically the min if it will ever be
+	return 20 + (5 * floor(_wave / 2))
+}
+
+function generate_equation_and_answer(_wave) {
+	// 20 is basically the min if it will ever be
+	var _max = math_determine_max_from_wave(_wave)
+	var _difficulty = min(global.max_math_difficulty, floor(_wave / global.wave_difficulty_step))
+	var _answer = generate_answer(_max)
 	return generate_equation(_answer, _max, _difficulty)
+}
+
+function get_max_word_length_from_wave(_wave) {
+	return min(global.max_word_length, global.min_word_length + floor(_wave / global.wave_difficulty_step))
+}
+
+function generate_text_and_answer(_wave) {
+	var _max_word_length = get_max_word_length_from_wave(_wave)
+	var _text = select_word_of_length(irandom_range(global.min_word_length, _max_word_length))
+	return {
+		equation: _text,
+		answer: _text
+	}
+}
+
+function select_word_of_length(_length) {
+	if (_length < global.min_word_length || _length > global.max_word_length) {
+		throw "Invalid word length"
+	}
+	var _dictionaries = [
+		global.dictionary_4,
+		global.dictionary_5,
+		global.dictionary_6,
+		global.dictionary_7,
+		global.dictionary_8,
+		global.dictionary_9,
+		global.dictionary_10,
+		global.dictionary_11,
+	]
+	var _dictionary = _dictionaries[_length - global.min_word_length]
+	return _dictionary[irandom_range(0, array_length(_dictionary) - 1)]
 }

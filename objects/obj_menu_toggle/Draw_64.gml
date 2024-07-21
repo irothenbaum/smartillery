@@ -14,7 +14,12 @@ var _border_bounds = _final_format({
 	x1: _bounds.x1 + 12,
 	y1: _bounds.y1 + 6 
 })
+
 draw_roundrect_ext(_border_bounds.x0, _border_bounds.y0, _border_bounds.x1, _border_bounds.y1, _border_bounds.height / 2, _border_bounds.height / 2, true)
+if (is_selected()) {
+	draw_set_alpha(image_alpha * 0.25)
+	draw_roundrect_ext(_border_bounds.x0, _border_bounds.y0, _border_bounds.x1, _border_bounds.y1, _border_bounds.height / 2, _border_bounds.height / 2, false)	
+}
 
 bounds = _border_bounds
 draw_set_alpha(1)

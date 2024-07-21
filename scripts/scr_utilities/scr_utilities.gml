@@ -164,11 +164,6 @@ function get_play_time() {
 	return current_time - global.total_paused_time
 }
 
-function math_determine_max_from_wave(_wave) {
-	// 20 is basically the min if it will ever be
-	return 20 + (5 * floor(_wave / 2))
-}
-
 function round_ext(_val, _round_to) {
 	return round(_val / _round_to) * _round_to
 }

@@ -43,7 +43,7 @@ function execute_hit_target() {
 	
 	// Muzzle Flash
 	var _muzzle = get_turret_muzzle()
-	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: aiming_at_instance.x, target_y: aiming_at_instance.y, width: 12})
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: aiming_at_instance.x, target_y: aiming_at_instance.y, width: 12, color: get_game_controller().has_point_streak() ? c_orange : c_white})
 	
 	recoil_amount = max_recoil_amount
 	aiming_at_instance.register_hit()

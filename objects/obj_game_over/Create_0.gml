@@ -1,6 +1,7 @@
 x = room_width / 2
 y = room_height / 2
 overlay_amount = undefined
+showing_results = false
 
 alarm[0] = 1
 explosion_count = 10
@@ -11,9 +12,12 @@ function draw_buttons() {
 		duration: 9999,
 		align: ALIGN_CENTER,
 	})
+	
+	alarm[2] = 2 * game_get_speed(gamespeed_fps)
 
 	instance_create_layer(x - 100, y, LAYER_HUD, obj_menu_button, {
 		message: "Menu",
+		fade_in: 1,
 		on_click: function() {
 			room_goto(rm_menu)
 		}
@@ -21,6 +25,7 @@ function draw_buttons() {
 
 	instance_create_layer(x + 100, y, LAYER_HUD, obj_menu_button, {
 		message: "Play Again",
+		fade_in: 1,
 		on_click: function() {
 			room_restart()
 		}

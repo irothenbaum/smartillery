@@ -11,4 +11,4 @@
 // we then want to rotate about this origin to face `direction` and calculate our new x0, x1, y0, y1 given x,y, and width
 
 
-draw_sprite_ext(spr_pixel, 0, x, y, length / sprite_height, width / sprite_width, direction, c_white, image_alpha)
+draw_sprite_ext(spr_pixel, 0, x, y, length / sprite_height, width / sprite_width, direction, color, image_alpha)
