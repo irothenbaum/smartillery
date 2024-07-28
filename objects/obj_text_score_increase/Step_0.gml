@@ -1,4 +1,4 @@
-vspeed = vspeed * 0.9
+vspeed = vspeed * 0.8
 // vspeed is negative so we check > -
 if (vspeed > -0.02) {
 	vspeed = 0

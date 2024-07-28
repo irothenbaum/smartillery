@@ -85,7 +85,8 @@ function for_each_enemy() {
 	var _count = array_length(_instances)
 	
 	for (var _i =0; _i < _count; _i++) {
-		script_execute(argument[0], _instances[_i], _i)
+		// we pass any other argument back to the callback
+		script_execute(argument[0], _instances[_i], _i, argument[1], argument[2], argument[3])
 	}
 }
 

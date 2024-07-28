@@ -15,7 +15,7 @@ function draw_buttons() {
 	
 	alarm[2] = 2 * game_get_speed(gamespeed_fps)
 
-	instance_create_layer(x - 100, y, LAYER_HUD, obj_menu_button, {
+	instance_create_layer(x - 160, y, LAYER_HUD, obj_menu_button, {
 		message: "Menu",
 		fade_in: 1,
 		on_click: function() {

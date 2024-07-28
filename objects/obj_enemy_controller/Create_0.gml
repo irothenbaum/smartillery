@@ -12,7 +12,7 @@ function init_wave() {
 	var _current_wave = get_current_wave_number()
 	// we want each wave to progress the same way regardless of play so we reset the random seed deterministically
 	random_set_seed(get_game_controller().game_seed + _current_wave);
-	enemy_count = _current_wave * 2;
+	enemy_count = ceil(_current_wave * 1.5);
 	spawned_count = 0;
 	
 	instance_create_layer(x, y, LAYER_HUD, obj_next_wave_text)

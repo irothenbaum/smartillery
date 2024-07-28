@@ -8,7 +8,10 @@
 
 
 global.max_health = 100
-global.ultimate_requirement = 30
+global.min_answer = 10
+global.power_color = c_aqua
+global.beam_color = c_white
+global.ultimate_requirement = 15
 global.scene_transition_duration = 6
 global.body_color = c_ltgrey;
 global.turret_color = c_ltgrey;

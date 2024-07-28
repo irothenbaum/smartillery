@@ -1,7 +1,7 @@
 message = ""
 color = c_white
 font = fnt_base
-vspeed = -3
+vspeed = -2
 decrease_opacity = false
 
 function set_amount(_amt, _color, _font) {

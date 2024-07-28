@@ -1,7 +1,7 @@
 var _game_cotroller = get_game_controller()
 
 if (_game_cotroller.has_point_streak()) {
-	draw_set_colour(c_orange);
+	draw_set_colour(global.power_color);
 } else {
 	draw_set_colour(c_white)
 }

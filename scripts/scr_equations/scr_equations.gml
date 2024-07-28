@@ -83,8 +83,8 @@ function generate_answer(_max) {
 }
 
 function math_determine_max_from_wave(_wave) {
-	// 20 is basically the min if it will ever be
-	return 20 + (5 * floor(_wave / 2))
+	// global.min_answer is basically the min if it will ever be
+	return global.min_answer + (5 * floor(_wave / 2))
 }
 
 function generate_equation_and_answer(_wave) {

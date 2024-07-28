@@ -17,5 +17,5 @@ function is_math() {
 }
 
 
-instance_create_layer(x, y - 60, LAYER_INSTANCES, obj_menu_toggle, {message: ("Mode: " + (global.is_math_mode ? "MATH" : "TYPING")), on_click: change_game_mode, is_selected: is_math})
+instance_create_layer(x, y - 80, LAYER_INSTANCES, obj_menu_toggle, {message: ("Mode: " + (global.is_math_mode ? "MATH" : "TYPING")), on_click: change_game_mode, is_selected: is_math})
 instance_create_layer(x, y, LAYER_INSTANCES, obj_menu_button, {message: "Play", on_click: start_game})

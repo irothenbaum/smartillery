@@ -1,10 +1,10 @@
 draw_set_halign(fa_left);
 
 // might be fun to make this configurable
-game_seed = game_seed || 132435345;
+game_seed = game_seed || current_time;
 random_set_seed(game_seed);
 
-current_wave = 0;
+current_wave = 3;
 game_score = 0;
 unit_score = 0; // base score
 streak_score = 0; // streak bonus
@@ -93,7 +93,7 @@ function draw_point_indicators(_x, _y, _base, _streak) {
 	
 	if (_streak) {	
 		var _streak_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase)
-		_streak_inst.set_amount(_streak, c_orange)
+		_streak_inst.set_amount(_streak, global.power_color)
 	}
 }
 

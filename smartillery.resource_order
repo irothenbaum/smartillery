@@ -20,6 +20,7 @@
   "ResourceOrderSettings":[
     {"name":"fnt_base","order":1,"path":"fonts/fnt_base/fnt_base.yy",},
     {"name":"fnt_large","order":2,"path":"fonts/fnt_large/fnt_large.yy",},
+    {"name":"obj_background","order":8,"path":"objects/obj_background/obj_background.yy",},
     {"name":"obj_color_picker","order":2,"path":"objects/obj_color_picker/obj_color_picker.yy",},
     {"name":"obj_enemy_1","order":1,"path":"objects/obj_enemy_1/obj_enemy_1.yy",},
     {"name":"obj_enemy_2","order":7,"path":"objects/obj_enemy_2/obj_enemy_2.yy",},
