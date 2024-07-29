@@ -43,7 +43,8 @@ function execute_hit_target() {
 	
 	// Muzzle Flash
 	var _muzzle = get_turret_muzzle()
-	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: aiming_at_instance.x, target_y: aiming_at_instance.y, width: 12, color: get_game_controller().has_point_streak() ? global.power_color : global.beam_color})
+	var _on_streak = get_game_controller().has_point_streak()
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: aiming_at_instance.x, target_y: aiming_at_instance.y, width: _on_streak ? 16 : 12, color: _on_streak ? global.power_color : global.beam_color})
 	
 	recoil_amount = max_recoil_amount
 	aiming_at_instance.register_hit()
@@ -75,7 +76,7 @@ function execute_take_damage(_damage_amount) {
 
 function get_turret_muzzle() {
 	// this is hardcoded, but somehow a property of the turret sprite size * image_scale
-	var _turret_length = 58
+	var _turret_length = 50
 	return {
 		x: x + lengthdir_x(_turret_length, image_angle),
 		y: y + lengthdir_y(_turret_length, image_angle)

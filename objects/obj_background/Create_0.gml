@@ -7,7 +7,7 @@ background_radius = sqrt(room_width * room_width + room_height * room_height) / 
 circle_magnitude = background_radius - center_circle_radius
 
 starting_saturation = 120
-starting_lumosity = 30
+starting_lumosity = 40
 starting_alpha = 0.1
 fade_speed = 0.1
 grid_color = c_white
@@ -17,6 +17,7 @@ drawn_ring_hue = array_create(number_of_circles, 0)
 drawn_ring_saturation = array_create(number_of_circles, 0)
 drawn_ring_lumosity = array_create(number_of_circles, 0)
 gradient_shadow = 0.5
+drawn_skipped_rings = 0
 
 function get_radius_at_i(_i) {
 	return background_radius - ((_i / number_of_circles) * circle_magnitude)

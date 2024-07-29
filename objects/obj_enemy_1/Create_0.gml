@@ -1,11 +1,8 @@
-spawn_time = get_play_time()
-equation = "";
-answer = "";
+enemy_initlaize(self, 10)
 image_scale = 0.25
 image_xscale = image_scale
 image_yscale = image_scale
 approach_speed = 1.6
-point_value = 10
 rotate_speed = (irandom(1) == 0 ? -1 : 1) * (irandom(20) + 5) / 10
 
 var _player = get_player();
@@ -30,9 +27,6 @@ function register_hit() {
 }
 
 function collide_with_player() {
-	get_player().execute_take_damage(35)
+	get_player().execute_take_damage(30)
 	explode_and_destroy()
 }
-
-
-enemy_generate_question(self)

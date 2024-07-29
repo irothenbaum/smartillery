@@ -14,7 +14,8 @@ image_angle = point_direction(x, y, _player.x, _player.y)
 
 var _distance_to_firing = distance_to_point(firing_position.x, firing_position.y)
 
-if(_distance_to_firing < 10) {	
+// once we start shooting we won't stop
+if(shooting || _distance_to_firing < 10) {	
 	if (!shooting) {
 		speed = 0
 		shooting = true

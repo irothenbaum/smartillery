@@ -1,12 +1,9 @@
+enemy_initlaize(self, 30)
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
-// all enemies must implement these private variables:
-spawn_time = get_play_time()
-equation = "";
 max_speed = 4;
 shift_position = undefined
 starting_speed = 0.1
 speed = starting_speed
-point_value = 30
 image_scale = 0.25
 image_xscale = image_scale
 image_yscale = image_scale
@@ -52,5 +49,3 @@ function collide_with_player() {
 	get_player().execute_take_damage(40)
 	explode_and_destroy()
 }
-
-enemy_generate_question(self)

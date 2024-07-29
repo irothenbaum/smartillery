@@ -1,7 +1,4 @@
-spawn_time = get_play_time()
-equation = "";
-answer = "";
-point_value = 10
+enemy_initlaize(self, 10)
 image_scale = 0.25
 image_xscale = image_scale
 image_yscale = image_scale
@@ -29,4 +26,3 @@ function collide_with_player() {
 	explode_and_destroy()
 }
 
-enemy_generate_question(self)

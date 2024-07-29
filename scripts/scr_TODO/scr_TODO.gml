@@ -2,18 +2,22 @@
 
 
 TODO:
-
- - Show transition thrust (handle moving background)
- - Typing mode
+ - Recolor sprites so that the Body portion isn't pure white
+   - Let's try making it additive drawing (color portion is BLACK, ouline is WHITE) 
+     and then draw a second sprite underneath that replaces all non-white rgb with selected color 
+	 (else, it doesn't draw it at all)
+	 so bottom sprite draws just the custom color at ~40% alpha, then top sprite is ADDITIVTE WHITE OUTLINE
+ - Enemy3 has a bug that is preventing it from being solved (happens randomly?)
  - Ultimate interface update
- - Ultimate strike animation
+ - Ultimate strike particle effect update
+ - Heal ultimate
+   - functionality,
+   - use rotating wave effect
+ - Ultimate availability HUD
  - Main Menu screen
    - Skip to wave option
-   - Switch to typing mode
    - High scores?
-- Aura that appears when you're on streak
 - Transition to the game start (animate zooming out and the player moving to center_
    - Might put Menu into the actual game room (spawns Hud and GameController, etc, when game starts)
-- When an enemy is pausing, make it flash red instead of just be red
 
 */

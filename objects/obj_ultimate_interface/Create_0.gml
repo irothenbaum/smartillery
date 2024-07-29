@@ -66,7 +66,7 @@ function execute_ultimate() {
 	// NOTE: We must unpause first before actually triggering the ult
 	get_game_controller().mark_ultimate_used()
 	
-	var _ultimate = instance_create_layer(x,y, LAYER_INSTANCES, obj_ultimate)
+	var _ultimate = instance_create_layer(x,y, LAYER_INSTANCES, obj_ultimate_strike)
 	_ultimate.execute(default_strike_count + solved_codes)
 	
 	instance_destroy()

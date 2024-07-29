@@ -1,14 +1,12 @@
+enemy_initlaize(self, 20)
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
-spawn_time = get_play_time()
 shooting = false
-fire_distance = 300
+fire_distance = 280
 firing_position = undefined
-equation = "";
 image_scale = 0.25
 image_xscale = image_scale
 image_yscale = image_scale
-approach_speed = 0.75
-point_value = 20
+approach_speed = 1
 my_health = 1
 recoil_amount = 0
 max_recoil_amount = 10
@@ -64,9 +62,21 @@ function register_hit(_insta_kill = false) {
 }
 
 function fire_shot() {
+	var _player = get_player()
 	recoil_amount = max_recoil_amount
-	get_player().execute_take_damage(20)
+	_player.execute_take_damage(20)
 	alarm[0] = 2 * game_get_speed(gamespeed_fps)
+	
+	// Muzzle Flash
+	var _muzzle = get_turret_muzzle()
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: _player.x, target_y: _player.y, width: 4, color: c_red})
 }
 
-enemy_generate_question(self)
+function get_turret_muzzle() {
+	// this is hardcoded, but somehow a property of the turret sprite size * image_scale
+	var _turret_length = 20
+	return {
+		x: x + lengthdir_x(_turret_length, image_angle),
+		y: y + lengthdir_y(_turret_length, image_angle)
+	}
+}

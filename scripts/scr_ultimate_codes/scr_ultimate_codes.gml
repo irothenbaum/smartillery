@@ -7,3 +7,5 @@
 #macro CODE_MATH_PELL ["1", "2", "5", "12", "29"]
 #macro CODE_MATH_COMPOSITES ["4", "6", "8", "9", "10"]
 #macro CODE_MATH_WOODALL ["1", "7", "23", "63", "159"]
+
+#macro CODE_TYPING_THE_PEN = ["the", "pen", "is", "mightier"]

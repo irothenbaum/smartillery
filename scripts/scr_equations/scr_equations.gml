@@ -83,12 +83,10 @@ function generate_answer(_max) {
 }
 
 function math_determine_max_from_wave(_wave) {
-	// global.min_answer is basically the min if it will ever be
-	return global.min_answer + (5 * floor(_wave / 2))
+	return global.min_answer + (5 * floor(_wave / 3))
 }
 
 function generate_equation_and_answer(_wave) {
-	// 20 is basically the min if it will ever be
 	var _max = math_determine_max_from_wave(_wave)
 	var _difficulty = min(global.max_math_difficulty, floor(_wave / global.wave_difficulty_step))
 	var _answer = generate_answer(_max)

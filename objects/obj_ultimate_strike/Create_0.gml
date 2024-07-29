@@ -6,20 +6,15 @@ alarm[1] = 3 * game_get_speed(gamespeed_fps)
 function execute(_num_strikes) {
 	number_of_strikes = _num_strikes
 	
-	// TODO: run flyover animation
-	
-	// wait one second, then start bombing
-	alarm[0] = 1 * game_get_speed(gamespeed_fps)
+	// stat boming immediately
+	alarm[0] = 1
 }
 
 function strike_nearest_enemy() {
 	strikes_launched++
-	debug("Launching strike", strikes_launched)
 
 	var _enemies = get_all_enemy_instances()
 	var _enemy_count = array_length(_enemies)
-	
-	debug("Found enemies", _enemy_count)
 	
 	if (_enemy_count == 0) {
 		debug("No more enemies, ending ultimate early")

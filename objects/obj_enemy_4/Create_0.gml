@@ -1,8 +1,5 @@
-// all enemies must implement these private variables:
-spawn_time = get_play_time()
-equation = "";
+enemy_initlaize(self, 10)
 speed = 1
-point_value = 10
 image_scale = 0.25
 image_xscale = image_scale
 image_yscale = image_scale
@@ -36,5 +33,3 @@ function collide_with_player() {
 	get_player().execute_take_damage(50)
 	explode_and_destroy()
 }
-
-enemy_generate_question(self)

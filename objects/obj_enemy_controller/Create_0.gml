@@ -77,7 +77,7 @@ function spawn_enemy() {
 /// @param {Id.Instance} _inst
 /// @return {undefined}
 function reserve_answer(_ans, _inst) {
-	if (is_answer_active(_ans)) {
+	if (is_answer_active(_ans) || _ans == global.launch_code || _ans == global.heal_code) {
 		throw "Answer in use";
 	}
 	active_answers[$ _ans] = _inst;

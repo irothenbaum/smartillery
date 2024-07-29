@@ -56,7 +56,6 @@
     {"name":"scr_TODO","order":7,"path":"scripts/scr_TODO/scr_TODO.yy",},
     {"name":"scr_ultimate_codes","order":5,"path":"scripts/scr_ultimate_codes/scr_ultimate_codes.yy",},
     {"name":"sh_distort","order":1,"path":"shaders/sh_distort/sh_distort.yy",},
-    {"name":"spr_background","order":6,"path":"sprites/spr_background/spr_background.yy",},
     {"name":"spr_enemy1_body","order":7,"path":"sprites/spr_enemy1_body/spr_enemy1_body.yy",},
     {"name":"spr_enemy2_body","order":8,"path":"sprites/spr_enemy2_body/spr_enemy2_body.yy",},
     {"name":"spr_enemy2_turret","order":9,"path":"sprites/spr_enemy2_turret/spr_enemy2_turret.yy",},
