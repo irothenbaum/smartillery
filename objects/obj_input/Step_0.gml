@@ -5,19 +5,12 @@ if (global.paused && !get_game_controller().is_ulting()) {
 }
 if(keyboard_check_pressed(vk_enter)) {
 	if (string_length(message) > 0) {
-		get_enemy_controller().handle_submit_answer(message)
+		get_game_controller().handle_submit_code(message)
 	}
 	keyboard_string = "";
 } else {
 	keyboard_string = string_copy(keyboard_string, 0, 20);
 	message = keyboard_string
-	/*
-	Disabling auto submit for now
-	if (get_enemy_controller().is_answer_active(message)) {
-		get_enemy_controller().handle_submit_answer(message)	
-		keyboard_string = "";
-	}
-	*/
 }
 
 

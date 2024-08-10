@@ -33,7 +33,7 @@ function enemy_draw_equation(_e) {
 		var _string = global.paused ? "******" : equation
 		// logically should be sprite_height / 2, but we scale the enemy image to .5 so it becomes / 4
 		var _offset_y = (y > room_height / 2 ? -1 : 1)*(20 + string_height(_string))
-		draw_offset_y = typeof(draw_offset_y) == "number" ? lerp(draw_offset_y, _offset_y, 0.1) : _offset_y
+		draw_offset_y = typeof(draw_offset_y) == "number" ? lerp(draw_offset_y, _offset_y, global.fade_speed) : _offset_y
 		draw_text_with_alignment(x, y + draw_offset_y, _string, ALIGN_CENTER);
 	}
 }

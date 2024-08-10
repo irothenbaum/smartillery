@@ -1,3 +1,32 @@
+function draw_particle_sparkle(x, y, _color, _radius) {
+	//par_healing_sparkle
+var _ps = part_system_create();
+part_system_draw_order(_ps, true);
+
+//Emitter
+var _ptype1 = part_type_create();
+part_type_sprite(_ptype1, spr_pixel, false, true, false)
+part_type_size(_ptype1, 0.5, 1.5, 0, 1);
+part_type_scale(_ptype1, 1, 1);
+part_type_speed(_ptype1, 1, 2, 0, 0);
+part_type_direction(_ptype1, 0, 359, 0, 20);
+part_type_gravity(_ptype1, 0, 0);
+part_type_orientation(_ptype1, 0, 0, 0, 0, false);
+part_type_colour3(_ptype1, _color, _color, _color);
+part_type_alpha3(_ptype1, 1, 1, 1);
+part_type_blend(_ptype1, false);
+part_type_life(_ptype1, 70, 90);
+
+var _pemit1 = part_emitter_create(_ps);
+part_emitter_region(_ps, _pemit1, -_radius, _radius, -_radius, _radius, ps_shape_ellipse, ps_distr_gaussian);
+part_emitter_stream(_ps, _pemit1, _ptype1, 1);
+part_emitter_interval(_ps, _pemit1, 1, 3, time_source_units_frames);
+
+part_system_position(_ps, x, y);
+
+	return _ps
+}
+
 function draw_particle_shockwave(x,y, _scale = 1) {
 	//par_shockwave
 	var _ps = part_system_create();

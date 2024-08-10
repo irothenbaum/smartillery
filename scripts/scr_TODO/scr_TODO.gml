@@ -12,7 +12,7 @@ TODO:
  - Ultimate strike particle effect update
  - Heal ultimate
    - functionality,
-   - use rotating wave effect
+   - add more flare (particle effect) to the current wave pattern.
  - Ultimate availability HUD
  - Main Menu screen
    - Skip to wave option

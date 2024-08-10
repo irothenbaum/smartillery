@@ -77,7 +77,7 @@ function spawn_enemy() {
 /// @param {Id.Instance} _inst
 /// @return {undefined}
 function reserve_answer(_ans, _inst) {
-	if (is_answer_active(_ans) || _ans == global.launch_code || _ans == global.heal_code) {
+	if (is_answer_active(_ans)) {
 		throw "Answer in use";
 	}
 	active_answers[$ _ans] = _inst;
@@ -94,12 +94,11 @@ function release_answer(_ans) {
 /// @param {String} _answer
 /// @return {Bool}
 function handle_submit_answer(_answer) {
-	if (get_game_controller().is_ulting() || !is_answer_active(_answer)) {
-		return get_game_controller().handle_submit_code(_answer);
+	if (!is_answer_active(_answer)) {
+		return false
 	}
 	
 	var _instance = active_answers[$ _answer];
-	
 	get_player().fire_at_instance(_instance);
 	return true;
 }

@@ -74,3 +74,47 @@ function draw_overlay(_alpha  = 0.5) {
 	draw_set_alpha(1)
 	draw_set_color(c_white)
 }
+
+function draw_input_box_with_progress(_bounds, _ratio, _align) {
+	_ratio = max(0, min(_ratio, 1))
+	var _rectangle_bounds = _final_format(_bounds)
+
+	draw_roundrect(
+		_rectangle_bounds.x0, 
+		_rectangle_bounds.y0, 
+		_rectangle_bounds.x1, 
+		_rectangle_bounds.y1, 
+		true
+	)
+
+	draw_set_alpha(0.15)
+	if (is_undefined(_align) || _align == ALIGN_LEFT) {
+		draw_roundrect(
+			_rectangle_bounds.x0, 
+			_rectangle_bounds.y0, 
+			_rectangle_bounds.x0 + _rectangle_bounds.width * _ratio,
+			_rectangle_bounds.y1, 
+			false
+		)
+	} else if (_align == ALIGN_RIGHT) {
+		draw_roundrect(
+			_rectangle_bounds.x1 - _rectangle_bounds.width * _ratio, 
+			_rectangle_bounds.y0, 
+			_rectangle_bounds.x1,
+			_rectangle_bounds.y1, 
+			false
+		)
+	} else {
+		// TODO: this is not right, but also not in use so 
+		draw_roundrect(
+			_rectangle_bounds.x0, 
+			_rectangle_bounds.y0, 
+			_rectangle_bounds.x0 + _rectangle_bounds.width * _ratio,
+			_rectangle_bounds.y1, 
+			false
+		)
+	}
+
+	draw_set_alpha(1)
+	draw_set_color(c_white)
+}

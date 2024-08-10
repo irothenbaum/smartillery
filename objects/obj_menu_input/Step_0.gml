@@ -10,11 +10,4 @@ if(keyboard_check_pressed(vk_enter)) {
 	}
 } else {
 	message = string_lower(keyboard_string);
-	/*
-	Disabling auto submit for now
-	if (get_enemy_controller().is_answer_active(message)) {
-		get_enemy_controller().handle_submit_answer(message)	
-		keyboard_string = "";
-	}
-	*/
 }

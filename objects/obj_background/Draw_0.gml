@@ -1,31 +1,23 @@
 var _player_health = get_player().my_health
-var _health_hue = _player_health * 0.85
 var _ring_enemy_counts = array_create(number_of_circles, 0)
 for_each_enemy(filter_by_distance_to_player, _ring_enemy_counts)
-
 var _skipped_rings = number_of_circles - floor(number_of_circles * (_player_health / global.max_health))
-drawn_skipped_rings = lerp(drawn_skipped_rings, _skipped_rings, fade_speed)
-for(var _i = 0; _i < number_of_circles; _i++) {
-	var _this_lumosity = starting_lumosity
-	var _this_saturation = starting_saturation
-	var _this_hue = _health_hue
-	var _line_alpha = starting_alpha
-	var _number_of_enemies_on_ring = _ring_enemy_counts[_i]
-	if (_i < round(drawn_skipped_rings)) {
-		_this_lumosity = starting_lumosity * 0.4
-		_this_saturation = 0
-		_line_alpha = _line_alpha / 2
-		_this_hue = 0
-	} else {
-		_this_lumosity = starting_lumosity + 10 * _number_of_enemies_on_ring - ((number_of_circles - _i) * gradient_shadow)
-		_this_saturation = starting_saturation + 15 * _number_of_enemies_on_ring
-		_line_alpha = starting_alpha
-	}
+drawn_skipped_rings = lerp(drawn_skipped_rings, _skipped_rings, global.fade_speed)
+
+var _options = {
+	is_healing: get_game_controller().is_healing(),
+	health_hue: _player_health * 0.85,
+}
+
+for(var _i = 0; _i < number_of_circles; _i++) {	
+	_options.enemies_on_ring = _ring_enemy_counts[_i]
 	
-	drawn_ring_hue[_i] = lerp(drawn_ring_hue[_i], _this_hue, fade_speed)
-	drawn_ring_saturation[_i] = lerp(drawn_ring_saturation[_i], _this_saturation, fade_speed)
-	drawn_ring_lumosity[_i] = lerp(drawn_ring_lumosity[_i], _this_lumosity, fade_speed)
-	drawn_ring_line_alpha[_i] = lerp(drawn_ring_line_alpha[_i], _line_alpha, fade_speed)
+	var _fade_speed = get_fade_speed_for_ring(_i,_options)
+	
+	drawn_ring_hue[_i] = lerp(drawn_ring_hue[_i], get_hue_for_ring(_i, _options), _fade_speed)
+	drawn_ring_saturation[_i] = lerp(drawn_ring_saturation[_i], get_saturation_for_ring(_i, _options), _fade_speed)
+	drawn_ring_lumosity[_i] = lerp(drawn_ring_lumosity[_i], get_lumosity_for_ring(_i, _options), _fade_speed)
+	drawn_ring_line_alpha[_i] = lerp(drawn_ring_line_alpha[_i], get_line_alpha_for_ring(_i, _options), _fade_speed)
 	
 	var _color = make_color_hsv(drawn_ring_hue[_i], drawn_ring_saturation[_i], drawn_ring_lumosity[_i]);
 	draw_set_circle_precision((number_of_circles - _i) * 2 + 32)
