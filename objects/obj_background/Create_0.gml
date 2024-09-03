@@ -3,8 +3,7 @@ y = room_height / 2
 
 draw_idle_color = true
 idle_hue = color_get_hue(global.bg_color)
-heal_hue_tint = color_get_hue(global.heal_color_tint)
-heal_hue = color_get_hue(global.heal_color)
+black_hue = color_get_hue(#000000)
 
 number_of_circles = 20
 center_circle_radius = 40
@@ -43,22 +42,41 @@ function filter_by_distance_to_player(_instance, _index, _ring_enemy_counts) {
 	}
 }
 
-heal_hues = [heal_hue, heal_hue_tint]
+var _c1 = global.ultimate_colors[$ ULTIMATE_HEAL]
+var _c2 = global.ultimate_color_tints[$ ULTIMATE_HEAL]
+var _c12 = color_get_hue(_c1)
+var _c22 = color_get_hue(_c2)
+heal_hues = [_c12, _c22]
 heal_hues_count = array_length(heal_hues)
-function get_heal_hue_from_time(_shift) {
-	// every 1 second we select the next heal_hue by index as determined by current_time
-	return heal_hues[round((current_time + _shift) / 1000) % heal_hues_count]
-}
-
 
 
 function get_hue_for_ring(_i, _options) {
-	var _this_hue = _options.is_healing ? get_heal_hue_from_time(_i * 100) : (draw_idle_color ? idle_hue : _options.health_hue)	
-
+	var _this_hue = undefined;
 	if(_i < round(drawn_skipped_rings)) {  
 		_this_hue = 0
+	} else if (_options.is_ulting) {
+		switch (global.selected_ultimate) {
+			case ULTIMATE_HEAL:
+				var _shift = _i * 100
+				// every 300ms we select the next heal_hue by index as determined by current_time
+				_this_hue = heal_hues[round((current_time + _shift) / 300) % heal_hues_count]
+				break
+				
+			case ULTIMATE_STRIKE:
+				_this_hue = _options.enemies_on_ring == 0 ? black_hue : global.ultimate_colors[$ ULTIMATE_STRIKE]
+				break
+				
+			case ULTIMATE_SLOW:
+				_this_hue = _options.enemies_on_ring == 0 ? global.ultimate_color_tints[$ ULTIMATE_SLOW] : global.ultimate_colors[$ ULTIMATE_SLOW]
+				break
+							
+			case ULTIMATE_NONE:
+				_this_hue = idle_hue
+		}
+	} else if (draw_idle_color) {
+		_this_hue = idle_hue
 	} else {
-		// do nothing
+		_this_hue = _options.health_hue
 	}
 	
 	return _this_hue
@@ -70,7 +88,28 @@ function get_saturation_for_ring(_i, _options) {
 	if(_i < round(drawn_skipped_rings)) {  
 		_this_saturation = 0
 	} else {
-		_this_saturation = _options.is_healing ? starting_saturation + 60 : starting_saturation
+		if (_options.is_ulting) {
+			switch (global.selected_ultimate) {
+				case ULTIMATE_HEAL:
+					_this_saturation = starting_saturation + 60
+					break
+					
+				case ULTIMATE_STRIKE:
+					_this_saturation = _options.enemies_on_ring == 0 ? 0 : 255
+					break
+				
+				case ULTIMATE_SLOW:
+					_this_saturation = 128
+					break
+				
+				case ULTIMATE_NONE:
+					_this_saturation = starting_saturation
+			}
+			_this_saturation = starting_saturation + 60
+		} else if (_options.player_health < global.max_health) {
+			_this_saturation += 60 * (global.max_health - _options.player_health) / global.max_health
+		}
+		
 		_this_saturation += 15 * _options.enemies_on_ring
 	}
 	
@@ -83,8 +122,30 @@ function get_lumosity_for_ring(_i, _options) {
 	if(_i < round(drawn_skipped_rings)) { 
 		_this_lumosity = starting_lumosity * 0.4
 	} else {
-		_this_lumosity = _options.is_healing ? starting_lumosity + 40 : starting_lumosity 
-		_this_lumosity += 10 * _options.enemies_on_ring // - ((number_of_circles - _i) * gradient_shadow)
+		if (_options.is_ulting) {
+			switch (global.selected_ultimate) {
+				case ULTIMATE_HEAL:
+					var _shift = _i * 100
+					_this_lumosity = round((current_time + _shift) / 300) % heal_hues_count == 1 ? starting_lumosity + 40 : starting_lumosity
+					break
+					
+				case ULTIMATE_STRIKE:
+					_this_lumosity = _options.enemies_on_ring == 0 ? 0 : 128
+					break
+					
+				case ULTIMATE_SLOW:
+					_this_lumosity = _options.enemies_on_ring == 0 ? 60 : 100
+					break
+					
+				case ULTIMATE_NONE:
+					_this_lumosity = starting_lumosity
+					break
+			}
+		} else if (_options.player_health < global.max_health) {
+			_this_lumosity += 30 * (global.max_health - _options.player_health) / global.max_health
+		}
+
+		_this_lumosity += 10 * _options.enemies_on_ring
 	}
 	
 	return _this_lumosity
@@ -106,9 +167,13 @@ function get_fade_speed_for_ring(_i, _options) {
 	var _fade_speed_multiplier = 1
 	
 	if (_i < round(drawn_skipped_rings)) {
-		// do nothing
+		// do nothing fade multiplier should stay at 1
 	} else {
-		_fade_speed_multiplier = _options.is_healing ? 2 : (draw_idle_color ? 5 : 1)
+		if (_options.is_ulting && global.selected_ultimate == ULTIMATE_HEAL && _i >= drawn_skipped_rings) {
+			_fade_speed_multiplier = 1 + 6 * (1 - (_i / number_of_circles))
+		} else {
+			// keep it at 1
+		}
 	}
 	
 	return global.fade_speed / _fade_speed_multiplier

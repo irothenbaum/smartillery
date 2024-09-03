@@ -12,16 +12,10 @@ streak_score = 0; // streak bonus
 streak = 0;
 longest_streak = 0;
 
-ultimate_charge = global.ultimate_requirement;
+ultimate_charge = 0;
+ultimate_experience = 0
+ultimate_level = 1
 inst_ultimate = undefined;
-ultimate_hint = ""
-ultimate_code = ""
-
-// half way to heal
-heal_charge = global.heal_requirement // / 2;
-inst_heal = undefined;
-heal_hint = ""
-heal_code = ""
 
 is_game_over = false;
 
@@ -34,12 +28,7 @@ function has_point_streak() {
 
 /// @returns {Bool}
 function has_ultimate() {
-	return !self.is_ulting() && ultimate_charge >= global.ultimate_requirement
-}
-
-/// @returns {Bool}
-function has_heal() {
-	return !self.is_healing() && heal_charge >= global.heal_requirement
+	return !is_ulting() && ultimate_charge >= global.ultimate_requirement
 }
 
 function mark_wave_completed() {
@@ -56,19 +45,6 @@ function mark_wave_completed() {
 	
 	alarm[0] = 1 * game_get_speed(gamespeed_fps)
 	alarm[1] = (global.scene_transition_duration - 2) * game_get_speed(gamespeed_fps)
-	
-	// we shuffle for new Heal and Strike codes
-	var _values = global.is_math_mode ? generate_equation_and_answer(current_wave) : generate_text_and_answer(current_wave)
-	ultimate_code = _values.answer
-	ultimate_hint = _values.equation
-	// reserve the answer so no enemy can use it
-	_controller.reserve_answer(_values.answer, self)
-	
-	_values = global.is_math_mode ? generate_equation_and_answer(current_wave) : generate_text_and_answer(current_wave)
-	heal_code = _values.answer
-	heal_hint = _values.equation
-	// reserve the answer so no enemy can use it
-	_controller.reserve_answer(_values.answer, self)
 	
 	return _controller
 }
@@ -110,12 +86,6 @@ function handle_enemy_killed(_enemy) {
 	unit_score += _enemy.point_value
 	streak_score += _streak_score
 	game_score += _enemy.point_value + _streak_score
-	
-	streak++
-	ultimate_charge++
-	heal_charge++
-	
-	longest_streak = max(longest_streak, streak)
 }
 
 
@@ -140,20 +110,39 @@ function handle_submit_code(_code) {
 
 	if (is_ulting()) { 
 		return inst_ultimate.handle_submit_code(_code)
-	} else if (_code == ultimate_code) {
+	} else if (_code == global.ultimate_code && global.selected_ultimate != ULTIMATE_NONE) {
 		activate_ultimate()
 		return true
-	} else if (_code == heal_code) {
-		activate_heal()
-		return true
 	} else if (get_enemy_controller().handle_submit_answer(_code)) {
-		// do nothing, this was an enemy answer
+		// if this was a correct enemy answer
+		streak++
+	
+		if (has_point_streak()) {
+			// once we get on streak for the first time, we need to select an ultimate type
+			if (global.selected_ultimate == ULTIMATE_NONE) {
+				// TODO: Create the ultimate selection object
+				global.selected_ultimate = ULTIMATE_STRIKE	
+			}
+		
+			if (ultimate_charge < global.ultimate_requirement) {
+				ultimate_charge++
+			} else {
+				ultimate_experience++
+			
+				var _next_level_experience = get_experience_needed_for_next_level()
+				if (ultimate_experience >= _next_level_experience) {
+					ultimate_level++
+					ultimate_experience = 0
+				}
+			}
+		}
+	
+		longest_streak = max(longest_streak, streak)
+		
 		return true
 	} else {
 		// this was simply an inccorect submission, streak goes to 0
 		streak = 0
-		// we also stop healing if they were
-		mark_heal_used()
 		return false
 	}
 }
@@ -162,27 +151,20 @@ function activate_ultimate() {
 	if (!has_ultimate() || is_scene_transitioning) {
 		return
 	}
-	inst_ultimate = instance_create_layer(x, y, LAYER_HUD, obj_ultimate_interface)
+	// TODO: Add Slow power here
+	var _ult_obj = global.selected_ultimate == ULTIMATE_STRIKE ? obj_ultimate_strike : obj_heal_power
+	inst_ultimate = instance_create_layer(x, y, LAYER_HUD, _ult_obj, {level: ultimate_level})
 	ultimate_charge = 0
-	toggle_pause(true)
 }
 
-function activate_heal() {
-	if (!has_heal() || is_scene_transitioning) {
-		return
-	}
-	inst_heal = instance_create_layer(x, y, LAYER_HUD, obj_heal_power)
-	heal_charge = 0
-}
 
 function mark_ultimate_used() {
+	if (!is_undefined(inst_ultimate)) {
+		instance_destroy(inst_ultimate)
+	}
 	inst_ultimate = undefined
-	toggle_pause(false)
 }
 
-function mark_heal_used() {
-	inst_heal = undefined
-}
 
 function is_ulting() {
 	if (is_undefined(inst_ultimate)) {
@@ -195,23 +177,8 @@ function is_ulting() {
 	return false
 }
 
-function is_healing() {
-	if (is_undefined(inst_heal)) {
-		return false
-	}
-	if (instance_exists(inst_heal)) {
-		return true
-	}
-	inst_heal = undefined
-	return false
-}
-
-function get_ultimate_text() {
-	return ultimate_hint
-}
-
-function get_heal_text() {
-	return heal_hint
+function get_experience_needed_for_next_level() {
+	return min(5 * ultimate_level, 50)
 }
 
 // start off marking wave completed so game can start

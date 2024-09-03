@@ -1,14 +1,8 @@
-debug("ULTIMATE!");
-number_of_strikes = 0
+number_of_strikes = 2 + level
 strikes_launched = 0
-alarm[1] = 3 * game_get_speed(gamespeed_fps)
-
-function execute(_num_strikes) {
-	number_of_strikes = _num_strikes
-	
-	// stat boming immediately
-	alarm[0] = 1
-}
+// wait one second, then strike
+alarm[0] = game_get_speed(gamespeed_fps)
+toggle_pause(true)
 
 function strike_nearest_enemy() {
 	strikes_launched++
@@ -42,5 +36,7 @@ function strike_nearest_enemy() {
 	if (strikes_launched < number_of_strikes) {
 		// if we have more to launch, reset the alarm
 		alarm[0] = 0.2 * game_get_speed(gamespeed_fps)
+	} else {
+		alarm[1] =game_get_speed(gamespeed_fps)
 	}
 }

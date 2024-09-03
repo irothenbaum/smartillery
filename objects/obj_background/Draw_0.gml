@@ -5,8 +5,9 @@ var _skipped_rings = number_of_circles - floor(number_of_circles * (_player_heal
 drawn_skipped_rings = lerp(drawn_skipped_rings, _skipped_rings, global.fade_speed)
 
 var _options = {
-	is_healing: get_game_controller().is_healing(),
-	health_hue: _player_health * 0.85,
+	is_ulting: get_game_controller().is_ulting(),
+	player_health: _player_health,
+	health_hue: _player_health - 10,
 }
 
 for(var _i = 0; _i < number_of_circles; _i++) {	

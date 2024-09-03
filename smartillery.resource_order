@@ -44,7 +44,6 @@
     {"name":"obj_rotating_wave","order":6,"path":"objects/obj_rotating_wave/obj_rotating_wave.yy",},
     {"name":"obj_screen_shake","order":19,"path":"objects/obj_screen_shake/obj_screen_shake.yy",},
     {"name":"obj_text_title","order":1,"path":"objects/obj_text_title/obj_text_title.yy",},
-    {"name":"obj_ultimate_interface","order":1,"path":"objects/obj_ultimate_interface/obj_ultimate_interface.yy",},
     {"name":"par_debris","order":2,"path":"particles/par_debris/par_debris.yy",},
     {"name":"par_healing_sparkle","order":3,"path":"particles/par_healing_sparkle/par_healing_sparkle.yy",},
     {"name":"par_sparks","order":1,"path":"particles/par_sparks/par_sparks.yy",},

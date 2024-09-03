@@ -1,3 +1,5 @@
+// TODO: How much to heal and for how long based on level
+
 var _player = get_player();
 x = _player.x
 y = _player.y
