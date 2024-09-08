@@ -3,20 +3,18 @@ y = room_height / 2
 
 draw_idle_color = true
 idle_hue = color_get_hue(global.bg_color)
-black_hue = color_get_hue(#000000)
+idle_saturation = color_get_saturation(global.bg_color)
+idle_lumosity = color_get_value(global.bg_color)
 
 number_of_circles = 20
 center_circle_radius = 40
 background_radius = sqrt(room_width * room_width + room_height * room_height) / 2
 circle_magnitude = background_radius - center_circle_radius
 
-starting_saturation = 120
-starting_lumosity = 40
-starting_alpha = 0.1
 grid_color = c_white
 
 drawn_ring_line_alpha = array_create(number_of_circles, 0)
-drawn_ring_hue = array_create(number_of_circles, 0)
+drawn_ring_hue = array_create(number_of_circles, idle_hue)
 drawn_ring_saturation = array_create(number_of_circles, 0)
 drawn_ring_lumosity = array_create(number_of_circles, 0)
 gradient_shadow = 0.5
@@ -63,7 +61,7 @@ function get_hue_for_ring(_i, _options) {
 				break
 				
 			case ULTIMATE_STRIKE:
-				_this_hue = _options.enemies_on_ring == 0 ? black_hue : global.ultimate_colors[$ ULTIMATE_STRIKE]
+				_this_hue = _options.enemies_on_ring == 0 ? 0 : global.ultimate_colors[$ ULTIMATE_STRIKE]
 				break
 				
 			case ULTIMATE_SLOW:
@@ -83,7 +81,7 @@ function get_hue_for_ring(_i, _options) {
 }
 
 function get_saturation_for_ring(_i, _options) {
-	var _this_saturation = starting_saturation
+	var _this_saturation = idle_saturation
 	
 	if(_i < round(drawn_skipped_rings)) {  
 		_this_saturation = 0
@@ -91,7 +89,7 @@ function get_saturation_for_ring(_i, _options) {
 		if (_options.is_ulting) {
 			switch (global.selected_ultimate) {
 				case ULTIMATE_HEAL:
-					_this_saturation = starting_saturation + 60
+					_this_saturation = idle_saturation + 60
 					break
 					
 				case ULTIMATE_STRIKE:
@@ -103,11 +101,11 @@ function get_saturation_for_ring(_i, _options) {
 					break
 				
 				case ULTIMATE_NONE:
-					_this_saturation = starting_saturation
+					_this_saturation = idle_saturation
 			}
-			_this_saturation = starting_saturation + 60
+			_this_saturation = idle_saturation + 60
 		} else if (_options.player_health < global.max_health) {
-			_this_saturation += 60 * (global.max_health - _options.player_health) / global.max_health
+			_this_saturation = idle_saturation + ((255 - idle_saturation) * ease_in_quad((global.max_health - _options.player_health) / global.max_health))
 		}
 		
 		_this_saturation += 15 * _options.enemies_on_ring
@@ -117,16 +115,16 @@ function get_saturation_for_ring(_i, _options) {
 }
 
 function get_lumosity_for_ring(_i, _options) {
-	var _this_lumosity = starting_lumosity
+	var _this_lumosity = idle_lumosity
 	
 	if(_i < round(drawn_skipped_rings)) { 
-		_this_lumosity = starting_lumosity * 0.4
+		_this_lumosity = idle_lumosity * 0.4
 	} else {
 		if (_options.is_ulting) {
 			switch (global.selected_ultimate) {
 				case ULTIMATE_HEAL:
 					var _shift = _i * 100
-					_this_lumosity = round((current_time + _shift) / 300) % heal_hues_count == 1 ? starting_lumosity + 40 : starting_lumosity
+					_this_lumosity = round((current_time + _shift) / 300) % heal_hues_count == 1 ? idle_lumosity + 40 : idle_lumosity
 					break
 					
 				case ULTIMATE_STRIKE:
@@ -138,11 +136,11 @@ function get_lumosity_for_ring(_i, _options) {
 					break
 					
 				case ULTIMATE_NONE:
-					_this_lumosity = starting_lumosity
+					_this_lumosity = idle_lumosity
 					break
 			}
 		} else if (_options.player_health < global.max_health) {
-			_this_lumosity += 30 * (global.max_health - _options.player_health) / global.max_health
+			_this_lumosity = idle_lumosity + ((180 - idle_lumosity) * ease_in_quad((global.max_health - _options.player_health) / global.max_health))
 		}
 
 		_this_lumosity += 10 * _options.enemies_on_ring
@@ -152,12 +150,13 @@ function get_lumosity_for_ring(_i, _options) {
 }
 
 function get_line_alpha_for_ring(_i, _options) {
-	var _line_alpha = starting_alpha
+	var _line_alpha = 0.1
 	
 	if(_i < round(drawn_skipped_rings)) {  
 		_line_alpha = _line_alpha / 2	
-	} else {
-		_line_alpha = starting_alpha
+	} else if (drawn_skipped_rings > 0 && _i == drawn_skipped_rings) {
+		// make the edge of our missing health bar extra bright
+		_line_alpha = 0.5
 	}
 	
 	return _line_alpha

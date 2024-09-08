@@ -9,7 +9,13 @@
 #macro ULTIMATE_SLOW "slow"
 #macro ULTIMATE_HEAL "heal"
 
-global.bg_color = #150c1f
+#macro EVENT_ENEMY_DAMAGED "enemy-damaged"
+#macro EVENT_ENEMY_KILLED "enemy-killed"
+#macro EVENT_TOGGLE_PAUSE "toggle-pause"
+
+// this is just hardcoded, but somehow determined by the player sprite size
+global.turret_length = 50
+global.bg_color = #260b26
 global.power_color = c_aqua
 global.selected_ultimate = "none";
 global.beam_color = c_white

@@ -1,7 +1,7 @@
 enemy_initlaize(self, 20)
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 shooting = false
-fire_distance = 280
+fire_distance = 260
 firing_position = undefined
 image_scale = 0.25
 image_xscale = image_scale
@@ -32,10 +32,6 @@ firing_position = {
 	y: _player.y + lengthdir_y(fire_distance, _player_halo_direction)
 }
 
-function explode_and_destroy() {
-	instance_destroy();
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_2_destroy});
-}
 
 function register_hit(_insta_kill = false) {
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_2_damage});
@@ -57,8 +53,8 @@ function register_hit(_insta_kill = false) {
 		return
 	}
 	// my_health <= 0 || insta_kill
-	get_game_controller().handle_enemy_killed(self)
-	explode_and_destroy()
+	get_game_controller().handle_enemy_killed(self, _insta_kill)
+	instance_destroy();
 }
 
 function fire_shot() {

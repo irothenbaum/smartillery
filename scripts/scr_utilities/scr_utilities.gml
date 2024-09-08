@@ -101,6 +101,8 @@ function toggle_pause(_status) {
 		global.pause_start = undefined
 	}
 	
+	broadcast(EVENT_TOGGLE_PAUSE, global.paused)
+	
 	var _layer = layer_get_id(LAYER_INSTANCES);
 	var _instances = layer_get_all_elements(_layer);
 	var _instance_count = array_length(_instances)	
@@ -110,10 +112,8 @@ function toggle_pause(_status) {
 	
 	for (var _i = 0; _i < _instance_count; _i++) {
 		var _inst = layer_instance_get_instance(_instances[_i])
-		debug(_instances[_i], _inst)
-		
+	
 		with (_inst) {
-			debug("Status: ", global.paused)
 			if (global.paused) {
 				// memoize our pre-pause values
 				paused_speed = speed
@@ -204,4 +204,13 @@ function color_to_array() {
 	}
 
 	return ret;
+}
+
+function _final_format(_b) {
+	_b.width = _b.x1 - _b.x0
+	_b.height = _b.y1 - _b.y0
+	_b.xcenter = _b.x0 + _b.width / 2
+	_b.ycenter = _b.y0 + _b.height / 2
+	
+	return _b
 }

@@ -48,6 +48,7 @@ function execute_hit_target() {
 	
 	recoil_amount = max_recoil_amount
 	aiming_at_instance.register_hit()
+	broadcast(EVENT_ENEMY_DAMAGED, aiming_at_instance)
 	aiming_at_instance = undefined
 	
 	// after a few seconds, reset to vertical postion
@@ -76,9 +77,8 @@ function execute_take_damage(_damage_amount) {
 
 function get_turret_muzzle() {
 	// this is hardcoded, but somehow a property of the turret sprite size * image_scale
-	var _turret_length = 50
 	return {
-		x: x + lengthdir_x(_turret_length, image_angle),
-		y: y + lengthdir_y(_turret_length, image_angle)
+		x: x + lengthdir_x(global.turret_length, image_angle),
+		y: y + lengthdir_y(global.turret_length, image_angle)
 	}
 }

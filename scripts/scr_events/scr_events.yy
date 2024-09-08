@@ -1,9 +1,9 @@
 {
   "$GMScript":"",
-  "%Name":"scr_ultimate_codes",
+  "%Name":"scr_events",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_ultimate_codes",
+  "name":"scr_events",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

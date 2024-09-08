@@ -1,4 +1,5 @@
-number_of_strikes = 2 + level
+number_of_strikes = ult_strike_get_count(level)
+strike_radius = ult_strike_get_radius(level)
 strikes_launched = 0
 // wait one second, then strike
 alarm[0] = game_get_speed(gamespeed_fps)
@@ -28,9 +29,9 @@ function strike_nearest_enemy() {
 		}
 	}
 	
-	instance_create_layer(_target.x, _target.y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_ultimate_strike})
 	with(_target) {
 		register_hit(true)
+		instance_create_layer(x, y, LAYER_INSTANCES, obj_ultimate_strike_explosion, {radius: other.strike_radius})
 	}
 
 	if (strikes_launched < number_of_strikes) {

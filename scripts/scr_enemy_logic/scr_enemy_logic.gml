@@ -6,12 +6,8 @@
 	equation = "";
 	point_value = 10
 
-	// they must also implement these functions:
-	function explode_and_destroy() {} // remove instance and create particle system explosion
+	// they must also implement this functions:
 	function register_hit(_insta_kill=false) {} // report hit by player
-	
-	// must call this
-	enemy_generate_question(self)
 */
 
 function enemy_initlaize(_e, _point_value) {
@@ -30,7 +26,7 @@ function enemy_draw_equation(_e) {
 	with (_e) {
 		draw_set_font(fnt_large);
 		draw_set_colour(c_white);
-		var _string = global.paused ? "******" : equation
+		var _string = global.paused ? "" : equation
 		// logically should be sprite_height / 2, but we scale the enemy image to .5 so it becomes / 4
 		var _offset_y = (y > room_height / 2 ? -1 : 1)*(20 + string_height(_string))
 		draw_offset_y = typeof(draw_offset_y) == "number" ? lerp(draw_offset_y, _offset_y, global.fade_speed) : _offset_y
@@ -67,4 +63,16 @@ function enemy_generate_question(_e) {
 			return
 		}
 	}
+}
+		
+function explode_nearby_enemies(_enemy, _radius) {
+	for_each_enemy(function(_e, _index, _enemy, _radius) {
+		if (_e.id == _enemy.id) {
+			// obviously don't count ourselves as nearby to ourselves
+			return
+		}
+		if (point_distance(_e.x, _e.y, _enemy.x, _enemy.y) < _radius) {
+			_e.register_hit(true)
+		}
+	}, _enemy, _radius)
 }

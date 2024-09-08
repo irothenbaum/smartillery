@@ -1,0 +1,1 @@
+player.my_health = min(global.max_health, player.my_health + heal_rate)

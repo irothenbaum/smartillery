@@ -1,4 +1,4 @@
-if (global.paused && !is_ulting()) {
+if (global.paused && !is_ulting() && !is_selecting_ult) {
 	draw_overlay()
 	draw_set_color(c_white)
 	draw_set_font(fnt_title)

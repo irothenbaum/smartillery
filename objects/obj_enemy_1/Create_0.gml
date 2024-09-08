@@ -15,18 +15,9 @@ turning_towards = false
 direction = point_direction(x, y, target_location_x, target_location_y) +  30 // * _scale
 speed = approach_speed
 
-function explode_and_destroy() {
-	instance_destroy();
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_1_destroy});
-}
-
-function register_hit() {
+function register_hit(_insta_kill) {
+	debug("REGISTER HIT", self)
 	get_enemy_controller().release_answer(answer);
-	get_game_controller().handle_enemy_killed(self);
-	explode_and_destroy()
-}
-
-function collide_with_player() {
-	get_player().execute_take_damage(30)
-	explode_and_destroy()
+	get_game_controller().handle_enemy_killed(self, _insta_kill);
+	instance_destroy();
 }

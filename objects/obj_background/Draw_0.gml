@@ -7,7 +7,8 @@ drawn_skipped_rings = lerp(drawn_skipped_rings, _skipped_rings, global.fade_spee
 var _options = {
 	is_ulting: get_game_controller().is_ulting(),
 	player_health: _player_health,
-	health_hue: _player_health - 10,
+	// from 210 for full health to 255 for 0 health
+	health_hue: 255 - (_player_health / global.max_health) * 45
 }
 
 for(var _i = 0; _i < number_of_circles; _i++) {	

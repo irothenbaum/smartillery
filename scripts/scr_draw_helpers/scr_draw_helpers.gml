@@ -58,15 +58,6 @@ function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT) {
 	return _final_format(_bound)
 }
 
-function _final_format(_b) {
-	_b.width = _b.x1 - _b.x0
-	_b.height = _b.y1 - _b.y0
-	_b.xcenter = _b.x0 + _b.width / 2
-	_b.ycenter = _b.y0 + _b.height / 2
-	
-	return _b
-}
-
 function draw_overlay(_alpha  = 0.5) {
 	draw_set_alpha(_alpha)
 	draw_set_color(c_black)

@@ -12,6 +12,7 @@ streak_score = 0; // streak bonus
 streak = 0;
 longest_streak = 0;
 
+is_selecting_ult = false
 ultimate_charge = 0;
 ultimate_experience = 0
 ultimate_level = 1
@@ -52,7 +53,7 @@ function mark_wave_completed() {
 function handle_game_over() {
 	function explode_enemy(_e, _index) {
 		with (_e) {
-			explode_and_destroy();
+			instance_destroy();
 		}
 	}
 	
@@ -71,32 +72,41 @@ function handle_game_over() {
 
 /// @func handle_enemy_killed(_enemy)
 /// @param {Id.Instance} _enemy
+/// @param {Bool} _skip_streak
 /// @return {undefined}
-function handle_enemy_killed(_enemy) {
+function handle_enemy_killed(_enemy, _skip_streak = false) {
 	// we don'tcount enemy points when the game is over
 	if (is_game_over) {
 		return 
 	}
 	
+	increase_streak()
+	
 	// streak is + 30% of base
-	var _streak_score = has_point_streak() ? floor(_enemy.point_value * 0.3) : 0;
+	var _streak_score = (!_skip_streak && has_point_streak()) ? floor(_enemy.point_value * 0.3) : 0;
 	
 	draw_point_indicators(_enemy.x, _enemy.y, _enemy.point_value, _streak_score)
 	
 	unit_score += _enemy.point_value
 	streak_score += _streak_score
 	game_score += _enemy.point_value + _streak_score
+	
+	broadcast(EVENT_ENEMY_KILLED, _enemy)
 }
 
 
 function draw_point_indicators(_x, _y, _base, _streak) {
-	var _base_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase)
-	_base_inst.set_amount(_base, c_white, fnt_large)
+	var _base_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase, {
+		amount: _base,
+		font: fnt_large
+	})
 	_y -= 20
 	
 	if (_streak) {	
-		var _streak_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase)
-		_streak_inst.set_amount(_streak, global.power_color)
+		var _streak_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase, {
+			amount: _streak,
+			color: global.power_color
+		})
 	}
 }
 
@@ -115,30 +125,6 @@ function handle_submit_code(_code) {
 		return true
 	} else if (get_enemy_controller().handle_submit_answer(_code)) {
 		// if this was a correct enemy answer
-		streak++
-	
-		if (has_point_streak()) {
-			// once we get on streak for the first time, we need to select an ultimate type
-			if (global.selected_ultimate == ULTIMATE_NONE) {
-				// TODO: Create the ultimate selection object
-				global.selected_ultimate = ULTIMATE_STRIKE	
-			}
-		
-			if (ultimate_charge < global.ultimate_requirement) {
-				ultimate_charge++
-			} else {
-				ultimate_experience++
-			
-				var _next_level_experience = get_experience_needed_for_next_level()
-				if (ultimate_experience >= _next_level_experience) {
-					ultimate_level++
-					ultimate_experience = 0
-				}
-			}
-		}
-	
-		longest_streak = max(longest_streak, streak)
-		
 		return true
 	} else {
 		// this was simply an inccorect submission, streak goes to 0
@@ -165,7 +151,6 @@ function mark_ultimate_used() {
 	inst_ultimate = undefined
 }
 
-
 function is_ulting() {
 	if (is_undefined(inst_ultimate)) {
 		return false
@@ -179,6 +164,35 @@ function is_ulting() {
 
 function get_experience_needed_for_next_level() {
 	return min(5 * ultimate_level, 50)
+}
+
+function increase_streak() {
+	streak++
+	
+	debug("NEW STREAK", streak)
+	
+	if (has_point_streak()) {
+		// once we get on streak for the first time, we need to select an ultimate type
+		if (global.selected_ultimate == ULTIMATE_NONE) {
+			is_selecting_ult = true
+			instance_create_layer(x,y, LAYER_HUD, obj_select_ultimate)
+		} else if (!is_ulting()) {
+			// if we're ulting then we don't count kills to our ult bar
+			if (ultimate_charge < global.ultimate_requirement) {
+				ultimate_charge++
+			} else {
+				ultimate_experience++
+			
+				var _next_level_experience = get_experience_needed_for_next_level()
+				if (ultimate_experience >= _next_level_experience) {
+					ultimate_level++
+					ultimate_experience = 0
+				}
+			}
+		}
+	}
+	
+	longest_streak = max(longest_streak, streak)
 }
 
 // start off marking wave completed so game can start

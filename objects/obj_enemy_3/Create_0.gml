@@ -17,13 +17,9 @@ stunned_color_arr = color_to_array(stunned_color)
 var _player = get_player();
 direction = point_direction(x, y, _player.x, _player.y)
 
-function explode_and_destroy() {
-	instance_destroy();
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_3_destroy});
-}
 
 function register_hit(_insta_kill=false) {
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_2_damage});
+	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_3_damage});
 	get_enemy_controller().release_answer(answer);
 	if (my_health > 0 && !_insta_kill) {
 		my_health--;
@@ -41,11 +37,11 @@ function register_hit(_insta_kill=false) {
 	}
 	
 	// my_health <= 0 || insta_kill
-	get_game_controller().handle_enemy_killed(self)
-	explode_and_destroy()
+	get_game_controller().handle_enemy_killed(self, _insta_kill)
+	instance_destroy();
 }
 
 function collide_with_player() {
 	get_player().execute_take_damage(40)
-	explode_and_destroy()
+	instance_destroy();
 }
