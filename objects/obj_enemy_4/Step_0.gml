@@ -1,0 +1,3 @@
+if (global.paused) {
+	return
+}

@@ -19,7 +19,7 @@ subscribe(EVENT_ENEMY_DAMAGED, function(_enemy) {
 	}
 	
 	var _turret_muzzle = player.get_turret_muzzle()
-	instance_create_layer(_turret_muzzle.x, _turret_muzzle.y, LAYER_HUD, obj_text_score_increase, {
+	instance_create_layer(_turret_muzzle.x, _turret_muzzle.y, LAYER_INSTANCES, obj_text_score_increase, {
 		amount: _leech_amount,
 		color: global.ultimate_color_tints[$ ULTIMATE_HEAL]
 	})

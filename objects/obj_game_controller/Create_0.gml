@@ -96,14 +96,14 @@ function handle_enemy_killed(_enemy, _skip_streak = false) {
 
 
 function draw_point_indicators(_x, _y, _base, _streak) {
-	var _base_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase, {
+	var _base_inst = instance_create_layer(_x, _y, LAYER_INSTANCES, obj_text_score_increase, {
 		amount: _base,
 		font: fnt_large
 	})
 	_y -= 20
 	
 	if (_streak) {	
-		var _streak_inst = instance_create_layer(_x, _y, LAYER_HUD, obj_text_score_increase, {
+		var _streak_inst = instance_create_layer(_x, _y, LAYER_INSTANCES, obj_text_score_increase, {
 			amount: _streak,
 			color: global.power_color
 		})
@@ -129,6 +129,7 @@ function handle_submit_code(_code) {
 	} else {
 		// this was simply an inccorect submission, streak goes to 0
 		streak = 0
+		broadcast(EVENT_WRONG_GUESS, _code)
 		return false
 	}
 }
@@ -168,8 +169,6 @@ function get_experience_needed_for_next_level() {
 
 function increase_streak() {
 	streak++
-	
-	debug("NEW STREAK", streak)
 	
 	if (has_point_streak()) {
 		// once we get on streak for the first time, we need to select an ultimate type

@@ -1,6 +1,8 @@
-if (!global.paused) {
-	image_angle += rotate_speed
+if (global.paused) {
+	return
 }
+
+image_angle += rotate_speed
 
 // once we start turning we can never stop turning
 turning_towards = turning_towards || point_distance(x, y, start_position_x, start_position_y) > room_width * 0.66

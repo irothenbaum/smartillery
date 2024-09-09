@@ -15,7 +15,7 @@ function init_wave() {
 	enemy_count = ceil(_current_wave * 1.5);
 	spawned_count = 0;
 	
-	instance_create_layer(x, y, LAYER_HUD, obj_next_wave_text)
+	instance_create_layer(x, y, LAYER_INSTANCES, obj_next_wave_text)
 	alarm[0] = global.scene_transition_duration * 0.75 * game_get_speed(gamespeed_fps);
 }
 
