@@ -80,7 +80,7 @@ function handle_enemy_killed(_enemy, _skip_streak = false) {
 		return 
 	}
 	
-	has_point_streak()
+	increase_streak()
 	
 	// streak is + 30% of base
 	var _streak_score = (!_skip_streak && has_point_streak()) ? floor(_enemy.point_value * 0.3) : 0;
@@ -92,6 +92,8 @@ function handle_enemy_killed(_enemy, _skip_streak = false) {
 	game_score += _enemy.point_value + _streak_score
 	
 	broadcast(EVENT_ENEMY_KILLED, _enemy)
+		
+	increase_ult_score()
 }
 
 
@@ -169,7 +171,10 @@ function get_experience_needed_for_next_level() {
 
 function increase_streak() {
 	streak++
-	
+	longest_streak = max(longest_streak, streak)
+}
+
+function increase_ult_score() {
 	if (has_point_streak()) {
 		// once we get on streak for the first time, we need to select an ultimate type
 		if (global.selected_ultimate == ULTIMATE_NONE) {
@@ -190,8 +195,6 @@ function increase_streak() {
 			}
 		}
 	}
-	
-	longest_streak = max(longest_streak, streak)
 }
 
 // start off marking wave completed so game can start

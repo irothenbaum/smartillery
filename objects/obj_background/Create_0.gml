@@ -14,15 +14,6 @@ drawn_ring_lumosity = array_create(global.bg_number_of_circles, 0)
 gradient_shadow = 0.5
 drawn_skipped_rings = 0
 
-function get_radius_at_i(_i) {
-	return background_radius - ((_i / number_of_circles) * circle_magnitude)
-}
-
-// this inverse of get_radius_at_i
-function get_ring_from_distance(_distance) {
-	return  floor(number_of_circles * (background_radius - _distance) / circle_magnitude)
-}
-
 function filter_by_distance_to_player(_instance, _index, _ring_enemy_counts) {
 	var _distance_to_player = point_distance(_instance.x, _instance.y, global.x_center, global.y_center)
 	var _ring_number = get_ring_from_distance(_distance_to_player)
@@ -37,7 +28,6 @@ var _c12 = color_get_hue(_c1)
 var _c22 = color_get_hue(_c2)
 heal_hues = [_c12, _c22]
 heal_hues_count = array_length(heal_hues)
-
 
 function get_hue_for_ring(_i, _options) {
 	var _this_hue = _options.health_hue;

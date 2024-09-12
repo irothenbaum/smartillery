@@ -40,12 +40,6 @@ function get_current_wave_number() {
 	return get_game_controller().current_wave
 }
 
-/// @func calculate_time_bonus(_lifetime) 
-/// @param {Real} _lifetime // in seconds
-/// @return {Real}
-function calculate_time_bonus(_lifetime) {
-	return 1 - (_lifetime / TIME_BONUS_PERIOD);
-}
 
 /// @func count_all_enemies()
 /// @return {Array<Id.Instance>}
@@ -117,12 +111,9 @@ function toggle_pause(_status) {
 			if (global.paused) {
 				// memoize our pre-pause values
 				paused_speed = speed
+				paused_vspeed = vspeed
 				paused_image_speed = image_speed
 				paused_alarms = []
-				
-				// disable movement and animation
-				speed = 0
-				image_speed = 0
 				
 				for (var _j = 0; _j < _alarm_length; _j++) {
 					if (alarm[_j] > 0) {
@@ -134,6 +125,11 @@ function toggle_pause(_status) {
 						paused_alarms[_j] = 0
 					}
 				}
+				
+				// disable movement and animation
+				speed = 0
+				vspeed = 0
+				image_speed = 0
 			} else {
 				// if paused alarms was not set, then this object was not around when we first paused
 				// probably was an ultimate or something
@@ -142,6 +138,7 @@ function toggle_pause(_status) {
 				}
 				// restore pre-pause values
 				speed = paused_speed
+				vspeed = paused_vspeed
 				image_speed = paused_image_speed
 				
 				for (var _j = 0; _j < _alarm_length; _j++) {
@@ -150,8 +147,9 @@ function toggle_pause(_status) {
 					}
 				}
 				
-				// remove all out paused states
+				// remove all our paused states
 				paused_speed = undefined
+				paused_vspeed = undefined
 				paused_image_speed  = undefined
 				paused_alarms = undefined
 			}

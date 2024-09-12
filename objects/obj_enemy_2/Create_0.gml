@@ -1,7 +1,8 @@
 enemy_initlaize(self, 20)
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 shooting = false
-fire_distance = 260 // this should be less than ult_slow_get_radius(1)
+// fire at the center of  third circle -- this should be less than ult_slow_get_radius(1)
+fire_distance = get_radius_at_i(global.bg_number_of_circles - 3) + global.bg_circle_magnitude / 2
 firing_position = undefined
 image_scale = 0.25
 image_xscale = image_scale

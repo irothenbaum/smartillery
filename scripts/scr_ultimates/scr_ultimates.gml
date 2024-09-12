@@ -53,9 +53,8 @@ function ult_slow_get_duration(_level) {
 	return ult_heal_get_duration(_level)
 }
 
-slow_base_radius = 300 // outside the fire distance of enemy2
-slow_radius_increment_step = 50
+slow_base_radius = 4 // outside the fire distance of enemy2
 // this is the area of effect in pixels
 function ult_slow_get_radius(_level) {
-	return slow_base_radius + (_level * slow_radius_increment_step)
+	return get_radius_at_i(slow_base_radius + _level)
 }
