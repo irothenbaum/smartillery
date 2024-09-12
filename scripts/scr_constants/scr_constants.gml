@@ -38,6 +38,8 @@ global.paused = false
 // seemingly magic numbers
 global.heal_radius = 75
 global.turret_length = 50
+global.x_center = room_width / 2
+global.y_center = room_height / 2
 
 // gameplay
 global.point_streak_requirement = 3
@@ -54,3 +56,7 @@ global.max_word_length = 11
 // effects
 global.fade_speed = 0.1
 global.scene_transition_duration = 6
+global.bg_number_of_circles = 20
+global.bg_circle_max_radius = ceil(sqrt(power(room_width, 2) + power(room_height, 2)) / 2)
+global.bg_cicle_min_radius = global.turret_length
+global.bg_circle_magnitude = global.bg_circle_max_radius - global.bg_cicle_min_radius

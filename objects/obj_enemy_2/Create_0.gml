@@ -1,7 +1,7 @@
 enemy_initlaize(self, 20)
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 shooting = false
-fire_distance = 260
+fire_distance = 260 // this should be less than ult_slow_get_radius(1)
 firing_position = undefined
 image_scale = 0.25
 image_xscale = image_scale
@@ -20,16 +20,15 @@ stunned_color_arr = color_to_array(stunned_color)
 
 
 // here we establish where we'll be heading and firing from
-var _player = get_player()
 var _shifted_degrees = irandom_range(5, 30)
 if (irandom(1) == 1) {
 	// possibly shift counter clockwise
 	_shifted_degrees = _shifted_degrees * -1
 }
-var _player_halo_direction = point_direction(_player.x, _player.y, x, y) + _shifted_degrees
+var _player_halo_direction = point_direction(global.x_center, global.y_center, x, y) + _shifted_degrees
 firing_position = {
-	x: _player.x + lengthdir_x(fire_distance, _player_halo_direction),
-	y: _player.y + lengthdir_y(fire_distance, _player_halo_direction)
+	x: global.x_center + lengthdir_x(fire_distance, _player_halo_direction),
+	y: global.y_center + lengthdir_y(fire_distance, _player_halo_direction)
 }
 
 
@@ -44,8 +43,7 @@ function register_hit(_insta_kill = false) {
 		// restart approach in 3 seconds
 		alarm[1] = 3 * game_get_speed(gamespeed_fps)
 		alarm[0] = -1;
-		var _player = get_player()
-		var _dir_to_player = point_direction(_player.x, _player.y, x,y)
+		var _dir_to_player = point_direction(global.x_center, global.y_center, x,y)
 		shift_position = {
 			x: x + lengthdir_x(20, _dir_to_player),
 			y: y + lengthdir_y(20, _dir_to_player)
@@ -65,7 +63,7 @@ function fire_shot() {
 	
 	// Muzzle Flash
 	var _muzzle = get_turret_muzzle()
-	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: _player.x, target_y: _player.y, width: 4, color: c_red})
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: global.x_center, target_y: global.y_center, width: 4, color: c_red})
 }
 
 function get_turret_muzzle() {

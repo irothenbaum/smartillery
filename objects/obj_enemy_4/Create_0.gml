@@ -4,8 +4,7 @@ image_scale = 0.25
 image_xscale = image_scale
 image_yscale = image_scale
 
-var _player = get_player();
-direction = point_direction(x, y, _player.x, _player.y)
+direction = point_direction(x, y, global.x_center, global.y_center)
 
 function register_hit(_insta_kill=false) {
 	if (_insta_kill) {

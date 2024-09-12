@@ -66,6 +66,7 @@
     {"id":{"name":"obj_rotating_wave","path":"objects/obj_rotating_wave/obj_rotating_wave.yy",},},
     {"id":{"name":"obj_screen_shake","path":"objects/obj_screen_shake/obj_screen_shake.yy",},},
     {"id":{"name":"obj_select_ultimate","path":"objects/obj_select_ultimate/obj_select_ultimate.yy",},},
+    {"id":{"name":"obj_slow_time","path":"objects/obj_slow_time/obj_slow_time.yy",},},
     {"id":{"name":"obj_text_score_increase","path":"objects/obj_text_score_increase/obj_text_score_increase.yy",},},
     {"id":{"name":"obj_text_title","path":"objects/obj_text_title/obj_text_title.yy",},},
     {"id":{"name":"obj_ultimate_strike_explosion","path":"objects/obj_ultimate_strike_explosion/obj_ultimate_strike_explosion.yy",},},

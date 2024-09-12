@@ -16,12 +16,11 @@ function strike_nearest_enemy() {
 		return
 	}
 	
-	var _player = get_player()
 	var _target = _enemies[0]
-	var _target_distance = point_distance(_target.x, _target.y, _player.x, _player.y)
+	var _target_distance = point_distance(_target.x, _target.y, global.x_center, global.y_center)
 	for (var _i = 1; _i < _enemy_count; _i++) {
 		var _this_enemy = _enemies[_i]
-		var _this_distance = point_distance(_this_enemy.x, _this_enemy.y, _player.x, _player.y)
+		var _this_distance = point_distance(_this_enemy.x, _this_enemy.y, global.x_center, global.y_center)
 		
 		if (_this_distance < _target_distance) {
 			_target = _this_enemy

@@ -1,5 +1,5 @@
 message = "";
-x = room_width / 2
+x = global.x_center
 y = room_height - 60
 min_box_width = 40
 

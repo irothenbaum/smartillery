@@ -17,13 +17,13 @@ pos_wave = {
 }
 
 pos_ultimate = {
-	x: room_width / 2 + (margin / 2),
+	x: global.x_center + (margin / 2),
 	y: margin,
 	align: ALIGN_LEFT
 }
 
 pos_heal = {
-	x: room_width / 2 - (margin / 2),
+	x: global.x_center - (margin / 2),
 	y: margin,
 	align: ALIGN_RIGHT
 }

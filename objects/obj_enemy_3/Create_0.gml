@@ -14,9 +14,7 @@ stunned_color = c_red
 normal_color_arr = color_to_array(normal_color)
 stunned_color_arr = color_to_array(stunned_color)
 
-var _player = get_player();
-direction = point_direction(x, y, _player.x, _player.y)
-
+direction = point_direction(x, y, global.x_center, global.y_center)
 
 function register_hit(_insta_kill=false) {
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_3_damage});

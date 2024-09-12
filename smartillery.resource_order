@@ -44,6 +44,7 @@
     {"name":"obj_rotating_wave","order":6,"path":"objects/obj_rotating_wave/obj_rotating_wave.yy",},
     {"name":"obj_screen_shake","order":19,"path":"objects/obj_screen_shake/obj_screen_shake.yy",},
     {"name":"obj_select_ultimate","order":3,"path":"objects/obj_select_ultimate/obj_select_ultimate.yy",},
+    {"name":"obj_slow_time","order":5,"path":"objects/obj_slow_time/obj_slow_time.yy",},
     {"name":"obj_text_title","order":1,"path":"objects/obj_text_title/obj_text_title.yy",},
     {"name":"obj_ultimate_strike_explosion","order":4,"path":"objects/obj_ultimate_strike_explosion/obj_ultimate_strike_explosion.yy",},
     {"name":"par_debris","order":2,"path":"particles/par_debris/par_debris.yy",},

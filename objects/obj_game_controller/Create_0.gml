@@ -80,7 +80,7 @@ function handle_enemy_killed(_enemy, _skip_streak = false) {
 		return 
 	}
 	
-	increase_streak()
+	has_point_streak()
 	
 	// streak is + 30% of base
 	var _streak_score = (!_skip_streak && has_point_streak()) ? floor(_enemy.point_value * 0.3) : 0;

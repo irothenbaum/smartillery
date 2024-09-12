@@ -1,5 +1,5 @@
-x = room_width / 2
-y = room_height / 2
+x = global.x_center
+y = global.y_center
 overlay_amount = undefined
 showing_results = false
 

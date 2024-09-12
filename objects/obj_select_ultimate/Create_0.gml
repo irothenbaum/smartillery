@@ -1,8 +1,8 @@
 toggle_pause(true)
 
 staged_selection = undefined
-x = room_width / 2
-y = room_height / 2
+x = global.x_center
+y = global.y_center
 
 icons = {
 	ULTIMATE_STRIKE: spr_particle_divide,

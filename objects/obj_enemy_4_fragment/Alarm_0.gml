@@ -1,4 +1,4 @@
 target_location = {
-	x: get_player().x,
-	y: get_player().y
+	x: global.x_center,
+	y: global.y_center
 }

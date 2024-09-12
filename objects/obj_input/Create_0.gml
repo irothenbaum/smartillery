@@ -1,7 +1,7 @@
 message = "";
 
 y = 100
-initial_x = room_width / 2
+initial_x = global.x_center
 x = initial_x
 render_x = x
 

@@ -9,7 +9,7 @@ turning_towards = turning_towards || point_distance(x, y, start_position_x, star
 
 if (turning_towards) {
 	var _dif = angle_difference(point_direction(x,y, target_location_x, target_location_y), direction)
-	direction += _dif * .015
+	direction += _dif * 0.015
 	
-	speed = speed * 1.003
+	speed += speed * 0.003
 }

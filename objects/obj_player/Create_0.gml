@@ -1,4 +1,4 @@
-  _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
+_u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 recoil_amount = 0
 max_recoil_amount = 20
 hide_self = false;
@@ -14,9 +14,8 @@ my_health = global.max_health
 aiming_at_instance = undefined
 image_angle = rotate_to;
 direction = 90 // point upwards
-x = room_width / 2
-x = room_width / 2
-y = room_height / 2
+x = global.x_center
+y = global.y_center
 
 image_scale = 0.4
 image_xscale = image_scale;
@@ -76,7 +75,6 @@ function execute_take_damage(_damage_amount) {
 }
 
 function get_turret_muzzle() {
-	// this is hardcoded, but somehow a property of the turret sprite size * image_scale
 	return {
 		x: x + lengthdir_x(global.turret_length, image_angle),
 		y: y + lengthdir_y(global.turret_length, image_angle)

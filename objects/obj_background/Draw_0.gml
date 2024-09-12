@@ -1,14 +1,17 @@
 var _player_health = get_player().my_health
 var _ring_enemy_counts = array_create(number_of_circles, 0)
 for_each_enemy(filter_by_distance_to_player, _ring_enemy_counts)
-var _skipped_rings = number_of_circles - floor(number_of_circles * (_player_health / global.max_health))
+var _skipped_rings = number_of_circles - ceil(number_of_circles * (_player_health / global.max_health))
+
 drawn_skipped_rings = lerp(drawn_skipped_rings, _skipped_rings, global.fade_speed)
 
 var _options = {
 	is_ulting: get_game_controller().is_ulting(),
 	player_health: _player_health,
 	// from 210 for full health to 255 for 0 health
-	health_hue: 255 - (_player_health / global.max_health) * 45
+	health_hue: 255 - (_player_health / global.max_health) * 45,
+	skipped_rings: _skipped_rings,
+	rounded_skipped_rings: round(drawn_skipped_rings)
 }
 
 for(var _i = 0; _i < number_of_circles; _i++) {	
@@ -19,7 +22,7 @@ for(var _i = 0; _i < number_of_circles; _i++) {
 	drawn_ring_hue[_i] = lerp(drawn_ring_hue[_i], get_hue_for_ring(_i, _options), _fade_speed)
 	drawn_ring_saturation[_i] = lerp(drawn_ring_saturation[_i], get_saturation_for_ring(_i, _options), _fade_speed)
 	drawn_ring_lumosity[_i] = lerp(drawn_ring_lumosity[_i], get_lumosity_for_ring(_i, _options), _fade_speed)
-	drawn_ring_line_alpha[_i] = lerp(drawn_ring_line_alpha[_i], get_line_alpha_for_ring(_i, _options), _fade_speed)
+	drawn_ring_line_alpha[_i] = lerp(drawn_ring_line_alpha[_i], get_line_alpha_for_ring(_i, _options), global.fade_speed)
 	
 	var _color = make_color_hsv(drawn_ring_hue[_i], drawn_ring_saturation[_i], drawn_ring_lumosity[_i]);
 	draw_set_circle_precision((number_of_circles - _i) * 2 + 32)

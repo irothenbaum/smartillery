@@ -66,11 +66,59 @@ function draw_overlay(_alpha  = 0.5) {
 	draw_set_color(c_white)
 }
 
+function draw_rounded_rectangle(_x0, _y0, _x1, _y1, _radius, _thickness = 1) {
+	var _horizontal = {
+		x0: _x0 + _radius,
+		x1: _x1 - _radius,
+	}
+	var _vertical = {
+		y0: _y0 + _radius,
+		y1: _y1 - _radius,
+	}
+	
+	draw_line_width(_horizontal.x0, _y0, _horizontal.x1, _y0, _thickness)
+	draw_arc(_horizontal.x1, _vertical.y0, _radius, 90, 270, _thickness)
+	draw_line_width(_x1, _vertical.y0, _x1, _vertical.y1, _thickness)
+	draw_arc(_horizontal.x1, _vertical.y1, _radius, 90, 0, _thickness)
+	draw_line_width(_horizontal.x0, _y1, _horizontal.x1, _y1, _thickness)
+	draw_arc(_horizontal.x0, _vertical.y1, _radius, 90, 90, _thickness)
+	draw_line_width(_x0, _vertical.y0, _x0, _vertical.y1, _thickness)
+	draw_arc(_horizontal.x0, _vertical.y0, _radius, 90, 180, _thickness)
+}
+
+function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1) {
+	var _steps = 6 // TODO: make this a factor of _radius
+	var _total = _degrees - _start
+	var _step_degree = _total / _steps
+	
+	var _start_point = {
+		x: _x + lengthdir_x(_radius, _start),
+		y: _y + lengthdir_y(_radius, _start)
+	}
+	
+	var _last_point = {
+		x: _start_point.x,
+		y: _start_point.y
+	}
+	
+	for (var _i = 1; _i < _steps; _i++) {
+		var _end_angle = _start + (_i * _step_degree)
+		var _end_x = _x + lengthdir_x(_radius, _end_angle)
+		var _end_y = _y + lengthdir_y(_radius, _end_angle)
+		
+		draw_line_width(_last_point.x, _last_point.y, _end_x, _end_y, _thickness)	
+		_last_point.x = _end_x
+		_last.point.y = _end_y
+	}
+	
+	draw_line_width(_last_point.x, _last_point.y, _start_point.x, _start_point.y, _thickness)
+}
+
 function draw_input_box_with_progress(_bounds, _ratio, _align) {
 	_ratio = max(0, min(_ratio, 1))
 	var _rectangle_bounds = _final_format(_bounds)
 
-	draw_roundrect(
+	draw_rounded_rectangle(
 		_rectangle_bounds.x0, 
 		_rectangle_bounds.y0, 
 		_rectangle_bounds.x1, 

@@ -30,7 +30,7 @@ function ult_strike_get_count(_level) {
 	return floor(strike_minimum + _level / strike_increment_level_step)
 }
 
-strike_base_radius = 60
+strike_base_radius = 50
 strike_radius_increment_step = 10
 strike_radius_reduction = 3
 // in pixels
@@ -39,4 +39,23 @@ function ult_strike_get_radius(_level) {
 		+ (strike_radius_increment_step * _level) 
 		// everytime we increase our strike count, we take a small step back in our radius
 		- (strike_radius_reduction * (_level / strike_increment_level_step))
+}
+
+slow_base_multiplier = 0.75
+function ult_slow_get_speed_multiplier(_level) {
+	
+}
+
+slow_base_duration = heal_base_duration
+slow_duration_increment = heal_duration_increment
+// in frames
+function ult_slow_get_duration(_level) {
+	return ult_heal_get_duration(_level)
+}
+
+slow_base_radius = 300 // outside the fire distance of enemy2
+slow_radius_increment_step = 50
+// this is the area of effect in pixels
+function ult_slow_get_radius(_level) {
+	return slow_base_radius + (_level * slow_radius_increment_step)
 }
