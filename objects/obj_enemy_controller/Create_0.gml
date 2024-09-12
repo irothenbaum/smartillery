@@ -33,7 +33,7 @@ function spawn_enemy() {
 	// the no spawn zone is the middle 33%, so if pos_x is in that range, we shift it
 	var _no_spawn_marker = room_width * 0.33
 	if (_pos_x > _no_spawn_marker && _pos_x < _no_spawn_marker * 2) {
-		var _distance_to_center = _pos_x - global.x_center
+		var _distance_to_center = _pos_x - global.xcenter
 		// if _distance_to_center is negative, then pos_x is to the right of center, in the middle 33%.
 		// this basically shifts our x position back into either the first or 3rd swction respctive to its position in the second
 		_pos_x = _distance_to_center < 0 ? 2 * (_no_spawn_marker + abs(_distance_to_center)) : _no_spawn_marker - (_distance_to_center * 2)

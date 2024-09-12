@@ -13,7 +13,7 @@ if (!is_undefined(shift_position)) {
 	y = (y + shift_position.y) / 2
 }
 
-image_angle = point_direction(x, y, global.x_center, global.y_center)	
+image_angle = point_direction(x, y, global.xcenter, global.ycenter)	
 
 var _distance_to_firing = distance_to_point(firing_position.x, firing_position.y)
 

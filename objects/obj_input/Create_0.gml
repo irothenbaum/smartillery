@@ -1,7 +1,7 @@
 message = "";
 
 y = 100
-initial_x = global.x_center
+initial_x = global.xcenter
 x = initial_x
 render_x = x
 

@@ -24,8 +24,8 @@
 global.bg_color = #260b26
 global.power_color = c_aqua
 global.beam_color = c_white
-global.ultimate_colors = {"none": c_white, "strike": #ffaaaa, "slow": c_blue, "heal": #02fa4d}
-global.ultimate_color_tints = {"none": #eeeeee, "strike": #ffccaa, "slow": c_blue, "heal": #02f6fa}
+global.ultimate_colors = {"none": c_white, "strike": #e03a3a, "slow": #3e7bed, "heal": #11d94e}
+global.ultimate_color_tints = {"none": #eeeeee, "strike": #e0773a, "slow": #a43eed, "heal": #0ce7eb}
 
 // in-game configurable
 global.selected_ultimate = "none";
@@ -40,8 +40,8 @@ global.heal_radius = 75
 global.turret_length = 50
 global.room_width = 1440
 global.room_height = 1000
-global.x_center = global.room_width / 2
-global.y_center = global.room_height / 2
+global.xcenter = global.room_width / 2
+global.ycenter = global.room_height / 2
 
 // gameplay
 global.point_streak_requirement = 3
@@ -62,3 +62,4 @@ global.bg_number_of_circles = 20
 global.bg_circle_max_radius = ceil(sqrt(power(global.room_width, 2) + power(global.room_height, 2)) / 2)
 global.bg_cicle_min_radius = global.turret_length
 global.bg_circle_magnitude = global.bg_circle_max_radius - global.bg_cicle_min_radius
+global.bg_circle_ring_width = global.bg_circle_magnitude / global.bg_number_of_circles

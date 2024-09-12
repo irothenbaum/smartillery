@@ -14,8 +14,8 @@ my_health = global.max_health
 aiming_at_instance = undefined
 image_angle = rotate_to;
 direction = 90 // point upwards
-x = global.x_center
-y = global.y_center
+x = global.xcenter
+y = global.ycenter
 
 image_scale = 0.4
 image_xscale = image_scale;

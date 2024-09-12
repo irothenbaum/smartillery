@@ -13,14 +13,15 @@ function strike_nearest_enemy() {
 	
 	if (_enemy_count == 0) {
 		debug("No more enemies, ending ultimate early")
+		alarm[1] =game_get_speed(gamespeed_fps)
 		return
 	}
 	
 	var _target = _enemies[0]
-	var _target_distance = point_distance(_target.x, _target.y, global.x_center, global.y_center)
+	var _target_distance = point_distance(_target.x, _target.y, global.xcenter, global.ycenter)
 	for (var _i = 1; _i < _enemy_count; _i++) {
 		var _this_enemy = _enemies[_i]
-		var _this_distance = point_distance(_this_enemy.x, _this_enemy.y, global.x_center, global.y_center)
+		var _this_distance = point_distance(_this_enemy.x, _this_enemy.y, global.xcenter, global.ycenter)
 		
 		if (_this_distance < _target_distance) {
 			_target = _this_enemy

@@ -6,8 +6,8 @@ approach_speed = 1.6
 rotate_speed = (irandom(1) == 0 ? -1 : 1) * (irandom(20) + 5) / 10
 
 var _scale = irandom(1) == 0 ? -1 : 1
-target_location_x = global.x_center
-target_location_y = global.y_center
+target_location_x = global.xcenter
+target_location_y = global.ycenter
 start_position_x = x
 start_position_y = y
 turning_towards = false

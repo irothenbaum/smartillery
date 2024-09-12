@@ -1,8 +1,8 @@
 toggle_pause(true)
 
 staged_selection = undefined
-x = global.x_center
-y = global.y_center
+x = global.xcenter
+y = global.ycenter
 
 icons = {
 	ULTIMATE_STRIKE: spr_icon_ult_strike_medium,

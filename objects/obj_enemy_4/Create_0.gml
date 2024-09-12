@@ -4,7 +4,7 @@ image_scale = 0.25
 image_xscale = image_scale
 image_yscale = image_scale
 
-direction = point_direction(x, y, global.x_center, global.y_center)
+direction = point_direction(x, y, global.xcenter, global.ycenter)
 
 function register_hit(_insta_kill=false) {
 	if (_insta_kill) {

@@ -23,11 +23,11 @@ if (global.is_math_mode) {
 		var _new_operation_index = min(_number_of_operations-1, _wave_over_step)
 		var _new_operation = global.operations_order[_new_operation_index]
 		draw_set_font(fnt_large)
-		draw_text_with_alignment(global.x_center, _bounds.y1 + 40, "New operation: " + _new_operation, ALIGN_CENTER)
+		draw_text_with_alignment(global.xcenter, _bounds.y1 + 40, "New operation: " + _new_operation, ALIGN_CENTER)
 	}
 } else {
 	var _max_word_length = get_max_word_length_from_wave(_current_wave)
 	draw_set_font(fnt_large)
-	draw_text_with_alignment(global.x_center, _bounds.y1 + 20, "max word length: " + string(_max_word_length), ALIGN_CENTER)
+	draw_text_with_alignment(global.xcenter, _bounds.y1 + 20, "max word length: " + string(_max_word_length), ALIGN_CENTER)
 }
 draw_set_alpha(1)

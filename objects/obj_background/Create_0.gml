@@ -1,5 +1,5 @@
-x = global.x_center
-y = global.y_center	
+x = global.xcenter
+y = global.ycenter	
 
 idle_hue = color_get_hue(global.bg_color)
 idle_saturation = color_get_saturation(global.bg_color)
@@ -15,7 +15,7 @@ gradient_shadow = 0.5
 drawn_skipped_rings = 0
 
 function filter_by_distance_to_player(_instance, _index, _ring_enemy_counts) {
-	var _distance_to_player = point_distance(_instance.x, _instance.y, global.x_center, global.y_center)
+	var _distance_to_player = point_distance(_instance.x, _instance.y, global.xcenter, global.ycenter)
 	var _ring_number = get_ring_from_distance(_distance_to_player)
 	if (_ring_number >= 0 && _ring_number < array_length(_ring_enemy_counts)) {
 		_ring_enemy_counts[_ring_number]++ 

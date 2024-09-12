@@ -1,5 +1,5 @@
-x = global.x_center
-y = global.y_center
+x = global.xcenter
+y = global.ycenter
 
 function start_game() {
 	room_goto(rm_waves)
