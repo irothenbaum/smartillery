@@ -16,6 +16,7 @@ function enemy_initlaize(_e, _point_value) {
 		draw_offset_y = undefined
 		equation = "";
 		point_value = _point_value
+		slow_multiplier = 1
 	}
 	
 	enemy_generate_question(_e)
@@ -75,4 +76,21 @@ function explode_nearby_enemies(_enemy, _radius) {
 			_e.register_hit(true)
 		}
 	}, _enemy, _radius)
+}
+
+function enemy_remove_slow(_enemy) {
+	enemy_apply_slow(_enemy, 1)
+}
+
+function enemy_apply_slow(_enemy, _multiplier) {
+	with(_enemy) {
+		// undo our last multiplier
+		if (slow_multiplier != _multiplier) {
+			speed = speed / slow_multiplier
+		}
+		
+		// apply the new one
+		slow_multiplier = _multiplier
+		speed = speed * slow_multiplier
+	}
 }

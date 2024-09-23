@@ -23,10 +23,7 @@ pos_wave = {
 	align: ALIGN_LEFT
 }
 
-pos_ultimate = {
-	xcenter: global.xcenter,
-	ycenter: 0 + margin + half_sprite_size
-}
+input = instance_find(obj_input, 0)
 
 function draw_text_obj(_obj, _text) {
 	draw_set_font(fnt_large)

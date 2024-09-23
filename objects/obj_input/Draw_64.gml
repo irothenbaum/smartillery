@@ -21,9 +21,11 @@ if (_bounds.width < min_box_width) {
 
 draw_streak_ratio = lerp(draw_streak_ratio, streak_ratio, global.fade_speed)
 
-draw_input_box_with_progress({
+my_bounds = _final_format({
 	x0: _bounds.x0 - 12,
 	y0: _bounds.y0 - 6,
 	x1: _bounds.x1 + 12,
 	y1: _bounds.y1
-}, draw_streak_ratio)
+})
+
+draw_input_box_with_progress(my_bounds, draw_streak_ratio)

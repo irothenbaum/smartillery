@@ -1,6 +1,6 @@
 message = "";
 
-y = 100
+y = 50
 initial_x = global.xcenter
 x = initial_x
 render_x = x
@@ -16,6 +16,8 @@ total_shake_time = 500
 total_shakes = 3
 shake_magnitude = 10
 wrong_guess = ""
+
+my_bounds = undefined
 
 // whenver we pause or unpause we clear the input
 subscribe(EVENT_TOGGLE_PAUSE, function(_status) {

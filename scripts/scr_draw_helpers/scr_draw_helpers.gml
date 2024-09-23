@@ -4,7 +4,7 @@
 /// @param {Read} _y1
 /// @param {Read} _progress -- [0,1]
 /// @param {Color} _color
-function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color = c_lime) {
+function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color = c_lime, _background_color = c_grey) {
 	draw_set_color(c_grey)
 	draw_rectangle(_x, _y, _x1, _y1, false)
 	draw_set_color(_color)
@@ -13,8 +13,6 @@ function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color = c_lime) {
 	
 	return _final_format({
 		x0: _x,
-		
-		
 		y0: _y,
 		x1: _x1,
 		y1: _y1,
@@ -59,9 +57,10 @@ function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT) {
 }
 
 function draw_overlay(_alpha  = 0.5) {
+	// TODO Might want to use draw_clear_alpha() here but it's not working. I must be doing something wrong
 	draw_set_alpha(_alpha)
 	draw_set_color(c_black)
-	draw_rectangle(0, 0, room_width, room_height, false)
+	draw_rectangle(0, 0, global.room_width, global.room_height, false)
 	draw_set_alpha(1)
 	draw_set_color(c_white)
 }

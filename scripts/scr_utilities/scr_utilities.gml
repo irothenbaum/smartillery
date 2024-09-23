@@ -204,6 +204,7 @@ function color_to_array() {
 	return ret;
 }
 
+/// @return {{x0: Real, y0: Real, xcenter: Real, ycenter: Real, x1: Real, y1: Real, width: Real, height: Real}}
 function _final_format(_b) {
 	_b.width = _b.x1 - _b.x0
 	_b.height = _b.y1 - _b.y0

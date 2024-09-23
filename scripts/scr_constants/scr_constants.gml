@@ -23,6 +23,7 @@
 // colors
 global.bg_color = #260b26
 global.power_color = c_aqua
+global.combo_color = c_red
 global.beam_color = c_white
 global.ultimate_colors = {"none": c_white, "strike": #e03a3a, "slow": #3e7bed, "heal": #11d94e}
 global.ultimate_color_tints = {"none": #eeeeee, "strike": #e0773a, "slow": #a43eed, "heal": #0ce7eb}
@@ -45,6 +46,9 @@ global.ycenter = global.room_height / 2
 
 // gameplay
 global.point_streak_requirement = 3
+global.combo_delay_ms = 2000
+global.minimum_combo = 2
+global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower", "Menace", "Untouchable", "Impossible"]
 global.ultimate_requirement = 10
 global.ultimate_code = "000"
 global.max_health = 100

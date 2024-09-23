@@ -61,6 +61,7 @@ function execute_take_damage(_damage_amount) {
 	streak = 0
 	
 	if (my_health <= 0) {
+		aiming_at_instance = undefined
 		get_game_controller().handle_game_over()
 	}
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_shockwave})

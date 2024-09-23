@@ -1,0 +1,1 @@
+game_controller = get_game_controller()

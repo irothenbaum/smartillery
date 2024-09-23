@@ -3,7 +3,7 @@ if (global.paused) {
 }
 
 if (recoil_amount > 0.01) {
-	recoil_amount = recoil_amount * 0.85
+	recoil_amount = recoil_amount * 0.85 * slow_multiplier
 } else {
 	recoil_amount = 0
 }
@@ -22,11 +22,11 @@ if(shooting || _distance_to_firing < 10) {
 	if (!shooting) {
 		speed = 0
 		shooting = true
-		alarm[0] = 2 * game_get_speed(gamespeed_fps)
+		alarm[0] = 2 * game_get_speed(gamespeed_fps) * slow_multiplier
 	}
 	
 	var _diff = angle_difference(image_angle + 90, direction);
-	direction += _diff * 0.025;
+	direction += _diff * 0.025 * slow_multiplier;
 } else {
 	direction = point_direction(x, y, firing_position.x, firing_position.y)
 }
