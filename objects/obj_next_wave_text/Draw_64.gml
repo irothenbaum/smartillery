@@ -1,9 +1,8 @@
 if (fade_out) {
-	draw_set_alpha(image_alpha)
 	image_alpha = image_alpha * 0.9;
 }
+draw_set_composite_color(composite_color(c_white, image_alpha))
 draw_set_font(fnt_title)
-draw_set_colour(c_white)
 var _bounds = draw_text_with_alignment(x, y, "Beginning Wave #" + string(get_current_wave_number()), ALIGN_CENTER)
 
 var _current_wave = get_current_wave_number()
@@ -30,4 +29,4 @@ if (global.is_math_mode) {
 	draw_set_font(fnt_large)
 	draw_text_with_alignment(global.xcenter, _bounds.y1 + 20, "max word length: " + string(_max_word_length), ALIGN_CENTER)
 }
-draw_set_alpha(1)
+reset_composite_color()

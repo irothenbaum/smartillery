@@ -4,12 +4,13 @@
 /// @param {Read} _y1
 /// @param {Read} _progress -- [0,1]
 /// @param {Color} _color
-function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color = c_lime, _background_color = c_grey) {
-	draw_set_color(c_grey)
+function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_color) {
+	draw_set_composite_color(_background_color)
 	draw_rectangle(_x, _y, _x1, _y1, false)
-	draw_set_color(_color)
+	draw_set_composite_color(_color)
 	var _x_diff = _x1 - _x
 	draw_rectangle(_x, _y, _x + (min(max(0,_progress), 1) * _x_diff), _y1, false)
+	reset_composite_color()
 	
 	return _final_format({
 		x0: _x,
@@ -61,8 +62,7 @@ function draw_overlay(_alpha  = 0.5) {
 	draw_set_alpha(_alpha)
 	draw_set_color(c_black)
 	draw_rectangle(0, 0, global.room_width, global.room_height, false)
-	draw_set_alpha(1)
-	draw_set_color(c_white)
+	reset_composite_color()
 }
 
 function draw_rounded_rectangle(_x0, _y0, _x1, _y1, _radius, _thickness = 1) {
@@ -139,8 +139,20 @@ function draw_input_box_with_progress(_bounds, _ratio, _align) {
 		// TODO: this is not right, but also not in use so 
 	}
 
-	draw_set_alpha(1)
-	draw_set_color(c_white)
+	reset_composite_color()
+}
+
+function composite_color(_color, _opacity) {
+	return {c: _color, o:_opacity}
+}
+
+function draw_set_composite_color(_c) {
+	draw_set_alpha(_c.o)
+	draw_set_color(_c.c)
+}
+
+function reset_composite_color() {
+	draw_set_composite_color(RESET_COLOR)
 }
 
 

@@ -184,16 +184,17 @@ function is_ulting() {
 	return false
 }
 
-function get_experience_needed_for_next_level() {
-	return min(5 * ultimate_level, 50)
-}
-
 function increase_streak() {
 	streak++
 	longest_streak = max(longest_streak, streak)
 }
 
 function increase_combo() {
+	// can only combo if you're on streak
+	if (!has_point_streak()) {
+		return
+	}
+	
 	combo_count++
 	alarm[2] = combo_max_alarm
 	longest_combo = max(longest_combo, combo_count)
@@ -212,10 +213,11 @@ function increase_ult_score() {
 			} else {
 				ultimate_experience++
 			
-				var _next_level_experience = get_experience_needed_for_next_level()
+				var _next_level_experience = get_experience_needed_for_next_level(ultimate_level)
 				if (ultimate_experience >= _next_level_experience) {
 					ultimate_level++
 					ultimate_experience = 0
+					broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level)
 				}
 			}
 		}

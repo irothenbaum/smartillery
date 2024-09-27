@@ -11,11 +11,9 @@ for (var _i = 0; _i < _draw_steps; _i++) {
 	var _x2 = x + lengthdir_x(circle_radius + _amplitude2, _draw_direction + step_rotation)
 	var _y1 = y + lengthdir_y(circle_radius + _amplitude1, _draw_direction)
 	var _y2 = y + lengthdir_y(circle_radius + _amplitude2, _draw_direction + step_rotation)
-	draw_set_alpha(image_alpha)
-	draw_set_color(color)
+	draw_set_composite_color(composite_color(color, image_alpha))
 	draw_line_width(_x1, _y1, _x2, _y2, thickness)
-	draw_set_color(c_white)
-	draw_set_alpha(1)
+	reset_composite_color()
 	
 	/*
 	-- Draws a straight sin wave

@@ -40,8 +40,7 @@ for (var _i = 0; _i < array_length(_keys); _i++) {
 		draw_set_alpha(_draw_opacity)
 		draw_rounded_rectangle(_bounds.x0, _bounds.y0, _bounds.x1, _bounds.y1, 10, 5)
 		
-		draw_set_alpha(1)
-		draw_set_color(c_white)
+		reset_composite_color()
 	}
 	
 	if (is_spot_in_bounds(mouse_x, mouse_y, _bounds)) {

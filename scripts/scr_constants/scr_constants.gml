@@ -16,6 +16,9 @@
 #macro EVENT_ENEMY_KILLED "enemy-killed"
 #macro EVENT_TOGGLE_PAUSE "toggle-pause"
 #macro EVENT_WRONG_GUESS "wrong-guess"
+#macro EVENT_UTLTIMATE_LEVEL_UP "ultimate-level-up"
+
+#macro RESET_COLOR {c: c_white, o: 1}
 
 #macro TAU (2 * pi)
 
@@ -45,11 +48,11 @@ global.xcenter = global.room_width / 2
 global.ycenter = global.room_height / 2
 
 // gameplay
-global.point_streak_requirement = 3
+global.point_streak_requirement = 1 // 3
 global.combo_delay_ms = 2000
 global.minimum_combo = 2
-global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower", "Menace", "Untouchable", "Impossible"]
-global.ultimate_requirement = 10
+global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower!", "Menace!!", "Untouchable!!!", "Impossible!!!!"]
+global.ultimate_requirement = 3 // 10
 global.ultimate_code = "000"
 global.max_health = 100
 global.min_answer = 10
