@@ -17,9 +17,18 @@ function enemy_initlaize(_e, _point_value) {
 		equation = "";
 		point_value = _point_value
 		slow_multiplier = 1
+		slow_sparks = undefined
 	}
 	
 	enemy_generate_question(_e)
+}
+
+function enemy_handle_destroy(_e) {
+	with (_e) {
+		if (!is_undefined(slow_sparks)) {
+			destroy_particle(slow_sparks)
+		}
+	}
 }
 
 
@@ -44,7 +53,7 @@ function enemy_generate_question(_e) {
 			try {
 				_attempts--;
 				var _values = global.is_math_mode ? generate_equation_and_answer(_wave) : generate_text_and_answer(_wave)
-				get_enemy_controller().reserve_answer(_values.answer, self)
+				get_game_controller().reserve_answer(_values.answer, self)
 				equation = _values.equation
 				answer = _values.answer
 			} catch (_err) {
@@ -68,6 +77,9 @@ function enemy_generate_question(_e) {
 		
 function explode_nearby_enemies(_enemy, _radius) {
 	for_each_enemy(function(_e, _index, _enemy, _radius) {
+		if (!instance_exists(_e) || !instance_exists(_enemy)) {
+			return;
+		}
 		if (_e.id == _enemy.id) {
 			// obviously don't count ourselves as nearby to ourselves
 			return
@@ -84,13 +96,26 @@ function enemy_remove_slow(_enemy) {
 
 function enemy_apply_slow(_enemy, _multiplier) {
 	with(_enemy) {
-		// undo our last multiplier
 		if (slow_multiplier != _multiplier) {
+			debug("Applying multiplier ", _multiplier, _enemy)
+			// undo our last multiplier
 			speed = speed / slow_multiplier
+			// apply the new one
+			slow_multiplier = _multiplier
+			speed = speed * slow_multiplier
+			
+			if (_multiplier == 1) {
+				if (!is_undefined(slow_sparks)) {
+					destroy_particle(slow_sparks)
+				}
+				slow_sparks = undefined
+			} else {
+				slow_sparks = draw_particle_sparkle(x, y, global.ultimate_color_tints[$ ULTIMATE_SLOW], 20)
+			}
 		}
 		
-		// apply the new one
-		slow_multiplier = _multiplier
-		speed = speed * slow_multiplier
+		if (!is_undefined(slow_sparks)) {
+			part_system_position(slow_sparks, x, y)
+		}
 	}
 }

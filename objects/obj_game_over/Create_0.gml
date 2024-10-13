@@ -17,16 +17,18 @@ function draw_buttons() {
 
 	instance_create_layer(x - 160, y, LAYER_HUD, obj_menu_button, {
 		message: "Menu",
-		fade_in: 1,
+		image_alpha: 0,
 		on_click: function() {
+			get_game_controller().reset_starting_values()
 			room_goto(rm_menu)
 		}
 	})
 
 	instance_create_layer(x + 100, y, LAYER_HUD, obj_menu_button, {
 		message: "Play Again",
-		fade_in: 1,
+		image_alpha: 0,
 		on_click: function() {
+			get_game_controller().reset_starting_values()
 			room_restart()
 		}
 	})

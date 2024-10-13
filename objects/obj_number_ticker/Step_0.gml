@@ -1,1 +1,0 @@
-current_value += (value - current_value) / 4

@@ -1,8 +1,8 @@
 number_of_strikes = ult_strike_get_count(level)
 strike_radius = ult_strike_get_radius(level)
 strikes_launched = 0
-// wait one second, then strike
-alarm[0] = game_get_speed(gamespeed_fps)
+// wait 2 seconds, then strike
+alarm[0] = 2 * game_get_speed(gamespeed_fps)
 toggle_pause(true)
 
 function strike_nearest_enemy() {
@@ -13,7 +13,7 @@ function strike_nearest_enemy() {
 	
 	if (_enemy_count == 0) {
 		debug("No more enemies, ending ultimate early")
-		alarm[1] =game_get_speed(gamespeed_fps)
+		alarm[1] = game_get_speed(gamespeed_fps)
 		return
 	}
 	
@@ -29,6 +29,9 @@ function strike_nearest_enemy() {
 		}
 	}
 	
+	// flash the screen
+	instance_create_layer(x, y, LAYER_INSTANCES, obj_flash_screen, {duration: game_get_speed(gamespeed_fps) * 0.1})
+	
 	with(_target) {
 		register_hit(true)
 		instance_create_layer(x, y, LAYER_INSTANCES, obj_ultimate_strike_explosion, {radius: other.strike_radius})
@@ -36,8 +39,9 @@ function strike_nearest_enemy() {
 
 	if (strikes_launched < number_of_strikes) {
 		// if we have more to launch, reset the alarm
-		alarm[0] = 0.2 * game_get_speed(gamespeed_fps)
+		alarm[0] = random_range(0.2, 0.6) * game_get_speed(gamespeed_fps)
 	} else {
-		alarm[1] =game_get_speed(gamespeed_fps)
+		// wait 3 seconds then destroy self
+		alarm[1] = 3 * game_get_speed(gamespeed_fps)
 	}
 }

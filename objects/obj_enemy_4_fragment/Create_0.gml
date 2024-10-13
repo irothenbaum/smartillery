@@ -10,8 +10,9 @@ target_direction = direction
 alarm[0] = (irandom_range(500,2000) / 1000) * game_get_speed(gamespeed_fps)
 
 function register_hit(_insta_kill=false) {
-	get_enemy_controller().release_answer(answer);
-	get_game_controller().handle_enemy_killed(self, _insta_kill)
+	var _game_controller = get_game_controller()
+	_game_controller.release_answer(answer);
+	_game_controller.handle_enemy_killed(self, _insta_kill)
 	instance_destroy();
 }
 

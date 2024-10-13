@@ -1,13 +1,11 @@
 draw_set_halign(fa_left);
 
-// might be fun to make this configurable
-game_seed = game_seed || current_time;
-random_set_seed(game_seed);
+random_set_seed(global.game_seed);
 
-current_wave = 3
+current_wave = 0
 game_score = 0
-unit_score = 0 // base score
-streak_score = 0 // streak bonus
+unit_score = 0
+streak_score = 0
 combo_score = 0
 
 combo_count = 0
@@ -20,6 +18,7 @@ is_selecting_ult = false
 ultimate_charge = 0;
 ultimate_experience = 0
 ultimate_level = 1
+cached_ultimate_level = undefined;
 inst_ultimate = undefined;
 
 is_game_over = false;
@@ -28,6 +27,8 @@ is_scene_transitioning = false;
 
 combo_max_alarm = (global.combo_delay_ms / 1000) * game_get_speed(gamespeed_fps)
 instance_create_layer(x, y, LAYER_INSTANCES, obj_combo_drawer)
+
+debug("USING SEED :" + string(global.game_seed))
 
 /// @returns {Bool}
 function has_point_streak() {
@@ -52,7 +53,7 @@ function mark_wave_completed() {
 	}
 	
 	alarm[0] = 1 * game_get_speed(gamespeed_fps)
-	alarm[1] = (global.scene_transition_duration - 2) * game_get_speed(gamespeed_fps)
+	alarm[1] = (global.scene_transition_duration * 0.6) * game_get_speed(gamespeed_fps)
 	
 	return _controller
 }
@@ -63,6 +64,9 @@ function handle_game_over() {
 			instance_destroy();
 		}
 	}
+	
+	// this will destroy the ult
+	mark_ultimate_used();
 	
 	is_game_over = true;
 	
@@ -75,6 +79,20 @@ function handle_game_over() {
 	instance_destroy(instance_find(obj_hud, 0))
 	
 	var _game_over_message = instance_create_layer(x, y, LAYER_HUD, obj_game_over)
+}
+
+function reset_starting_values() {
+	global.selected_ultimate = undefined
+	combo_score = 0
+	unit_score = 0
+	streak_score = 0
+	game_score = 0
+	ultimate_charge = 0
+	ultimate_experience = 0
+	ultimate_level = 1
+	cached_ultimate_level = undefined
+	current_wave = 0
+	random_set_seed(global.game_seed);
 }
 
 /// @func handle_enemy_killed(_enemy)
@@ -138,13 +156,23 @@ function handle_submit_code(_code) {
 	if (string_length(_code) == 0) {
 		return false;
 	}
+	
+	// test strings
+	if(_code == "_damage") {
+		get_player().execute_take_damage(20)
+		return true;
+	}
+	if (_code == "_level") {
+		ultimate_level++
+		ultimate_charge = global.ultimate_requirement
+		broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level)
+		return true;
+	}
 
-	if (is_ulting()) { 
-		return inst_ultimate.handle_submit_code(_code)
-	} else if (_code == global.ultimate_code && global.selected_ultimate != ULTIMATE_NONE) {
+	if (_code == global.ultimate_code && global.selected_ultimate != ULTIMATE_NONE) {
 		activate_ultimate()
 		return true
-	} else if (get_enemy_controller().handle_submit_answer(_code)) {
+	} else if (handle_submit_answer(_code)) {
 		// if this was a correct enemy answer
 		return true
 	} else {
@@ -159,10 +187,10 @@ function activate_ultimate() {
 	if (!has_ultimate() || is_scene_transitioning) {
 		return
 	}
-	// TODO: Add Slow power here
-	var _ult_obj = global.selected_ultimate == ULTIMATE_STRIKE ? obj_ultimate_strike : obj_heal_power
+	
+	var _ult_obj = global.selected_ultimate == ULTIMATE_STRIKE ? obj_ultimate_strike : (global.selected_ultimate == ULTIMATE_HEAL ? obj_heal_power : obj_slow_time)
 	inst_ultimate = instance_create_layer(x, y, LAYER_HUD, _ult_obj, {level: ultimate_level})
-	ultimate_charge = 0
+	cached_ultimate_level = ultimate_level
 }
 
 
@@ -170,7 +198,13 @@ function mark_ultimate_used() {
 	if (!is_undefined(inst_ultimate)) {
 		instance_destroy(inst_ultimate)
 	}
+	ultimate_charge = 0
 	inst_ultimate = undefined
+	cached_ultimate_level = undefined
+}
+
+function get_ulting_level() {
+	return cached_ultimate_level
 }
 
 function is_ulting() {
@@ -180,7 +214,7 @@ function is_ulting() {
 	if (instance_exists(inst_ultimate)) {
 		return true
 	}
-	inst_ultimate = undefined
+	mark_ultimate_used()
 	return false
 }
 
@@ -222,6 +256,48 @@ function increase_ult_score() {
 			}
 		}
 	}
+}
+
+// --------------------------------------------------------------------
+// ANSWER TRACKING
+
+// these values are things that can be solved by the obj_input
+// and keyed by the solution. This way we ensure unique solutions exist
+active_answers = {};
+
+/// @func reserve_answer(_ans, _inst)
+/// @param {String} _ans
+/// @param {Id.Instance} _inst
+/// @return {undefined}
+function reserve_answer(_ans, _inst) {
+	if (is_answer_active(_ans)) {
+		throw "Answer in use";
+	}
+	active_answers[$ _ans] = _inst;
+}
+
+/// @func release_answer(_ans)
+/// @param {String} _ans
+/// @return {undefined}
+function release_answer(_ans) {
+	struct_remove(active_answers, _ans)
+}
+
+/// @func handle_submit_answer(_answer)
+/// @param {String} _answer
+/// @return {Bool}
+function handle_submit_answer(_answer) {
+	if (!is_answer_active(_answer)) {
+		return false
+	}
+	
+	var _instance = active_answers[$ _answer];
+	get_player().fire_at_instance(_instance);
+	return true;
+}
+
+function is_answer_active(_answer) {
+	return struct_exists(active_answers, _answer)
 }
 
 // start off marking wave completed so game can start

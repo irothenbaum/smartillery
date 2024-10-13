@@ -15,7 +15,8 @@ direction = point_direction(x, y, target_location_x, target_location_y) +  30 //
 speed = approach_speed
 
 function register_hit(_insta_kill) {
-	get_enemy_controller().release_answer(answer);
-	get_game_controller().handle_enemy_killed(self, _insta_kill);
-	instance_destroy();
+	var _game_controller = get_game_controller()
+	_game_controller.release_answer(answer);
+	_game_controller.handle_enemy_killed(self, _insta_kill)
+	instance_destroy()
 }

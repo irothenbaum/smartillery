@@ -1,9 +1,7 @@
 can_spawn = false;
 enemy_count = 0;
 spawned_count = 0;
-// these values are things that can be solved by the obj_input
-// and keyed by the solution. This way we ensure unique solutions exist
-active_answers = {};
+
 
 /// @func init()
 /// @returns {undefined}
@@ -11,12 +9,12 @@ function init_wave() {
 	can_spawn = false;
 	var _current_wave = get_current_wave_number()
 	// we want each wave to progress the same way regardless of play so we reset the random seed deterministically
-	random_set_seed(get_game_controller().game_seed + _current_wave);
+	random_set_seed(global.game_seed + _current_wave);
 	enemy_count = ceil(_current_wave * 1.5);
 	spawned_count = 0;
 	
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_next_wave_text)
-	alarm[0] = global.scene_transition_duration * 0.75 * game_get_speed(gamespeed_fps);
+	alarm[0] = global.scene_transition_duration * 2 * game_get_speed(gamespeed_fps);
 }
 
 /// @func spawn_enemy()
@@ -49,13 +47,13 @@ function spawn_enemy() {
 	
 	var _spawn_value
 	var _next_enemy_type
-	if (_max_enemy >= 4 && irandom(10) == 1) {
+	if (_max_enemy >= 4 && irandom(20) == 1) {
 		_next_enemy_type = obj_enemy_4
 		_spawn_value = 3
-	} else if (_max_enemy >= 3 && irandom(8) == 1) {
+	} else if (_max_enemy >= 3 && irandom(14) == 1) {
 		_next_enemy_type = obj_enemy_3
 		_spawn_value = 2
-	} else if (_max_enemy >= 2 && irandom(6) == 1) {
+	} else if (_max_enemy >= 2 && irandom(8) == 1) {
 		_next_enemy_type = obj_enemy_2
 		_spawn_value = 1
 	} else {
@@ -70,39 +68,4 @@ function spawn_enemy() {
 	spawned_count++;
 	
 	return _new_enemy
-}
-
-/// @func reserve_answer(_ans, _inst)
-/// @param {String} _ans
-/// @param {Id.Instance} _inst
-/// @return {undefined}
-function reserve_answer(_ans, _inst) {
-	if (is_answer_active(_ans)) {
-		throw "Answer in use";
-	}
-	active_answers[$ _ans] = _inst;
-}
-
-/// @func release_answer(_ans)
-/// @param {String} _ans
-/// @return {undefined}
-function release_answer(_ans) {
-	struct_remove(active_answers, _ans)
-}
-
-/// @func handle_submit_answer(_answer)
-/// @param {String} _answer
-/// @return {Bool}
-function handle_submit_answer(_answer) {
-	if (!is_answer_active(_answer)) {
-		return false
-	}
-	
-	var _instance = active_answers[$ _answer];
-	get_player().fire_at_instance(_instance);
-	return true;
-}
-
-function is_answer_active(_answer) {
-	return struct_exists(active_answers, _answer)
 }

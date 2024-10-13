@@ -29,15 +29,18 @@ global.power_color = c_aqua
 global.combo_color = c_red
 global.beam_color = c_white
 global.ultimate_colors = {"none": c_white, "strike": #e03a3a, "slow": #3e7bed, "heal": #11d94e}
-global.ultimate_color_tints = {"none": #eeeeee, "strike": #e0773a, "slow": #a43eed, "heal": #0ce7eb}
+global.ultimate_color_tints = {"none": #eeeeee, "strike": #e0773a, "slow": #0ce7eb, "heal": #c0ed2b}
 
 // in-game configurable
 global.selected_ultimate = "none";
-global.body_color = c_ltgrey;
-global.turret_color = c_ltgrey;
+global.body_color = c_white;
+global.turret_color = c_white;
 global.is_math_mode = true
 global.total_paused_time = 0
 global.paused = false
+global.game_seed = randomize()
+
+global.focused_input = undefined
 
 // seemingly magic numbers
 global.heal_radius = 75
@@ -48,15 +51,15 @@ global.xcenter = global.room_width / 2
 global.ycenter = global.room_height / 2
 
 // gameplay
-global.point_streak_requirement = 1 // 3
-global.combo_delay_ms = 2000
+global.point_streak_requirement = 3
+global.combo_delay_ms = 1600
 global.minimum_combo = 2
 global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower!", "Menace!!", "Untouchable!!!", "Impossible!!!!"]
-global.ultimate_requirement = 3 // 10
+global.ultimate_requirement = 6
 global.ultimate_code = "000"
 global.max_health = 100
-global.min_answer = 10
-global.wave_difficulty_step = 4;
+global.starting_max_answer = 10
+global.wave_difficulty_step = 5;
 global.operations_order = ["+", "-", "x", "/", "^", "^"]
 global.max_math_difficulty = array_length(global.operations_order)
 global.min_word_length = 4
@@ -64,7 +67,7 @@ global.max_word_length = 11
 
 // effects
 global.fade_speed = 0.1
-global.scene_transition_duration = 6
+global.scene_transition_duration = 2
 global.bg_number_of_circles = 20
 global.bg_circle_max_radius = ceil(sqrt(power(global.room_width, 2) + power(global.room_height, 2)) / 2)
 global.bg_cicle_min_radius = global.turret_length

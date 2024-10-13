@@ -6,3 +6,6 @@ for_each_enemy(function(_enemy, _index, _distance, _slow_amount) {
 		enemy_remove_slow(_enemy)
 	}
 }, range, slow_multiplier)
+
+var _gc = get_game_controller()
+_gc.ultimate_charge = lerp(_gc.ultimate_charge, global.ultimate_requirement * alarm[0] / starting_duration, global.fade_speed)

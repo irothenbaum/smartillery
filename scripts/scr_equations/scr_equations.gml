@@ -83,7 +83,7 @@ function generate_answer(_max) {
 }
 
 function math_determine_max_from_wave(_wave) {
-	return global.min_answer + (5 * floor(_wave / 3))
+	return global.starting_max_answer + (5 * floor(_wave / 3))
 }
 
 function generate_equation_and_answer(_wave) {

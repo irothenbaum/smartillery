@@ -20,6 +20,52 @@ function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_colo
 	})
 }
 
+function get_max_bounds(_bounds_array) {
+	if (!is_array(_bounds_array) || array_length(_bounds_array) == 0) {
+		return undefined
+	}
+	var _ret_val = {
+		x0: _bounds_array[0].x0,
+		y0: _bounds_array[0].y0,
+		x1: _bounds_array[0].x1,
+		y1: _bounds_array[0].y1,
+	}
+	for (var _i = 1; _i < array_length(_bounds_array); _i++) {
+		var _these_bounds = _bounds_array[_i];
+		_ret_val.x0 = min(_ret_val.x0, _these_bounds.x0)
+		_ret_val.x1 = max(_ret_val.x1, _these_bounds.x1)
+		_ret_val.y0 = min(_ret_val.y0, _these_bounds.y0)
+		_ret_val.y1 = max(_ret_val.y1, _these_bounds.y1)
+	}
+	
+	return _final_format(_ret_val)
+}
+
+function draw_info_modal(_bounds, _step) {
+	_step = min(1, max(0, _step))
+	var _padding = 20;
+	var _with_padding = {
+		x0: (_bounds.x0 - _padding),
+		y0: (_bounds.y0 - _padding),
+		x0: (_bounds.x1 + _padding),
+		y0: (_bounds.y1 + _padding),
+	}
+	
+	if (_step < 1) {
+		_with_padding = {
+			x0: lerp(_bounds.xcenter, _with_padding.x0, min(1, _step * 2)),
+			y0: lerp(_bounds.ycenter, _with_padding.y0, max(0, _step * 2 - 1)),
+			x0: lerp(_bounds.xcenter, _with_padding.x1, min(1, _step * 2)),
+			y0: lerp(_bounds.ycenter, _with_padding.y1, max(0, _step * 2 - 1)),
+		}	
+	}
+	
+	draw_set_composite_color(composite_color(c_white, 1))
+	draw_rectangle(_with_padding.x0, _with_padding.y0, _with_padding.x1, _with_padding.y1, true)
+	draw_set_composite_color(composite_color(c_black, 0.3))
+	draw_rectangle(_with_padding.x0, _with_padding.y0, _with_padding.x1, _with_padding.y1, false)
+}
+
 function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT) {	
 	var _bound = {
 		x0: _x,
@@ -96,10 +142,14 @@ function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1) {
 	
 	for (var _i = 1; _i <= _steps; _i++) {
 		var _end_angle = _start + (_i * _step_degree)
+		var _end_angle_compensated = _end_angle + (0.1 * _step_degree)
 		var _end_x = _x + lengthdir_x(_radius, _end_angle)
 		var _end_y = _y + lengthdir_y(_radius, _end_angle)
 		
-		draw_line_width(_last_point.x, _last_point.y, _end_x, _end_y, _thickness)	
+		var _end_x_compensated = _x + lengthdir_x(_radius, _end_angle_compensated)
+		var _end_y_compensated = _y + lengthdir_y(_radius, _end_angle_compensated)
+		
+		draw_line_width(_last_point.x, _last_point.y, _end_x_compensated, _end_y_compensated, _thickness)	
 		_last_point.x = _end_x
 		_last_point.y = _end_y
 	}

@@ -1,6 +1,7 @@
 draw_ultimate = 0
 draw_ultimate_experience = 0
 margin = 20
+drawn_score = 0
 
 min_box_width = 100
 

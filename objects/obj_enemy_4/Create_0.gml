@@ -16,7 +16,8 @@ function register_hit(_insta_kill=false) {
 		instance_create_layer(x, y, LAYER_INSTANCES, obj_enemy_4_fragment, {direction: direction + 180});
 	}
 	
-	get_enemy_controller().release_answer(answer);
-	get_game_controller().handle_enemy_killed(self, _insta_kill)
+	var _game_controller = get_game_controller()
+	_game_controller.release_answer(answer);
+	_game_controller.handle_enemy_killed(self, _insta_kill)
 	instance_destroy()
 }

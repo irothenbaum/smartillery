@@ -12,7 +12,7 @@ if (global.selected_ultimate != ULTIMATE_NONE && instance_exists(input) && !is_u
 	
 	var _circle_radius = half_sprite_size + margin / 2
 	
-	// draw the filled progress bar if we have any charge
+	// draw the ultimate circle progress if we have any charge
 	if (game_controller.ultimate_charge > 0) {
 		draw_ultimate = lerp(draw_ultimate, game_controller.ultimate_charge / global.ultimate_requirement, global.fade_speed)
 		draw_set_composite_color(composite_color(_ultimate_color, game_controller.has_ultimate() ? 1 : 0.3))
@@ -20,13 +20,11 @@ if (global.selected_ultimate != ULTIMATE_NONE && instance_exists(input) && !is_u
 	}
 	
 	// draw the empty experience bar
-	draw_set_composite_color(composite_color(c_white, 0.5))
+	draw_set_composite_color(composite_color(c_white, 1))
 	draw_arc(_xcenter, _ycenter, _circle_radius , 360, 0, 4)
-	reset_composite_color()
 	
 	// draw the experiece arc if we have any
 	if (game_controller.ultimate_experience > 0) {
-		draw_set_color(_ultimate_tint)
 		var _next_amount = get_experience_needed_for_next_level(game_controller.ultimate_level)
 		draw_ultimate_experience = lerp(draw_ultimate_experience, game_controller.ultimate_experience / _next_amount, global.fade_speed)
 		draw_arc(_xcenter, _ycenter, _circle_radius, 360 * draw_ultimate_experience, 270, 8)
@@ -39,4 +37,5 @@ if (global.selected_ultimate != ULTIMATE_NONE && instance_exists(input) && !is_u
 }
 
 reset_composite_color()
-draw_text_obj(pos_score, "Score: " + string(game_controller.game_score));
+
+draw_text_obj(pos_score, "Score: " + string(lerp(drawn_score, game_controller.game_score, 0.25)));
