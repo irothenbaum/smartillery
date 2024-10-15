@@ -16,6 +16,7 @@ function select_button_by_label() {
 				: instance_find(obj_menu_number_input, _i - _buttons - _toggles)
 			)
 		if (string_lower(_inst.label) == message) {
+			message = ""
 			_inst.on_click()
 			return true
 		}

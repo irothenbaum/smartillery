@@ -46,6 +46,8 @@ function enemy_draw_equation(_e) {
 
 function enemy_generate_question(_e) {
 	_wave = get_current_wave_number()
+	equation = ""
+	answer = ""
 	
 	with (_e) {
 		var _attempts = 10;
@@ -65,7 +67,7 @@ function enemy_generate_question(_e) {
 			}
 		} until (equation != "" || _attempts <= 0)
 	
-		debug("Generated equation:", equation, answer)
+		debug("Generated equation:", equation, answer, _attempts)
 	
 		if (equation == "") {
 			instance_destroy();

@@ -25,8 +25,11 @@ function spawn_enemy() {
 	// out of bounds margin
 	var _oob_margin = 100
 	
-	var _pos_x = irandom(room_width)
-	var _pos_y = irandom(room_height)
+	var _rotation = irandom(360)
+	var _pos_x = global.xcenter + lengthdir_x(global.bg_circle_max_radius, _rotation)
+	var _pos_y = global.ycenter + lengthdir_x(global.bg_circle_max_radius, _rotation)
+	
+	debug("GENERATED", _pos_x, _pos_y, _rotation, global.bg_circle_max_radius)
 	
 	// the no spawn zone is the middle 33%, so if pos_x is in that range, we shift it
 	var _no_spawn_marker = room_width * 0.33

@@ -2,14 +2,18 @@ if (global.focused_input == self) {
 	if(keyboard_check_pressed(vk_escape)) {
 		global.focused_input = global.default_focused_input
 		keyboard_string = "";
-	} else {
+	} else if(global.focused_input == self) {
 		try {
-			cached_value = string_digits(keyboard_string)
-			if (cached_value != get_value()) {
-				on_change(cached_value)
+			if (string_length(keyboard_string) == 0) {
+				// do nothing
+			} else {
+				cached_value = string_digits(keyboard_string)
+				if (cached_value != get_value()) {
+					on_change(cached_value)
+				}
 			}
 		} catch(_e) {
-			debug("Invalid seed, ignoring")
+			debug("Invalid seed, ignoring", _e)
 		}
 	}
 }

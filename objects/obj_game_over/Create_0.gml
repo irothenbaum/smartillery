@@ -16,7 +16,7 @@ function draw_buttons() {
 	alarm[2] = 2 * game_get_speed(gamespeed_fps)
 
 	instance_create_layer(x - 160, y, LAYER_HUD, obj_menu_button, {
-		message: "Menu",
+		label: "Menu",
 		image_alpha: 0,
 		on_click: function() {
 			get_game_controller().reset_starting_values()
@@ -25,7 +25,7 @@ function draw_buttons() {
 	})
 
 	instance_create_layer(x + 100, y, LAYER_HUD, obj_menu_button, {
-		message: "Play Again",
+		label: "Play Again",
 		image_alpha: 0,
 		on_click: function() {
 			get_game_controller().reset_starting_values()
