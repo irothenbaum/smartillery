@@ -17,6 +17,7 @@
 #macro EVENT_TOGGLE_PAUSE "toggle-pause"
 #macro EVENT_WRONG_GUESS "wrong-guess"
 #macro EVENT_UTLTIMATE_LEVEL_UP "ultimate-level-up"
+#macro EVENT_ON_OFF_STREAK "on-streak"
 
 #macro RESET_COLOR {c: c_white, o: 1}
 
@@ -51,7 +52,7 @@ global.xcenter = global.room_width / 2
 global.ycenter = global.room_height / 2
 
 // gameplay
-global.point_streak_requirement = 1 // 3
+global.point_streak_requirement = 3
 global.combo_delay_ms = 1600
 global.minimum_combo = 2
 global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower!", "Menace!!", "Untouchable!!!", "Impossible!!!!"]

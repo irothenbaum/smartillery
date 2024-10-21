@@ -53,7 +53,6 @@ function draw_particle_shockwave(x,y, _scale = 1, _sprite_override = pt_shape_ci
 
 	part_system_position(_ps, x, y);
 
-	
 	return _ps
 }
 
@@ -111,6 +110,39 @@ function draw_particle_sparks(x,y, _number = 12) {
 	part_system_position(_ps, x, y);
 
 	return _ps
+}
+
+function draw_muzzle_smoke(x, y, _color) {
+	//par_muzzle_smoke
+	var _ps = part_system_create();
+	part_system_draw_order(_ps, true);
+
+	//Emitter
+	var _ptype1 = part_type_create();
+	part_type_shape(_ptype1, pt_shape_square);
+	part_type_size(_ptype1, 0.2, 0.8, 0, 0);
+	part_type_scale(_ptype1, 0.1, 0.1);
+	part_type_speed(_ptype1, 0.2, 0.8, 0, 0);
+	part_type_direction(_ptype1, 90, 90, 0, 40);
+	part_type_gravity(_ptype1, 0, 0);
+	part_type_orientation(_ptype1, 0, 0, 0, 0, false);
+	part_type_colour1(_ptype1, _color);
+	part_type_alpha1(_ptype1, 1);
+	part_type_blend(_ptype1, false);
+	part_type_life(_ptype1, 40, 10);
+
+	var _pemit1 = part_emitter_create(_ps);
+	part_emitter_region(_ps, _pemit1, -10, 10, -10, 10, ps_shape_ellipse, ps_distr_linear);
+	part_emitter_stream(_ps, _pemit1, _ptype1, 1);
+	part_emitter_interval(_ps, _pemit1, 2, 10, time_source_units_frames)
+
+	part_system_position(_ps, x, y);
+
+	return {
+		system: _ps,
+		emitter: _pemit1,
+		type: _ptype1,
+	}
 }
 
 function destroy_particle(_p) {

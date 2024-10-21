@@ -22,6 +22,7 @@ image_xscale = image_scale;
 image_yscale = image_scale;
 
 screen_shake = instance_create_layer(x,y, LAYER_INSTANCES, obj_screen_shake)
+streak_fire = undefined
 
 function fire_at_instance(_inst) {
 	if (!_inst) {
@@ -75,9 +76,23 @@ function execute_take_damage(_damage_amount) {
    }
 }
 
-function get_turret_muzzle() {
+function get_turret_muzzle(_extra = 0) {
 	return {
-		x: x + lengthdir_x(global.turret_length, image_angle),
-		y: y + lengthdir_y(global.turret_length, image_angle)
+		x: x + lengthdir_x(global.turret_length + _extra, image_angle),
+		y: y + lengthdir_y(global.turret_length + _extra, image_angle)
 	}
 }
+
+subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
+	var _player = get_player()
+	if (_is_on_streak) {
+		with (_player) {
+			streak_fire = draw_muzzle_smoke(x, y, global.power_color)
+		}
+	} else {
+		with(_player) {
+			destroy_particle(streak_fire.system)
+			streak_fire = undefined
+		}
+	}
+})

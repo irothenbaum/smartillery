@@ -18,3 +18,9 @@ if (recoil_amount > 0.01) {
 } else {
 	recoil_amount = 0
 }
+
+if (!is_undefined(streak_fire)) {
+	var _muzzle_position = get_turret_muzzle(10 - recoil_amount)
+	part_type_direction(streak_fire.type, image_angle, image_angle, 0, 40);
+	part_system_position(streak_fire.system, _muzzle_position.x, _muzzle_position.y)
+}

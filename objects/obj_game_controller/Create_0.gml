@@ -178,6 +178,7 @@ function handle_submit_code(_code) {
 	} else {
 		// this was simply an inccorect submission, streak goes to 0
 		streak = 0
+		broadcast(EVENT_ON_OFF_STREAK, false)
 		broadcast(EVENT_WRONG_GUESS, _code)
 		return false
 	}
@@ -219,8 +220,14 @@ function is_ulting() {
 }
 
 function increase_streak() {
-	streak++
+	_had_sreak = self.has_point_streak()
+	streak++	
+	
 	longest_streak = max(longest_streak, streak)
+	
+	if (!_had_sreak && self.has_point_streak()) {
+		broadcast(EVENT_ON_OFF_STREAK, true)
+	}
 }
 
 function increase_combo() {
