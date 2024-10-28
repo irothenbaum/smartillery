@@ -12,8 +12,12 @@ drawn_ring_hue = array_create(global.bg_number_of_circles, idle_hue)
 drawn_ring_saturation = array_create(global.bg_number_of_circles, 0)
 drawn_ring_lumosity = array_create(global.bg_number_of_circles, 0)
 gradient_shadow = 0.5
-drawn_skipped_rings = 0
+drawn_skipped_rings = global.bg_number_of_circles
 game_controller = get_game_controller()
+booting_up = true
+boot_up_time = 1 * game_get_speed(gamespeed_fps)
+alarm[0] = boot_up_time
+
 
 function filter_by_distance_to_player(_instance, _index, _ring_enemy_counts) {
 	var _distance_to_player = point_distance(_instance.x, _instance.y, global.xcenter, global.ycenter)

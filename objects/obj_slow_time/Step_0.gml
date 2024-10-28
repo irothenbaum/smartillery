@@ -8,4 +8,4 @@ for_each_enemy(function(_enemy, _index, _distance, _slow_amount) {
 }, range, slow_multiplier)
 
 var _gc = get_game_controller()
-_gc.ultimate_charge = lerp(_gc.ultimate_charge, global.ultimate_requirement * alarm[0] / starting_duration, global.fade_speed)
+_gc.ultimate_charge = max(0, global.ultimate_requirement * alarm[0] / starting_duration)

@@ -84,15 +84,13 @@ function get_turret_muzzle(_extra = 0) {
 }
 
 subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
-	var _player = get_player()
 	if (_is_on_streak) {
-		with (_player) {
-			streak_fire = draw_muzzle_smoke(x, y, global.power_color)
+		streak_fire = draw_muzzle_smoke(x, y, global.power_color)
+	} else {	
+		if (is_undefined(streak_fire)) {
+			return
 		}
-	} else {
-		with(_player) {
-			destroy_particle(streak_fire.system)
-			streak_fire = undefined
-		}
+		destroy_particle(streak_fire.system)
+		streak_fire = undefined
 	}
 })

@@ -1,6 +1,6 @@
 
 // the smallest combo_count is 2 (double kill)
-if (last_combo >= global.minimum_combo && !game_controller.is_scene_transitioning && !game_controller.is_selecting_ult) {
+if (last_combo >= global.minimum_combo && !game_controller.is_selecting_ult) {
 	var _phrase = global.combo_phrases[min(array_length(global.combo_phrases) - 1, other.last_combo - global.minimum_combo)]
 	var _combo_y = global.ycenter + 200
 	var _combo_width = global.xcenter // shorthand for half the room width

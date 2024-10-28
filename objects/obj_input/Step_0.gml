@@ -34,3 +34,7 @@ if (!is_undefined(shake_start)) {
 
 // update our render_x in case we were shaking (modifying x)
 render_x = lerp(render_x, x, global.fade_speed)
+
+if (!is_undefined(streak_fire)) {
+	size_streak_fire()
+}

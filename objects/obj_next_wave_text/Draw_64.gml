@@ -1,6 +1,12 @@
 if (fade_out) {
-	image_alpha = image_alpha * 0.9;
+	image_alpha = lerp(0, image_alpha, global.fade_speed)
+	if (image_alpha == 0) {
+		instance_destroy()
+	}
+} else if (image_alpha < 1) {
+	image_alpha = lerp(1, image_alpha, global.fade_speed)
 }
+
 draw_set_composite_color(composite_color(c_white, image_alpha))
 draw_set_font(fnt_title)
 var _bounds = draw_text_with_alignment(x, y, "Beginning Wave #" + string(get_current_wave_number()), ALIGN_CENTER)
