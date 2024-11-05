@@ -27,12 +27,6 @@ drawn_icon_opacity = {
 	ULTIMATE_HEAL: 0,
 }
 
-ultimate_descriptions = {
-	ULTIMATE_STRIKE: {title: "Air strike", description: "Launch a barrage from the air that targets and eliminates your most dangerous enemies"},
-	ULTIMATE_SLOW: {title: "Time slow", description: "Reduce the approach and attack speed of enemies nearing your position"},
-	ULTIMATE_HEAL: {title: "Regenerate", description: "Repair damage to your ship so you can stay in the fight longer"}
-}
-
 function handle_select(_ult) {
 	global.selected_ultimate = _ult
 	instance_destroy()

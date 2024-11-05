@@ -1,13 +1,16 @@
 {
   "$GMObject":"",
-  "%Name":"ultimate",
-  "eventList":[],
+  "%Name":"obj_tutorial_overlay",
+  "eventList":[
+    {"$GMEvent":"","%Name":"","collisionObjectId":null,"eventNum":64,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
-  "name":"ultimate",
+  "name":"obj_tutorial_overlay",
   "overriddenProperties":[],
   "parent":{
-    "name":"modals",
-    "path":"folders/Objects/modals.yy",
+    "name":"drawing",
+    "path":"folders/Objects/drawing.yy",
   },
   "parentObjectId":null,
   "persistent":false,

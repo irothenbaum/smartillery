@@ -52,7 +52,7 @@ global.xcenter = global.room_width / 2
 global.ycenter = global.room_height / 2
 
 // gameplay
-global.point_streak_requirement = 3
+global.point_streak_requirement = 1 // 3
 global.combo_delay_ms = 1600
 global.minimum_combo = 2
 global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower!", "Menace!!", "Untouchable!!!", "Impossible!!!!"]
@@ -74,3 +74,10 @@ global.bg_circle_max_radius = ceil(sqrt(power(global.room_width, 2) + power(glob
 global.bg_cicle_min_radius = global.turret_length
 global.bg_circle_magnitude = global.bg_circle_max_radius - global.bg_cicle_min_radius
 global.bg_circle_ring_width = global.bg_circle_magnitude / global.bg_number_of_circles
+
+// copy
+global.ultimate_descriptions = {
+	ULTIMATE_STRIKE: {title: "Air strike", description: "Launch a barrage from the air that targets and eliminates your most dangerous enemies"},
+	ULTIMATE_SLOW: {title: "Time slow", description: "Reduce the approach and attack speed of enemies nearing your position"},
+	ULTIMATE_HEAL: {title: "Regenerate", description: "Repair damage to your ship so you can stay in the fight longer"}
+}

@@ -53,11 +53,11 @@ for (var _i = 0; _i < array_length(_keys); _i++) {
 		
 		draw_set_color(global.ultimate_colors[$ _k])
 		draw_set_font(fnt_title)
-		var _title_bounds = draw_text_with_alignment(x, y + _half_icon_space + 20, ultimate_descriptions[$ _k].title, ALIGN_CENTER)
+		var _title_bounds = draw_text_with_alignment(x, y + _half_icon_space + 20, global.ultimate_descriptions[$ _k].title, ALIGN_CENTER)
 		
 		draw_set_color(c_white)
 		draw_set_font(fnt_base)
-		draw_text_with_alignment(x, _title_bounds.y1 + 20, ultimate_descriptions[$ _k].description, ALIGN_CENTER)
+		draw_text_with_alignment(x, _title_bounds.y1 + 20, global.ultimate_descriptions[$ _k].description, ALIGN_CENTER)
 
 	}
 }

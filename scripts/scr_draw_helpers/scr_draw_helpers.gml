@@ -66,41 +66,59 @@ function draw_info_modal(_bounds, _step) {
 	draw_rectangle(_with_padding.x0, _with_padding.y0, _with_padding.x1, _with_padding.y1, false)
 }
 
-function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT) {	
-	var _bound = {
+function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_height = 1.1) {	
+	var _lines = string_split(_text, "\n")
+	var _final_bounds = {
 		x0: _x,
 		y0: _y,
 		x1: _x,
 		y1: _y
 	}
+		
+	var _total_lines = array_length(_lines)
+	for (var _i = 0; _i < _total_lines; _i++) {
+		var _line_text = _lines[_i]
+		var _line_bounds = {
+			x0: _x,
+			y0: _y,
+			x1: _x,
+			y1: _y
+		}
+		
+		var _str_width = string_width(_line_text)
+		var _str_height = string_height(_line_text)
+		
+		// we always draw the text center aligned vertically
+		_line_bounds.y0 = _y - (_str_height / 2)
+			
+		switch (_align) {
+			case ALIGN_CENTER:
+				_line_bounds.x0 = _x - _str_width / 2 
+				break
+			
+			case ALIGN_RIGHT:
+				_line_bounds.x0 = _x - _str_width
+				break
+			
+			case ALIGN_LEFT:
+			default: 
+				// do nothing
+				break
+		}
 	
-	var _str_width = string_width(_text)
-	var _str_height = string_height(_text)
+		_line_bounds.x1 = _line_bounds.x0 + _str_width
+		_line_bounds.y1 = _line_bounds.y0 + _str_height
 	
-	// we always draw the 
-	_bound.y0 = _y - (_str_height / 2)
-			
-	switch (_align) {
-		case ALIGN_CENTER:
-			_bound.x0 = _x - _str_width / 2 
-			break
-			
-		case ALIGN_RIGHT:
-			_bound.x0 = _x - _str_width
-			break
-			
-		case ALIGN_LEFT:
-		default: 
-			// do nothing
-			break
+		draw_text(_line_bounds.x0, _line_bounds.y0, _line_text);
+		_y += _str_height * _line_height
+		
+		_final_bounds.x0 = min(_final_bounds.x0, _line_bounds.x0)
+		_final_bounds.x1 = max(_final_bounds.x1, _line_bounds.x1)
+		_final_bounds.y0 = min(_final_bounds.y0, _line_bounds.y0)
+		_final_bounds.y1 = max(_final_bounds.y1, _line_bounds.y1)
 	}
 	
-	_bound.x1 = _bound.x0 + _str_width
-	_bound.y1 = _bound.y0 + _str_height
-	
-	draw_text(_bound.x0, _bound.y0, _text);
-	
-	return _final_format(_bound)
+	return _final_format(_final_bounds)
 }
 
 function draw_overlay(_alpha  = 0.5) {

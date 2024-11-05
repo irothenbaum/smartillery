@@ -2,6 +2,8 @@ draw_set_halign(fa_left);
 
 random_set_seed(global.game_seed);
 
+tutorial = undefined;
+
 current_wave = 0
 game_score = 0
 unit_score = 0

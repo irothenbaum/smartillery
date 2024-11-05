@@ -1,12 +1,12 @@
 {
   "$GMObject":"",
-  "%Name":"obj_hude_ultimate_icon",
+  "%Name":"obj_hud_ultimate_icon",
   "eventList":[
     {"$GMEvent":"","%Name":"","collisionObjectId":null,"eventNum":64,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_hude_ultimate_icon",
+  "name":"obj_hud_ultimate_icon",
   "overriddenProperties":[],
   "parent":{
     "name":"drawing",

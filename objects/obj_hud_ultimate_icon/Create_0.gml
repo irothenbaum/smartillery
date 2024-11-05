@@ -7,6 +7,7 @@ input = instance_find(obj_input, 0)
 game_controller = get_game_controller()
 color_shadow = composite_color(c_black, 0.4)
 color_shadow_dark = composite_color(c_black, 0.8)
+my_bounds = undefined
 
 ultimate_icons = {
 	ULTIMATE_HEAL: spr_icon_ult_heal_small,

@@ -10,7 +10,7 @@ target_location_y = global.ycenter
 start_position_x = x
 start_position_y = y
 turning_towards = false
-direction = point_direction(x, y, target_location_x, target_location_y) + irandom_range(-20,20)
+direction = point_direction(x, y, target_location_x, target_location_y) + (20 * (irandom(1) == 1 ? 1 : -1))
 speed = approach_speed
 
 function register_hit(_insta_kill) {

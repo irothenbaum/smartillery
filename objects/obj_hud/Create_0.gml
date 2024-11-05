@@ -15,9 +15,9 @@ pos_wave = {
 
 game_controller = get_game_controller()
 
-instance_create_layer(x, y, LAYER_HUD, obj_hude_ultimate_icon)
+instance_create_layer(x, y, LAYER_HUD, obj_hud_ultimate_icon)
 
 function draw_text_obj(_obj, _text) {
 	draw_set_font(fnt_large)
-	draw_text_with_alignment(_obj.x, _obj.y, _text, _obj.align)
+	_obj.bounds = draw_text_with_alignment(_obj.x, _obj.y, _text, _obj.align)
 }

@@ -64,7 +64,7 @@ function ult_slow_get_rings(_level) {
 	return max(0, global.bg_number_of_circles - (slow_base_radius + _level))
 }
 
-
+// ----------------------------------------------------
 
 function get_experience_needed_for_next_level(_curent_level) {
 	return min(5 * _curent_level, 50)
