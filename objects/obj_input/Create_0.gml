@@ -1,6 +1,6 @@
 message = "";
 
-y = 50
+y = 30
 initial_x = global.xcenter
 x = initial_x
 render_x = x
@@ -28,6 +28,10 @@ function size_streak_fire() {
 // whenver we pause or unpause we clear the input
 subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
 	message = ""
+	
+	if (!is_undefined(streak_fire)) {
+		pause_particle(streak_fire.system, _status)
+	}
 })
 
 // vibrate on wrong guess

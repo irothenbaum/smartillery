@@ -14,7 +14,7 @@ draw_text_with_alignment(score_description.x, score_description.y, "Your score",
 
 var _input_bounds = input.my_bounds
 if (!is_undefined(_input_bounds)) {
-	draw_line_between(_input_bounds.xcenter, _input_bounds.y1, input_description.x, input_description.y)
+	draw_line_between(_input_bounds.x0, _input_bounds.ycenter, input_description.x, input_description.y, true)
 	
 	var _message = "Enter your answers here\nGet 3 in a row and score streak bonus."
 	if (game_controller.has_point_streak()) {

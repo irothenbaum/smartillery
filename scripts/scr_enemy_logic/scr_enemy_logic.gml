@@ -18,6 +18,12 @@ function enemy_initlaize(_e, _point_value) {
 		point_value = _point_value
 		slow_multiplier = 1
 		slow_sparks = undefined
+		
+		subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
+			if (!is_undefined(slow_sparks)) {
+				pause_particle(slow_sparks, _status)
+			}
+		})
 	}
 	
 	enemy_generate_question(_e)
@@ -121,3 +127,4 @@ function enemy_apply_slow(_enemy, _multiplier) {
 		}
 	}
 }
+

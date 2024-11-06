@@ -28,5 +28,9 @@ subscribe(EVENT_ENEMY_DAMAGED, function(_enemy) {
 	player.my_health = min(global.max_health, player.my_health + _leech_amount)
 })
 
+subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
+	pause_particle(heal_sparks, _status)
+})
+
 starting_duration = ult_heal_get_duration(level)
 alarm[0] = starting_duration

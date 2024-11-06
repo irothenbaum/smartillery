@@ -101,6 +101,7 @@ function toggle_pause(_status) {
 	var _instances = layer_get_all_elements(_layer);
 	var _instance_count = array_length(_instances)	
 	
+	
 	debug("Turning pause " + (global.paused ? "ON" : "OFF") + " for " + string(_instance_count) + " instances")
 	var _alarm_length = 12
 	
@@ -212,4 +213,9 @@ function _final_format(_b) {
 	_b.ycenter = _b.y0 + _b.height / 2
 	
 	return _b
+}
+
+/// @return {number} -- will return 1 or -1, or 0
+function normalize(_num) {
+	return _num < 0 ? -1 : (_num > 0 ? 1 : 0)
 }

@@ -94,3 +94,9 @@ subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
 		streak_fire = undefined
 	}
 })
+
+subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
+	if (!is_undefined(streak_fire)) {
+		pause_particle(streak_fire.system, _status)
+	}
+})

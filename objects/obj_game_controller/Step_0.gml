@@ -1,5 +1,5 @@
 if (keyboard_check_pressed(vk_escape)) {
-	if (!is_ulting() && !is_selecting_ult) {
+	if (!is_ulting() && !is_selecting_ult && !is_game_over) {
 		toggle_pause()
 		
 		if (global.paused) {
@@ -8,6 +8,6 @@ if (keyboard_check_pressed(vk_escape)) {
 			instance_destroy(tutorial)
 		}
 	} else {
-		debug("Cannot pause during ult or selection")
+		debug("Cannot pause during ult or selection or game over")
 	}
 }
