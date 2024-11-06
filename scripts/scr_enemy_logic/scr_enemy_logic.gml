@@ -13,7 +13,7 @@
 function enemy_initlaize(_e, _point_value) {
 	with (_e) {
 		spawn_time = get_play_time()
-		draw_offset_y = undefined
+		draw_equation_position = undefined
 		equation = "";
 		point_value = _point_value
 		slow_multiplier = 1
@@ -37,16 +37,47 @@ function enemy_handle_destroy(_e) {
 	}
 }
 
-
-function enemy_draw_equation(_e) {	
+function enemy_draw_equation(_e) {
 	with (_e) {
 		draw_set_font(fnt_large);
 		draw_set_colour(c_white);
-		var _string = global.paused ? "" : equation
-		// logically should be sprite_height / 2, but we scale the enemy image to .5 so it becomes / 4
-		var _offset_y = (y > room_height / 2 ? -1 : 1)*(20 + string_height(_string))
-		draw_offset_y = typeof(draw_offset_y) == "number" ? lerp(draw_offset_y, _offset_y, global.fade_speed) : _offset_y
-		draw_text_with_alignment(x, y + draw_offset_y, _string, ALIGN_CENTER);
+		var _string = global.paused ? " " : equation
+		var _string_height = string_height(_string)
+		var _string_width = string_width(_string)
+		// 25 is a constant that basically indicates half the sprite size
+		var _offset_y = (y > global.ycenter ? -1 : 1) * (25 + _string_height)
+		
+		var _string_directional_bounds = _final_format({
+			x0: global.directional_hint_bounds.x0 + _string_width / 2,
+			y0: global.directional_hint_bounds.y0 + _string_height / 2,
+			x1: global.directional_hint_bounds.x1 - _string_width / 2,
+			y1: global.directional_hint_bounds.y1 - _string_height / 2
+		})
+		
+		var _target_position = {
+			x: x,
+			y: y + _offset_y
+		}
+		var _actual_position = _target_position
+		
+		var _is_out_of_bounds = 
+			_target_position.x < _string_directional_bounds.x0 || 
+			_target_position.y < _string_directional_bounds.y0 ||
+			_target_position.x > _string_directional_bounds.x1 || 
+			_target_position.y > _string_directional_bounds.y1
+			
+		if (_is_out_of_bounds) {
+			var _direction_from_center = point_direction(global.xcenter, global.ycenter, _target_position.x, _target_position.y)
+			_actual_position = find_intersection(_string_directional_bounds.width, _string_directional_bounds.height, _direction_from_center)
+		}
+		
+		_actual_position.y = max(70, _actual_position.y) // this 70 is to ensure we avoid the HUD
+		
+		draw_equation_position = is_undefined(draw_equation_position) ? _target_position : {
+			x: lerp(draw_equation_position.x, _actual_position.x, global.fade_speed * 2),
+			y: lerp(draw_equation_position.y, _actual_position.y, global.fade_speed * 2)
+		}
+		draw_text_with_alignment(draw_equation_position.x, draw_equation_position.y, _string, ALIGN_CENTER);
 	}
 }
 
@@ -128,3 +159,37 @@ function enemy_apply_slow(_enemy, _multiplier) {
 	}
 }
 
+
+/// @param {number} _rect_width
+/// @param {number} _rect_height
+/// @param {number} _angle // in degrees
+function find_intersection(_rect_width, _rect_height, _angle) {	
+	_rect_width = _rect_width / 2
+	_rect_height = _rect_height / 2
+	
+	// Convert angle to radians
+    var _angle_radians = (_angle * pi) / 180
+	
+	// Calculate direction vector components
+    var _dx = cos(_angle_radians)
+    var _dy = -1 * sin(_angle_radians)
+	
+	// Find intersection with each edge of the rectangle
+    var _t_max = 99999
+	
+	// Intersection with left and right sides
+    if (_dx != 0) {
+        _t_max = min(_t_max, (_rect_width / abs(_dx)))
+    }
+
+    // Intersection with left and right sides
+    if (_dy != 0) {
+        _t_max = min(_t_max, (_rect_height / abs(_dy)))
+    }
+
+    // Calculate intersection point
+    return { 
+		x: _t_max * _dx + global.xcenter, 
+		y: _t_max * _dy + global.ycenter
+	}
+}

@@ -1,3 +1,7 @@
+if (global.paused) {
+	return
+}
+
 if (fade_out) {
 	image_alpha = lerp(0, image_alpha, global.fade_speed)
 	if (image_alpha == 0) {

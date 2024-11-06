@@ -26,6 +26,7 @@ if (!is_undefined(_input_bounds)) {
 
 var _ult_bounds = ultimate_icon.my_bounds
 if (!is_undefined(_ult_bounds)) {
+	draw_set_font(fnt_large)
 	draw_line_between(_ult_bounds.xcenter, _ult_bounds.y1, ultimate_description.x, ultimate_description.y)
 	
 	var _message = string_concat("Your ultimate is \"", global.ultimate_descriptions[$ global.selected_ultimate].title, "\"\n", global.ultimate_descriptions[$ global.selected_ultimate].description)
@@ -45,6 +46,8 @@ if (!is_undefined(_ult_bounds)) {
 	
 }
 
-draw_set_font(fnt_base)
+draw_set_font(fnt_large)
 
-draw_text_with_alignment(global.room_width / 2, global.room_height - 200, "Click escape to unpause", ALIGN_CENTER)
+draw_text_with_alignment(global.room_width / 2, global.room_height - 100, "[     Click escape to unpause     ]", ALIGN_CENTER)
+
+draw_set_font(fnt_base)

@@ -65,17 +65,17 @@ function draw_ultimate_level_details(_ult_bounds) {
 	}
 	
 	var _details_center = {
-		x: _ult_bounds.xcenter + lengthdir_x(200, 315),
-		y: _ult_bounds.ycenter + lengthdir_y(200, 315),
+		x: _ult_bounds.xcenter + lengthdir_x(260, 330),
+		y: _ult_bounds.ycenter + lengthdir_y(260, 330),
 	}
 	draw_line_between(_level_center.x, _level_center.y, _details_center.x, _details_center.y, true)
 	
 	var _this_level_stats = get_ultimate_stats(game_controller.ultimate_level)
 	var _next_level_stats = get_ultimate_stats(game_controller.ultimate_level + 1)
 	
-	draw_set_font(fnt_base)
+	draw_set_font(fnt_large)
 	var _new_bounds = draw_text_with_alignment(_details_center.x, _details_center.y, string_concat(global.ultimate_descriptions[$ global.selected_ultimate].title, " -- lvl ", game_controller.ultimate_level), ALIGN_CENTER)
-	draw_set_font(fnt_small)
+	draw_set_font(fnt_base)
 	_new_bounds = draw_text_with_alignment(_new_bounds.x0, _new_bounds.y1 + 20, _this_level_stats, ALIGN_LEFT)
 	
 	draw_line_width(_new_bounds.x0, _new_bounds.y1 + 20, _new_bounds.x1 + 60, _new_bounds.y1 + 20, 1)
