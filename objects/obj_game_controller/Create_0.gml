@@ -20,6 +20,7 @@ is_selecting_ult = false
 ultimate_charge = 0;
 ultimate_experience = 0
 ultimate_level = 1
+ult_overlay = 0
 cached_ultimate_level = undefined;
 inst_ultimate = undefined;
 

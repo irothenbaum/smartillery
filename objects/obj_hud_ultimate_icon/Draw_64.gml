@@ -30,8 +30,8 @@ if (global.selected_ultimate != ULTIMATE_NONE && instance_exists(input) && !is_u
 	}
 	
 	// draw the sprite on top
-	var _ult_sprite = ultimate_icons[$ global.selected_ultimate]
-	draw_sprite_ext(_ult_sprite, 0, _xcenter, _ycenter, 0.4, 0.4, 0, c_white, 1)
+	var _ult_sprite = global.ultimate_icons[$ global.selected_ultimate]
+	draw_sprite_ext(_ult_sprite, 0, _xcenter, _ycenter, icon_scale, icon_scale, 0, c_white, 1)
 	
 	// last we draw the level
 	var _level_center = {

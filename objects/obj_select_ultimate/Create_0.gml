@@ -4,16 +4,12 @@ staged_selection = undefined
 x = global.xcenter
 y = global.ycenter
 
-icons = {
-	ULTIMATE_STRIKE: spr_icon_ult_strike_medium,
-	ULTIMATE_SLOW: spr_icon_ult_slow_medium,
-	ULTIMATE_HEAL: spr_icon_ult_heal_medium,
-}
+hovered_scale = 0.18
+default_scale = 0.12
 
-hovered_scale = 1
-default_scale = 0.8
+square_size = 240
 
-icon_space = 260
+icon_space = 300
 
 drawn_icon_scales = {
 	ULTIMATE_STRIKE: default_scale,

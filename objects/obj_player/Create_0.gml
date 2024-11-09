@@ -5,6 +5,7 @@ hide_self = false;
 
 body_color_arr = color_to_array(global.body_color)
 turret_color_arr = color_to_array(global.turret_color)
+power_color = color_to_array(global.power_color)
 
 rotate_aim_speed = 720 // in degrees per second
 rotate_idle_speed = 90 // in degrees per second
@@ -17,7 +18,7 @@ direction = 90 // point upwards
 x = global.xcenter
 y = global.ycenter
 
-image_scale = 0.4
+image_scale = 0.16
 image_xscale = image_scale;
 image_yscale = image_scale;
 

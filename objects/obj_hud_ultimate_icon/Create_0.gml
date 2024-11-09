@@ -3,17 +3,12 @@ drawn_ultimate = 0
 drawn_ultimate_experience = 0
 sprite_size = 40
 half_sprite_size = 20
+icon_scale = 0.02
 input = instance_find(obj_input, 0)
 game_controller = get_game_controller()
 color_shadow = composite_color(c_black, 0.4)
 color_shadow_dark = composite_color(c_black, 0.8)
 my_bounds = undefined
-
-ultimate_icons = {
-	ULTIMATE_HEAL: spr_icon_ult_heal_small,
-	ULTIMATE_STRIKE: spr_icon_ult_strike_small,
-	ULTIMATE_SLOW: spr_icon_ult_slow_small,
-}
 
 subscribe(EVENT_UTLTIMATE_LEVEL_UP, method({
 	input: input, 

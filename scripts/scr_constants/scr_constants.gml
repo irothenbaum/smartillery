@@ -31,6 +31,11 @@ global.combo_color = c_red
 global.beam_color = c_white
 global.ultimate_colors = {"none": c_white, "strike": #e03a3a, "slow": #3e7bed, "heal": #11d94e}
 global.ultimate_color_tints = {"none": #eeeeee, "strike": #e0773a, "slow": #0ce7eb, "heal": #c0ed2b}
+global.ultimate_icons = {
+	ULTIMATE_STRIKE: spr_ult_strike,
+	ULTIMATE_SLOW: spr_ult_slow,
+	ULTIMATE_HEAL: spr_ult_heal,
+}
 
 // in-game configurable
 global.selected_ultimate = "none";
@@ -45,14 +50,14 @@ global.focused_input = undefined
 
 // seemingly magic numbers
 global.heal_radius = 75
-global.turret_length = 50
+global.turret_length = 53
 global.room_width = 1440
 global.room_height = 1000
 global.xcenter = global.room_width / 2
 global.ycenter = global.room_height / 2
 
 // gameplay
-global.point_streak_requirement = 3
+global.point_streak_requirement = 1 // 3
 global.combo_delay_ms = 1600
 global.minimum_combo = 2
 global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower!", "Menace!!", "Untouchable!!!", "Impossible!!!!"]

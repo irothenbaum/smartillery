@@ -234,3 +234,25 @@ function get_radius_at_i(_i) {
 function get_ring_from_distance(_distance) {
 	return  floor(global.bg_number_of_circles * (global.bg_circle_max_radius - _distance) / global.bg_circle_magnitude)
 }
+
+function draw_rectangle_clipped(_x0, _y0, _x1, _y1, _color, _spr, _scale) {
+	// Set the shader
+	var _mask_texture = sprite_get_texture(_spr, 0);
+	shader_set(sh_clip_sprite);
+
+	// Set the mask texture as the second texture unit
+	var _u_mask_texture = shader_get_uniform(sh_clip_sprite, "u_maskTexture");
+	texture_set_stage(1, _mask_texture);
+	shader_set_uniform_i(_u_mask_texture, 1);
+
+	// Set the scaling for the mask
+	var _u_scale = shader_get_uniform(sh_clip_sprite, "u_scale");
+	shader_set_uniform_f(_u_scale, _scale, _scale);
+
+	// Draw the rectangle
+	draw_rectangle_color(_x0, _y0, _x1, _y1, _color, _color, _color, _color, false);
+
+	// Reset the shader
+	shader_reset();
+
+}
