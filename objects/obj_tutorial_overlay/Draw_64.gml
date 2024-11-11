@@ -35,8 +35,8 @@ if (!is_undefined(_ult_bounds)) {
 	var _description_bounds = draw_text_with_alignment(ultimate_description.x, ultimate_description.y, _message , ultimate_description.align)
 	if (game_controller.has_ultimate()) {
 		draw_text_with_alignment(
-			_description_bounds.x0, 
-			_description_bounds.y1 + 20, 
+			_description_bounds.xcenter, 
+			_description_bounds.y1 + 60, 
 			string_concat("Ultimate fully charged!\nEnter launch code \"", global.ultimate_code, "\" to activate"),
 			ultimate_description.align
 		)

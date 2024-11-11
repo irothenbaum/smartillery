@@ -18,6 +18,7 @@
 #macro EVENT_WRONG_GUESS "wrong-guess"
 #macro EVENT_UTLTIMATE_LEVEL_UP "ultimate-level-up"
 #macro EVENT_ON_OFF_STREAK "on-streak"
+#macro EVENT_GAME_OVER "game-gover"
 
 #macro RESET_COLOR {c: c_white, o: 1}
 

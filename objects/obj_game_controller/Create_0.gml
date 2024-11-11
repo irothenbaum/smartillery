@@ -6,6 +6,7 @@ tutorial = undefined;
 
 current_wave = 0
 game_score = 0
+drawn_game_score = 0
 unit_score = 0
 streak_score = 0
 combo_score = 0
@@ -61,7 +62,7 @@ function mark_wave_completed() {
 	return _controller
 }
 
-function handle_game_over() {
+function end_game() {
 	function explode_enemy(_e, _index) {
 		with (_e) {
 			instance_destroy();
@@ -72,6 +73,7 @@ function handle_game_over() {
 	mark_ultimate_used();
 	
 	is_game_over = true;
+	broadcast(EVENT_GAME_OVER, game_score)
 	
 	// destroy all enemies
 	for_each_enemy(explode_enemy)
@@ -90,6 +92,7 @@ function reset_starting_values() {
 	unit_score = 0
 	streak_score = 0
 	game_score = 0
+	drawn_game_score = 0
 	ultimate_charge = 0
 	ultimate_experience = 0
 	ultimate_level = 1
@@ -130,14 +133,14 @@ function handle_enemy_killed(_enemy, _skip_streak = false) {
 
 
 function draw_point_indicators(_x, _y, _base, _streak, _combo) {
-	var _base_inst = instance_create_layer(_x, _y, LAYER_INSTANCES, obj_text_score_increase, {
+	instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
 		amount: _base,
 		font: fnt_large
 	})
 	_y -= 20
 	
 	if (_streak) {	
-		var _streak_inst = instance_create_layer(_x, _y, LAYER_INSTANCES, obj_text_score_increase, {
+		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
 			amount: _streak,
 			color: global.power_color
 		})
@@ -145,7 +148,7 @@ function draw_point_indicators(_x, _y, _base, _streak, _combo) {
 	}
 	
 	if (_combo) {
-		var _streak_inst = instance_create_layer(_x, _y, LAYER_INSTANCES, obj_text_score_increase, {
+		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
 			amount: _combo,
 			color: global.combo_color
 		})
@@ -171,6 +174,11 @@ function handle_submit_code(_code) {
 		broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level)
 		return true;
 	}
+	
+	if (_code == "_wave") {
+		get_enemy_controller().spawned_count = get_enemy_controller().enemy_count
+		return true
+	}
 
 	if (_code == global.ultimate_code && global.selected_ultimate != ULTIMATE_NONE) {
 		activate_ultimate()
@@ -192,6 +200,7 @@ function activate_ultimate() {
 		return
 	}
 	
+	ult_overlay = 1
 	var _ult_obj = global.selected_ultimate == ULTIMATE_STRIKE ? obj_ultimate_strike : (global.selected_ultimate == ULTIMATE_HEAL ? obj_heal_power : obj_slow_time)
 	inst_ultimate = instance_create_layer(x, y, LAYER_HUD, _ult_obj, {level: ultimate_level})
 	cached_ultimate_level = ultimate_level

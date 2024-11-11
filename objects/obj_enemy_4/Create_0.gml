@@ -1,6 +1,6 @@
 enemy_initlaize(self, 10)
 speed = 1
-image_scale = 0.25
+image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
 

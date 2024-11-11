@@ -84,7 +84,7 @@ function draw_particle_debirs(x,y, _number = 3) {
 	return _ps
 }
 
-function draw_particle_sparks(x,y, _number = 12) {
+function draw_particle_sparks(x,y, _number = 12, _color = c_white) {
 	//par_sparks
 	var _ps = part_system_create();
 	part_system_draw_order(_ps, true);
@@ -98,8 +98,8 @@ function draw_particle_sparks(x,y, _number = 12) {
 	part_type_direction(_ptype1, 0, 360, 0, 0);
 	part_type_gravity(_ptype1, 0, 270);
 	part_type_orientation(_ptype1, 0, 360, 10, 20, false);
-	part_type_colour3(_ptype1, $FFFFFF, $B3B3B3, $000000);
-	part_type_alpha3(_ptype1, 1, 1, 1);
+	part_type_colour3(_ptype1, _color, _color, _color);
+	part_type_alpha3(_ptype1, 1, 0.8, 0);
 	part_type_blend(_ptype1, true);
 	part_type_life(_ptype1, 40, 40);
 

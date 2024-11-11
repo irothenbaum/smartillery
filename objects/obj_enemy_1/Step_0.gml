@@ -1,3 +1,4 @@
+enemy_step(self)
 if (global.paused) {
 	return
 }
@@ -5,11 +6,10 @@ if (global.paused) {
 image_angle += rotate_speed * slow_multiplier
 
 // once we start turning we can never stop turning
-turning_towards = turning_towards || point_distance(x, y, start_position_x, start_position_y) > global.bg_circle_magnitude * 0.75
+turning_towards = turning_towards || point_distance(x, y, start_position_x, start_position_y) > global.bg_circle_magnitude * 0.70
 
 if (turning_towards) {
-	var _dif = angle_difference(point_direction(x,y, target_location_x, target_location_y), direction)
-	direction += _dif * 0.015 * slow_multiplier
+	direction = lerp(direction, point_direction(x,y, target_location_x, target_location_y), global.fade_speed)
 	
-	speed += speed * 0.003
+	speed = lerp(speed, 5, global.fade_speed)
 }

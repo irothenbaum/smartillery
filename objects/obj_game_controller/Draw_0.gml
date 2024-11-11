@@ -5,6 +5,11 @@ if (global.paused && !is_ulting() && !is_selecting_ult) {
 	draw_text_with_alignment(global.xcenter, global.ycenter, "PAUSED", ALIGN_CENTER)
 }
 
+// This isn't working and I'm not sure why...
+// draw_rectangle_clipped(0, 0, global.room_width - 0, global.room_height - 0, c_red, spr_test, 1)
+
 if (ult_overlay > 0) {
-	draw_rectangle_clipped(0, 0, global.room_height, global.room_height, global.ultimate_colors[$ global.selected_ultimate], global.ultimate_icons[$ global.selected_ultimate], 1 + 1 - (_ult_overlay / 1))
+	var _scale = 0.3 + (1 - ult_overlay ) / 2.5
+	draw_sprite_ext(global.ultimate_icons[$ global.selected_ultimate], 0, global.xcenter, global.ycenter, _scale, _scale, 0, global.ultimate_colors[$ global.selected_ultimate], ult_overlay)
+	// draw_rectangle_clipped(0, 0, global.room_width, global.room_height, global.ultimate_colors[$ global.selected_ultimate], global.ultimate_icons[$ global.selected_ultimate], _scale)
 }

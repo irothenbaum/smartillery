@@ -41,6 +41,11 @@ subscribe(EVENT_WRONG_GUESS, function(_guess) {
 	alarm[0] = game_get_speed(gamespeed_fps) * total_shake_time / 1000
 })
 
+// vibrate on wrong guess
+subscribe(EVENT_GAME_OVER, function() {
+	destroy_particle(streak_fire.system)
+})
+
 subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
 	if (_is_on_streak) {
 		streak_fire = draw_muzzle_smoke(x, y, global.power_color)

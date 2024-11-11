@@ -37,8 +37,15 @@ function enemy_handle_destroy(_e) {
 	}
 }
 
+function enemy_step(_e) {
+	with(_e) {
+		depth = point_distance(x, y, global.xcenter, global.ycenter)
+	}
+}
+
 function enemy_draw_equation(_e) {
 	with (_e) {
+		depth = 
 		draw_set_font(fnt_large);
 		draw_set_colour(c_white);
 		var _string = global.paused ? " " : equation
@@ -47,6 +54,7 @@ function enemy_draw_equation(_e) {
 		// 25 is a constant that basically indicates half the sprite size
 		var _offset_y = (y > global.ycenter ? -1 : 1) * (25 + _string_height)
 		
+		// this logic is going to draw the equation within the game bounds even if the enemy us out of screen
 		var _string_directional_bounds = _final_format({
 			x0: global.directional_hint_bounds.x0 + _string_width / 2,
 			y0: global.directional_hint_bounds.y0 + _string_height / 2,
@@ -60,6 +68,7 @@ function enemy_draw_equation(_e) {
 		}
 		var _actual_position = _target_position
 		
+		// we're out of bounds of any of our coordinates as off screen
 		var _is_out_of_bounds = 
 			_target_position.x < _string_directional_bounds.x0 || 
 			_target_position.y < _string_directional_bounds.y0 ||
@@ -71,7 +80,24 @@ function enemy_draw_equation(_e) {
 			_actual_position = find_intersection(_string_directional_bounds.width, _string_directional_bounds.height, _direction_from_center)
 		}
 		
-		_actual_position.y = max(70, _actual_position.y) // this 70 is to ensure we avoid the HUD
+		// make sure we never draw the equation ontop of the HUD elements
+		_actual_position.y = max(70, _actual_position.y) // this 70 is basically the HUD height
+		
+		// we check again here because we need _actual_position in its final state.
+		if (_is_out_of_bounds) {
+			var _direction_from_equation_to_enemy = point_direction(_actual_position.x, _actual_position.y, x, y) 
+			draw_sprite_ext(
+				spr_chevron, 
+				0, 
+				_actual_position.x + lengthdir_x(40, _direction_from_equation_to_enemy), 
+				_actual_position.y + lengthdir_y(40, _direction_from_equation_to_enemy),
+				0.07, 
+				0.07, 
+				_direction_from_equation_to_enemy, 
+				c_white, 
+				1
+			)
+		}
 		
 		draw_equation_position = is_undefined(draw_equation_position) ? _target_position : {
 			x: lerp(draw_equation_position.x, _actual_position.x, global.fade_speed * 2),

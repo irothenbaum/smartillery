@@ -41,7 +41,7 @@ slow_tint_hue = color_get_hue(global.ultimate_color_tints[$ ULTIMATE_SLOW])
 
 function get_hue_for_ring(_i, _options) {
 	var _this_hue = _options.health_hue;
-	if(_i < _options.rounded_skipped_rings) {  
+	if(_i < _options.rounded_skipped_rings && !(_options.should_draw_ult_styles && global.selected_ultimate == ULTIMATE_STRIKE && _options.enemies_on_ring > 0)) {  
 		_this_hue = 0
 	} else if (_options.should_draw_ult_styles) {
 		switch (global.selected_ultimate) {
@@ -70,7 +70,7 @@ function get_hue_for_ring(_i, _options) {
 function get_saturation_for_ring(_i, _options) {
 	var _this_saturation = idle_saturation
 	
-	if(_i < _options.rounded_skipped_rings) {  
+	if(_i < _options.rounded_skipped_rings && !(_options.should_draw_ult_styles && global.selected_ultimate == ULTIMATE_STRIKE && _options.enemies_on_ring > 0)) {  
 		_this_saturation = 0
 	} else {
 		if (_options.should_draw_ult_styles) {
@@ -104,7 +104,7 @@ function get_saturation_for_ring(_i, _options) {
 function get_lumosity_for_ring(_i, _options) {
 	var _this_lumosity = idle_lumosity
 	
-	if(_i < _options.rounded_skipped_rings) { 
+	if(_i < _options.rounded_skipped_rings && !(_options.should_draw_ult_styles && global.selected_ultimate == ULTIMATE_STRIKE && _options.enemies_on_ring > 0)) { 
 		_this_lumosity = idle_lumosity * 0.4
 	} else {
 		if (_options.should_draw_ult_styles) {

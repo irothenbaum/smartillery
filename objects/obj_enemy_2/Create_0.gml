@@ -4,7 +4,7 @@ shooting = false
 // fire at the center of third circle -- this should be less than ult_slow_get_radius(1)
 fire_distance = get_radius_at_i(global.bg_number_of_circles - 3) - global.bg_circle_ring_width / 2
 firing_position = undefined
-image_scale = 0.25
+image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
 approach_speed = 1
