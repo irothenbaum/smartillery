@@ -6,7 +6,7 @@ if (!is_undefined(shift_position)) {
 var _draw_color = normal_color
 var _draw_color_arr = normal_color_arr
 var _shadows_to_draw = floor(speed)
-if (speed == 0 && floor(current_time % 400) < 200) {
+if (!is_paused && speed == 0 && floor(current_time % 400) < 200) {
 	_draw_color = stunned_color
 	_draw_color_arr = stunned_color_arr
 }

@@ -1,0 +1,8 @@
+
+- Sounds
+- Main Menu
+	- Logo,
+	- Wave select
+	- Power color selection
+	- Save settings to ini
+- steam leaderboard integration

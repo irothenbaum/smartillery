@@ -10,7 +10,7 @@ var _turret_scale = 1 - (recoil_amount / (max_recoil_amount * 2))
 
 var _draw_color = normal_color
 var _draw_color_arr = normal_color_arr
-if (equation == "" && floor(current_time % 400) < 200) {
+if (equation == "" && floor(get_play_time() % 400) < 200) {
 	_draw_color = stunned_color
 	_draw_color_arr = stunned_color_arr
 }

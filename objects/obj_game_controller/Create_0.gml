@@ -87,7 +87,7 @@ function end_game() {
 }
 
 function reset_starting_values() {
-	global.selected_ultimate = undefined
+	global.selected_ultimate = ULTIMATE_NONE
 	combo_score = 0
 	unit_score = 0
 	streak_score = 0
@@ -128,7 +128,9 @@ function handle_enemy_killed(_enemy, _skip_streak = false) {
 	
 	broadcast(EVENT_ENEMY_KILLED, _enemy)
 		
-	increase_ult_score()
+	if (has_point_streak()) {
+		increase_ult_score()
+	}
 }
 
 
@@ -163,20 +165,7 @@ function handle_submit_code(_code) {
 		return false;
 	}
 	
-	// test strings
-	if(_code == "_damage") {
-		get_player().execute_take_damage(20)
-		return true;
-	}
-	if (_code == "_level") {
-		ultimate_level++
-		ultimate_charge = global.ultimate_requirement
-		broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level)
-		return true;
-	}
-	
-	if (_code == "_wave") {
-		get_enemy_controller().spawned_count = get_enemy_controller().enemy_count
+	if (_handle_test_string(_code)) {
 		return true
 	}
 
@@ -254,27 +243,26 @@ function increase_combo() {
 }
 
 function increase_ult_score() {
-	if (has_point_streak()) {
-		// once we get on streak for the first time, we need to select an ultimate type
-		if (global.selected_ultimate == ULTIMATE_NONE) {
-			is_selecting_ult = true
-			instance_create_layer(x,y, LAYER_HUD, obj_select_ultimate)
-		} else if (!is_ulting()) {
-			// if we're ulting then we don't count kills to our ult bar
-			if (ultimate_charge < global.ultimate_requirement) {
-				ultimate_charge++
-			} else {
-				ultimate_experience++
+	// once we get on streak for the first time, we need to select an ultimate type
+	if (global.selected_ultimate == ULTIMATE_NONE) {
+		is_selecting_ult = true
+		instance_create_layer(x,y, LAYER_HUD, obj_select_ultimate)
+	} else if (!is_ulting()) {
+		// if we're ulting then we don't count kills to our ult bar
+		if (ultimate_charge < global.ultimate_requirement) {
+			ultimate_charge++
+		} else {
+			ultimate_experience++
 			
-				var _next_level_experience = get_experience_needed_for_next_level(ultimate_level)
-				if (ultimate_experience >= _next_level_experience) {
-					ultimate_level++
-					ultimate_experience = 0
-					broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level)
-				}
+			var _next_level_experience = get_experience_needed_for_next_level(ultimate_level)
+			if (ultimate_experience >= _next_level_experience) {
+				ultimate_level++
+				ultimate_experience = 0
+				broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level)
 			}
 		}
 	}
+	
 }
 
 // --------------------------------------------------------------------
@@ -321,3 +309,26 @@ function is_answer_active(_answer) {
 
 // start off marking wave completed so game can start
 mark_wave_completed();
+
+
+
+// TESTING
+function _handle_test_string(_code) {
+	if(_code == "_damage") {
+		get_player().execute_take_damage(20)
+		return true;
+	}
+
+	if (_code == "_level") {
+		increase_ult_score()
+		ultimate_level++
+		ultimate_charge = global.ultimate_requirement
+		return true;
+	}
+	
+	if (_code == "_wave") {
+		get_enemy_controller().spawned_count = get_enemy_controller().enemy_count
+		current_wave++;
+		return true
+	}
+}

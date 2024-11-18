@@ -66,7 +66,6 @@
     {"name":"scr_equations","order":2,"path":"scripts/scr_equations/scr_equations.yy",},
     {"name":"scr_events","order":9,"path":"scripts/scr_events/scr_events.yy",},
     {"name":"scr_particles","order":3,"path":"scripts/scr_particles/scr_particles.yy",},
-    {"name":"scr_TODO","order":7,"path":"scripts/scr_TODO/scr_TODO.yy",},
     {"name":"scr_ultimates","order":5,"path":"scripts/scr_ultimates/scr_ultimates.yy",},
     {"name":"sh_clip_sprite","order":2,"path":"shaders/sh_clip_sprite/sh_clip_sprite.yy",},
     {"name":"sh_distort","order":1,"path":"shaders/sh_distort/sh_distort.yy",},

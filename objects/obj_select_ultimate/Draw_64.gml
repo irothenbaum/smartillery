@@ -54,7 +54,7 @@ for (var _i = 0; _i < array_length(_keys); _i++) {
 		var _title_bounds = draw_text_with_alignment(x, y + icon_space, global.ultimate_descriptions[$ _k].title, ALIGN_CENTER)
 		
 		draw_set_color(c_white)
-		draw_set_font(fnt_base)
+		draw_set_font(fnt_large)
 		draw_text_with_alignment(x, _title_bounds.y1 + 20, global.ultimate_descriptions[$ _k].description, ALIGN_CENTER)
 	}
 }

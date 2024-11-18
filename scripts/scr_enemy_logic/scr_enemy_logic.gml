@@ -38,14 +38,16 @@ function enemy_handle_destroy(_e) {
 }
 
 function enemy_step(_e) {
+	/*
+	// do nothing, was going to set depth but it's behaving oddly
 	with(_e) {
-		depth = point_distance(x, y, global.xcenter, global.ycenter)
+		
 	}
+	*/
 }
 
 function enemy_draw_equation(_e) {
 	with (_e) {
-		depth = 
 		draw_set_font(fnt_large);
 		draw_set_colour(c_white);
 		var _string = global.paused ? " " : equation

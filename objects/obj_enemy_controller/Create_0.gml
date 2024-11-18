@@ -1,16 +1,14 @@
 can_spawn = false;
 enemy_count = 0;
 spawned_count = 0;
+current_wave = get_current_wave_number()
 
 
 /// @func init()
 /// @returns {undefined}
 function init_wave() {
 	can_spawn = false;
-	var _current_wave = get_current_wave_number()
-	// we want each wave to progress the same way regardless of play so we reset the random seed deterministically
-	random_set_seed(global.game_seed + _current_wave);
-	enemy_count = ceil(_current_wave * 1.5);
+	enemy_count = ceil(current_wave * 1.5);
 	spawned_count = 0;
 	
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_next_wave_text)
@@ -20,6 +18,8 @@ function init_wave() {
 /// @func spawn_enemy()
 /// @return {Id.Instance}
 function spawn_enemy() {
+	// we want each wave to progress the same way regardless of play so we reset the random seed deterministically each time
+	random_set_seed(global.game_seed + current_wave + spawned_count);
 	can_spawn = false
 	
 	// out of bounds margin
@@ -44,7 +44,7 @@ function spawn_enemy() {
 	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? room_width + _oob_margin : _pos_x);
 	
 	
-	var _max_enemy = 1 + floor(get_current_wave_number() / global.wave_difficulty_step)
+	var _max_enemy = 1 + floor(current_wave / global.wave_difficulty_step)
 	
 	var _spawn_value
 	var _next_enemy_type

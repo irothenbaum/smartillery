@@ -1,5 +1,8 @@
 direction = point_direction(x,y, global.xcenter, global.ycenter)
-speed = 2
+// since orbs can be created during Air Strike, we need to check if we're currently paused or not
+paused_speed = 2
+is_paused = global.paused
+speed = is_paused ? 0 : paused_speed
 
 orbs = []
 cloud_radius = 30

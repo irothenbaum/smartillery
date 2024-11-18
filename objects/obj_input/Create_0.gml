@@ -1,6 +1,6 @@
 message = "";
 
-y = 30
+y = 40
 initial_x = global.xcenter
 x = initial_x
 render_x = x
@@ -43,7 +43,9 @@ subscribe(EVENT_WRONG_GUESS, function(_guess) {
 
 // vibrate on wrong guess
 subscribe(EVENT_GAME_OVER, function() {
-	destroy_particle(streak_fire.system)
+	if (!is_undefined(streak_fire)) {
+		destroy_particle(streak_fire.system)
+	}
 })
 
 subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {

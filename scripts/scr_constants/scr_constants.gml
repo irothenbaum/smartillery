@@ -58,7 +58,7 @@ global.xcenter = global.room_width / 2
 global.ycenter = global.room_height / 2
 
 // gameplay
-global.point_streak_requirement = 1 // 3
+global.point_streak_requirement = 3
 global.combo_delay_ms = 1600
 global.minimum_combo = 2
 global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower!", "Menace!!", "Untouchable!!!", "Impossible!!!!"]
@@ -72,10 +72,10 @@ global.max_math_difficulty = array_length(global.operations_order)
 global.min_word_length = 4
 global.max_word_length = 11
 global.directional_hint_bounds = _final_format({
-	x0: 20,
-	y0: 20,
-	x1: global.room_width - 20,
-	y1: global.room_height - 20
+	x0: 40,
+	y0: 40,
+	x1: global.room_width - 40,
+	y1: global.room_height - 40
 })
 
 // effects

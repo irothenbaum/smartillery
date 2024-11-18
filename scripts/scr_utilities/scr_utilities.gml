@@ -112,9 +112,8 @@ function toggle_pause(_status) {
 			if (global.paused) {
 				// memoize our pre-pause values
 				paused_speed = speed
-				paused_vspeed = vspeed
-				paused_image_speed = image_speed
 				paused_alarms = []
+				is_paused = true
 				
 				for (var _j = 0; _j < _alarm_length; _j++) {
 					if (alarm[_j] > 0) {
@@ -127,32 +126,29 @@ function toggle_pause(_status) {
 					}
 				}
 				
-				// disable movement and animation
+				// disable movement
 				speed = 0
-				vspeed = 0
-				image_speed = 0
 			} else {
-				// if paused alarms was not set, then this object was not around when we first paused
+				// if is_paused was not set, then this object was not around when we first paused
 				// probably was an ultimate or something
-				if (!variable_instance_exists(self, "paused_alarms")) {
+				if (!variable_instance_exists(self, "is_paused") || !is_paused) {
 					continue
 				}
 				// restore pre-pause values
 				speed = paused_speed
-				vspeed = paused_vspeed
-				image_speed = paused_image_speed
 				
-				for (var _j = 0; _j < _alarm_length; _j++) {
-					if (paused_alarms[_j] > 0) {
-						alarm[_j] = paused_alarms[_j]
+				if (variable_instance_exists(self, "paused_alarms")) {
+					for (var _j = 0; _j < _alarm_length; _j++) {
+						if (paused_alarms[_j] > 0) {
+							alarm[_j] = paused_alarms[_j]
+						}
 					}
 				}
 				
 				// remove all our paused states
 				paused_speed = undefined
-				paused_vspeed = undefined
-				paused_image_speed  = undefined
 				paused_alarms = undefined
+				is_paused = false
 			}
 		}
 	}
