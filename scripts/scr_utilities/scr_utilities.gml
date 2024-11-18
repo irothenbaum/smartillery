@@ -215,3 +215,20 @@ function _final_format(_b) {
 function normalize(_num) {
 	return _num < 0 ? -1 : (_num > 0 ? 1 : 0)
 }
+
+function flip_coin(_sides = 2) {
+	return roll_dice(_sides) == 1
+}
+
+function roll_dice(_sides = 6) {
+	return irandom(_sides - 1) + 1
+}
+
+function get_tangent_point(_from_x, _from_y, _to_x, _to_y, _distance) {
+	var _reverse = flip_coin() ? -1 : 1
+	var _tangent_direction = point_direction(_to_x, _to_y, _from_x, _from_y) + (90 * _reverse)
+	return {
+		x: _to_x + lengthdir_x(_distance, _tangent_direction),
+		y: _to_y + lengthdir_y(_distance, _tangent_direction)
+	}
+}

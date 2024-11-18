@@ -5,13 +5,16 @@ image_yscale = image_scale
 approach_speed = 1.6
 rotate_speed = (irandom(1) == 0 ? -1 : 1) * (irandom(20) + 5) / 10
 
-target_location_x = global.xcenter
-target_location_y = global.ycenter
-start_position_x = x
-start_position_y = y
 turning_towards = false
-direction = point_direction(x, y, target_location_x, target_location_y) + (20 * (irandom(1) == 1 ? 1 : -1))
+
+waypoints = [get_tangent_point(x,y, global.xcenter, global.ycenter, global.room_height * 0.2)]
+
+direction = point_direction(x, y, global.xcenter, global.ycenter) + (20 * (irandom(1) == 1 ? 1 : -1))
 speed = approach_speed
+
+function set_waypoints(_w) {
+	waypoints = _w
+}
 
 function register_hit(_insta_kill) {
 	var _game_controller = get_game_controller()

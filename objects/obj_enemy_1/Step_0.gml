@@ -5,10 +5,15 @@ if (global.paused) {
 
 image_angle += rotate_speed * slow_multiplier
 
-// once we start turning we can never stop turning
-turning_towards = turning_towards || point_distance(x, y, start_position_x, start_position_y) > global.bg_circle_magnitude * 0.70
-
-if (turning_towards) {
-	direction -= angle_difference(direction, point_direction(x, y, target_location_x, target_location_y)) * 0.05;
+if (array_length(waypoints) > 0) {
+	direction -= angle_difference(direction, point_direction(x, y, waypoints[0].x, waypoints[1].y)) * 0.05;
+	
+	// when we close to a waypoint, we shit it off
+	if (point_distance(x, y, waypoints[0].x, waypoints[0].y) < 20) {
+		array_shift(waypoints)
+	}
+} else {
+	direction -= angle_difference(direction, point_direction(x, y, global.xcenter, global.ycenter)) * 0.05;
+	// accelerate to speed 5
 	speed = lerp(speed, 5, 0.05)
 }
