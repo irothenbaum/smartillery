@@ -1,8 +1,12 @@
-
-- Sounds
+- Finish enemy groups (Not sure exactly where I left off there...)
+- Finish ultimate upgrade challenge.
+    - Currently working in obj_upgrade_tpying, have most of the logic done. Was about to start Draw GUI. Then need to handle solving / forfeiting
+- Sound effects
 - Main Menu
 	- Logo,
 	- Wave select
 	- Power color selection
 	- Save settings to ini
 - steam leaderboard integration
+    - https://partner.steamgames.com/
+

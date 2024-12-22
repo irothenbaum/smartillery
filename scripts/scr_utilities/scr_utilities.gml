@@ -232,3 +232,10 @@ function get_tangent_point(_from_x, _from_y, _to_x, _to_y, _distance) {
 		y: _to_y + lengthdir_y(_distance, _tangent_direction)
 	}
 }
+
+/// @param {string} _str
+/// @param {number} _pos
+/// @param {string} _insert
+function string_replace_at(_str, _pos, _insert) {
+	return string_copy(_str, 1, _pos-1) + _insert + string_delete(_str, 1, _pos);
+}

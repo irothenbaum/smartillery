@@ -110,16 +110,7 @@ function select_word_of_length(_length) {
 	if (_length < global.min_word_length || _length > global.max_word_length) {
 		throw "Invalid word length"
 	}
-	var _dictionaries = [
-		global.dictionary_4,
-		global.dictionary_5,
-		global.dictionary_6,
-		global.dictionary_7,
-		global.dictionary_8,
-		global.dictionary_9,
-		global.dictionary_10,
-		global.dictionary_11,
-	]
-	var _dictionary = _dictionaries[_length - global.min_word_length]
+	
+	var _dictionary = global.dictionaries[string(_length - global.min_word_length)]
 	return _dictionary[irandom_range(0, array_length(_dictionary) - 1)]
 }

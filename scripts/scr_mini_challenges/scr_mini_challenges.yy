@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"scr_mini_challenges",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_mini_challenges",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
