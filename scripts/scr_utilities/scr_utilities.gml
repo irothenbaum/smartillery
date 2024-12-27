@@ -211,6 +211,15 @@ function _final_format(_b) {
 	return _b
 }
 
+function _apply_padding_to_bounds(_bounds, _vertical, _horizontal) {
+	return _final_format({
+		x0: _bounds.x0 - _horizontal,
+		y0: _bounds.y0 - _vertical,
+		x1: _bounds.x1 + _horizontal,
+		y1: _bounds.y1 + _vertical,
+	})
+}
+
 /// @return {number} -- will return 1 or -1, or 0
 function normalize(_num) {
 	return _num < 0 ? -1 : (_num > 0 ? 1 : 0)

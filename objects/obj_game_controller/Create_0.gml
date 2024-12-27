@@ -256,13 +256,18 @@ function increase_ult_score() {
 			
 			var _next_level_experience = get_experience_needed_for_next_level(ultimate_level)
 			if (ultimate_experience >= _next_level_experience) {
-				ultimate_level++
-				ultimate_experience = 0
-				broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level)
+				ultimate_level_up_controller = instance_create_layer(x, y, LAYER_CONTROLLERS, global.is_math_mode ? obj_ult_upgrade_math : obj_ult_upgrade_typing)
 			}
 		}
 	}
 	
+}
+
+function increate_ult_level() {
+	ultimate_level_up_controller = undefined
+	ultimate_level++
+	ultimate_experience = 0
+	broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level)
 }
 
 // --------------------------------------------------------------------

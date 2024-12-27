@@ -80,3 +80,42 @@ function build_solution_from_keyboard_input(_input, _blocks) {
 	
 	return _solution
 }
+
+#macro MINI_CHALLENGE_BLOCK_STYLE_GIVEN "given"
+#macro MINI_CHALLENGE_BLOCK_STYLE_GUESS "guess"
+#macro MINI_CHALLENGE_BLOCK_STYLE_WRONG "wrong"
+#macro MINI_CHALLENGE_BLOCK_STYLE_RIGHT "right"
+
+/**
+ * @param {Array<string>} _block -- the block content
+ * @param {Array<string>} _styles -- the block styles
+ * @param {boolean} _is_focused
+ */
+function draw_word_blocks(_x, _y, _block, _styles, _is_focused) {
+	var _padding = 20
+	var _bounds = {
+		x0: _x,
+		y0: _y,
+		x1: _x,
+		y1: _y
+	}
+	var _squares_count = array_length(_block)
+	for (var _i = 0; _i < _squares_count; _i++) {
+		// draw the square content
+		var _this_square_bounds = draw_text_with_alignment(_bounds.x1, _bounds.y0, _block[_i], ALIGN_LEFT)
+		// shift our bounds to include this new square
+		_bounds.x1 = _this_square_bounds.x1
+		// apply padding to all internal squares
+		if (_i > 0 && _i < _squares_count - 1) {
+			_bounds.x1 = _bounds.x1 + _padding
+			// draw vertical line indicating space between characters
+			draw_line(_bounds.x1, _bounds.y0 - _padding, _bounds.x1, _bounds.y1 + _padding)
+			_bounds.x1 = _bounds.x1 + _padding
+		}
+	}
+	
+	// draw external padding and then draw the word containing box
+	_bounds = _apply_padding_to_bounds(_bounds, _padding, _padding)
+	draw_rounded_rectangle(_bounds.x0, _bounds.y0, _bounds.x1, _bounds.y1, _padding / 2, _is_focused ? 6 : 2)
+	return _bounds
+}

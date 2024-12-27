@@ -44,12 +44,7 @@ function get_max_bounds(_bounds_array) {
 function draw_info_modal(_bounds, _step) {
 	_step = min(1, max(0, _step))
 	var _padding = 20;
-	var _with_padding = {
-		x0: (_bounds.x0 - _padding),
-		y0: (_bounds.y0 - _padding),
-		x0: (_bounds.x1 + _padding),
-		y0: (_bounds.y1 + _padding),
-	}
+	var _with_padding = _apply_padding_to_bounds(_bounds, _padding, _padding)
 	
 	if (_step < 1) {
 		_with_padding = {
