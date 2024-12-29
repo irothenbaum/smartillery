@@ -14,10 +14,12 @@ for (var _w = 0; _w < words_count; _w++) {
 		array_push(_styles, 
 			typeof(_blocks[_w][_b]) == "string" 
 				? MINI_CHALLENGE_BLOCK_STYLE_GIVEN
-				: _blocks[_w][_b]
-					? MINI_CHALLENGE_BLOCK_STYLE_RIGHT
-					: MINI_CHALLENGE_BLOCK_STYLE_GUESS
-					
+				: (
+					_blocks[_w][_b]
+						? MINI_CHALLENGE_BLOCK_STYLE_RIGHT
+						: MINI_CHALLENGE_BLOCK_STYLE_GUESS
+				)
+		)				
 	}
 	
 	var _this_boundary = draw_word_blocks(

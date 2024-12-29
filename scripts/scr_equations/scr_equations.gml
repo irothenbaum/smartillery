@@ -111,6 +111,10 @@ function select_word_of_length(_length) {
 		throw "Invalid word length"
 	}
 	
-	var _dictionary = global.dictionaries[string(_length - global.min_word_length)]
+	var _dictionary_name = string_concat("length", string(_length))
+	
+	debug("NAME", _dictionary_name)
+	
+	var _dictionary = global.dictionaries[$ _dictionary_name]
 	return _dictionary[irandom_range(0, array_length(_dictionary) - 1)]
 }

@@ -256,7 +256,7 @@ function increase_ult_score() {
 			
 			var _next_level_experience = get_experience_needed_for_next_level(ultimate_level)
 			if (ultimate_experience >= _next_level_experience) {
-				ultimate_level_up_controller = instance_create_layer(x, y, LAYER_CONTROLLERS, global.is_math_mode ? obj_ult_upgrade_math : obj_ult_upgrade_typing)
+				ultimate_level_up_controller = instance_create_layer(x, y, LAYER_HUD, global.is_math_mode ? obj_ult_upgrade_math : obj_ult_upgrade_typing)
 			}
 		}
 	}
@@ -322,6 +322,13 @@ function _handle_test_string(_code) {
 	if(_code == "_damage") {
 		get_player().execute_take_damage(20)
 		return true;
+	}
+	
+	if (_code == "_test") {
+		var _next_level_experience = get_experience_needed_for_next_level(ultimate_level)
+		ultimate_experience = _next_level_experience	
+		ultimate_level_up_controller = instance_create_layer(x, y, LAYER_HUD, global.is_math_mode ? obj_ult_upgrade_math : obj_ult_upgrade_typing)
+		return true
 	}
 
 	if (_code == "_level") {

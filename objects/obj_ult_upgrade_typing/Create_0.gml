@@ -9,6 +9,7 @@ total_letters = _phrase_details.total_letters
 words_count = array_length(words)
 
 toggle_pause(true)
+debug("MINI GAME", _phrase_details)
 
 // seed keyboard_string with the first n letters that are provided
 keyboard_string = ""
@@ -17,6 +18,8 @@ while (typeof(blocks[0][_i]) == "string") {
 	keyboard_string += blocks[0][_i]
 	_i++
 }
+
+debug("keyboard string:", keyboard_string)
 
 function check_solution(_solution) {
 	var _previous_word_lengths = 0
@@ -48,8 +51,16 @@ function update_blocks_from_guess(_guessed_word, _block_index) {
 	}
 }
 
-function handle_solution_found() {
+function handle_solution_found(_solution) {
+	debug("SOLVED", _solution)
 	// TODO: need a little animation or whatever something pretty
 	game_controller.increate_ult_level()
+	instance_destroy()
+}
+
+function handle_forfeit() {
+	debug("FAILED")
+	// TODO: need a little animation or whatever something pretty
+	game_controller.ultimate_experience = round(game_controller.ultimate_experience / 2)
 	instance_destroy()
 }

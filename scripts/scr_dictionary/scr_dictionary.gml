@@ -1,5 +1,5 @@
-global.dictionary = {
-	"adjectives": [
+global.dictionaries = {
+	adjectives: [
 		"active", "amazing", "ancient", "angry", "awkward", "beautiful", "bitter", 
 		"bold", "brave", "bright", "calm", "careful", "cheerful", "clever", "cold", 
 		"colorful", "complex", "crazy", "curious", "dangerous", "dark", "delicate", 
@@ -8,16 +8,16 @@ global.dictionary = {
 		"kind", "lovely", "magical", "massive", "nervous", "perfect", "quiet", 
 	  "red", "serious", "silly", "simple", "strong", "yellow"
 	],
-	"nouns": [
+	nouns: [
 		"apple", "animal", "artist", "bridge", "building", "butterfly", "camera", 
 		"car", "cat", "child", "city", "cloud", "computer", "desert", "dog", 
 		"dream", "elephant", "family", "flower", "forest", "garden", "gift", 
 		"group", "house", "island", "journey", "key", "king", "lake", "lion", 
 		"machine", "mountain", "ocean", "pencil", "planet", "queen", "rainbow", 
 		"river", "road", "school", "ship", "sky", "snake", "star", "stone", 
-	"street", "sun", "tiger", "tree", "village"
+		"street", "sun", "tiger", "tree", "village"
 	],
-	"4": [
+	length4: [
 		"tree", "love", "home", "life", "work", "good", "time", "blue", "dark", 
 		"easy", "hard", "mind", "kind", "snow", "rain", "fire", "calm", "wild", 
 		"bird", "wolf", "game", "song", "hand", "plan", "idea", "city", "star", 
@@ -25,7 +25,7 @@ global.dictionary = {
 		"walk", "jump", "grow", "cook", "sing", "give", "help", "stay", "safe", 
 		"look", "find", "move", "play", "hope"
 	],
-	"5": [
+	length5: [
 		"house", "apple", "water", "light", "place", "voice", "night", "music", 
 		"dream", "cloud", "earth", "river", "storm", "smile", "grass", "child", 
 		"space", "green", "heart", "angel", "peace", "sound", "paper", "dance", 
@@ -34,7 +34,7 @@ global.dictionary = {
 		"stone", "chair", "table", "light", "north", "south", "field", "floor", 
 		"image", "dream"
 	],
-	"6": [
+	length6: [
 		"people", "future", "friend", "beauty", "bright", "silver", "forest", 
 		"orange", "market", "school", "strong", "energy", "golden", "moment", 
 		"window", "garden", "danger", "bridge", "wonder", "animal", "artist", 
@@ -44,7 +44,7 @@ global.dictionary = {
 		"flower", "forest", "silver", "office", "object", "spirit", "farmer", 
 		"leader"
 	],
-	"7": [
+	length7: [
 		"country", "journey", "science", "freedom", "picture", "captain", 
 		"holiday", "station", "teacher", "history", "weather", "justice", 
 		"fiction", "fortune", "soldier", "diamond", "fiction", "village", 
@@ -55,7 +55,7 @@ global.dictionary = {
 		"trouble", "fortune", "soldier", "teacher", "captain", "holiday", 
 		"journey", "science"
 	],
-	"8": [
+	length8: [
 		"happiness", "adventure", "decision", "electric", "discovery", 
 		"situation", "movement", "research", "guidance", "festival", 
 		"romantic", "solution", "strength", "computer", "mountain", 
@@ -67,7 +67,7 @@ global.dictionary = {
 		"resource", "election", "assembly", "continent", "creative", 
 		"national", "solution", "guidance", "discovery", "festival"
 	],
-	"9": [
+	length9: [
 		"adventure", "character", "directory", "invention", "important", 
 		"knowledge", "confidence", "guideline", "education", "chemistry", 
 		"underwear", "attention", "beautiful", "excitement", "judgement", 
@@ -79,7 +79,7 @@ global.dictionary = {
 		"material", "operation", "pollution", "processor", "publisher", 
 		"radiation", "recession", "simulation", "universal"
 	],
-	"10": [
+	length10: [
 		"advancement", "achievement", "recollection", "imagination", 
 		"destination", "recommendation", "communication", "understanding", 
 		"appreciation", "investigation", "consideration", "construction", 
@@ -96,7 +96,7 @@ global.dictionary = {
 		"materialization", "systematization", "universalization", 
 		"neutralization", "generalization"
 	],
-	"11": [
+	length11: [
 		"information", "exploration", "presentation", "development", 
 		"interaction", "environment", "announcement", "conversation", 
 		"organization", "imagination", "preparation", "discovery", 
