@@ -19,7 +19,7 @@ function init_wave() {
 /// @return {Id.Instance}
 function spawn_enemy() {
 	// we want each wave to progress the same way regardless of play so we reset the random seed deterministically each time
-	random_set_seed(global.game_seed + current_wave + spawned_count);
+	random_set_seed(global.game_seed + current_wave * 10000 + spawned_count);
 	can_spawn = false
 	
 	// out of bounds margin

@@ -13,7 +13,7 @@ function create_typing_phrase(_level = 1){
 	
 	return {
 		words: _blocks,
-		total_letters: _const_phrase_credits,
+		total_letters: _const_phrase_credits - _phrase_credits,
 		blocks: _remove_solution_boxes(_blocks)
 	}
 }
@@ -59,6 +59,8 @@ function _remove_solution_boxes(_words) {
 	
 		array_push(_ret_val, _blocks)
 	}
+	
+	return _ret_val
 }
 
 function build_solution_from_keyboard_input(_input, _blocks) {
@@ -92,6 +94,8 @@ function build_solution_from_keyboard_input(_input, _blocks) {
  * @param {boolean} _is_focused
  */
 function draw_word_blocks(_x, _y, _block, _styles, _is_focused) {
+	debug("DRAWING WORD BLOCK", _block, _styles, _is_focused)
+	
 	var _padding = 20
 	var _bounds = {
 		x0: _x,
@@ -101,6 +105,7 @@ function draw_word_blocks(_x, _y, _block, _styles, _is_focused) {
 	}
 	var _squares_count = array_length(_block)
 	for (var _i = 0; _i < _squares_count; _i++) {
+		
 		// draw the square content
 		var _this_square_bounds = draw_text_with_alignment(_bounds.x1, _bounds.y0, _block[_i], ALIGN_LEFT)
 		// shift our bounds to include this new square
