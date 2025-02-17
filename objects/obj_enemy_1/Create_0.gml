@@ -13,7 +13,10 @@ direction = point_direction(x, y, global.xcenter, global.ycenter) + (20 * (irand
 speed = approach_speed
 
 function set_waypoints(_w) {
-	waypoints = _w
+	waypoints = []
+	array_copy(waypoints, 0, _w, 0, array_length(_w))
+	
+	debug("HAS WWAYPOINTS", waypoints)
 }
 
 function register_hit(_insta_kill) {

@@ -1,7 +1,12 @@
 can_spawn = false;
 enemy_count = 0;
 spawned_count = 0;
+spawn_delay_seconds = 0;
 current_wave = get_current_wave_number()
+
+min_spawn_delay_seconds = 0.5
+max_spawn_delay_seconds = 10
+round_duration_seconds = 60
 
 
 /// @func init()
@@ -10,9 +15,36 @@ function init_wave() {
 	can_spawn = false;
 	enemy_count = ceil(current_wave * 1.5);
 	spawned_count = 0;
+	spawn_delay_seconds = max(min_spawn_delay_seconds, min(max_spawn_delay_seconds, 30 / enemy_count))
 	
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_next_wave_text)
+	
 	alarm[0] = global.scene_transition_duration * 2 * game_get_speed(gamespeed_fps);
+}
+
+_enemy_order = [
+	obj_enemy_1,
+	obj_enemy_2,
+	obj_enemy_3,
+	obj_enemy_4,
+	obj_compound_enemy_1,
+	obj_compound_enemy_2
+]
+
+function _get_enemy_variables(_enemy_type) { 
+	var _ret_val = {}
+	switch(_enemy_type) {
+		case obj_compound_enemy_1:
+			_ret_val.enemy_count = max(3, current_wave / global.wave_difficulty_step)
+			_ret_val.waypoint_count = floor(_ret_val.enemy_count / 2)
+			break
+		
+		case obj_compound_enemy_2:
+			_ret_val.enemy_count = max(2, current_wave / global.wave_difficulty_step)
+			break
+	}
+	
+	return _ret_val
 }
 
 /// @func spawn_enemy()
@@ -46,25 +78,31 @@ function spawn_enemy() {
 	
 	var _max_enemy = 1 + floor(current_wave / global.wave_difficulty_step)
 	
-	var _spawn_value
-	var _next_enemy_type
-	if (_max_enemy >= 4 && irandom(20) == 1) {
-		_next_enemy_type = obj_enemy_4
-		_spawn_value = 3
-	} else if (_max_enemy >= 3 && irandom(14) == 1) {
-		_next_enemy_type = obj_enemy_3
-		_spawn_value = 2
-	} else if (_max_enemy >= 2 && irandom(8) == 1) {
-		_next_enemy_type = obj_enemy_2
-		_spawn_value = 1
-	} else {
-		_next_enemy_type = obj_enemy_1
-		_spawn_value = 1
-	}
+	var _next_enemy_type = undefined
+	var _next_enemy_params = undefined
+	do {
+		if (_max_enemy == 0 || flip_coin(max(2, (_max_enemy - 1) * 10 - current_wave))) {
+			_next_enemy_type = _enemy_order[_max_enemy]
+		} else {
+			_max_enemy--
+		}
+	} until (!is_undefined(_next_enemy_type))
 	
-	var _new_enemy =  instance_create_layer(_pos_x, _pos_y, LAYER_INSTANCES, _next_enemy_type);
-	// at round 20 they'll spawn half a second apart
-	alarm[0] = game_get_speed(gamespeed_fps) * _spawn_value * (global.wave_difficulty_step / _max_enemy)
+	_next_enemy_params = _get_enemy_variables(_next_enemy_type)
+	
+	// JUST FOR TESTING:
+	_next_enemy_type = obj_compound_enemy_1
+	_next_enemy_params = {enemy_count: 7, waypoint_count: 4}
+	// -----
+		
+	var _new_enemy =  instance_create_layer(
+		_pos_x,
+		_pos_y, 
+		LAYER_INSTANCES, 
+		_next_enemy_type, 
+		_next_enemy_params
+	);
+	alarm[0] = game_get_speed(gamespeed_fps) * spawn_delay_seconds
 	
 	spawned_count++;
 	
