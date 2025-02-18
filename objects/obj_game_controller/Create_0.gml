@@ -24,6 +24,7 @@ ultimate_level = 1
 ult_overlay = 0
 cached_ultimate_level = undefined;
 inst_ultimate = undefined;
+ultimate_level_up_controller = undefined;
 
 is_game_over = false;
 

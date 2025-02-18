@@ -1,4 +1,4 @@
-/// @description pausecreate phrase
+/// @description pause, create phrase
 // You can write your code in this editor
 
 game_controller = get_game_controller()

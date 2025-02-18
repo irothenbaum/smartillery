@@ -1,4 +1,3 @@
-- Finish enemy groups (Not sure exactly where I left off there...)
 - Finish ultimate upgrade challenge.
     - Currently working in obj_upgrade_tpying, have most of the logic done. Was about to start Draw GUI. Then need to handle solving / forfeiting
 - "Practice" mode for:

@@ -74,7 +74,11 @@ function build_solution_from_keyboard_input(_input, _blocks) {
 			if (typeof(_this_block[_w]) == "string") {
 				_solution += _this_block[_w]
 			} else {
-				_solution += string_char_at(_input, _unshifted_count + 1)
+				var _this_character = string_char_at(_input, _unshifted_count + 1)
+				if (typeof(_this_character) != "string" || _this_character == "") {
+					_this_character = " "
+				}
+				_solution += _this_character
 				_unshifted_count++
 			}
 		}

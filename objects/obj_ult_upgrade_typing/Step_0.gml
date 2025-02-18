@@ -5,4 +5,6 @@ if (keyboard_check_pressed(vk_anykey)) {
 		check_solution(build_solution_from_keyboard_input(keyboard_string, blocks))
 		keyboard_string = ""
 	}
+	
+	debug("keyboard_string:", keyboard_string)
 }
