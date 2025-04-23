@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"scr_steam_utilities",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_steam_utilities",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

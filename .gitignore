@@ -1,0 +1,25 @@
+# Ignore GameMaker extensions (excluding metadata if needed)
+extensions/
+
+# Ignore Steam API binaries (if they ever get added)
+steam_api.dll
+steam_api64.dll
+libsteam_api.dylib
+libsteam_api.so
+
+# Ignore compiled binaries and cache
+*.yyz
+*.exe
+*.app
+*.apk
+*.ipa
+*.pck
+*.ogg
+*.log
+*.tmp
+.cache/
+build/
+output/
+
+# Keep Steam configuration files
+!steam_appid.txt
