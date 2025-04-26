@@ -1,10 +1,15 @@
-- Finish ultimate upgrade challenge.
-    - Currently working in obj_upgrade_tpying, have most of the logic done. Was about to start Draw GUI. Then need to handle solving / forfeiting
+- Multiplayer
+    - Modify "host" game controller to send events for meaninfuly actions
+	     - Create/Destroy new enemy
+		 - Create explosion
+		 - Score changes
+    - Create "guest" game controller to receive events + send User input events
+	- Need to update enemies (and explosions, etc) to be creatable using 
+- Remove Heal and Slow ult. Implement a new Lightning ult that destroys nearby enemies
 - "Practice" mode for:
     - Main game (a modified enemy_1 that just travels right towards you, one at a time - next one as soon as you kill one, no power ups, just guessing answers)
 	- Math ult puzzle
-	- Typing ult puzzle
-- Pre-determine all enemies in a round and show them at the start as a sequence. Maybe you see them the whole time and slowly X your way through them
+- Pre-determine all enemies in a round and show them at the start as a sequence. Maybe you see them the whole time and slowly X your way through them??
 - Sound effects
 - Main Menu
 	- Logo,
