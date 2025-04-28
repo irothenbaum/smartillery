@@ -26,5 +26,11 @@ function handle_cancel() {
 }
 
 function handle_start() {
+	send_event({
+		"event_name": NET_EVENT_GAME_START,
+		"host_id": global.is_host ? global.my_steam_id : global.partner_steam_id,
+		"guest_id": global.is_host ? global.partner_steam_id : global.my_steam_id
+	})
 	
+	room_goto(rm_play_coop)
 }

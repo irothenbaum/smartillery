@@ -4,12 +4,17 @@
 // The third section is receiving event logic
 
 #macro NET_EVENT_GAME_START "NET_EVENT_GAME_START"
+#macro NET_EVENT_SCORE_CHANGED "NET_EVENT_SCORE_CHANGED"
 #macro NET_EVENT_CREATE_INSTANCE "NET_EVENT_CREATE_INSTANCE"
 #macro NET_EVENT_DESTROY_INSTANCE "NET_EVENT_DESTROY_INSTANCE"
+#macro NET_EVENT_TURRET_ANGLE_CHANGED "NET_EVENT_TURRET_ANGLE_CHANGED"
 
 // the numeric ID is simply the index in the array
 var _numeric_id_to_event_name = [
-	NET_EVENT_GAME_START
+	NET_EVENT_GAME_START,
+	NET_EVENT_SCORE_CHANGED,
+	NET_EVENT_CREATE_INSTANCE,
+	NET_EVENT_DESTROY_INSTANCE
 ]
 
 // we then create a reverse map of the array so we can get index from event name string
@@ -22,14 +27,34 @@ array_foreach(_numeric_id_to_event_name, method({lookup: _event_name_to_numeric_
 var _event_payload_keys = {
 	// "event_name" is also an implied item on all these payloads
 	NET_EVENT_GAME_START: ["host_id", "guest_id"],
+	NET_EVENT_SCORE_CHANGED: ["player_steam_id", "unit_score", "streak_score", "combo_score", "game_score"],
+	NET_EVENT_CREATE_INSTANCE: ["instance_id", "instance_type", "x", "y", "direction", "speed"],
+	NET_EVENT_DESTROY_INSTANCE: ["instance_id"],
+	NET_EVENT_TURRET_ANGLE_CHANGED: ["rotate_to", "rotate_speed"],
 }
 
 // define the type each key (prop on an event) is
 var _payload_key_types = {
 	"events_count": buffer_u8,
 	"event_name": buffer_u8,
-	"host_id": buffer_u8,
+	
+	// common
+	"player_steam_id": buffer_u8,
+	"instance_id": buffer_u8,
+	
+	// game start
 	"guest_id": buffer_u8,
+	"host_id": buffer_u8,
+	
+	// score changes
+	"unit_score": buffer_u8,
+	"streak_score": buffer_u8,
+	"combo_score": buffer_u8,
+	"game_score": buffer_u8,
+	
+	// turrent angle
+	"rotate_to": buffer_u8,
+	"rotate_speed": buffer_u8,
 }
 
 // --------------------------------------------------------------------------------------
@@ -64,10 +89,22 @@ function events_to_buffer(_events) {
 	return _buffer
 }
 
-function send_events(_events, _peer_steam_id) {
+function send_events_to(_events, _peer_steam_id) {
 	var _buffer = events_to_buffer(_events)
 	steam_net_send(_peer_steam_id, _buffer, buffer_tell(_buffer));
 	buffer_delete(_buffer);
+}
+
+function send_event_to(_event, _peer_steam_id) {
+	return send_events_to([_event], _peer_steam_id)
+}
+
+function send_event(_event) {
+	return send_event_to(_event, global.partner_steam_id)
+}
+
+function send_events(_events) {
+	return send_events_to(_events, global.partner_steam_id)
 }
 
 // --------------------------------------------------------------------------------------

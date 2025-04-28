@@ -17,12 +17,12 @@ function debug() {
 
 function get_game_controller(){
 	var _game_controller = instance_find(obj_game_controller, 0)
+	
+	if (is_undefined(_game_controller)) {
+		_game_controller = instance_find(obj_guest_game_controller, 0)
+	}
+	
 	return _game_controller 
-}
-
-function get_enemy_controller() {
-	var _enemy_controller = instance_find(obj_enemy_controller, 0)
-	return _enemy_controller
 }
 
 function get_player() {

@@ -12,14 +12,6 @@
 #macro ULTIMATE_SLOW "slow"
 #macro ULTIMATE_HEAL "heal"
 
-#macro EVENT_ENEMY_DAMAGED "enemy-damaged"
-#macro EVENT_ENEMY_KILLED "enemy-killed"
-#macro EVENT_TOGGLE_PAUSE "toggle-pause"
-#macro EVENT_WRONG_GUESS "wrong-guess"
-#macro EVENT_UTLTIMATE_LEVEL_UP "ultimate-level-up"
-#macro EVENT_ON_OFF_STREAK "on-streak"
-#macro EVENT_GAME_OVER "game-gover"
-
 #macro RESET_COLOR {c: c_white, o: 1}
 
 #macro TAU (2 * pi)

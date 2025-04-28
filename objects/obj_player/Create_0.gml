@@ -12,9 +12,9 @@ rotate_idle_speed = 90 // in degrees per second
 rotate_speed = rotate_idle_speed
 rotate_to = 90;
 my_health = global.max_health
-aiming_at_instance = undefined
+aiming_at_instance = []
 image_angle = rotate_to;
-direction = 90 // point upwards
+direction = 90 // point upwards - the default and starting position
 x = global.xcenter
 y = global.ycenter
 
@@ -25,35 +25,51 @@ image_yscale = image_scale;
 screen_shake = instance_create_layer(x,y, LAYER_INSTANCES, obj_screen_shake)
 streak_fire = undefined
 
+function rotate_towards_next_target() {
+	if (array_length(aiming_at_instance) > 0) {
+		rotate_speed = rotate_aim_speed;
+		var _target = aiming_at_instance[0] 
+		rotate_to = point_direction(x, y, _target.x, _target.y)
+		
+		broadcast(EVENT_NEW_TURRET_ANGLE, {
+			rotate_to: rotate_to,
+			rotate_speed: rotate_speed,
+		})
+	} else {
+		// after a few seconds, reset to vertical postion
+		alarm[0] = game_get_speed(gamespeed_fps) * 3
+	}
+}
+
 function fire_at_instance(_inst) {
 	if (!_inst) {
 		// do nothing
 		return
 	}
 	alarm[0] = -1
-	aiming_at_instance = _inst
-	rotate_speed = rotate_aim_speed;
-	rotate_to = point_direction(x, y, _inst.x, _inst.y);
+	array_push(aiming_at_instance, _inst)
+	rotate_towards_next_target()
 }
 
 function execute_hit_target() {
-	if (not aiming_at_instance) {
+	if (array_length(aiming_at_instance) == 0) {
 		debug("This shouldn't happen -- execute_hit_target -> not aiming_at_instance")
 		return
 	}
 	
+	var _target = array_shift(aiming_at_instance)
+	
 	// Muzzle Flash
 	var _muzzle = get_turret_muzzle()
 	var _on_streak = get_game_controller().has_point_streak()
-	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: aiming_at_instance.x, target_y: aiming_at_instance.y, width: _on_streak ? 16 : 12, color: _on_streak ? global.power_color : global.beam_color})
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: _target.x, target_y: _target.y, width: _on_streak ? 16 : 12, color: _on_streak ? global.power_color : global.beam_color})
 	
 	recoil_amount = max_recoil_amount
-	aiming_at_instance.register_hit()
-	broadcast(EVENT_ENEMY_DAMAGED, aiming_at_instance)
-	aiming_at_instance = undefined
 	
-	// after a few seconds, reset to vertical postion
-	alarm[0] = game_get_speed(gamespeed_fps) * 3
+	_target.register_hit()
+	broadcast(EVENT_ENEMY_DAMAGED, _target)
+	
+	rotate_towards_next_target()
 }
 
 function execute_take_damage(_damage_amount) {
@@ -63,7 +79,7 @@ function execute_take_damage(_damage_amount) {
 	streak = 0
 	
 	if (my_health <= 0) {
-		aiming_at_instance = undefined
+		aiming_at_instance = []
 		if (!is_undefined(streak_fire)) {
 			destroy_particle(streak_fire.system)
 		}

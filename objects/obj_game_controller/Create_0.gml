@@ -3,6 +3,7 @@ draw_set_halign(fa_left);
 random_set_seed(global.game_seed);
 
 tutorial = undefined;
+enemy_controller = undefined;
 
 current_wave = 0
 game_score = 0
@@ -46,14 +47,15 @@ function has_ultimate() {
 }
 
 function mark_wave_completed() {
-	if (get_enemy_controller()) {	
-		instance_destroy(get_enemy_controller())
+	if (!is_undefined(enemy_controller)) {	
+		instance_destroy(enemy_controller)
+		enemy_controller = undefined
 	}
 	get_player().my_health = global.max_health
 	current_wave++;
 	// Even those the enemy controller is a controller, 
-	var _controller = instance_create_layer(x, y, LAYER_INSTANCES, obj_enemy_controller);
-	with (_controller) {
+	enemy_controller = instance_create_layer(x, y, LAYER_INSTANCES, obj_enemy_controller);
+	with (enemy_controller) {
 		init_wave()
 	}
 	
@@ -81,7 +83,8 @@ function end_game() {
 	
 	// destroy the enemy controller and user input
 	instance_destroy(instance_find(obj_input, 0))
-	instance_destroy(get_enemy_controller())
+	instance_destroy(enemy_controller)
+	enemy_controller = undefined
 	instance_destroy(instance_find(obj_hud, 0))
 	
 	var _game_over_message = instance_create_layer(x, y, LAYER_HUD, obj_game_over)
@@ -127,6 +130,12 @@ function handle_enemy_killed(_enemy, _skip_streak = false) {
 	combo_score += _combo_score
 	game_score += _enemy.point_value + _streak_score + _combo_score
 	
+	broadcast(EVENT_SCORE_CHANGED, {
+		unit_score: unit_score,
+		streak_score: streak_score,
+		combo_score: combo_score,
+		game_score: game_score,
+	})
 	broadcast(EVENT_ENEMY_KILLED, _enemy)
 		
 	if (has_point_streak()) {
@@ -341,7 +350,7 @@ function _handle_test_string(_code) {
 	}
 	
 	if (_code == "_wave") {
-		get_enemy_controller().spawned_count = get_enemy_controller().enemy_count
+		enemy_controller.spawned_count = enemy_controller.enemy_count
 		current_wave++;
 		return true
 	}
