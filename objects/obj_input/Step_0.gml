@@ -13,7 +13,11 @@ if(keyboard_check_pressed(vk_enter)) {
 	keyboard_string = "";
 } else {
 	keyboard_string = string_copy(keyboard_string, 0, 20);
-	message = keyboard_string
+	
+	if (keyboard_string != message) {
+		message = keyboard_string
+		broadcast(EVENT_INPUT_CHANGED, message)
+	}
 
 	// if we were shaking, but the user started typing again, then stop shaking
 	if (!is_undefined(shake_start) && string_length(message) > 0) {

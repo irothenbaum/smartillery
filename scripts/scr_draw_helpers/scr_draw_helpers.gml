@@ -20,27 +20,6 @@ function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_colo
 	})
 }
 
-function get_max_bounds(_bounds_array) {
-	if (!is_array(_bounds_array) || array_length(_bounds_array) == 0) {
-		return undefined
-	}
-	var _ret_val = {
-		x0: _bounds_array[0].x0,
-		y0: _bounds_array[0].y0,
-		x1: _bounds_array[0].x1,
-		y1: _bounds_array[0].y1,
-	}
-	for (var _i = 1; _i < array_length(_bounds_array); _i++) {
-		var _these_bounds = _bounds_array[_i];
-		_ret_val.x0 = min(_ret_val.x0, _these_bounds.x0)
-		_ret_val.x1 = max(_ret_val.x1, _these_bounds.x1)
-		_ret_val.y0 = min(_ret_val.y0, _these_bounds.y0)
-		_ret_val.y1 = max(_ret_val.y1, _these_bounds.y1)
-	}
-	
-	return _final_format(_ret_val)
-}
-
 function draw_info_modal(_bounds, _step) {
 	_step = min(1, max(0, _step))
 	var _padding = 20;
@@ -59,6 +38,30 @@ function draw_info_modal(_bounds, _step) {
 	draw_rectangle(_with_padding.x0, _with_padding.y0, _with_padding.x1, _with_padding.y1, true)
 	draw_set_composite_color(composite_color(c_black, 0.3))
 	draw_rectangle(_with_padding.x0, _with_padding.y0, _with_padding.x1, _with_padding.y1, false)
+}
+
+function center_bounds_in_frame(_bounds, _width = 0, _height = 0) {
+	if (_width == 0) {
+		_width = global.room_width
+	}
+	if (_height == 0) {
+		_height = global.room_height
+	}
+	
+	var _center = {
+		x: round(_width / 2),
+		y: round(_height / 2)
+	}
+	
+	var _new_bounds = {
+		x0: _center.x - round(_bounds.width / 2),
+		y1: _center.y - round(_bounds.height / 2)
+	}
+	
+	_new_bounds.x1 = _new_bounds.x0 + _bounds.width
+	_new_bounds.y1 = _new_bounds.y0 + _bounds.height
+	
+	return _final_format(_new_bounds)
 }
 
 function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_height = 1.1) {	
@@ -125,23 +128,28 @@ function draw_overlay(_alpha  = 0.5) {
 }
 
 function draw_rounded_rectangle(_x0, _y0, _x1, _y1, _radius, _thickness = 1) {
-	var _horizontal = {
+	var _content_area = {
 		x0: _x0 + _radius,
 		x1: _x1 - _radius,
-	}
-	var _vertical = {
 		y0: _y0 + _radius,
 		y1: _y1 - _radius,
 	}
 	
-	draw_line_width(_horizontal.x0, _y0, _horizontal.x1, _y0, _thickness)
-	draw_arc(_horizontal.x1, _vertical.y0, _radius, 90, 0, _thickness)
-	draw_line_width(_x1, _vertical.y0, _x1, _vertical.y1, _thickness)
-	draw_arc(_horizontal.x1, _vertical.y1, _radius, 90, 270, _thickness)
-	draw_line_width(_horizontal.x0, _y1, _horizontal.x1, _y1, _thickness)
-	draw_arc(_horizontal.x0, _vertical.y1, _radius, 90, 180, _thickness)
-	draw_line_width(_x0, _vertical.y0, _x0, _vertical.y1, _thickness)
-	draw_arc(_horizontal.x0, _vertical.y0, _radius, 90, 90, _thickness)
+	draw_line_width(_content_area.x0, _y0, _content_area.x1, _y0, _thickness)
+	draw_arc(_content_area.x1, _vertical.y0, _radius, 90, 0, _thickness)
+	draw_line_width(_x1, _content_area.y0, _x1, _content_area.y1, _thickness)
+	draw_arc(_content_area.x1, _content_area.y1, _radius, 90, 270, _thickness)
+	draw_line_width(_content_area.x0, _y1, _content_area.x1, _y1, _thickness)
+	draw_arc(_content_area.x0, _content_area.y1, _radius, 90, 180, _thickness)
+	draw_line_width(_x0, _content_area.y0, _x0, _content_area.y1, _thickness)
+	draw_arc(_content_area.x0, _content_area.y0, _radius, 90, 90, _thickness)
+	
+	return _final_format({
+		x0: _x0,
+		y0: _y0,
+		x1: _x1,
+		y1: _y1
+	})
 }
 
 function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1) {
@@ -172,7 +180,7 @@ function draw_input_box_with_progress(_bounds, _ratio, _align) {
 	_ratio = max(0, min(_ratio, 1))
 	var _rectangle_bounds = _final_format(_bounds)
 
-	draw_rounded_rectangle(
+	var _final_bounds = draw_rounded_rectangle(
 		_rectangle_bounds.x0, 
 		_rectangle_bounds.y0, 
 		_rectangle_bounds.x1, 
@@ -203,6 +211,8 @@ function draw_input_box_with_progress(_bounds, _ratio, _align) {
 	}
 
 	reset_composite_color()
+	
+	return _final_format(_final_bounds)
 }
 
 function composite_color(_color, _opacity) {

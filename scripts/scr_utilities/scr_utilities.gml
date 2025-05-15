@@ -220,6 +220,27 @@ function _apply_padding_to_bounds(_bounds, _vertical, _horizontal) {
 	})
 }
 
+function get_max_bounds(_bounds_array) {
+	if (!is_array(_bounds_array) || array_length(_bounds_array) == 0) {
+		return undefined
+	}
+	var _ret_val = {
+		x0: _bounds_array[0].x0,
+		y0: _bounds_array[0].y0,
+		x1: _bounds_array[0].x1,
+		y1: _bounds_array[0].y1,
+	}
+	for (var _i = 1; _i < array_length(_bounds_array); _i++) {
+		var _these_bounds = _bounds_array[_i];
+		_ret_val.x0 = min(_ret_val.x0, _these_bounds.x0)
+		_ret_val.x1 = max(_ret_val.x1, _these_bounds.x1)
+		_ret_val.y0 = min(_ret_val.y0, _these_bounds.y0)
+		_ret_val.y1 = max(_ret_val.y1, _these_bounds.y1)
+	}
+	
+	return _final_format(_ret_val)
+}
+
 /// @return {number} -- will return 1 or -1, or 0
 function normalize(_num) {
 	return _num < 0 ? -1 : (_num > 0 ? 1 : 0)
@@ -247,4 +268,13 @@ function get_tangent_point(_from_x, _from_y, _to_x, _to_y, _distance) {
 /// @param {string} _insert
 function string_replace_at(_str, _pos, _insert) {
 	return string_copy(_str, 1, _pos-1) + _insert + string_delete(_str, 1, _pos);
+}
+
+
+function get_bounds_of_draw_functions(_fiber, _offset) {
+	var _bounds_array = []
+	var _finished = false
+	do {
+		var _next_bounds = fiber_call(_fiber, _offset)
+	} until(_finished)
 }

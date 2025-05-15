@@ -1,4 +1,5 @@
 #macro EVENT_SCORE_CHANGED "score-changed"
+#macro EVENT_INPUT_CHANGED "input-changed"
 #macro EVENT_ENEMY_DAMAGED "enemy-damaged"
 #macro EVENT_ENEMY_KILLED "enemy-killed"
 #macro EVENT_TOGGLE_PAUSE "toggle-pause"
@@ -7,6 +8,8 @@
 #macro EVENT_ON_OFF_STREAK "on-streak"
 #macro EVENT_GAME_OVER "game-gover"
 #macro EVENT_NEW_TURRET_ANGLE "new-turret-angle"
+#macro EVENT_ENEMY_SPAWNED "new-enemy-spawned"
+
 #macro EVENT_ALL "*all*"
 
 global._events = {};

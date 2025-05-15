@@ -8,6 +8,7 @@
 #macro NET_EVENT_CREATE_INSTANCE "NET_EVENT_CREATE_INSTANCE"
 #macro NET_EVENT_DESTROY_INSTANCE "NET_EVENT_DESTROY_INSTANCE"
 #macro NET_EVENT_TURRET_ANGLE_CHANGED "NET_EVENT_TURRET_ANGLE_CHANGED"
+#macro NET_EVENT_INPUT_CHANGED "NET_EVENT_INPUT_CHANGED"
 
 // the numeric ID is simply the index in the array
 var _numeric_id_to_event_name = [
@@ -31,6 +32,7 @@ var _event_payload_keys = {
 	NET_EVENT_CREATE_INSTANCE: ["instance_id", "instance_type", "x", "y", "direction", "speed"],
 	NET_EVENT_DESTROY_INSTANCE: ["instance_id"],
 	NET_EVENT_TURRET_ANGLE_CHANGED: ["rotate_to", "rotate_speed"],
+	NET_EVENT_INPUT_CHANGED: ["player_steam_id", "input"]
 }
 
 // define the type each key (prop on an event) is
@@ -52,9 +54,12 @@ var _payload_key_types = {
 	"combo_score": buffer_u8,
 	"game_score": buffer_u8,
 	
-	// turrent angle
+	// turret angle
 	"rotate_to": buffer_u8,
 	"rotate_speed": buffer_u8,
+	
+	// input changed
+	"input": buffer_u8,
 }
 
 // --------------------------------------------------------------------------------------
@@ -110,22 +115,6 @@ function send_events(_events) {
 // --------------------------------------------------------------------------------------
 // Receiving events
 
-function handle_guest_received_event(_ev) {
-	
-}
-
-function handle_host_received_event(_ev) {
-	
-}
-
-function handle_received_event(_ev) {
-	if (global.is_host) {
-		handle_host_received_event(_ev)
-	} else {
-		handle_guest_received_event(_ev)
-	}
-}
-
 function buffer_to_events(_buffer) {
 	var _ret_val = []
 	buffer_seek(_buffer, buffer_seek_start, 0);
@@ -165,15 +154,18 @@ function buffer_to_events(_buffer) {
 
 // --------------------------------------------------------------------------------------
 
-// This function is the main entry point, it is called in the step event
-function check_for_messages() {
+// This function is the main entry point, it should be called in the step event
+function check_for_network_events() {
+	var _ret_val = []
 	while (steam_net_packet_receive()) {
 		var _buffer = buffer_create(256, buffer_grow, 1);
 		steam_net_packet_get_data(_buffer);
 		
 		var _events = buffer_to_events(_buffer)
-		array_foreach(_events, handle_received_event)
+		array_copy(_ret_val, array_length(_ret_val), _events, 0, array_length(_events))
 		
 		buffer_delete(_buffer);
 	}
+	
+	return _ret_val
 }

@@ -36,8 +36,6 @@ switch (_ev) {
 	    global.is_host = steam_lobby_get_owner(global.lobby_id) == global.my_steam_id
 		
 		debug("Joined lobby as " + global.is_host ? "Host" : "Guest")
-		
-		
         break;
 
     case "steam_lobby_join_requested":
