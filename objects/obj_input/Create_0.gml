@@ -50,7 +50,7 @@ subscribe(EVENT_GAME_OVER, function() {
 
 subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
 	if (_is_on_streak) {
-		streak_fire = draw_muzzle_smoke(x, y, global.power_color)
+		streak_fire = draw_muzzle_smoke(x, y, global.p1_color)
 		size_streak_fire()
 	} else {	
 		if (is_undefined(streak_fire)) {

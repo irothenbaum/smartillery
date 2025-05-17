@@ -15,14 +15,12 @@ function debug() {
 	show_debug_message(_out);
 }
 
-function get_game_controller(){
-	var _game_controller = instance_find(obj_game_controller, 0)
-	
-	if (is_undefined(_game_controller)) {
-		_game_controller = instance_find(obj_guest_game_controller, 0)
+function get_game_controller() {
+	if (global.is_single_player || global.is_host) {
+		return instance_find(obj_game_controller, 0)
+	} else {
+		return instance_find(obj_guest_game_controller, 0)
 	}
-	
-	return _game_controller 
 }
 
 function get_player() {

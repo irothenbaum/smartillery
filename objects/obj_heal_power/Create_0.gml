@@ -1,10 +1,11 @@
 player = get_player();
+heal_radius = 75
 heal_color = global.ultimate_colors[$ ULTIMATE_HEAL]
 heal_color_tint = global.ultimate_color_tints[$ ULTIMATE_HEAL]
 x = global.xcenter
 y = global.ycenter
 heal_rate = ult_heal_get_rate(level)
-heal_sparks = draw_particle_sparkle(x, y, heal_color_tint, global.heal_radius)
+heal_sparks = draw_particle_sparkle(x, y, heal_color_tint, heal_radius)
 wave_1 = instance_create_layer(x, y, LAYER_INSTANCES, obj_rotating_wave, {
 	color: heal_color,
 	rotate_speed: 1,

@@ -5,7 +5,7 @@ hide_self = false;
 
 body_color_arr = color_to_array(global.body_color)
 turret_color_arr = color_to_array(global.turret_color)
-power_color = color_to_array(global.power_color)
+p1_color = color_to_array(global.p1_color)
 
 rotate_aim_speed = 720 // in degrees per second
 rotate_idle_speed = 90 // in degrees per second
@@ -62,7 +62,7 @@ function execute_hit_target() {
 	// Muzzle Flash
 	var _muzzle = get_turret_muzzle()
 	var _on_streak = get_game_controller().has_point_streak()
-	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: _target.x, target_y: _target.y, width: _on_streak ? 16 : 12, color: _on_streak ? global.power_color : global.beam_color})
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: _target.x, target_y: _target.y, width: _on_streak ? 16 : 12, color: _on_streak ? global.p1_color : global.beam_color})
 	
 	recoil_amount = max_recoil_amount
 	
@@ -105,7 +105,7 @@ function get_turret_muzzle(_extra = 0) {
 
 subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
 	if (_is_on_streak) {
-		streak_fire = draw_muzzle_smoke(x, y, global.power_color)
+		streak_fire = draw_muzzle_smoke(x, y, global.p1_color)
 	} else {	
 		if (is_undefined(streak_fire)) {
 			return

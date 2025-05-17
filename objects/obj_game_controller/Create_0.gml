@@ -154,7 +154,7 @@ function draw_point_indicators(_x, _y, _base, _streak, _combo) {
 	if (_streak) {	
 		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
 			amount: _streak,
-			color: global.power_color
+			color: global.p1_color
 		})
 		_y -= 20
 	}

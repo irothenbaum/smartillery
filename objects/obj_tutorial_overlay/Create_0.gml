@@ -88,17 +88,12 @@ function get_ultimate_stats(_level) {
 	var _frames_to_seconds = game_get_speed(gamespeed_fps)
 	switch (global.selected_ultimate) {
 		case ULTIMATE_HEAL:
-			array_push(_stats, string_concat("Heal rate: ", round((ult_heal_get_rate(_level) / _frames_to_seconds) * 10) / 10, " /s"))
 			array_push(_stats, string_concat("Duration: ", round((ult_heal_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
-			var _leech_amount = ult_heal_get_leech_amount(_level)
-			if (_leech_amount > 0) {
-				array_push(_stats, string_concat("+", _leech_amount, " health per kill"))
-			}
+			array_push(_stats, string_concat("+", ult_heal_get_leech_amount(_level), " health per kill"))
 			break
 			
 		case ULTIMATE_STRIKE:
 			array_push(_stats, string_concat(ult_strike_get_count(_level), " strikes"))
-			array_push(_stats, string_concat("Strike aoe: ", ult_strike_get_radius(_level)))
 			break
 		
 		case ULTIMATE_SLOW:

@@ -11,6 +11,9 @@
 #macro ULTIMATE_STRIKE "strike"
 #macro ULTIMATE_SLOW "slow"
 #macro ULTIMATE_HEAL "heal"
+#macro ULTIMATE_ASSIST "assist"
+#macro ULTIMATE_COLLATERAL "collateral"
+#macro ULTIMATE_SIMPLIFY "simplify"
 
 #macro RESET_COLOR {c: c_white, o: 1}
 
@@ -19,19 +22,39 @@
 
 // colors
 global.bg_color = #260b26
-global.power_color = c_aqua
+global.p1_color = #0398fc
+global.p2_color = #fc8403
 global.combo_color = c_red
 global.beam_color = c_white
-global.ultimate_colors = {"none": c_white, "strike": #e03a3a, "slow": #3e7bed, "heal": #11d94e}
-global.ultimate_color_tints = {"none": #eeeeee, "strike": #e0773a, "slow": #0ce7eb, "heal": #c0ed2b}
+global.ultimate_colors = {
+	ULTIMATE_NONE: c_white, 
+	ULTIMATE_STRIKE: #e03a3a, 
+	ULTIMATE_SLOW: #3e7bed, 
+	ULTIMATE_HEAL: #11d94e,
+	ULTIMATE_SIMPLIFY: #11d94e, // TODO:
+	ULTIMATE_ASSIST: #11d94e, // TODO:
+	ULTIMATE_COLLATERAL: #11d94e, // TODO:
+}
+global.ultimate_color_tints = {
+	ULTIMATE_NONE: #eeeeee, 
+	ULTIMATE_STRIKE: #e0773a, 
+	ULTIMATE_SLOW: #0ce7eb, 
+	ULTIMATE_HEAL: #c0ed2b,
+	ULTIMATE_SIMPLIFY: #c0ed2b, // TODO:
+	ULTIMATE_ASSIST: #c0ed2b, // TODO:
+	ULTIMATE_COLLATERAL: #c0ed2b, // TODO:
+}
 global.ultimate_icons = {
 	ULTIMATE_STRIKE: spr_ult_strike,
 	ULTIMATE_SLOW: spr_ult_slow,
 	ULTIMATE_HEAL: spr_ult_heal,
+	ULTIMATE_SIMPLIFY: spr_ult_heal, // TODO:
+	ULTIMATE_ASSIST: spr_ult_heal, // TODO:
+	ULTIMATE_COLLATERAL: spr_ult_heal, // TODO:
 }
 
 // in-game configurable
-global.selected_ultimate = "none";
+global.selected_ultimate = ULTIMATE_NONE;
 global.body_color = c_white;
 global.turret_color = c_white;
 global.is_math_mode = true
@@ -39,10 +62,12 @@ global.total_paused_time = 0
 global.paused = false
 global.game_seed = randomize()
 
+global.is_solo = false
+global.is_coop = false
+global.is_training = false
 global.focused_input = undefined
 
 // seemingly magic numbers
-global.heal_radius = 75
 global.turret_length = 53
 global.room_width = 1440
 global.room_height = 1000
@@ -83,5 +108,8 @@ global.bg_circle_ring_width = global.bg_circle_magnitude / global.bg_number_of_c
 global.ultimate_descriptions = {
 	ULTIMATE_STRIKE: {title: "Air strike", description: "Launch a barrage from the air that targets and eliminates your most dangerous enemies"},
 	ULTIMATE_SLOW: {title: "Time slow", description: "Reduce the approach and attack speed of enemies nearing your position"},
-	ULTIMATE_HEAL: {title: "Regenerate", description: "Repair damage to your ship so you can stay in the fight longer"}
+	ULTIMATE_HEAL: {title: "Leech", description: "Destroying enemies repairs damage to your ship so you can stay in the fight longer"},
+	ULTIMATE_COLLATERAL: {title: "Collateral Damage", description: "Destroying an enemy will also explode nearby foes"},
+	ULTIMATE_ASSIST: {title: "Aim Assist", description: "Near misses will magically turn into direct strikes on target"},
+	ULTIMATE_SIMPLIFY: {title: "Simplifcation", description: "Enemies become much easier to target"},
 }
