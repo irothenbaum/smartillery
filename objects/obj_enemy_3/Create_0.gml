@@ -1,4 +1,4 @@
-enemy_initlaize(self, 30)
+enemy_initlaize(self, global.points_enemy_3)
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 max_speed = 4;
 shift_position = undefined
@@ -14,6 +14,8 @@ normal_color = c_white
 stunned_color = c_red
 normal_color_arr = color_to_array(normal_color)
 stunned_color_arr = color_to_array(stunned_color)
+
+var _shift_amount = 100
 
 direction = point_direction(x, y, global.xcenter, global.ycenter)
 
@@ -31,8 +33,8 @@ function register_hit(_insta_kill=false) {
 		enemy_generate_question(self)
 		shift_position = {
 			// we do - instead of + so it goes backwards
-			x: x - lengthdir_x(100, direction),
-			y: y - lengthdir_y(100, direction)
+			x: x - lengthdir_x(_shift_amount, direction),
+			y: y - lengthdir_y(_shift_amount, direction)
 		}
 		return
 	}
@@ -43,6 +45,9 @@ function register_hit(_insta_kill=false) {
 }
 
 function collide_with_player() {
-	get_player().execute_take_damage(40)
+	get_player().execute_take_damage(global.damage_enemy_3_collision)
 	instance_destroy();
 }
+
+
+broadcast(EVENT_ENEMY_SPAWNED, self)

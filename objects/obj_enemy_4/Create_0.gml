@@ -1,4 +1,4 @@
-enemy_initlaize(self, 10)
+enemy_initlaize(self, global.points_enemy_4)
 speed = 1
 image_scale = 0.12
 image_xscale = image_scale
@@ -21,3 +21,5 @@ function register_hit(_insta_kill=false) {
 	_game_controller.handle_enemy_killed(self, _insta_kill)
 	instance_destroy()
 }
+
+broadcast(EVENT_ENEMY_SPAWNED, self)

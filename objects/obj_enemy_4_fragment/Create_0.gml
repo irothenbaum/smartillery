@@ -1,4 +1,4 @@
-enemy_initlaize(self, 10)
+enemy_initlaize(self, global.points_enemy_4_fragment)
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
@@ -7,7 +7,8 @@ wobble_frequency = 1500
 wobble_amplitude = 30
 target_location = undefined
 target_direction = direction
-alarm[0] = (irandom_range(500,2000) / 1000) * game_get_speed(gamespeed_fps)
+target_delay = (irandom_range(500,2000) / 1000) * game_get_speed(gamespeed_fps)
+alarm[0] = target_delay
 
 function register_hit(_insta_kill=false) {
 	var _game_controller = get_game_controller()
@@ -16,3 +17,6 @@ function register_hit(_insta_kill=false) {
 	instance_destroy();
 }
 
+relevant_meta_vars = ["target_delay", "direction"]
+
+broadcast(EVENT_ENEMY_SPAWNED, self)

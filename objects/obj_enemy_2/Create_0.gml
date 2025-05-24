@@ -1,4 +1,4 @@
-enemy_initlaize(self, 20)
+enemy_initlaize(self, global.points_enemy_2)
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 shooting = false
 // fire at the center of third circle -- this should be less than ult_slow_get_radius(1)
@@ -19,6 +19,7 @@ stunned_color = c_red
 normal_color_arr = color_to_array(normal_color)
 stunned_color_arr = color_to_array(stunned_color)
 
+var _shift_amount = 20
 
 // here we establish where we'll be heading and firing from
 var _shifted_degrees = irandom_range(5, 30)
@@ -42,13 +43,15 @@ function register_hit(_insta_kill = false) {
 		// pause the approach
 		speed = 0
 		equation = ""
+		shooting = false
+
 		// restart approach in 3 seconds
 		alarm[1] = 3 * game_get_speed(gamespeed_fps)
 		alarm[0] = -1;
 		var _dir_to_player = point_direction(global.xcenter, global.ycenter, x,y)
 		shift_position = {
-			x: x + lengthdir_x(20, _dir_to_player),
-			y: y + lengthdir_y(20, _dir_to_player)
+			x: x + lengthdir_x(_shift_amount, _dir_to_player),
+			y: y + lengthdir_y(_shift_amount, _dir_to_player)
 		}
 		return
 	}
@@ -60,7 +63,7 @@ function register_hit(_insta_kill = false) {
 function fire_shot() {
 	var _player = get_player()
 	recoil_amount = max_recoil_amount
-	_player.execute_take_damage(20)
+	_player.execute_take_damage(global.damage_enemy_2_shot)
 	alarm[0] = 2 * game_get_speed(gamespeed_fps)
 	
 	// Muzzle Flash
@@ -76,3 +79,6 @@ function get_turret_muzzle() {
 		y: y + lengthdir_y(_turret_length, image_angle)
 	}
 }
+
+relevant_meta_vars = ["firing_position"]
+broadcast(EVENT_ENEMY_SPAWNED, self)

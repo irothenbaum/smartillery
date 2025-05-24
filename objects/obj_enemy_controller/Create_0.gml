@@ -3,6 +3,7 @@ enemy_count = 0;
 spawned_count = 0;
 spawn_delay_seconds = 0;
 current_wave = get_current_wave_number()
+game_controller = get_game_controller()
 
 min_spawn_delay_seconds = 0.5
 max_spawn_delay_seconds = 10

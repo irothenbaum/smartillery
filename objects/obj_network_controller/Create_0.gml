@@ -38,6 +38,17 @@ subscribe(EVENT_INPUT_CHANGED, function(_input) {
 	})
 })
 
+subsribe(EVENT_ENEMY_SPAWNED, function(_enemy) {
+	array_push(event_buffer, object_keys_copy({
+		event_name: NET_EVENT_CREATE_INSTANCE,
+		instance_id: _enemy.id,
+		instance_type: global.networking_obj_to_instance_type[$ _enemy.object_index],
+		x: _enemy.x,
+		y: _enemy.y,
+		equation: _enemy.equation,
+	}, enemy_get_meta_state(_enemy)))
+})
+
 // TODO: more event types to relay
 
 // ---------------------------------------------------------------------------------------------

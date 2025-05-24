@@ -7,5 +7,5 @@ if (spawned_count < enemy_count) {
 		spawn_enemy()
 	}
 } else if (count_all_enemies() == 0) {
-	get_game_controller().mark_wave_completed()
+	game_controller.mark_wave_completed()
 }

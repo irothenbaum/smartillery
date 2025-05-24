@@ -1,3 +1,5 @@
+// This mini challenge is when an equation or word is presented to you and you need to fill
+// in the missing areas. Not currently in use in the game
 
 function create_typing_phrase(_level = 1){
 	var _blocks = []

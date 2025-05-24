@@ -33,6 +33,7 @@
     {"name":"obj_enemy_3","order":2,"path":"objects/obj_enemy_3/obj_enemy_3.yy",},
     {"name":"obj_enemy_4_fragment","order":4,"path":"objects/obj_enemy_4_fragment/obj_enemy_4_fragment.yy",},
     {"name":"obj_enemy_4","order":3,"path":"objects/obj_enemy_4/obj_enemy_4.yy",},
+    {"name":"obj_enemy_5","order":9,"path":"objects/obj_enemy_5/obj_enemy_5.yy",},
     {"name":"obj_enemy_controller","order":3,"path":"objects/obj_enemy_controller/obj_enemy_controller.yy",},
     {"name":"obj_flash_screen","order":10,"path":"objects/obj_flash_screen/obj_flash_screen.yy",},
     {"name":"obj_game_controller","order":4,"path":"objects/obj_game_controller/obj_game_controller.yy",},

@@ -276,3 +276,12 @@ function get_bounds_of_draw_functions(_fiber, _offset) {
 		var _next_bounds = fiber_call(_fiber, _offset)
 	} until(_finished)
 }
+
+function object_keys_copy(_target_object, _source_object) {	
+	var _keys = variable_struct_get_names(_source_object);
+	var _key_count = array_length(_keys)
+	for (var _i = 0; _i < _key_count; _i++) {
+	    var _key = _keys[_i];
+	    _target_object[$ _key] = _target_object[$ _key];
+	}
+}

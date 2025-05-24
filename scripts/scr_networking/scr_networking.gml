@@ -60,7 +60,32 @@ var _payload_key_types = {
 	
 	// input changed
 	"input": buffer_u8,
+	
+	// create instance
+	"instance_type": buffer_u8,
+	"x": buffer_u8, 
+	"y": buffer_u8, 
+	"direction": buffer_u8, 
+	"speed": buffer_u8
 }
+
+// --------------------------------------------------------------------------------------
+// Instance Type Maps
+global.networking_instance_type_to_obj = {
+	"obj_compound_enemy_1": obj_compound_enemy_1,
+	"obj_compound_enemy_2": obj_compound_enemy_2,
+	"obj_enemy_1": obj_enemy_1,
+	"obj_enemy_2": obj_enemy_2,
+	"obj_enemy_3": obj_enemy_3,
+	"obj_enemy_4": obj_enemy_4,
+	"obj_enemy_5": obj_enemy_5,
+}
+
+var _instance_types = variable_struct_get_names(global.networking_instance_type_to_obj)
+global.networking_obj_to_instance_type = {}
+array_foreach(_instance_types, function(_type) {
+	global.networking_obj_to_instance_type[$ global.networking_instance_type_to_obj[$ _type]] = _type
+})
 
 // --------------------------------------------------------------------------------------
 // Sending events

@@ -57,6 +57,7 @@
     {"id":{"name":"obj_enemy_3","path":"objects/obj_enemy_3/obj_enemy_3.yy",},},
     {"id":{"name":"obj_enemy_4_fragment","path":"objects/obj_enemy_4_fragment/obj_enemy_4_fragment.yy",},},
     {"id":{"name":"obj_enemy_4","path":"objects/obj_enemy_4/obj_enemy_4.yy",},},
+    {"id":{"name":"obj_enemy_5","path":"objects/obj_enemy_5/obj_enemy_5.yy",},},
     {"id":{"name":"obj_enemy_controller","path":"objects/obj_enemy_controller/obj_enemy_controller.yy",},},
     {"id":{"name":"obj_flash_screen","path":"objects/obj_flash_screen/obj_flash_screen.yy",},},
     {"id":{"name":"obj_game_controller","path":"objects/obj_game_controller/obj_game_controller.yy",},},

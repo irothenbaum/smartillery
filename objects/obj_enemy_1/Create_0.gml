@@ -1,4 +1,4 @@
-enemy_initlaize(self, 10)
+enemy_initlaize(self, global.points_enemy_1)
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
@@ -22,4 +22,5 @@ function register_hit(_insta_kill) {
 	instance_destroy()
 }
 
+relevant_meta_vars = ["waypoints", "direction"]
 broadcast(EVENT_ENEMY_SPAWNED, self)

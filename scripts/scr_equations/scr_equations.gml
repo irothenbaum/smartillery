@@ -118,3 +118,26 @@ function select_word_of_length(_length) {
 	var _dictionary = global.dictionaries[$ _dictionary_name]
 	return _dictionary[irandom_range(0, array_length(_dictionary) - 1)]
 }
+
+
+function generate_sequence_from_wave(_wave) {
+	var _keys = variable_struct_get_names(global.sequences)
+	var _max_index = min(array_length(_keys) - 1, ceil(_wave / global.wave_difficulty_step)) // this basically identifies the most challenging sequence we'll give
+	var _max_length = 5 + _max_index - 1
+	
+	var _selected_index = irandom(_max_index)
+	var _selected_key = _keys[_selected_index]
+	var _selected_sequence = global.sequences[_keys[_selected_index]]
+	
+	return get_sequence_from_label_and_length(_selected_key, min(_max_length, array_length(_selected_sequence)))
+}
+
+function get_sequence_from_label_and_length(_label, _length) {
+	var _selected_sequence = global.sequences[$ _label]
+	var _final_sequence = []
+	array_copy(_final_sequence, 0, _selected_sequence, 0, _length)
+	return {
+		label: _label,
+		sequence: _final_sequence
+	}
+}

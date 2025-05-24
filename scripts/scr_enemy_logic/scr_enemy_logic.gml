@@ -10,7 +10,7 @@
 	function register_hit(_insta_kill=false) {} // report hit by player
 */
 
-function enemy_initlaize(_e, _point_value) {
+function enemy_initlaize(_e, _point_value, _skip_question_generation = false) {
 	with (_e) {
 		spawn_time = get_play_time()
 		draw_equation_position = undefined
@@ -18,6 +18,7 @@ function enemy_initlaize(_e, _point_value) {
 		point_value = _point_value
 		slow_multiplier = 1
 		slow_sparks = undefined
+		relevant_meta_vars = []
 		
 		subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
 			if (!is_undefined(slow_sparks)) {
@@ -26,7 +27,9 @@ function enemy_initlaize(_e, _point_value) {
 		})
 	}
 	
-	enemy_generate_question(_e)
+	if (!_skip_question_generation) {
+		enemy_generate_question(_e)
+	}
 }
 
 function enemy_handle_destroy(_e) {
@@ -110,7 +113,7 @@ function enemy_draw_equation(_e) {
 }
 
 function enemy_generate_question(_e) {
-	_wave = get_current_wave_number()
+	var _wave = get_current_wave_number()
 	equation = ""
 	answer = ""
 	
@@ -220,4 +223,15 @@ function find_intersection(_rect_width, _rect_height, _angle) {
 		x: _t_max * _dx + global.xcenter, 
 		y: _t_max * _dy + global.ycenter
 	}
+}
+
+function enemy_get_meta_state(_e) {
+	var _ret_val = {}
+	var _key_count = array_length(_e.relevant_meta_vars)
+	for (var _i = 0; _i < _key_count; _i++) {
+		var _key = _e.relevant_meta_vars[_i]
+		_ret_val[$ _key] = _enemy[$ _key]
+	}
+	
+	return _ret_val
 }

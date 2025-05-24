@@ -95,6 +95,21 @@ global.directional_hint_bounds = _final_format({
 	y1: global.room_height - 40
 })
 
+// enemy damage & points
+global.damage_enemy_1_collision = 30
+global.damage_enemy_2_shot = 20
+global.damage_enemy_3_collision = 40
+global.damage_enemy_4_collision = 50
+global.damage_enemy_4_fragment_collision = 15
+global.damage_enemy_5_collision = 40
+
+global.points_enemy_1 = 10
+global.points_enemy_2 = 20
+global.points_enemy_3 = 30
+global.points_enemy_4 = 10
+global.points_enemy_4_fragment = 10
+global.points_enemy_5 = 10
+
 // effects
 global.fade_speed = 0.1
 global.scene_transition_duration = 2
