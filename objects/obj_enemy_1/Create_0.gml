@@ -15,12 +15,7 @@ if (is_undefined(waypoints)) {
 direction = point_direction(x, y, global.xcenter, global.ycenter) + (20 * (irandom(1) == 1 ? 1 : -1))
 speed = approach_speed
 
-function register_hit(_insta_kill) {
-	var _game_controller = get_game_controller()
-	_game_controller.release_answer(answer);
-	_game_controller.handle_enemy_killed(self, _insta_kill)
+function register_hit() {
 	instance_destroy()
 }
-
-relevant_meta_vars = ["waypoints", "direction"]
 broadcast(EVENT_ENEMY_SPAWNED, self)

@@ -33,10 +33,6 @@ speed = 1.6
 
 death_duration = 2 * game_get_speed(gamespeed_fps)
 function register_hit(_insta_kill) {
-	var _game_controller = get_game_controller()
-	_game_controller.release_answer(answer);
-	_game_controller.handle_enemy_killed(self, _insta_kill)
-	
 	speed = 0
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_1_destroy});
 	alarm[0] = death_duration
@@ -103,7 +99,5 @@ function draw_label_on_curve(_start_angle) {
 		_label_draw_start_angle = _label_draw_start_angle + (string_width(_this_char) / _circumference) * 360
 	}
 }
-
-relevant_meta_vars = ["sequence_label", "sequence_length", "target_index", "answer"]
 
 broadcast(EVENT_ENEMY_SPAWNED, self)

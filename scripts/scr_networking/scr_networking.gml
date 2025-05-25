@@ -9,13 +9,17 @@
 #macro NET_EVENT_DESTROY_INSTANCE "NET_EVENT_DESTROY_INSTANCE"
 #macro NET_EVENT_TURRET_ANGLE_CHANGED "NET_EVENT_TURRET_ANGLE_CHANGED"
 #macro NET_EVENT_INPUT_CHANGED "NET_EVENT_INPUT_CHANGED"
+#macro NET_EVENT_ENEMY_HIT "NET_EVENT_ENEMY_HIT"
 
 // the numeric ID is simply the index in the array
 var _numeric_id_to_event_name = [
 	NET_EVENT_GAME_START,
 	NET_EVENT_SCORE_CHANGED,
 	NET_EVENT_CREATE_INSTANCE,
-	NET_EVENT_DESTROY_INSTANCE
+	NET_EVENT_DESTROY_INSTANCE,
+	NET_EVENT_TURRET_ANGLE_CHANGED,
+	NET_EVENT_INPUT_CHANGED,
+	NET_EVENT_ENEMY_HIT
 ]
 
 // we then create a reverse map of the array so we can get index from event name string
@@ -29,10 +33,11 @@ var _event_payload_keys = {
 	// "event_name" is also an implied item on all these payloads
 	NET_EVENT_GAME_START: ["host_id", "guest_id"],
 	NET_EVENT_SCORE_CHANGED: ["player_steam_id", "unit_score", "streak_score", "combo_score", "game_score"],
-	NET_EVENT_CREATE_INSTANCE: ["instance_id", "instance_type", "x", "y", "direction", "speed"],
+	NET_EVENT_CREATE_INSTANCE: ["instance_id", "instance_type", "x", "y", "equation", "meta0", "meta1", "meta2", "meta3", "meta4", "meta5"],
 	NET_EVENT_DESTROY_INSTANCE: ["instance_id"],
 	NET_EVENT_TURRET_ANGLE_CHANGED: ["rotate_to", "rotate_speed"],
-	NET_EVENT_INPUT_CHANGED: ["player_steam_id", "input"]
+	NET_EVENT_INPUT_CHANGED: ["player_steam_id", "input"],
+	NET_EVENT_ENEMY_HIT: ["instance_id"],
 }
 
 // define the type each key (prop on an event) is
@@ -65,26 +70,34 @@ var _payload_key_types = {
 	"instance_type": buffer_u8,
 	"x": buffer_u8, 
 	"y": buffer_u8, 
-	"direction": buffer_u8, 
-	"speed": buffer_u8
+	"equation": buffer_u8, 
+	"meta0": buffer_u8,
+	"meta1": buffer_u8,
+	"meta2": buffer_u8,
+	"meta3": buffer_u8,
+	"meta4": buffer_u8,
+	"meta5": buffer_u8,
 }
+
+// this is a shorthand to represent the meta0 - meta5 prop count
+#macro NET_TOTAL_META_PROPS 6
 
 // --------------------------------------------------------------------------------------
 // Instance Type Maps
-global.networking_instance_type_to_obj = {
-	"obj_compound_enemy_1": obj_compound_enemy_1,
-	"obj_compound_enemy_2": obj_compound_enemy_2,
-	"obj_enemy_1": obj_enemy_1,
-	"obj_enemy_2": obj_enemy_2,
-	"obj_enemy_3": obj_enemy_3,
-	"obj_enemy_4": obj_enemy_4,
-	"obj_enemy_5": obj_enemy_5,
-}
 
-var _instance_types = variable_struct_get_names(global.networking_instance_type_to_obj)
+global.networking_instance_type_to_obj = [
+	obj_compound_enemy_1,
+	obj_compound_enemy_2,
+	obj_enemy_1,
+	obj_enemy_2,
+	obj_enemy_3,
+	obj_enemy_4,
+	obj_enemy_5,
+]
+
 global.networking_obj_to_instance_type = {}
-array_foreach(_instance_types, function(_type) {
-	global.networking_obj_to_instance_type[$ global.networking_instance_type_to_obj[$ _type]] = _type
+array_foreach(global.networking_instance_type_to_obj, function(_type, _index) {
+	global.networking_obj_to_instance_type[$ _type] = _index
 })
 
 // --------------------------------------------------------------------------------------
@@ -108,8 +121,18 @@ function events_to_buffer(_events) {
 		
 		// for each prop
 		array_foreach(_keys, method({obj: _event, buffer: _buffer, types_map: _payload_key_types}, function(_key) {
-			// write the value of each prop to the buffer using the type as defined in _payload_key_types
-			buffer_write(buffer, types_map[_key], obj[_key])
+			if (!struct_exists(types_map, _key)) {
+				debug(string_concat("Type map missing key ", _key))
+				return
+			}
+			
+			if (struct_exists(obj, _key)) {
+				// write the value of each prop to the buffer using the type as defined in _payload_key_types
+				buffer_write(buffer, types_map[_key], obj[_key])
+			} else {
+				// this may happen for the meta state variables, we just send 0 it doesn't/shouldn't matter
+				buffer_write(buffer, types_map[_key], 0)
+			}
 		}))
 		
 		// repeat for all events in the events array
@@ -121,8 +144,8 @@ function events_to_buffer(_events) {
 
 function send_events_to(_events, _peer_steam_id) {
 	var _buffer = events_to_buffer(_events)
-	steam_net_send(_peer_steam_id, _buffer, buffer_tell(_buffer));
-	buffer_delete(_buffer);
+	steam_net_send(_peer_steam_id, _buffer, buffer_tell(_buffer))
+	buffer_delete(_buffer)
 }
 
 function send_event_to(_event, _peer_steam_id) {

@@ -15,7 +15,7 @@ wave_1 = instance_create_layer(x, y, LAYER_INSTANCES, obj_rotating_wave, {
 	thickness: 2,
 })
 
-subscribe(EVENT_ENEMY_DAMAGED, function(_enemy) {
+subscribe(EVENT_ENEMY_HIT, function(_enemy) {
 	var _leech_amount = ult_heal_get_leech_amount(level)
 	if (_leech_amount == 0) {
 		return

@@ -1,6 +1,6 @@
 #macro EVENT_SCORE_CHANGED "score-changed"
 #macro EVENT_INPUT_CHANGED "input-changed"
-#macro EVENT_ENEMY_DAMAGED "enemy-damaged"
+#macro EVENT_ENEMY_HIT "enemy-hit"
 #macro EVENT_ENEMY_KILLED "enemy-killed"
 #macro EVENT_TOGGLE_PAUSE "toggle-pause"
 #macro EVENT_WRONG_GUESS "wrong-guess"

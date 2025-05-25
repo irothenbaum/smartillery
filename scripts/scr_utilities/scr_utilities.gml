@@ -277,6 +277,9 @@ function get_bounds_of_draw_functions(_fiber, _offset) {
 	} until(_finished)
 }
 
+/// @param {Struct} _target_object
+/// @param {Struct} _source_object
+/// @return {Struct}
 function object_keys_copy(_target_object, _source_object) {	
 	var _keys = variable_struct_get_names(_source_object);
 	var _key_count = array_length(_keys)
@@ -284,4 +287,7 @@ function object_keys_copy(_target_object, _source_object) {
 	    var _key = _keys[_i];
 	    _target_object[$ _key] = _target_object[$ _key];
 	}
+	
+	// it overwrites inline AND returns the new object
+	return _target_object
 }

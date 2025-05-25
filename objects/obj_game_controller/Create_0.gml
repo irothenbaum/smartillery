@@ -107,20 +107,19 @@ function reset_starting_values() {
 
 /// @func handle_enemy_killed(_enemy)
 /// @param {Id.Instance} _enemy
-/// @param {Bool} _skip_streak
 /// @return {undefined}
-function handle_enemy_killed(_enemy, _skip_streak = false) {
-	// we don'tcount enemy points when the game is over
+function handle_enemy_killed(_enemy) {
+	// we don't count enemy points when the game is over
 	if (is_game_over) {
 		return 
 	}
 	
+	release_answer(_enemy.answer);
 	increase_streak()
-	
 	increase_combo()
 	
 	// streak is + 30% of base
-	var _streak_score = (!_skip_streak && has_point_streak()) ? floor(_enemy.point_value * 0.3) : 0;
+	var _streak_score = has_point_streak() ? floor(_enemy.point_value * 0.3) : 0;
 	var _combo_score = combo_count >= global.minimum_combo ? combo_count : 0
 	
 	draw_point_indicators(_enemy.x, _enemy.y, _enemy.point_value, _streak_score, _combo_score)

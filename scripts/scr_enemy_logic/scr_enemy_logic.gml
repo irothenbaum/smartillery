@@ -18,7 +18,6 @@ function enemy_initlaize(_e, _point_value, _skip_question_generation = false) {
 		point_value = _point_value
 		slow_multiplier = 1
 		slow_sparks = undefined
-		relevant_meta_vars = []
 		
 		subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
 			if (!is_undefined(slow_sparks)) {
@@ -33,6 +32,7 @@ function enemy_initlaize(_e, _point_value, _skip_question_generation = false) {
 }
 
 function enemy_handle_destroy(_e) {
+	get_game_controller().handle_enemy_killed(_e)
 	with (_e) {
 		if (!is_undefined(slow_sparks)) {
 			destroy_particle(slow_sparks)
@@ -145,7 +145,7 @@ function enemy_generate_question(_e) {
 	}
 }
 		
-function explode_nearby_enemies(_enemy, _radius) {
+function enemy_strike_nearby_enemies(_enemy, _radius) {
 	for_each_enemy(function(_e, _index, _enemy, _radius) {
 		if (!instance_exists(_e) || !instance_exists(_enemy)) {
 			return;
@@ -155,7 +155,8 @@ function explode_nearby_enemies(_enemy, _radius) {
 			return
 		}
 		if (point_distance(_e.x, _e.y, _enemy.x, _enemy.y) < _radius) {
-			_e.register_hit(true)
+			_e.register_hit()
+			broadcast(EVENT_ENEMY_HIT, _e)
 		}
 	}, _enemy, _radius)
 }
@@ -225,12 +226,52 @@ function find_intersection(_rect_width, _rect_height, _angle) {
 	}
 }
 
+// -------------------------------------------------------------------------------------
+// Meta state and networking tools
+global.enemy_type_to_meta_variables_array = {
+	obj_enemy_1: ["waypoints", "direction"],
+	obj_enemy_2: ["firing_position"],
+	obj_enemy_3: [],
+	obj_enemy_4: [],
+	obj_enemy_4_fragment: ["target_delay", "direction"],
+	obj_enemy_5: ["sequence_label", "sequence_length", "target_index", "answer"],
+}
+
+// this converts the enemy instance variables inta meta0, meta1, meta2, etc
+// the meta order matches the relevant_meta_vars array order
+/// @returns {Struct}
 function enemy_get_meta_state(_e) {
 	var _ret_val = {}
-	var _key_count = array_length(_e.relevant_meta_vars)
-	for (var _i = 0; _i < _key_count; _i++) {
-		var _key = _e.relevant_meta_vars[_i]
-		_ret_val[$ _key] = _enemy[$ _key]
+	var _relevant_meta_vars_length = array_length(_e.relevant_meta_vars)
+	for (var _i = 0; _i < NET_TOTAL_META_PROPS; _i++) {
+		var _meta_val = 0
+		if (_i < _relevant_meta_vars_length) {
+			var _var_name = _e.relevant_meta_vars[_i]
+			_meta_val = _e[$ _var_name]
+		} else {
+			// this instance doesn't have that many meta variables,
+			// set it to the default value (it will be ignored)
+			_meta_val = 0
+		}
+		
+		_ret_val[$ string_concat("meta", _i)] = _meta_val
+	}
+	
+	return _ret_val
+}
+
+
+// this is the inverse of enemy_get_meta_state
+/// @param {Instance} _enemy_type
+/// @param {Struct} _payload
+/// @return {Struct}
+function enemy_convert_network_payload_to_state_object(_enemy_type, _payload) {
+	var _relevant_meta_vars = global.enemy_type_to_meta_variables_array[_enemy_type]
+	var _ret_val = {}
+	var _relevant_meta_vars_length = array_length(_relevant_meta_vars)
+	for (var _i = 0; _i < _relevant_meta_vars_length; _i++) {
+		var _var_name = _relevant_meta_vars[_i]
+		_ret_val[$ _var_name] = _payload[string_concat("meta", _i)]
 	}
 	
 	return _ret_val

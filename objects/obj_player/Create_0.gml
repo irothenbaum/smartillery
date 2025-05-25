@@ -67,7 +67,7 @@ function execute_hit_target() {
 	recoil_amount = max_recoil_amount
 	
 	_target.register_hit()
-	broadcast(EVENT_ENEMY_DAMAGED, _target)
+	broadcast(EVENT_ENEMY_HIT, _target)
 	
 	rotate_towards_next_target()
 }

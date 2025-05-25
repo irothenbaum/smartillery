@@ -1,5 +1,8 @@
 /// @description Set up event relays
 
+// this map relates a network instance id to this game's instance id
+instance_id_map = {}
+
 // ---------------------------------------------------------------------------------------------
 // Event Sending
 event_buffer = []
@@ -30,11 +33,15 @@ subscribe(EVENT_NEW_TURRET_ANGLE, function(_payload) {
 	})
 })
 
-subscribe(EVENT_INPUT_CHANGED, function(_input) {
+subscribe(EVENT_INPUT_CHANGED, function(_payload) {
+	
+	
 	array_push(event_bufer, {
 		event_name: NET_EVENT_INPUT_CHANGED,
 		player_steam_id: global.my_steam_id,
-		input: _input
+		input: _payload.input,
+		is_on_streak: _payload.is_on_streak,
+		is_wrong_guess: _payload.is_wrong_guess,
 	})
 })
 
@@ -49,36 +56,65 @@ subsribe(EVENT_ENEMY_SPAWNED, function(_enemy) {
 	}, enemy_get_meta_state(_enemy)))
 })
 
+subsribe(EVENT_ENEMY_HIT, function(_enemy) {
+	array_push(event_buffer, {
+		event_name: NET_EVENT_ENEMY_HIT,
+		instance_id: _enemy.id,
+	})
+})
+
 // TODO: more event types to relay
 
 // ---------------------------------------------------------------------------------------------
 // Event Handling
 
-function handle_create_instance(_e) {
-	// TODO: How do we determine the instance type and instance meta data (equation, speed, direction, waypoints, etc)
-	instance_create_layer(_e.x, _e.y, LAYER_INSTANCES, )
+function handle_create_instance(_event) {
+	var _obj_type = global.networking_instance_type_to_obj[$ _event.instance_type]
+	
+	var _new_enemy = instance_create_layer(_event.x, _event.y, LAYER_INSTANCES, _obj_type, object_keys_copy({
+		equation: _event.equation,
+	}, enemy_convert_network_payload_to_state_object(_obj_type, _event)))
+	
+	instance_id_map[$ _event.instance_id] = _new_enemy.id
 }
 
-function handle_destroy_instance(_e) {
-	// TODO: is this ID reliable across clients? Can we set it directly or do we need a proxy and lookup
-	instance_destroy(_e.instance_id)
+function handle_destroy_instance(_event) {
+	instance_destroy(instance_id_map[$ _event.instance_id])
 }
 
-function handle_game_start(_e) {
-	// TODO: whatever this even means
+function handle_game_start(_event) {
+	room_goto(rm_play_coop)
 }
 
-function handle_input_changed(_e) {
+function handle_input_changed(_event) {
 	// TODO: get peer's user_input instance and update its message
 }
 
-function handle_score_changed(_e) {
+function handle_score_changed(_event) {
 	var _gc = get_game_controller()
 
-	_gc.unit_score = _e.unit_score
-	_gc.streak_score = _e.streak_score
-	_gc.combo_score = _e.combo_score
-	_gc.game_score = _e.game_score	
+	_gc.unit_score = _event.unit_score
+	_gc.streak_score = _event.streak_score
+	_gc.combo_score = _event.combo_score
+	_gc.game_score = _event.game_score
+}
+
+function handle_turret_angle_changed(_event) {
+	var _player = get_player()
+
+	_player.rotate_to = _event.rotate_to
+	_player.rotate_speed = _event.rotate_speed
+}
+
+function handle_enemy_hit(_event) {
+	var _enemy = layer_instance_get_instance(instance_id_map[$ _event.instance_id])
+	
+	if (is_undefined(_enemy)) {
+		debug(string_concat("Could not find enemy with id ", _event.instance_id))
+		return
+	}
+	
+	_enemy.register_hit()
 }
 
 
@@ -86,11 +122,13 @@ function handle_score_changed(_e) {
 // Event Receiving & Routing
 
 var _event_name_to_handler_map = {
+	NET_EVENT_GAME_START: handle_game_start,
+	NET_EVENT_SCORE_CHANGED: handle_score_changed,
 	NET_EVENT_CREATE_INSTANCE: handle_create_instance,
 	NET_EVENT_DESTROY_INSTANCE: handle_destroy_instance,
-	NET_EVENT_GAME_START: handle_game_start,
+	NET_EVENT_TURRET_ANGLE_CHANGED: handle_turret_angle_changed,
 	NET_EVENT_INPUT_CHANGED: handle_input_changed,
-	NET_EVENT_SCORE_CHANGED: handle_score_changed,
+	NET_EVENT_ENEMY_HIT: handle_enemy_hit,
 	// TODO: more events
 }
 

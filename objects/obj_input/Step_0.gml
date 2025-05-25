@@ -11,12 +11,17 @@ if(keyboard_check_pressed(vk_enter)) {
 		_game_controller.handle_submit_code(message)
 	}
 	keyboard_string = "";
+	broadcast(EVENT_INPUT_CHANGED, {
+		input: "",
+	})
 } else {
 	keyboard_string = string_copy(keyboard_string, 0, 20);
 	
 	if (keyboard_string != message) {
 		message = keyboard_string
-		broadcast(EVENT_INPUT_CHANGED, message)
+		broadcast(EVENT_INPUT_CHANGED, {
+			input: message,
+		})
 	}
 
 	// if we were shaking, but the user started typing again, then stop shaking

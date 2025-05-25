@@ -36,9 +36,8 @@ firing_position = {
 
 function register_hit(_insta_kill = false) {
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_2_damage});
-	var _game_controller = get_game_controller()
-	_game_controller.release_answer(answer);
 	if (my_health > 0 && !_insta_kill) {
+		get_game_controller().release_answer(answer);
 		my_health--;
 		// pause the approach
 		speed = 0
@@ -55,8 +54,8 @@ function register_hit(_insta_kill = false) {
 		}
 		return
 	}
+	
 	// my_health <= 0 || insta_kill
-	_game_controller.handle_enemy_killed(self, _insta_kill)
 	instance_destroy();
 }
 
@@ -80,5 +79,4 @@ function get_turret_muzzle() {
 	}
 }
 
-relevant_meta_vars = ["firing_position"]
 broadcast(EVENT_ENEMY_SPAWNED, self)
