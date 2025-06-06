@@ -10,6 +10,9 @@ states = {
 gui_state = states.menu;
 
 function handle_host_game() {
+	if (!steam_initialised()) {
+		return
+	}
 	// Called when host clicks "Start Game"
 	steam_lobby_create(steam_lobby_type_friendsonly, 2);
 	gui_state = states.host	

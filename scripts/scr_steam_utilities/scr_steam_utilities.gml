@@ -28,3 +28,12 @@ function steam_image_create_sprite(_img) {
 	buffer_delete(_cols)
 	return _sprite
 }
+
+function get_my_steam_id_safe() {
+	if (steam_initialised()) {
+		global.my_steam_id = steam_get_user_steam_id()
+	} else {
+		global.my_steam_id = "non-steam-player"
+	}
+	return global.my_steam_id
+}

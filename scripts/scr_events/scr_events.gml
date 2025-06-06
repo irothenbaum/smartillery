@@ -10,35 +10,32 @@
 #macro EVENT_NEW_TURRET_ANGLE "new-turret-angle"
 #macro EVENT_ENEMY_SPAWNED "new-enemy-spawned"
 
-#macro EVENT_ALL "*all*"
-
 global._events = {};
 
-function subscribe(_event, _callback) {
-    if(!struct_exists(global._events, _event)){
-        global._events[$ _event] = [];
-    }
-    array_push(global._events[$ _event], _callback);
-}
-
-function broadcast(_event, _payload) {
-	if (_event == EVENT_ALL) {
-		throw "Cannot broadcast All"
+function subscribe(_event, _callback, _steam_id = undefined) {
+	if (is_undefined(_steam_id)) {
+		_steam_id = get_my_steam_id_safe()
 	}
 	
-	// always send the event to our ALL listeners
-    if(struct_exists(global._events, EVENT_ALL)){
-        var _all_listeners = global._events[$ EVENT_ALL];
-        for(var _i = 0; _i < array_length(_all_listeners); _i++){
-            _all_listeners[_i](_payload, _event)
-        }
+	var _composite_event_name = string_concat(_steam_id, _event)
+    if(!struct_exists(global._events, _composite_event_name)){
+        global._events[$ _composite_event_name] = [];
     }
+    array_push(global._events[$ _composite_event_name], _callback);
+}
+
+function broadcast(_event, _payload, _steam_id = undefined) {
+	if (is_undefined(_steam_id)) {
+		_steam_id = get_my_steam_id_safe()
+	}
+	
+	var _composite_event_name = string_concat(_steam_id, _event)
 	
 	// then send to event-specific listeners
-    if(struct_exists(global._events, _event)){
-        var _listeners = global._events[$ _event];
+    if(struct_exists(global._events, _composite_event_name)){
+        var _listeners = global._events[$ _composite_event_name];
         for(var _i = 0; _i < array_length(_listeners); _i++){
-            _listeners[_i](_payload, _event)
+            _listeners[_i](_payload, _event, _composite_event_name)
         }
     }
 }

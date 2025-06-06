@@ -271,7 +271,7 @@ function enemy_convert_network_payload_to_state_object(_enemy_type, _payload) {
 	var _relevant_meta_vars_length = array_length(_relevant_meta_vars)
 	for (var _i = 0; _i < _relevant_meta_vars_length; _i++) {
 		var _var_name = _relevant_meta_vars[_i]
-		_ret_val[$ _var_name] = _payload[string_concat("meta", _i)]
+		_ret_val[$ _var_name] = _payload[$ string_concat("meta", _i)]
 	}
 	
 	return _ret_val

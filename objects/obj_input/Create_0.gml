@@ -1,5 +1,7 @@
 message = "";
 
+// TODO: I don't think will work? Not sure...
+streak_color = is_undefined(streak_color) ? streak_color : global.p1_color
 y = 40
 initial_x = global.xcenter
 x = initial_x
@@ -16,6 +18,10 @@ total_shake_time = 500
 total_shakes = 3
 shake_magnitude = 10
 wrong_guess = ""
+
+if (is_undefined(owner_steam_id) || owner_steam_id == 0) {
+	owner_steam_id = get_my_steam_id_safe()
+}
 
 my_bounds = undefined
 streak_fire = undefined
@@ -42,14 +48,12 @@ subscribe(EVENT_WRONG_GUESS, function(_guess) {
 	broadcast(EVENT_INPUT_CHANGED, {
 		input: "",
 		is_wrong_guess: true,
-	})
-})
+	}, owner_steam_id)
+}, owner_steam_id)
 
-// vibrate on wrong guess
 subscribe(EVENT_GAME_OVER, function() {
-	if (!is_undefined(streak_fire)) {
-		destroy_particle(streak_fire.system)
-	}
+	// effectively destroy the particle system
+	broadcast(EVENT_ON_OFF_STREAK, false, owner_steam_id)
 })
 
 subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
@@ -59,7 +63,7 @@ subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
 		broadcast(EVENT_INPUT_CHANGED, {
 			input: "",
 			is_on_streak: true,
-		})
+		}, owner_steam_id)
 	} else {	
 		if (is_undefined(streak_fire)) {
 			return
@@ -67,4 +71,4 @@ subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
 		destroy_particle(streak_fire.system)
 		streak_fire = undefined
 	}
-})
+}, owner_steam_id)

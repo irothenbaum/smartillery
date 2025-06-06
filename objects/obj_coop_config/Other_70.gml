@@ -34,6 +34,8 @@ switch (_ev) {
 	    }
 
 	    global.is_host = steam_lobby_get_owner(global.lobby_id) == global.my_steam_id
+		global.my_color = global.is_host ? global.p1_color : global.p2_color
+		global.partner_color = global.is_host ? global.p2_color : global.p1_color
 		
 		debug("Joined lobby as " + global.is_host ? "Host" : "Guest")
         break;
