@@ -1,5 +1,5 @@
 draw_set_valign(fa_top);
-draw_set_colour(c_white);
+draw_set_color(c_white);
 draw_set_font(fnt_title)
 var _message = string_length(message) > 0 ? message : " "
 var _bounds = draw_text_with_alignment(x, y, _message, ALIGN_CENTER)

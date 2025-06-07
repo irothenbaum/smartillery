@@ -52,7 +52,7 @@ function enemy_step(_e) {
 function enemy_draw_equation(_e) {
 	with (_e) {
 		draw_set_font(fnt_large);
-		draw_set_colour(c_white);
+		draw_set_color(c_white);
 		var _string = global.paused ? " " : equation
 		var _string_height = string_height(_string)
 		var _string_width = string_width(_string)

@@ -171,32 +171,32 @@ function is_spot_in_bounds(_x, _y, _bounds) {
 /// @param _color
 // Converts GML color constants to rgb float array
 function color_to_array() {
-	var hex = [];
-	var ret = [];
-	var quotient = argument0;
+	var _hex = [];
+	var _ret = [];
+	var _quotient = argument0;
 
 	// Convert to hex
-	for( var i = 0; quotient != 0; ++i){
-		hex[i] = quotient % 16;
-		quotient = floor( quotient / 16);
+	for( var _i = 0; _quotient != 0; ++_i){
+		_hex[_i] = _quotient % 16;
+		_quotient = floor(_quotient / 16);
 	}
 
 	// Make sure this is a color code
-	while(array_length(hex) < 6){
-		hex[array_length(hex)] = 0;
+	while(array_length(_hex) < 6){
+		_hex[array_length(_hex)] = 0;
 	}
-	if(array_length(hex) > 6){
+	if(array_length(_hex) > 6){
 		show_error( "Unknown color: " + string( argument0), true);
 		return -1;
 	}
 
 	// Convert hex to RGB
-	for( var i = 0; i < 3; ++i){
-		ret[i] = hex[i * 2 + 1] * 16 + hex[i * 2];
-		ret[i] /= 255; // Change from 255 to float
+	for( var _i = 0; _i < 3; ++i){
+		_ret[_i] = _hex[_i * 2 + 1] * 16 + _hex[_i * 2];
+		_ret[_i] /= 255; // Change from 255 to float
 	}
 
-	return ret;
+	return _ret;
 }
 
 /// @return {{x0: Real, y0: Real, xcenter: Real, ycenter: Real, x1: Real, y1: Real, width: Real, height: Real}}

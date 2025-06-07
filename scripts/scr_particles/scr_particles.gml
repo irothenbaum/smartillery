@@ -12,7 +12,7 @@ function draw_particle_sparkle(x, y, _color, _radius) {
 	part_type_direction(_ptype1, 0, 359, 0, 20);
 	part_type_gravity(_ptype1, 0, 0);
 	part_type_orientation(_ptype1, 0, 0, 0, 0, false);
-	part_type_colour3(_ptype1, _color, _color, _color);
+	part_type_color3(_ptype1, _color, _color, _color);
 	part_type_alpha3(_ptype1, 1, 1, 1);
 	part_type_blend(_ptype1, false);
 	part_type_life(_ptype1, 70, 90);
@@ -42,7 +42,7 @@ function draw_particle_shockwave(x,y, _scale = 1, _sprite_override = pt_shape_ci
 	part_type_direction(_ptype1, 0, 0, 0, 0);
 	part_type_gravity(_ptype1, 0, 0);
 	part_type_orientation(_ptype1, 0, 0, 0, 0, false);
-	part_type_colour3(_ptype1, $FFFFFF, $B3B3B3, $1A1A1A);
+	part_type_color3(_ptype1, $FFFFFF, $B3B3B3, $1A1A1A);
 	part_type_alpha3(_ptype1, 1, 1, 1);
 	part_type_blend(_ptype1, true);
 	part_type_life(_ptype1, 20, 20);
@@ -70,7 +70,7 @@ function draw_particle_debirs(x,y, _number = 3) {
 	part_type_direction(_ptype1, 0, 360, 0, 0);
 	part_type_gravity(_ptype1, 0, 270);
 	part_type_orientation(_ptype1, 0, 360, 0, 0, false);
-	part_type_colour3(_ptype1, $FFFFFF, $FFFFFF, $000000);
+	part_type_color3(_ptype1, $FFFFFF, $FFFFFF, $000000);
 	part_type_alpha3(_ptype1, 1, 1, 1);
 	part_type_blend(_ptype1, true);
 	part_type_life(_ptype1, 8 * game_get_speed(gamespeed_fps), 8 * game_get_speed(gamespeed_fps));
@@ -98,7 +98,7 @@ function draw_particle_sparks(x,y, _number = 12, _color = c_white) {
 	part_type_direction(_ptype1, 80, 360, 0, 0);
 	part_type_gravity(_ptype1, 0, 270);
 	part_type_orientation(_ptype1, 0, 360, 0, 20, false);
-	part_type_colour3(_ptype1, _color, _color, _color);
+	part_type_color3(_ptype1, _color, _color, _color);
 	part_type_alpha3(_ptype1, 1, 0.8, 0);
 	part_type_blend(_ptype1, true);
 	part_type_life(_ptype1, 40, 40);
@@ -126,7 +126,7 @@ function draw_muzzle_smoke(x, y, _color) {
 	part_type_direction(_ptype1, 90, 90, 0, 40);
 	part_type_gravity(_ptype1, 0, 0);
 	part_type_orientation(_ptype1, 0, 0, 0, 0, false);
-	part_type_colour1(_ptype1, _color);
+	part_type_color1(_ptype1, _color);
 	part_type_alpha1(_ptype1, 1);
 	part_type_blend(_ptype1, false);
 	part_type_life(_ptype1, 40, 10);

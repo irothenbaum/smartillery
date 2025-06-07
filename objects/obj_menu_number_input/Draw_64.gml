@@ -1,4 +1,4 @@
-draw_set_colour(c_white);
+draw_set_color(c_white);
 draw_set_font(fnt_title)
 draw_set_alpha(image_alpha)
 var _message = label + ": " + string(get_value())

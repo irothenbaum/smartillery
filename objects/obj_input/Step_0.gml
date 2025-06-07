@@ -1,33 +1,37 @@
 var _game_controller = get_game_controller()
 
-if (global.paused && !_game_controller.is_ulting()) {
-	// can't change message while paused
-	keyboard_string = message
-	return
-}
-
-if(keyboard_check_pressed(vk_enter)) {
-	if (string_length(message) > 0) {
-		_game_controller.handle_submit_code(message)
+if (is_controlled) {
+	if (global.paused && !_game_controller.is_ulting()) {
+		// can't change message while paused
+		keyboard_string = message
+		return
 	}
-	keyboard_string = "";
-	broadcast(EVENT_INPUT_CHANGED, {
-		input: "",
-	})
-} else {
-	keyboard_string = string_copy(keyboard_string, 0, 20);
-	
-	if (keyboard_string != message) {
-		message = keyboard_string
+
+	if(keyboard_check_pressed(vk_enter)) {
+		if (string_length(message) > 0) {
+			_game_controller.handle_submit_code(message)
+		}
+		keyboard_string = "";
 		broadcast(EVENT_INPUT_CHANGED, {
-			input: message,
+			input: "",
 		})
-	}
+	} else {
+		keyboard_string = string_copy(keyboard_string, 0, 20);
+	
+		if (keyboard_string != message) {
+			message = keyboard_string
+			broadcast(EVENT_INPUT_CHANGED, {
+				input: message,
+			})
+		}
 
-	// if we were shaking, but the user started typing again, then stop shaking
-	if (!is_undefined(shake_start) && string_length(message) > 0) {
-		alarm[0] = 1
+		// if we were shaking, but the user started typing again, then stop shaking
+		if (!is_undefined(shake_start) && string_length(message) > 0) {
+			alarm[0] = 1
+		}
 	}
+} else {
+	// do nothing, our string is modified by events
 }
 
 streak_ratio = min(get_game_controller().streak / global.point_streak_requirement, 1)

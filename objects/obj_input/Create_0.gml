@@ -1,9 +1,10 @@
 message = "";
 
-// TODO: I don't think will work? Not sure...
-streak_color = is_undefined(streak_color) ? streak_color : global.p1_color
+is_controlled = owner_steam_id == global.my_steam_id
+streak_color = get_player_color(owner_steam_id)
+
 y = 40
-initial_x = global.xcenter
+initial_x = global.xcenter - (!global.is_coop ? 0 : (is_host(owner_steam_id) ? global.multiplayer_input_shift_off_center : -1 * global.multiplayer_input_shift_off_center))
 x = initial_x
 render_x = x
 

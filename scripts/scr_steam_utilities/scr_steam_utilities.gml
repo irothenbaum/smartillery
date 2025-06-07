@@ -29,11 +29,42 @@ function steam_image_create_sprite(_img) {
 	return _sprite
 }
 
+#macro NON_STEAM_PLAYER 999.0001
+
+/**
+ * @returns {Real}
+ */
 function get_my_steam_id_safe() {
 	if (steam_initialised()) {
 		global.my_steam_id = steam_get_user_steam_id()
 	} else {
-		global.my_steam_id = "non-steam-player"
+		global.my_steam_id = NON_STEAM_PLAYER
 	}
 	return global.my_steam_id
+}
+
+/**
+ * @param {Real} _player_id
+ * @returns {Real}
+ */
+function get_player_color(_player_id) {
+	if (is_host(_player_id)) {
+		return global.p1_color
+	}
+	return global.p2_color
+}
+
+/**
+ * @returns {Real}
+ */
+function get_my_color() {
+	return get_player_color(get_my_steam_id_safe())
+}
+
+/**
+ * @param {Real} _player_id
+ * @returns {Bool}
+ */
+function is_host(_player_id) {
+	return _player_id == NON_STEAM_PLAYER || _player_id == global.host_id
 }

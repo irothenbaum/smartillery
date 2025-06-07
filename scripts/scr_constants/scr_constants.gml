@@ -119,6 +119,9 @@ global.bg_cicle_min_radius = global.turret_length
 global.bg_circle_magnitude = global.bg_circle_max_radius - global.bg_cicle_min_radius
 global.bg_circle_ring_width = global.bg_circle_magnitude / global.bg_number_of_circles
 
+// layout
+global.multiplayer_input_shift_off_center = 200
+
 // copy
 global.ultimate_descriptions = {
 	ULTIMATE_STRIKE: {title: "Air strike", description: "Launch a barrage from the air that targets and eliminates your most dangerous enemies"},

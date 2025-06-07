@@ -1,9 +1,19 @@
-/// @param {Read} _x
-/// @param {Read} _y
-/// @param {Read} _x1
-/// @param {Read} _y1
-/// @param {Read} _progress -- [0,1]
-/// @param {Color} _color
+/**
+ * @param {Real} _color
+ * @param {Real} _opacity
+ */
+function CompositeColor(_color, _opacity) constructor {
+	c = _color
+	o = _opacity
+}
+
+
+/// @param {Real} _x
+/// @param {Real} _y
+/// @param {Real} _x1
+/// @param {Real} _y1
+/// @param {Real} _progress -- [0,1]
+/// @param {Struct.CompositeColor} _color
 function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_color) {
 	draw_set_composite_color(_background_color)
 	draw_rectangle(_x, _y, _x1, _y1, false)
@@ -215,10 +225,18 @@ function draw_input_box_with_progress(_bounds, _ratio, _align) {
 	return _final_format(_final_bounds)
 }
 
+/**
+ * @param {Real} _color
+ * @param {Real} _opacity
+ * @returns {CompositeColor}
+ */
 function composite_color(_color, _opacity) {
 	return {c: _color, o:_opacity}
 }
 
+/**
+ * @param {Struct.CompositeColor} _c
+ */
 function draw_set_composite_color(_c) {
 	draw_set_alpha(_c.o)
 	draw_set_color(_c.c)

@@ -1,5 +1,7 @@
 CHECK THE obj_network_controller Create event for TODOs - that's the most recent stuff you were working on
 
+
+- Add glitter effect to background
 - Multiplayer
     - Create "guest" game controller to parody host actions received in network_controller
 	- Need to update enemies (and explosions, etc) to be creatable using meta data 
