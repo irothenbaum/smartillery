@@ -6,8 +6,8 @@ half_sprite_size = 20
 icon_scale = 0.02
 input = instance_find(obj_input, 0)
 game_controller = get_game_controller()
-color_shadow = composite_color(c_black, 0.4)
-color_shadow_dark = composite_color(c_black, 0.8)
+color_shadow =new CompositeColor(c_black, 0.4)
+color_shadow_dark =new CompositeColor(c_black, 0.8)
 my_bounds = undefined
 
 subscribe(EVENT_UTLTIMATE_LEVEL_UP, method({

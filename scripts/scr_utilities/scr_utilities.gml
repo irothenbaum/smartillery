@@ -199,23 +199,31 @@ function color_to_array() {
 	return _ret;
 }
 
-/// @return {{x0: Real, y0: Real, xcenter: Real, ycenter: Real, x1: Real, y1: Real, width: Real, height: Real}}
-function _final_format(_b) {
-	_b.width = _b.x1 - _b.x0
-	_b.height = _b.y1 - _b.y0
-	_b.xcenter = _b.x0 + _b.width / 2
-	_b.ycenter = _b.y0 + _b.height / 2
-	
-	return _b
+/**
+ * @param {Real} _x0
+ * @param {Real} _y0
+ * @param {Real} _x1
+ * @param {Real} _y1
+ */
+function Bounds(_x0, _y0, _x1, _y1) constructor {
+	x0 = _x0
+	y0 = _y0
+	x1 = _x1
+	y1 = _y1
+}
+
+/**
+ * @param {Struct.Bounds} _bounds
+ */
+function FormattedBounds(_bounds) : Bounds(_bounds.x0, _bounds.y0, _bounds.x1, _bounds.y1) constructor {
+	width = x1 - x0
+	height = y1 - y0
+	xcenter = x0 + width / 2
+	ycenter = y0 + height / 2
 }
 
 function _apply_padding_to_bounds(_bounds, _vertical, _horizontal) {
-	return _final_format({
-		x0: _bounds.x0 - _horizontal,
-		y0: _bounds.y0 - _vertical,
-		x1: _bounds.x1 + _horizontal,
-		y1: _bounds.y1 + _vertical,
-	})
+	return new FormattedBounds(new Bounds(_bounds.x0 - _horizontal,_bounds.y0 - _vertical,_bounds.x1 + _horizontal,_bounds.y1 + _vertical))
 }
 
 function get_max_bounds(_bounds_array) {
@@ -236,7 +244,7 @@ function get_max_bounds(_bounds_array) {
 		_ret_val.y1 = max(_ret_val.y1, _these_bounds.y1)
 	}
 	
-	return _final_format(_ret_val)
+	return new FormattedBounds(_ret_val)
 }
 
 /// @return {number} -- will return 1 or -1, or 0

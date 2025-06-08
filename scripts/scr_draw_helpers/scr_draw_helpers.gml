@@ -7,13 +7,15 @@ function CompositeColor(_color, _opacity) constructor {
 	o = _opacity
 }
 
-
-/// @param {Real} _x
-/// @param {Real} _y
-/// @param {Real} _x1
-/// @param {Real} _y1
-/// @param {Real} _progress -- [0,1]
-/// @param {Struct.CompositeColor} _color
+/**
+ * @param {Real} _x
+ * @param {Real} _y
+ * @param {Real} _x1
+ * @param {Real} _y1
+ * @param {Real} _progress -- [0,1]
+ * @param {Struct.CompositeColor} _color
+ * @returns {Struct.FormattedBounds}
+ */
 function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_color) {
 	draw_set_composite_color(_background_color)
 	draw_rectangle(_x, _y, _x1, _y1, false)
@@ -22,7 +24,7 @@ function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_colo
 	draw_rectangle(_x, _y, _x + (min(max(0,_progress), 1) * _x_diff), _y1, false)
 	reset_composite_color()
 	
-	return _final_format({
+	return new FormattedBounds({
 		x0: _x,
 		y0: _y,
 		x1: _x1,
@@ -30,18 +32,22 @@ function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_colo
 	})
 }
 
+/**
+ * @param {Struct.Bounds} _bounds
+ * @param {Real} _step
+ */
 function draw_info_modal(_bounds, _step) {
 	_step = min(1, max(0, _step))
 	var _padding = 20;
 	var _with_padding = _apply_padding_to_bounds(_bounds, _padding, _padding)
 	
 	if (_step < 1) {
-		_with_padding = {
-			x0: lerp(_bounds.xcenter, _with_padding.x0, min(1, _step * 2)),
-			y0: lerp(_bounds.ycenter, _with_padding.y0, max(0, _step * 2 - 1)),
-			x0: lerp(_bounds.xcenter, _with_padding.x1, min(1, _step * 2)),
-			y0: lerp(_bounds.ycenter, _with_padding.y1, max(0, _step * 2 - 1)),
-		}	
+		_with_padding = new Bounds(
+			lerp(_bounds.xcenter, _with_padding.x0, min(1, _step * 2)),
+			lerp(_bounds.ycenter, _with_padding.y0, max(0, _step * 2 - 1)),
+			lerp(_bounds.xcenter, _with_padding.x1, min(1, _step * 2)),
+			lerp(_bounds.ycenter, _with_padding.y1, max(0, _step * 2 - 1))
+		)
 	}
 	
 	draw_set_composite_color(composite_color(c_white, 1))
@@ -50,6 +56,12 @@ function draw_info_modal(_bounds, _step) {
 	draw_rectangle(_with_padding.x0, _with_padding.y0, _with_padding.x1, _with_padding.y1, false)
 }
 
+/**
+ * @param {Struct.Bounds} _bounds
+ * @param {Real} _width
+ * @param {Real} _height
+ * @returns {Struct.FormattedBounds}
+ */
 function center_bounds_in_frame(_bounds, _width = 0, _height = 0) {
 	if (_width == 0) {
 		_width = global.room_width
@@ -71,8 +83,17 @@ function center_bounds_in_frame(_bounds, _width = 0, _height = 0) {
 	_new_bounds.x1 = _new_bounds.x0 + _bounds.width
 	_new_bounds.y1 = _new_bounds.y0 + _bounds.height
 	
-	return _final_format(_new_bounds)
+	return new FormattedBounds(_new_bounds)
 }
+
+/**
+ * @param {Real} _x
+ * @param {Real} _y
+ * @param {String} _text
+ * @param {String} _align
+ * @param {Real} _line_height
+ * @returns {Struct.FormattedBounds}
+ */
 
 function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_height = 1.1) {	
 	var _lines = string_split(_text, "\n")
@@ -126,9 +147,12 @@ function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_heig
 		_final_bounds.y1 = max(_final_bounds.y1, _line_bounds.y1)
 	}
 	
-	return _final_format(_final_bounds)
+	return new FormattedBounds(_final_bounds)
 }
 
+/**
+ * @param {Real} _alpha
+ */
 function draw_overlay(_alpha  = 0.5) {
 	// TODO Might want to use draw_clear_alpha() here but it's not working. I must be doing something wrong
 	draw_set_alpha(_alpha)
@@ -137,31 +161,39 @@ function draw_overlay(_alpha  = 0.5) {
 	reset_composite_color()
 }
 
-function draw_rounded_rectangle(_x0, _y0, _x1, _y1, _radius, _thickness = 1) {
-	var _content_area = {
-		x0: _x0 + _radius,
-		x1: _x1 - _radius,
-		y0: _y0 + _radius,
-		y1: _y1 - _radius,
-	}
+/**
+ * @param {Struct.Bounds} _bounds
+ * @param {Real} _radius
+ * @param {Real} _thickness
+ */
+function draw_rounded_rectangle(_bounds, _radius, _thickness = 1) {
+	var _content_area = new Bounds(
+		_bounds.x0 + _radius,
+		_bounds.x1 - _radius,
+		_bounds.y0 + _radius,
+		_bounds.y1 - _radius
+	)
 	
-	draw_line_width(_content_area.x0, _y0, _content_area.x1, _y0, _thickness)
-	draw_arc(_content_area.x1, _vertical.y0, _radius, 90, 0, _thickness)
-	draw_line_width(_x1, _content_area.y0, _x1, _content_area.y1, _thickness)
+	draw_line_width(_content_area.x0, _bounds.y0, _content_area.x1, _bounds.y0, _thickness)
+	draw_arc(_content_area.x1, _bounds.y0, _radius, 90, 0, _thickness)
+	draw_line_width(_bounds.x1, _content_area.y0, _bounds.x1, _content_area.y1, _thickness)
 	draw_arc(_content_area.x1, _content_area.y1, _radius, 90, 270, _thickness)
-	draw_line_width(_content_area.x0, _y1, _content_area.x1, _y1, _thickness)
+	draw_line_width(_content_area.x0, _bounds.y1, _content_area.x1, _bounds.y1, _thickness)
 	draw_arc(_content_area.x0, _content_area.y1, _radius, 90, 180, _thickness)
-	draw_line_width(_x0, _content_area.y0, _x0, _content_area.y1, _thickness)
+	draw_line_width(_bounds.x0, _content_area.y0,_bounds.x0, _content_area.y1, _thickness)
 	draw_arc(_content_area.x0, _content_area.y0, _radius, 90, 90, _thickness)
 	
-	return _final_format({
-		x0: _x0,
-		y0: _y0,
-		x1: _x1,
-		y1: _y1
-	})
+	return new FormattedBounds(_bounds)
 }
 
+/**
+ * @param {Real} _x
+ * @param {Real} _y
+ * @param {Real} _radius
+ * @param {Real} _degrees
+ * @param {Real} _start
+ * @param {Real} _thickness
+ */
 function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1) {
 	var _steps = ceil((_radius * ((_degrees / 360) * TAU)) / 10)
 	var _step_degree = _degrees / _steps
@@ -186,18 +218,16 @@ function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1) {
 	}
 }
 
+/**
+ * @param {Struct.Bounds} _bounds
+ * @param {Real} _ratio
+ * @param {String} _align
+ */
 function draw_input_box_with_progress(_bounds, _ratio, _align) {
 	_ratio = max(0, min(_ratio, 1))
-	var _rectangle_bounds = _final_format(_bounds)
+	var _rectangle_bounds = new FormattedBounds(_bounds)
 
-	var _final_bounds = draw_rounded_rectangle(
-		_rectangle_bounds.x0, 
-		_rectangle_bounds.y0, 
-		_rectangle_bounds.x1, 
-		_rectangle_bounds.y1, 
-		8,
-		3
-	)
+	var _final_bounds = draw_rounded_rectangle(_rectangle_bounds, 8, 3)
 
 	draw_set_alpha(0.15)
 	if (is_undefined(_align) || _align == ALIGN_LEFT) {
@@ -222,16 +252,7 @@ function draw_input_box_with_progress(_bounds, _ratio, _align) {
 
 	reset_composite_color()
 	
-	return _final_format(_final_bounds)
-}
-
-/**
- * @param {Real} _color
- * @param {Real} _opacity
- * @returns {CompositeColor}
- */
-function composite_color(_color, _opacity) {
-	return {c: _color, o:_opacity}
+	return new FormattedBounds(_final_bounds)
 }
 
 /**
@@ -243,22 +264,39 @@ function draw_set_composite_color(_c) {
 }
 
 function reset_composite_color() {
-	draw_set_composite_color(RESET_COLOR)
+	draw_set_composite_color(new CompositeColor(c_white, 1))
 }
 
 
 // ----------------------------------------------------------------------
 // these are background circle related functions
+
+/**
+ * @param {Real} _i
+ * @returns {Real}
+ */
 function get_radius_at_i(_i) {
 	return global.bg_circle_max_radius - ((_i / global.bg_number_of_circles) * global.bg_circle_magnitude)
 }
 
-// this inverse of get_radius_at_i
+/**
+ * this inverse of get_radius_at_i
+ * @param {Real} _distance
+ * @returns {Real}
+ */
 function get_ring_from_distance(_distance) {
 	return  floor(global.bg_number_of_circles * (global.bg_circle_max_radius - _distance) / global.bg_circle_magnitude)
 }
 
-function draw_rectangle_clipped(_x0, _y0, _x1, _y1, _color, _spr, _scale) {
+/**
+
+ * @param {Struct.Bounds} _bounds
+ * @param {Real} _color
+ * @param {Real} _spr
+ * @param {Real} _scale
+ * @returns {Real}
+ */
+function draw_rectangle_clipped(_bounds, _color, _spr, _scale) {
 	// Set the shader
 	var _mask_texture = sprite_get_texture(_spr, 0);
 	shader_set(sh_clip_sprite);
@@ -273,9 +311,8 @@ function draw_rectangle_clipped(_x0, _y0, _x1, _y1, _color, _spr, _scale) {
 	shader_set_uniform_f(_u_scale, _scale, _scale);
 */
 	// Draw the rectangle
-	draw_rectangle_color(_x0, _y0, _x1, _y1, _color, _color, _color, _color, false);
+	draw_rectangle_color(_bounds.x0, _bounds.y0, _bounds.x1, _bounds.y1, _color, _color, _color, _color, false);
 
-debug("HERE?", _x0, _y0, _x1, _y1)
 	// Reset the shader
 	shader_reset();
 

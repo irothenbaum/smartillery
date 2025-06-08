@@ -46,7 +46,7 @@ if (global.selected_ultimate != ULTIMATE_NONE && instance_exists(input) && !is_u
 	draw_set_font(fnt_base)
 	// ------------------------------------------------------------------
 	
-	my_bounds = _final_format({
+	my_bounds = new FormattedBounds({
 		x0: _xcenter - _circle_radius,
 		y0: _ycenter - _circle_radius,
 		x1: _xcenter + _circle_radius,

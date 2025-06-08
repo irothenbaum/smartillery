@@ -18,14 +18,14 @@ for (var _i = 0; _i < array_length(_keys); _i++) {
 	var _draw_opacity = lerp(drawn_icon_opacity[$ _k], _overlay_color_opacity, global.fade_speed)
 	drawn_icon_opacity[$ _k] = _draw_opacity
 	
-	var _bounds = {
+	var _b = {
 		x0: x + ((_i - 1) * icon_space) - square_size / 2,
 		y0: y - square_size / 2,
 	}
 	
-	_bounds.x1 = _bounds.x0 + square_size
-	_bounds.y1 = _bounds.y0 + square_size
-	_bounds = _final_format(_bounds)
+	_b.x1 = _b.x0 + square_size
+	_b.y1 = _b.y0 + square_size
+	var _bounds = new FormattedBounds(_b)
 		
 	draw_sprite_ext(_spr, 0, _bounds.xcenter, _bounds.ycenter, _draw_scale, _draw_scale, 0 , c_white, 1)
 	
@@ -36,7 +36,7 @@ for (var _i = 0; _i < array_length(_keys); _i++) {
 		if (_k == staged_selection) {
 			draw_set_alpha(min(_draw_opacity, 1 -  0.8 * (_draw_scale - default_scale) / (hovered_scale - default_scale)))
 		}
-		draw_rounded_rectangle(_bounds.x0, _bounds.y0, _bounds.x1, _bounds.y1, 10, 5)
+		draw_rounded_rectangle(_bounds, 10, 5)
 		
 		reset_composite_color()
 	}

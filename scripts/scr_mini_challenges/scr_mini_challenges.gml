@@ -129,6 +129,6 @@ function draw_word_blocks(_x, _y, _block, _styles, _is_focused) {
 	
 	// draw external padding and then draw the word containing box
 	_bounds = _apply_padding_to_bounds(_bounds, _padding, _padding)
-	draw_rounded_rectangle(_bounds.x0, _bounds.y0, _bounds.x1, _bounds.y1, _padding / 2, _is_focused ? 6 : 2)
+	draw_rounded_rectangle(_bounds, _padding / 2, _is_focused ? 6 : 2)
 	return _bounds
 }

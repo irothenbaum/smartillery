@@ -5,7 +5,7 @@ var _is_flickering = alarm[0] > death_duration / 2
 // we take n seconds to die. The first half of that time is spent flickering, then fading out
 var _alpha = _is_flickering ? (get_play_time() % 200 < 100 ? 1 : 0) : _is_dying ? alarm[0] / (death_duration / 2) : 1
 
-var _comp_color = composite_color(c_white, _alpha)
+var _comp_color =new CompositeColor(c_white, _alpha)
 
 draw_set_composite_color(_comp_color)
 draw_arc(

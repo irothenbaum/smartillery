@@ -60,7 +60,7 @@ function enemy_draw_equation(_e) {
 		var _offset_y = (y > global.ycenter ? -1 : 1) * (25 + _string_height)
 		
 		// this logic is going to draw the equation within the game bounds even if the enemy us out of screen
-		var _string_directional_bounds = _final_format({
+		var _string_directional_bounds = new FormattedBounds({
 			x0: global.directional_hint_bounds.x0 + _string_width / 2,
 			y0: global.directional_hint_bounds.y0 + _string_height / 2,
 			x1: global.directional_hint_bounds.x1 - _string_width / 2,

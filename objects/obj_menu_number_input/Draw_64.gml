@@ -8,7 +8,7 @@ if (_bounds.width < min_box_width) {
 	_bounds.x0 = _bounds.xcenter - min_box_width /2
 	_bounds.x1 = _bounds.xcenter + min_box_width /2
 }
-var _border_bounds = _final_format({
+var _border_bounds = new FormattedBounds({
 	x0: _bounds.x0 - 12,
 	y0: _bounds.y0 - 8,
 	x1: _bounds.x1 + 12,

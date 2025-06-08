@@ -15,8 +15,6 @@
 #macro ULTIMATE_COLLATERAL "collateral"
 #macro ULTIMATE_SIMPLIFY "simplify"
 
-#macro RESET_COLOR {c: c_white, o: 1}
-
 #macro TAU (2 * pi)
 
 
@@ -88,7 +86,7 @@ global.operations_order = ["+", "-", "x", "/", "^", "^"]
 global.max_math_difficulty = array_length(global.operations_order)
 global.min_word_length = 4
 global.max_word_length = 11
-global.directional_hint_bounds = _final_format({
+global.directional_hint_bounds = new FormattedBounds({
 	x0: 40,
 	y0: 40,
 	x1: global.room_width - 40,
