@@ -28,8 +28,22 @@ function get_player() {
 	return _player
 }
 
-function get_input() {
-	var _input = instance_find(obj_input, 0)
+global._G.input_player_map = {}
+function get_input(_player_id) {
+	if (struct_exists(global._G.input_player_map, _player_id)) {
+		return global._G.input_player_map[$ _player_id]
+	}
+	
+	var _input = find_instance(obj_input, function (_inst, _i, _total) {
+		return _inst.owner_steam_id == global.my_steam_id
+	})
+	
+	if (is_undefined(_input)) {
+		debug("Cannot find input for player ", _player_id)
+	}
+	
+	global._G.input_player_map[$ _player_id] = _input
+	
 	return _input
 }
 
@@ -38,8 +52,26 @@ function get_current_wave_number() {
 	return get_game_controller().current_wave
 }
 
+/**
+ * @param {Object} _instance_type
+ * @param {Function} _condition
+ * @returns {Id.Instance|undefined}
+ */
+function find_instance(_instance_type, _condition) {
+	var _count = instance_number(_instance_type)
+	
+	for (var _i =0; _i < _count; _i++) {
+		var _inst = instance_find(_instance_type, _i)
+		// we pass any other argument back to the callback
+		if (script_execute(argument[1], _inst, _i, _count)) {
+			return _inst
+		}
+	}
+	
+	return undefined
+}
 
-/// @func count_all_enemies()
+/// @func get_all_enemy_instances()
 /// @return {Array<Id.Instance>}
 function get_all_enemy_instances() {
 	var _instances = []
@@ -260,6 +292,13 @@ function roll_dice(_sides = 6) {
 	return irandom(_sides - 1) + 1
 }
 
+/**
+ * @param {Real} _from_x
+ * @param {Real} _from_y
+ * @param {Real} _to_x
+ * @param {Real} _to_y
+ * @param {Real} _distance
+ */
 function get_tangent_point(_from_x, _from_y, _to_x, _to_y, _distance) {
 	var _reverse = flip_coin() ? -1 : 1
 	var _tangent_direction = point_direction(_to_x, _to_y, _from_x, _from_y) + (90 * _reverse)

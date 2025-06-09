@@ -34,8 +34,6 @@ subscribe(EVENT_NEW_TURRET_ANGLE, function(_payload) {
 })
 
 subscribe(EVENT_INPUT_CHANGED, function(_payload) {
-	
-	
 	array_push(event_bufer, {
 		event_name: NET_EVENT_INPUT_CHANGED,
 		player_steam_id: global.my_steam_id,
@@ -45,7 +43,7 @@ subscribe(EVENT_INPUT_CHANGED, function(_payload) {
 	})
 })
 
-subsribe(EVENT_ENEMY_SPAWNED, function(_enemy) {
+subscribe(EVENT_ENEMY_SPAWNED, function(_enemy) {
 	array_push(event_buffer, object_keys_copy({
 		event_name: NET_EVENT_CREATE_INSTANCE,
 		instance_id: _enemy.id,
@@ -53,10 +51,10 @@ subsribe(EVENT_ENEMY_SPAWNED, function(_enemy) {
 		x: _enemy.x,
 		y: _enemy.y,
 		equation: _enemy.equation,
-	}, enemy_get_meta_state(_enemy)))
+	}, instance_get_meta_state(_enemy)))
 })
 
-subsribe(EVENT_ENEMY_HIT, function(_enemy) {
+subscribe(EVENT_ENEMY_HIT, function(_enemy) {
 	array_push(event_buffer, {
 		event_name: NET_EVENT_ENEMY_HIT,
 		instance_id: _enemy.id,
@@ -73,7 +71,7 @@ function handle_create_instance(_event) {
 	
 	var _new_enemy = instance_create_layer(_event.x, _event.y, LAYER_INSTANCES, _obj_type, object_keys_copy({
 		equation: _event.equation,
-	}, enemy_convert_network_payload_to_state_object(_obj_type, _event)))
+	}, instance_convert_network_payload_to_state_object(_obj_type, _event)))
 	
 	instance_id_map[$ _event.instance_id] = _new_enemy.id
 }
@@ -86,8 +84,21 @@ function handle_game_start(_event) {
 	room_goto(rm_play_coop)
 }
 
-function handle_input_changed(_event) {
-	// TODO: get peer's user_input instance and update its message
+function handle_input_changed(_event) { 
+	if (typeof(_event.is_on_streak) == "bool") {
+		broadcast(EVENT_ON_OFF_STREAK, _event.is_on_streak, _event.player_steam_id)
+	}
+	
+	if (typeof(_event.is_wrong_guess) == "bool") {
+		broadcast(EVENT_WRONG_GUESS, _event.is_wrong_guess, _event.player_steam_id)
+	}
+	
+	if (_event.player_steam_id == get_my_steam_id_safe()) {
+		// we don't set the message for ourselves, only the guest
+	} else {
+		var _input = get_input(_event.player_steam_id)
+		_input.message = _event.input
+	}
 }
 
 function handle_score_changed(_event) {
@@ -129,7 +140,7 @@ var _event_name_to_handler_map = {
 	NET_EVENT_TURRET_ANGLE_CHANGED: handle_turret_angle_changed,
 	NET_EVENT_INPUT_CHANGED: handle_input_changed,
 	NET_EVENT_ENEMY_HIT: handle_enemy_hit,
-	// TODO: more events
+	// TODO: more events to handle
 }
 
 function handle_network_event(_event) {
