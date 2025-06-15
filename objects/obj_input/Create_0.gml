@@ -46,10 +46,6 @@ subscribe(EVENT_WRONG_GUESS, function(_guess) {
 	shake_start = get_play_time()
 	wrong_guess = _guess
 	alarm[0] = game_get_speed(gamespeed_fps) * total_shake_time / 1000
-	broadcast(EVENT_INPUT_CHANGED, {
-		input: "",
-		is_wrong_guess: true,
-	}, owner_steam_id)
 }, owner_steam_id)
 
 subscribe(EVENT_GAME_OVER, function() {
@@ -61,10 +57,6 @@ subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
 	if (_is_on_streak) {
 		streak_fire = draw_muzzle_smoke(x, y, global.p1_color)
 		size_streak_fire()
-		broadcast(EVENT_INPUT_CHANGED, {
-			input: "",
-			is_on_streak: true,
-		}, owner_steam_id)
 	} else {	
 		if (is_undefined(streak_fire)) {
 			return

@@ -4,7 +4,13 @@ CHECK THE obj_network_controller Create event for TODOs - that's the most recent
 - Add glitter effect to background
 - Multiplayer
     - Create "guest" game controller to parody host actions received in network_controller
-	- Need to update enemies (and explosions, etc) to be creatable using meta data 
+	- I think any call to instance_create_layer should trigger a new INSTANCE_CREATED event. 
+	     - This is how enemy spawn events currently work so that could be refactored out.
+	- obj_player needs to determine whose streak color to use when drawing its barrel and muzzle flash
+	- Need to finalize the Join / Host UX so lobby can be created
+	- just about ready to start testing I guess? Need to run gamemaker (and steam under a 2nd account) on a 2nd comp
+- A Multiplayer-only enemy that shows its equation only to one player. 
+	- Maybe the enemy appears as your teammate's color indiating you can't hit it?
 - Remove Heal and Slow ult. Implement a new Lightning ult that destroys nearby enemies
 - "Practice" mode for:
     - Main game (a modified enemy_1 that just travels right towards you, one at a time - next one as soon as you kill one, no power ups, just guessing answers)

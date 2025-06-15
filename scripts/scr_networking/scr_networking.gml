@@ -93,6 +93,7 @@ global.networking_instance_type_to_obj = [
 	obj_enemy_3,
 	obj_enemy_4,
 	obj_enemy_5,
+	
 ]
 
 global.networking_obj_to_instance_type = {}

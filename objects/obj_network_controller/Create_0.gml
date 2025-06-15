@@ -14,7 +14,7 @@ subscribe(EVENT_SCORE_CHANGED, function(_payload) {
 		streak_score: _payload.streak_score,
 		combo_score: _payload.combo_score,
 		game_score: _payload.game_score,
-		player_steam_id: global.my_steam_id
+		player_steam_id: get_my_steam_id_safe()
 	})
 })
 
@@ -24,7 +24,8 @@ subscribe(EVENT_ENEMY_KILLED, function(_enemy) {
 		instance_id: _enemy.id
 	})
 })
-
+// TODO: I think instead of new turret angle, the event should pass new Target_Instance or something
+// host and client and then treat it like a execute_hit_target
 subscribe(EVENT_NEW_TURRET_ANGLE, function(_payload) {
 	array_push(event_bufer, {
 		event_name: NET_EVENT_TURRET_ANGLE_CHANGED,
@@ -33,13 +34,33 @@ subscribe(EVENT_NEW_TURRET_ANGLE, function(_payload) {
 	})
 })
 
-subscribe(EVENT_INPUT_CHANGED, function(_payload) {
+subscribe(EVENT_INPUT_CHANGED, function(_input) {
 	array_push(event_bufer, {
 		event_name: NET_EVENT_INPUT_CHANGED,
-		player_steam_id: global.my_steam_id,
-		input: _payload.input,
-		is_on_streak: _payload.is_on_streak,
-		is_wrong_guess: _payload.is_wrong_guess,
+		player_steam_id: get_my_steam_id_safe(),
+		input: _input,
+		is_on_streak: undefined,
+		is_wrong_guess: undefined,
+	})
+})
+
+subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
+	array_push(event_bufer, {
+		event_name: NET_EVENT_INPUT_CHANGED,
+		player_steam_id: get_my_steam_id_safe(),
+		input: undefined,
+		is_on_streak: _is_on_streak,
+		is_wrong_guess: undefined,
+	})
+})
+
+subscribe(EVENT_WRONG_GUESS, function(_is_wrong_guess) {
+	array_push(event_bufer, {
+		event_name: NET_EVENT_INPUT_CHANGED,
+		player_steam_id: get_my_steam_id_safe(),
+		input: undefined,
+		is_on_streak: undefined,
+		is_wrong_guess: _is_wrong_guess,
 	})
 })
 

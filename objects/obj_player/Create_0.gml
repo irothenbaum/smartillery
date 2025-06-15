@@ -6,6 +6,7 @@ hide_self = false;
 body_color_arr = color_to_array(global.body_color)
 turret_color_arr = color_to_array(global.turret_color)
 p1_color = color_to_array(global.p1_color)
+p2_color = color_to_array(global.p2_color)
 
 rotate_aim_speed = 720 // in degrees per second
 rotate_idle_speed = 90 // in degrees per second
