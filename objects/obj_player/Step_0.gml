@@ -9,7 +9,7 @@ var _rotate_step = rotate_speed / game_get_speed(gamespeed_fps)
 image_angle += sign(_angle_dif) * (_abs_angle_dif < _rotate_step ? _abs_angle_dif : _rotate_step)
 
 // start the fire animation if we're within 5 degrees of our target
-if (aiming_at_instance && _abs_angle_dif < 1) {
+if (array_length(aiming_at_instance) > 0 && _abs_angle_dif < 1) {
 	execute_hit_target()
 }
 

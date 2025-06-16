@@ -29,7 +29,9 @@ if (!is_undefined(_ult_bounds)) {
 	draw_set_font(fnt_large)
 	draw_line_between(_ult_bounds.xcenter, _ult_bounds.y1, ultimate_description.x, ultimate_description.y)
 	
-	var _message = string_concat("Your ultimate is \"", global.ultimate_descriptions[$ global.selected_ultimate].title, "\"\n", global.ultimate_descriptions[$ global.selected_ultimate].description)
+	var _ultimate = get_player_ultimate(get_my_steam_id_safe())
+	
+	var _message = string_concat("Your ultimate is \"", global.ultimate_descriptions[$ _ultimate].title, "\"\n", global.ultimate_descriptions[$ _ultimate].description)
 	draw_text_with_alignment(ultimate_description.x, ultimate_description.y, _message , ultimate_description.align)
 
 	var _description_bounds = draw_text_with_alignment(ultimate_description.x, ultimate_description.y, _message , ultimate_description.align)

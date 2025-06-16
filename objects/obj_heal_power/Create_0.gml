@@ -35,3 +35,6 @@ subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
 
 starting_duration = ult_heal_get_duration(level)
 alarm[0] = starting_duration
+
+ultimate_initialize(self)
+ult_type = ULTIMATE_HEAL

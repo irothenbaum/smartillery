@@ -10,6 +10,7 @@
 #macro NET_EVENT_TURRET_ANGLE_CHANGED "NET_EVENT_TURRET_ANGLE_CHANGED"
 #macro NET_EVENT_INPUT_CHANGED "NET_EVENT_INPUT_CHANGED"
 #macro NET_EVENT_ENEMY_HIT "NET_EVENT_ENEMY_HIT"
+#macro NET_EVENT_SUBMIT_CODE "NET_EVENT_SUBMIT_CODE"
 
 // the numeric ID is simply the index in the array
 global._G.numeric_id_to_event_name = [
@@ -19,7 +20,8 @@ global._G.numeric_id_to_event_name = [
 	NET_EVENT_DESTROY_INSTANCE,
 	NET_EVENT_TURRET_ANGLE_CHANGED,
 	NET_EVENT_INPUT_CHANGED,
-	NET_EVENT_ENEMY_HIT
+	NET_EVENT_ENEMY_HIT,
+	NET_EVENT_SUBMIT_CODE
 ]
 
 // we then create a reverse map of the array so we can get index from event name string
@@ -32,41 +34,43 @@ array_foreach(global._G.numeric_id_to_event_name, method({lookup: global._G.even
 global._G.event_payload_keys = {
 	// "event_name" is also an implied item on all these payloads
 	NET_EVENT_GAME_START: ["host_id", "guest_id"],
-	NET_EVENT_SCORE_CHANGED: ["player_steam_id", "unit_score", "streak_score", "combo_score", "game_score"],
+	NET_EVENT_SCORE_CHANGED: ["player_id", "unit_score", "streak_score", "combo_score", "game_score"],
 	NET_EVENT_CREATE_INSTANCE: ["instance_id", "instance_type", "x", "y", "equation", "meta0", "meta1", "meta2", "meta3", "meta4", "meta5"],
 	NET_EVENT_DESTROY_INSTANCE: ["instance_id"],
 	NET_EVENT_TURRET_ANGLE_CHANGED: ["rotate_to", "rotate_speed"],
-	NET_EVENT_INPUT_CHANGED: ["player_steam_id", "input"],
-	NET_EVENT_ENEMY_HIT: ["instance_id"],
+	NET_EVENT_INPUT_CHANGED: ["player_id", "input"],
+	NET_EVENT_ENEMY_HIT: ["instance_id", "player_id"],
+	NET_EVENT_SUBMIT_CODE: ["player_id", "code"],
 }
 
 // define the type each key (prop on an event) is
 global._G.payload_key_types = {
+	// common
 	"events_count": buffer_u8,
 	"event_name": buffer_u8,
-	
-	// common
-	"player_steam_id": buffer_u8,
+	"player_id": buffer_u8,
 	"instance_id": buffer_u8,
 	
-	// game start
+	// NET_EVENT_GAME_START
 	"guest_id": buffer_u8,
 	"host_id": buffer_u8,
 	
-	// score changes
+	// NET_EVENT_SCORE_CHANGED
 	"unit_score": buffer_u8,
 	"streak_score": buffer_u8,
 	"combo_score": buffer_u8,
 	"game_score": buffer_u8,
 	
-	// turret angle
+	// NET_EVENT_TURRET_ANGLE_CHANGED
 	"rotate_to": buffer_u8,
 	"rotate_speed": buffer_u8,
 	
-	// input changed
+	// NET_EVENT_INPUT_CHANGED
 	"input": buffer_u8,
+	"streak_count": buffer_u8,
+	"is_wrong_guess": buffer_u8,
 	
-	// create instance
+	// NET_EVENT_CREATE_INSTANCE
 	"instance_type": buffer_u8,
 	"x": buffer_u8, 
 	"y": buffer_u8, 
@@ -77,6 +81,9 @@ global._G.payload_key_types = {
 	"meta3": buffer_u8,
 	"meta4": buffer_u8,
 	"meta5": buffer_u8,
+	
+	// NET_EVENT_SUBMIT_CODE
+	"code": buffer_u8
 }
 
 // this is a shorthand to represent the meta0 - meta5 prop count

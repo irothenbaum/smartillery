@@ -24,6 +24,6 @@ drawn_icon_opacity = {
 }
 
 function handle_select(_ult) {
-	global.selected_ultimate = _ult
+	global.selected_ultimate[$ owner_player_id] = _ult
 	instance_destroy()
 }

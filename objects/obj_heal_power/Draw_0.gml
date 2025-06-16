@@ -4,3 +4,5 @@ for (var _i = 0; _i < _stroke_width; _i++) {
 	draw_circle(x, y, heal_radius + _i, true)
 }
 
+
+ultimate_draw(self)

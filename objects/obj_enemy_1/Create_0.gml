@@ -15,7 +15,7 @@ if (is_undefined(waypoints)) {
 direction = point_direction(x, y, global.xcenter, global.ycenter) + (20 * (irandom(1) == 1 ? 1 : -1))
 speed = approach_speed
 
-function register_hit() {
+function register_hit(_player_who_shot_id) {
 	instance_destroy()
 }
 broadcast(EVENT_ENEMY_SPAWNED, self)

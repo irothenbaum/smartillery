@@ -42,13 +42,20 @@ function rotate_towards_next_target() {
 	}
 }
 
-function fire_at_instance(_inst) {
+/**
+ * @param {Id.Instance} _inst
+ * @param {String} _player_id -- who took the shot
+ */
+function fire_at_instance(_inst, _player_id) {
 	if (!_inst) {
 		// do nothing
 		return
 	}
 	alarm[0] = -1
-	array_push(aiming_at_instance, _inst)
+	array_push(aiming_at_instance, {
+		inst : _inst,
+		player_id: _player_id
+	})
 	rotate_towards_next_target()
 }
 
@@ -58,17 +65,20 @@ function execute_hit_target() {
 		return
 	}
 	
-	var _target = array_shift(aiming_at_instance)
+	var _target_entry = array_shift(aiming_at_instance)
+	var _target = _target_entry.inst
+	var _player_who_shot_id = _target_entry.player-id
 	
 	// Muzzle Flash
 	var _muzzle = get_turret_muzzle()
-	var _on_streak = get_game_controller().has_point_streak()
-	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: _target.x, target_y: _target.y, width: _on_streak ? 16 : 12, color: _on_streak ? global.p1_color : global.beam_color})
+	var _on_streak = get_game_controller().has_point_streak(_player_who_shot_id)
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: _target.x, target_y: _target.y, width: _on_streak ? 16 : 12, color: _on_streak ? get_player_color(_player_who_shot_id) : global.beam_color})
 	
 	recoil_amount = max_recoil_amount
 	
+	_target.last_hit_by_player_id = _player_who_shot_id
 	_target.register_hit()
-	broadcast(EVENT_ENEMY_HIT, _target)
+	broadcast(EVENT_ENEMY_HIT, _target, _player_who_shot_id)
 	
 	rotate_towards_next_target()
 }

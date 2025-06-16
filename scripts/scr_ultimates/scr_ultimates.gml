@@ -119,3 +119,61 @@ function ult_simplification_get_difficulty_multiplier(_level) {
 	// .... etc
 	return power(SIMPLIFICATION_BASE_MULTIPLIER, _level)
 }
+
+// -------------------------------------------------------------------------------------------
+// Utilities
+
+/**
+ * @param {String} _player_id
+ * @returns {String} 
+ */
+function get_player_ultimate(_player_id) {
+	return global.selected_ultimate[$ _player_id]
+}
+
+/**
+ * @param {Id.Instance} _obj
+ */
+function ultimate_initialize(_obj) {
+	with (_obj) {
+		ult_overlay = 1
+		ult_type = ULTIMATE_NONE
+	}
+}
+
+/**
+ * @param {Id.Instance} _obj
+ */
+function ultimate_step(_obj) {
+	with(_obj) {
+		if (ult_overlay > 0.001) {
+			ult_overlay = lerp(ult_overlay, 0, global.fade_speed / 2)
+		} else {
+			ult_overlay = 0
+		}
+	}
+}
+
+/**
+ * @param {Id.Instance} _obj
+ */
+function ultimate_draw(_obj) {
+	with (_obj) {
+		// this draws the ult icon flash over the screen when the player launches their ultimate
+		if (ult_overlay > 0) {
+			var _scale = 0.3 + (1 - ult_overlay ) / 2.5
+			draw_sprite_ext(global.ultimate_icons[$ ult_type], 0, global.xcenter, global.ycenter, _scale, _scale, 0, global.ultimate_colors[$ ult_type], ult_overlay)
+			// draw_rectangle_clipped(new Bounds(0, 0, global.room_width, global.room_height), global.ultimate_colors[$ global.selected_ultimate], global.ultimate_icons[$ global.selected_ultimate], _scale)
+		}
+	}
+}
+
+// TOOD: This needs to contorl more ultimate types
+global._G.ultimate_object_map = {
+	ULTIMATE_STRIKE: obj_ultimate_strike,
+	ULTIMATE_HEAL: obj_heal_power,
+	ULTIMATE_SLOW: obj_slow_time,
+	ULTIMATE_ASSIST: "todo",
+	ULTIMATE_SIMPLIFY: "todo",
+	ULTIMATE_COLLATERAL: "todo",
+}

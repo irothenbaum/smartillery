@@ -9,3 +9,5 @@ for_each_enemy(function(_enemy, _index, _distance, _slow_amount) {
 
 var _gc = get_game_controller()
 _gc.ultimate_charge = max(0, global.ultimate_requirement * alarm[0] / starting_duration)
+
+ultimate_step(self)

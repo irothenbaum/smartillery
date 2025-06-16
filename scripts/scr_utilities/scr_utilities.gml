@@ -35,7 +35,7 @@ function get_input(_player_id) {
 	}
 	
 	var _input = find_instance(obj_input, function (_inst, _i, _total) {
-		return _inst.owner_steam_id == global.my_steam_id
+		return _inst.owner_player_id == global.my_steam_id
 	})
 	
 	if (is_undefined(_input)) {
@@ -337,4 +337,19 @@ function object_keys_copy(_target_object, _source_object) {
 	
 	// it overwrites inline AND returns the new object
 	return _target_object
+}
+
+/**
+ * @param {Any} _val
+ * @returns {Struct}
+ */
+function initialize_player_map(_val) {
+	var _ret_val = {}
+	_ret_val[$ get_my_steam_id_safe()] = _val
+	
+	if (global.is_coop) {
+		_ret_val[$ global.partner_steam_id] = _val
+	}
+	
+	return _ret_val
 }

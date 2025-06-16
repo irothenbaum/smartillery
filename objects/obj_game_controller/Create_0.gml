@@ -12,20 +12,16 @@ unit_score = 0
 streak_score = 0
 combo_score = 0
 
-combo_count = 0
-longest_combo = 0
-
-streak = 0;
-longest_streak = 0;
-
-is_selecting_ult = false
-ultimate_charge = 0;
-ultimate_experience = 0
-ultimate_level = 1
-ult_overlay = 0
-cached_ultimate_level = undefined;
-inst_ultimate = undefined;
-ultimate_level_up_controller = undefined;
+// these are player specific values that we track
+combo_count = {}
+longest_combo = {}
+streak = {};
+longest_streak = {};
+ultimate_charge = {};
+ultimate_experience = {}
+ultimate_level = {}
+cached_ultimate_level = {};
+inst_ultimate = {};
 
 is_game_over = false;
 
@@ -36,14 +32,23 @@ instance_create_layer(x, y, LAYER_INSTANCES, obj_combo_drawer)
 
 debug("USING SEED :" + string(global.game_seed))
 
-/// @returns {Bool}
-function has_point_streak() {
-	return streak >= global.point_streak_requirement
+/**
+ * @param {String} _player_id
+ * @returns {Bool}
+ */
+function has_point_streak(_player_id) {
+	if (is_undefined(_player_id)) {
+		_player_id = get_my_steam_id_safe()
+	}
+	return streak[$ _player_id] >= global.point_streak_requirement
 }
 
-/// @returns {Bool}
-function has_ultimate() {
-	return !is_ulting() && ultimate_charge >= global.ultimate_requirement
+/**
+ * @param {String} _player_id
+ * @returns {Bool}
+ */
+function has_ultimate(_player_id) {
+	return !is_ulting(_player_id) && ultimate_charge[$ _player_id] >= global.ultimate_requirement
 }
 
 function mark_wave_completed() {
@@ -91,17 +96,22 @@ function end_game() {
 }
 
 function reset_starting_values() {
-	global.selected_ultimate = ULTIMATE_NONE
+	// TODO: we should track each of these score items per player as well (or maybe just the total?)
 	combo_score = 0
 	unit_score = 0
 	streak_score = 0
 	game_score = 0
-	drawn_game_score = 0
-	ultimate_charge = 0
-	ultimate_experience = 0
-	ultimate_level = 1
-	cached_ultimate_level = undefined
 	current_wave = 0
+	drawn_game_score = 0
+	combo_count = initialize_player_map(0)
+	longest_combo = initialize_player_map(0)
+	streak = initialize_player_map(0)
+	longest_streak = initialize_player_map(0)
+	ultimate_charge = initialize_player_map(0)
+	ultimate_experience = initialize_player_map(0)
+	ultimate_level = initialize_player_map(1)
+	cached_ultimate_level = initialize_player_map(undefined)
+	inst_ultimate = initialize_player_map(undefined)
 	random_set_seed(global.game_seed);
 }
 
@@ -114,13 +124,14 @@ function handle_enemy_killed(_enemy) {
 		return 
 	}
 	
+	var _player_id = _enemy.last_hit_by_player_id
 	release_answer(_enemy.answer);
-	increase_streak()
-	increase_combo()
+	increase_streak(_player_id)
+	increase_combo(_player_id)
 	
 	// streak is + 30% of base
 	var _streak_score = has_point_streak() ? floor(_enemy.point_value * 0.3) : 0;
-	var _combo_score = combo_count >= global.minimum_combo ? combo_count : 0
+	var _combo_score = combo_count[$ _player_id] >= global.minimum_combo ? combo_count[$ _player_id] : 0
 	
 	draw_point_indicators(_enemy.x, _enemy.y, _enemy.point_value, _streak_score, _combo_score)
 	
@@ -137,8 +148,8 @@ function handle_enemy_killed(_enemy) {
 	})
 	broadcast(EVENT_ENEMY_KILLED, _enemy)
 		
-	if (has_point_streak()) {
-		increase_ult_score()
+	if (has_point_streak(_player_id)) {
+		increase_ult_score(_player_id)
 	}
 }
 
@@ -168,8 +179,11 @@ function draw_point_indicators(_x, _y, _base, _streak, _combo) {
 
 
 /// @param {String} _code
+/// @param {String} _player_id
 /// @returns {Bool}
-function handle_submit_code(_code) {
+function handle_submit_code(_code, _player_id = undefined) {
+	_player_id = is_undefined(_player_id) ? get_my_steam_id_safe() : _player_id
+	
 	if (string_length(_code) == 0) {
 		return false;
 	}
@@ -178,106 +192,122 @@ function handle_submit_code(_code) {
 		return true
 	}
 
-	if (_code == global.ultimate_code && global.selected_ultimate != ULTIMATE_NONE) {
-		activate_ultimate()
+	if (_code == global.ultimate_code) {
+		activate_ultimate(_player_id)
 		return true
-	} else if (handle_submit_answer(_code)) {
+	} else if (handle_submit_answer(_code, _player_id)) {
 		// if this was a correct enemy answer
 		return true
 	} else {
 		// this was simply an inccorect submission, streak goes to 0
 		streak = 0
-		broadcast(EVENT_ON_OFF_STREAK, false)
-		broadcast(EVENT_WRONG_GUESS, _code)
+		broadcast(EVENT_ON_OFF_STREAK, 0, _player_id)
 		return false
 	}
 }
 
-function activate_ultimate() {
-	if (!has_ultimate() || is_scene_transitioning) {
+function activate_ultimate(_player_id) {
+	if (!has_ultimate(_player_id) || is_scene_transitioning) {
 		return
 	}
 	
-	ult_overlay = 1
-	var _ult_obj = global.selected_ultimate == ULTIMATE_STRIKE ? obj_ultimate_strike : (global.selected_ultimate == ULTIMATE_HEAL ? obj_heal_power : obj_slow_time)
-	inst_ultimate = instance_create_layer(x, y, LAYER_HUD, _ult_obj, {level: ultimate_level})
-	cached_ultimate_level = ultimate_level
+	var _ult_obj = global._G.ultimate_object_map[get_player_ultimate(_player_id)]
+	inst_ultimate[$ _player_id] = instance_create_layer(x, y, LAYER_HUD, _ult_obj, {level: ultimate_level[$ _player_id], owner_player_id: _player_id})
+	cached_ultimate_level[$ _player_id] = ultimate_level[$ _player_id]
 }
 
-
-function mark_ultimate_used() {
-	if (!is_undefined(inst_ultimate)) {
-		instance_destroy(inst_ultimate)
+/**
+ * @param {String} _player_id
+ */
+function mark_ultimate_used(_player_id) {
+	if (!is_undefined(inst_ultimate[$ _player_id])) {
+		instance_destroy(inst_ultimate[$ _player_id])
 	}
-	ultimate_charge = 0
-	inst_ultimate = undefined
-	cached_ultimate_level = undefined
+	ultimate_charge[$ _player_id] = 0
+	inst_ultimate[$ _player_id] = undefined
+	cached_ultimate_level[$ _player_id] = undefined
 }
 
-function get_ulting_level() {
-	return cached_ultimate_level
+/**
+ * @param {String} _player_id
+ * @returns {Real}
+ */
+function get_ulting_level(_player_id) {
+	return cached_ultimate_level[$ _player_id]
 }
 
-function is_ulting() {
-	if (is_undefined(inst_ultimate)) {
+/**
+ * @param {String} _player_id
+ * @returns {Bool}
+ */
+function is_ulting(_player_id) {
+	if (is_undefined(inst_ultimate[$ _player_id])) {
 		return false
 	}
-	if (instance_exists(inst_ultimate)) {
+	if (instance_exists(inst_ultimate[$ _player_id])) {
 		return true
 	}
-	mark_ultimate_used()
+	mark_ultimate_used(_player_id)
 	return false
 }
 
-function increase_streak() {
-	_had_sreak = self.has_point_streak()
-	streak++	
+/**
+ * @param {String} _player_id
+ */
+function increase_streak(_player_id) {
+	_had_sreak = has_point_streak(_player_id)
+	streak[$ _player_id]++	
 	
-	longest_streak = max(longest_streak, streak)
+	longest_streak[$ _player_id] = max(longest_streak[$ _player_id], streak[$ _player_id])
 	
 	if (!_had_sreak && self.has_point_streak()) {
-		broadcast(EVENT_ON_OFF_STREAK, true)
+		broadcast(EVENT_ON_OFF_STREAK, streak)
 	}
 }
 
-function increase_combo() {
+/**
+ * @param {String} _player_id
+ */
+function increase_combo(_player_id) {
 	// can only combo if you're on streak
-	if (!has_point_streak()) {
+	if (!has_point_streak(_player_id)) {
 		return
 	}
 	
-	combo_count++
+	combo_count[$ _player_id]++
+	// TODO: we need a different alarm per player
 	alarm[2] = combo_max_alarm
-	longest_combo = max(longest_combo, combo_count)
+	longest_combo[$ _player_id] = max(longest_combo[$ _player_id], combo_count[$ _player_id])
 }
 
-function increase_ult_score() {
-	// once we get on streak for the first time, we need to select an ultimate type
-	if (global.selected_ultimate == ULTIMATE_NONE) {
-		is_selecting_ult = true
-		instance_create_layer(x,y, LAYER_HUD, obj_select_ultimate)
-	} else if (!is_ulting()) {
+/**
+ * @param {String} _player_id
+ */ 
+function increase_ult_score(_player_id) {
+	if (!is_ulting(_player_id)) {
 		// if we're ulting then we don't count kills to our ult bar
-		if (ultimate_charge < global.ultimate_requirement) {
-			ultimate_charge++
+		if (ultimate_charge[$ _player_id] < global.ultimate_requirement) {
+			ultimate_charge[$ _player_id]++
 		} else {
-			ultimate_experience++
+			ultimate_experience[$ _player_id]++
 			
-			var _next_level_experience = get_experience_needed_for_next_level(ultimate_level)
-			if (ultimate_experience >= _next_level_experience) {
+			var _next_level_experience = get_experience_needed_for_next_level(ultimate_level[$ _player_id])
+			if (ultimate_experience[$ _player_id] >= _next_level_experience) {
 				// disabling level up mini game for now
 				// ultimate_level_up_controller = instance_create_layer(x, y, LAYER_HUD, global.is_math_mode ? obj_ult_upgrade_math : obj_ult_upgrade_typing)
-				increate_ult_level()
+				increate_ult_level(_player_id)
 			}
 		}
 	}
 }
 
-function increate_ult_level() {
-	ultimate_level_up_controller = undefined
-	ultimate_level++
-	ultimate_experience = 0
-	broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level)
+/**
+ * @param {String} _player_id
+ */ 
+function increate_ult_level(_player_id) {
+	ultimate_level[$ _player_id]++
+	ultimate_experience[$ _player_id] = 0
+	broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level[$ _player_id], _player_id)
 }
 
 // --------------------------------------------------------------------
@@ -307,14 +337,15 @@ function release_answer(_ans) {
 
 /// @func handle_submit_answer(_answer)
 /// @param {String} _answer
+/// @param {String} _player_id
 /// @return {Bool}
-function handle_submit_answer(_answer) {
+function handle_submit_answer(_answer, _player_id) {
 	if (!is_answer_active(_answer)) {
 		return false
 	}
 	
 	var _instance = active_answers[$ _answer];
-	get_player().fire_at_instance(_instance);
+	get_player().fire_at_instance(_instance, _player_id);
 	return true;
 }
 
@@ -334,12 +365,6 @@ function _handle_test_string(_code) {
 		return true;
 	}
 	
-	if (_code == "_test") {
-		var _next_level_experience = get_experience_needed_for_next_level(ultimate_level)
-		ultimate_experience = _next_level_experience	
-		ultimate_level_up_controller = instance_create_layer(x, y, LAYER_HUD, global.is_math_mode ? obj_ult_upgrade_math : obj_ult_upgrade_typing)
-		return true
-	}
 
 	if (_code == "_level") {
 		increase_ult_score()

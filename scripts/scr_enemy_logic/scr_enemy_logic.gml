@@ -10,6 +10,11 @@
 	function register_hit(_insta_kill=false) {} // report hit by player
 */
 
+/**
+ * @param {Id.Instance} _e
+ * @param {Real} _point_value
+ * @param {Bool} _skip_question_generation
+ */
 function enemy_initlaize(_e, _point_value, _skip_question_generation = false) {
 	with (_e) {
 		spawn_time = get_play_time()
@@ -18,6 +23,7 @@ function enemy_initlaize(_e, _point_value, _skip_question_generation = false) {
 		point_value = _point_value
 		slow_multiplier = 1
 		slow_sparks = undefined
+		last_hit_by_player_id = undefined
 		
 		subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
 			if (!is_undefined(slow_sparks)) {
@@ -31,8 +37,11 @@ function enemy_initlaize(_e, _point_value, _skip_question_generation = false) {
 	}
 }
 
+/**
+ * @param {Id.Instance} _e
+ */
 function enemy_handle_destroy(_e) {
-	get_game_controller().handle_enemy_killed(_e)
+	get_game_controller().handle_enemy_killed(_e, _e.last_hit_by_player_id)
 	with (_e) {
 		if (!is_undefined(slow_sparks)) {
 			destroy_particle(slow_sparks)
@@ -40,6 +49,9 @@ function enemy_handle_destroy(_e) {
 	}
 }
 
+/**
+ * @param {Id.Instance} _e
+ */
 function enemy_step(_e) {
 	/*
 	// do nothing, was going to set depth but it's behaving oddly
@@ -49,6 +61,9 @@ function enemy_step(_e) {
 	*/
 }
 
+/**
+ * @param {Id.Instance} _e
+ */
 function enemy_draw_equation(_e) {
 	with (_e) {
 		draw_set_font(fnt_large);
@@ -144,7 +159,7 @@ function enemy_generate_question(_e) {
 		}
 	}
 }
-		
+
 function enemy_strike_nearby_enemies(_enemy, _radius) {
 	for_each_enemy(function(_e, _index, _enemy, _radius) {
 		if (!instance_exists(_e) || !instance_exists(_enemy)) {
@@ -155,6 +170,7 @@ function enemy_strike_nearby_enemies(_enemy, _radius) {
 			return
 		}
 		if (point_distance(_e.x, _e.y, _enemy.x, _enemy.y) < _radius) {
+			_e.last_hit_by_player_id = _enemy.last_hit_by_player_id
 			_e.register_hit()
 			broadcast(EVENT_ENEMY_HIT, _e)
 		}

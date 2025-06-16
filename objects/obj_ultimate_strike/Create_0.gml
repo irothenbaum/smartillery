@@ -32,6 +32,7 @@ function strike_nearest_enemy() {
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_flash_screen, {duration: game_get_speed(gamespeed_fps) * 0.1})
 	
 	with(_target) {
+		_target.last_hit_by_player_id = other.owner_player_id
 		register_hit(true)
 		instance_create_layer(x, y, LAYER_INSTANCES, obj_ultimate_strike_explosion, {radius: 0})
 	}
@@ -44,3 +45,6 @@ function strike_nearest_enemy() {
 		alarm[1] = 3 * game_get_speed(gamespeed_fps)
 	}
 }
+
+ultimate_initialize(self)
+ult_type = ULTIMATE_STRIKE

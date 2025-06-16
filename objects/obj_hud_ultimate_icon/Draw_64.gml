@@ -1,7 +1,11 @@
-if (global.selected_ultimate != ULTIMATE_NONE && instance_exists(input) && !is_undefined(input.my_bounds)) {
+if (instance_exists(input) && !is_undefined(input.my_bounds)) {
+	// TODO: This needs to support multiple ultimate descriptions
+	var _player_id = [$ get_my_steam_id_safe()
+	var _selected_ultimate = global.selected_ultimate[$ _player_id]
+	
 	// draw ultimate box ----------------------------------------------
-	var _ultimate_color = global.ultimate_colors[$ global.selected_ultimate];
-	var _ultimate_tint = global.ultimate_color_tints[$ global.selected_ultimate];
+	var _ultimate_color = global.ultimate_colors[$ _selected_ultimate];
+	var _ultimate_tint = global.ultimate_color_tints[$ _selected_ultimate];
 	
 	var _xcenter = input.my_bounds.x1 + margin * 2 + half_sprite_size
 	var _ycenter = input.my_bounds.ycenter
@@ -9,9 +13,9 @@ if (global.selected_ultimate != ULTIMATE_NONE && instance_exists(input) && !is_u
 	var _circle_radius = half_sprite_size + margin / 2
 	
 	// draw the ultimate circle progress if we have any charge
-	if (game_controller.ultimate_charge > 0) {
-		drawn_ultimate = lerp(drawn_ultimate, game_controller.ultimate_charge / global.ultimate_requirement, global.fade_speed)
-		draw_set_composite_color(composite_color(_ultimate_color, game_controller.has_ultimate() ? 1 : 0.3))
+	if (game_controller.ultimate_charge[$ _player_id] > 0) {
+		drawn_ultimate = lerp(drawn_ultimate, game_controller.ultimate_charge[$ _player_id] / global.ultimate_requirement, global.fade_speed)
+		draw_set_composite_color(composite_color(_ultimate_color, game_controller.has_ultimate(_player_id) ? 1 : 0.3))
 		draw_circle_color(_xcenter, _ycenter, _circle_radius * drawn_ultimate, _ultimate_color, _ultimate_color, false)
 	}
 	
@@ -22,8 +26,8 @@ if (global.selected_ultimate != ULTIMATE_NONE && instance_exists(input) && !is_u
 	
 	// draw the experiece arc if we have any
 	if (game_controller.ultimate_experience > 0) {
-		var _next_amount = get_experience_needed_for_next_level(game_controller.ultimate_level)
-		drawn_ultimate_experience = lerp(drawn_ultimate_experience, game_controller.ultimate_experience / _next_amount, global.fade_speed)
+		var _next_amount = get_experience_needed_for_next_level(game_controller.ultimate_level[$ _player_id])
+		drawn_ultimate_experience = lerp(drawn_ultimate_experience, game_controller.ultimate_experience[$ _player_id] / _next_amount, global.fade_speed)
 		draw_arc(_xcenter, _ycenter, _circle_radius, 360 * drawn_ultimate_experience, 270, 8)
 	} else {
 		drawn_ultimate_experience = 0
@@ -42,7 +46,7 @@ if (global.selected_ultimate != ULTIMATE_NONE && instance_exists(input) && !is_u
 	draw_circle(_level_center.x, _level_center.y, 10, false)
 	reset_composite_color()
 	draw_set_font(fnt_small)
-	draw_text_with_alignment(_level_center.x, _level_center.y, string(game_controller.ultimate_level), ALIGN_CENTER)
+	draw_text_with_alignment(_level_center.x, _level_center.y, string(game_controller.ultimate_level[$ _player_id]), ALIGN_CENTER)
 	draw_set_font(fnt_base)
 	// ------------------------------------------------------------------
 	

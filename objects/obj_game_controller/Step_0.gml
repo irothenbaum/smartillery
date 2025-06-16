@@ -11,7 +11,3 @@ if (keyboard_check_pressed(vk_escape)) {
 		debug("Cannot pause during ult or selection or game over")
 	}
 }
-
-if (ult_overlay > 0) {
-	ult_overlay = lerp(ult_overlay, 0, global.fade_speed / 2)
-}

@@ -7,82 +7,87 @@ instance_id_map = {}
 // Event Sending
 event_buffer = []
 
-subscribe(EVENT_SCORE_CHANGED, function(_payload) {
-	array_push(event_buffer, {
-		event_name: NET_EVENT_SCORE_CHANGED,
-		unit_score: _payload.unit_score,
-		streak_score: _payload.streak_score,
-		combo_score: _payload.combo_score,
-		game_score: _payload.game_score,
-		player_steam_id: get_my_steam_id_safe()
-	})
-})
+var _both_player_channels = [global.my_steam_id, global.partner_steam_id]
 
-subscribe(EVENT_ENEMY_KILLED, function(_enemy) {
-	array_push(event_buffer, {
-		event_name: NET_EVENT_DESTROY_INSTANCE,
-		instance_id: _enemy.id
+if (is_host(global.my_steam_id)) {
+	subscribe(EVENT_SCORE_CHANGED, function(_payload) {
+		array_push(event_buffer, {
+			event_name: NET_EVENT_SCORE_CHANGED,
+			unit_score: _payload.unit_score,
+			streak_score: _payload.streak_score,
+			combo_score: _payload.combo_score,
+			game_score: _payload.game_score,
+			player_id: get_my_steam_id_safe()
+		})
 	})
-})
-// TODO: I think instead of new turret angle, the event should pass new Target_Instance or something
-// host and client and then treat it like a execute_hit_target
-subscribe(EVENT_NEW_TURRET_ANGLE, function(_payload) {
-	array_push(event_bufer, {
-		event_name: NET_EVENT_TURRET_ANGLE_CHANGED,
-		rotate_to: _payload.rotate_to,
-		rotate_speed: _payload.rotate_speed,
-	})
-})
 
+	subscribe(EVENT_ENEMY_KILLED, function(_enemy) {
+		array_push(event_buffer, {
+			event_name: NET_EVENT_DESTROY_INSTANCE,
+			instance_id: _enemy.id
+		})
+	})
+	
+	// TODO: I think instead of new turret angle, the event should pass new Target_Instance or something
+	// host and client can then treat it like a execute_hit_target
+	subscribe(EVENT_NEW_TURRET_ANGLE, function(_payload) {
+		array_push(event_bufer, {
+			event_name: NET_EVENT_TURRET_ANGLE_CHANGED,
+			rotate_to: _payload.rotate_to,
+			rotate_speed: _payload.rotate_speed,
+		})
+	})
+	
+	subscribe(EVENT_ON_OFF_STREAK, function(_streak_count) {
+		array_push(event_bufer, {
+			event_name: NET_EVENT_INPUT_CHANGED,
+			player_id: get_my_steam_id_safe(),
+			input: undefined,
+			streak_count: _streak_count,
+		}, _both_player_channels)
+	})
+
+	subscribe(EVENT_ENEMY_SPAWNED, function(_enemy) {
+		array_push(event_buffer, object_keys_copy({
+			event_name: NET_EVENT_CREATE_INSTANCE,
+			instance_id: _enemy.id,
+			instance_type: global.networking_obj_to_instance_type[$ _enemy.object_index],
+			x: _enemy.x,
+			y: _enemy.y,
+			equation: _enemy.equation,
+		}, instance_get_meta_state(_enemy)))
+	})
+
+	subscribe(EVENT_ENEMY_HIT, function(_enemy) {
+		array_push(event_buffer, {
+			event_name: NET_EVENT_ENEMY_HIT,
+			instance_id: _enemy.id,
+			player_id: _enemy.last_hit_by_player_id
+		})
+	}, _both_player_channels)
+	
+	// TODO: more event types to relay
+} else {
+	// Guest event handlers
+	subscribe(EVENT_SUBMIT_CODE, function(_code) {
+		array_push(event_buffer, {
+			event_name: NET_EVENT_SUBMIT_CODE,
+			code: _code,
+			player_id: get_my_steam_id_safe(),
+		})
+	})
+}
+
+// both host and partner trigger input changed events
 subscribe(EVENT_INPUT_CHANGED, function(_input) {
 	array_push(event_bufer, {
 		event_name: NET_EVENT_INPUT_CHANGED,
-		player_steam_id: get_my_steam_id_safe(),
+		player_id: get_my_steam_id_safe(),
 		input: _input,
-		is_on_streak: undefined,
+		streak_count: undefined,
 		is_wrong_guess: undefined,
 	})
 })
-
-subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
-	array_push(event_bufer, {
-		event_name: NET_EVENT_INPUT_CHANGED,
-		player_steam_id: get_my_steam_id_safe(),
-		input: undefined,
-		is_on_streak: _is_on_streak,
-		is_wrong_guess: undefined,
-	})
-})
-
-subscribe(EVENT_WRONG_GUESS, function(_is_wrong_guess) {
-	array_push(event_bufer, {
-		event_name: NET_EVENT_INPUT_CHANGED,
-		player_steam_id: get_my_steam_id_safe(),
-		input: undefined,
-		is_on_streak: undefined,
-		is_wrong_guess: _is_wrong_guess,
-	})
-})
-
-subscribe(EVENT_ENEMY_SPAWNED, function(_enemy) {
-	array_push(event_buffer, object_keys_copy({
-		event_name: NET_EVENT_CREATE_INSTANCE,
-		instance_id: _enemy.id,
-		instance_type: global.networking_obj_to_instance_type[$ _enemy.object_index],
-		x: _enemy.x,
-		y: _enemy.y,
-		equation: _enemy.equation,
-	}, instance_get_meta_state(_enemy)))
-})
-
-subscribe(EVENT_ENEMY_HIT, function(_enemy) {
-	array_push(event_buffer, {
-		event_name: NET_EVENT_ENEMY_HIT,
-		instance_id: _enemy.id,
-	})
-})
-
-// TODO: more event types to relay
 
 // ---------------------------------------------------------------------------------------------
 // Event Handling
@@ -107,17 +112,17 @@ function handle_game_start(_event) {
 
 function handle_input_changed(_event) { 
 	if (typeof(_event.is_on_streak) == "bool") {
-		broadcast(EVENT_ON_OFF_STREAK, _event.is_on_streak, _event.player_steam_id)
+		broadcast(EVENT_ON_OFF_STREAK, _event.is_on_streak, _event.player_id)
 	}
 	
 	if (typeof(_event.is_wrong_guess) == "bool") {
-		broadcast(EVENT_WRONG_GUESS, _event.is_wrong_guess, _event.player_steam_id)
+		broadcast(EVENT_WRONG_GUESS, _event.is_wrong_guess, _event.player_id)
 	}
 	
-	if (_event.player_steam_id == get_my_steam_id_safe()) {
+	if (_event.player_id == get_my_steam_id_safe()) {
 		// we don't set the message for ourselves, only the guest
 	} else {
-		var _input = get_input(_event.player_steam_id)
+		var _input = get_input(_event.player_id)
 		_input.message = _event.input
 	}
 }
@@ -146,7 +151,12 @@ function handle_enemy_hit(_event) {
 		return
 	}
 	
+	_enemy.last_hit_by_player_id = _event.player_id
 	_enemy.register_hit()
+}
+
+function handle_submit_code(_event) {
+	
 }
 
 
@@ -161,6 +171,7 @@ var _event_name_to_handler_map = {
 	NET_EVENT_TURRET_ANGLE_CHANGED: handle_turret_angle_changed,
 	NET_EVENT_INPUT_CHANGED: handle_input_changed,
 	NET_EVENT_ENEMY_HIT: handle_enemy_hit,
+	NET_EVENT_SUBMIT_CODE: handle_submit_code,
 	// TODO: more events to handle
 }
 

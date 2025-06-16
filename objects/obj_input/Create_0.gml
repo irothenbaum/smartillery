@@ -1,10 +1,10 @@
 message = "";
 
-is_controlled = owner_steam_id == global.my_steam_id
-streak_color = get_player_color(owner_steam_id)
+is_controlled = owner_player_id == global.my_steam_id
+streak_color = get_player_color(owner_player_id)
 
 y = 40
-initial_x = global.xcenter - (!global.is_coop ? 0 : (is_host(owner_steam_id) ? global.multiplayer_input_shift_off_center : -1 * global.multiplayer_input_shift_off_center))
+initial_x = global.xcenter - (!global.is_coop ? 0 : (is_host(owner_player_id) ? global.multiplayer_input_shift_off_center : -1 * global.multiplayer_input_shift_off_center))
 x = initial_x
 render_x = x
 
@@ -18,10 +18,10 @@ total_shake_time = 500
 // how many shakes we do
 total_shakes = 3
 shake_magnitude = 10
-wrong_guess = ""
+last_guess = ""
 
-if (is_undefined(owner_steam_id) || owner_steam_id == 0) {
-	owner_steam_id = get_my_steam_id_safe()
+if (is_undefined(owner_player_id) || owner_player_id == 0) {
+	owner_player_id = get_my_steam_id_safe()
 }
 
 my_bounds = undefined
@@ -41,20 +41,13 @@ subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
 	}
 })
 
-// vibrate on wrong guess
-subscribe(EVENT_WRONG_GUESS, function(_guess) {
-	shake_start = get_play_time()
-	wrong_guess = _guess
-	alarm[0] = game_get_speed(gamespeed_fps) * total_shake_time / 1000
-}, owner_steam_id)
-
 subscribe(EVENT_GAME_OVER, function() {
 	// effectively destroy the particle system
-	broadcast(EVENT_ON_OFF_STREAK, false, owner_steam_id)
+	broadcast(EVENT_ON_OFF_STREAK, false, owner_player_id)
 })
 
-subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
-	if (_is_on_streak) {
+subscribe(EVENT_ON_OFF_STREAK, function(_streak_count) {
+	if (_streak_count > 0) {
 		streak_fire = draw_muzzle_smoke(x, y, global.p1_color)
 		size_streak_fire()
 	} else {	
@@ -64,4 +57,4 @@ subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
 		destroy_particle(streak_fire.system)
 		streak_fire = undefined
 	}
-}, owner_steam_id)
+}, owner_player_id)

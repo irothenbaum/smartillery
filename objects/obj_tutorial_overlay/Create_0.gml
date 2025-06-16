@@ -74,7 +74,7 @@ function draw_ultimate_level_details(_ult_bounds) {
 	var _next_level_stats = get_ultimate_stats(game_controller.ultimate_level + 1)
 	
 	draw_set_font(fnt_large)
-	var _new_bounds = draw_text_with_alignment(_details_center.x, _details_center.y, string_concat(global.ultimate_descriptions[$ global.selected_ultimate].title, " -- lvl ", game_controller.ultimate_level), ALIGN_CENTER)
+	var _new_bounds = draw_text_with_alignment(_details_center.x, _details_center.y, string_concat(global.ultimate_descriptions[$ get_player_ultimate(get_my_steam_id_safe())].title, " -- lvl ", game_controller.ultimate_level), ALIGN_CENTER)
 	draw_set_font(fnt_base)
 	_new_bounds = draw_text_with_alignment(_new_bounds.x0, _new_bounds.y1 + 20, _this_level_stats, ALIGN_LEFT)
 	
@@ -83,10 +83,15 @@ function draw_ultimate_level_details(_ult_bounds) {
 	draw_text_with_alignment(_new_bounds.x0, _new_bounds.y1 + 50, string_concat("Next Level:\n", _next_level_stats), ALIGN_LEFT)
 }
 
-function get_ultimate_stats(_level) {
+/**
+ * @param {String} _ultimate
+ * @param {Real} _level
+ */
+function get_ultimate_stats(_ultimate, _level) {
 	var _stats = []
 	var _frames_to_seconds = game_get_speed(gamespeed_fps)
-	switch (global.selected_ultimate) {
+	// TODO: More ultimate types
+	switch (_ultimate) {
 		case ULTIMATE_HEAL:
 			array_push(_stats, string_concat("Duration: ", round((ult_heal_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
 			array_push(_stats, string_concat("+", ult_heal_get_leech_amount(_level), " health per kill"))

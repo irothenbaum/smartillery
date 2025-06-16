@@ -3,10 +3,11 @@ CHECK THE obj_network_controller Create event for TODOs - that's the most recent
 
 - Add glitter effect to background
 - Multiplayer
-    - Create "guest" game controller to parody host actions received in network_controller
+  
 	- I think any call to instance_create_layer should trigger a new INSTANCE_CREATED event. 
-	     - This is how enemy spawn events currently work so that could be refactored out.
+	    - This is how enemy spawn events currently work so that could be refactored out.
 	- obj_player needs to determine whose streak color to use when drawing its barrel and muzzle flash
+	    - Need to pass the player who shot's ID around. I started this process, but need to follow through
 	- Need to finalize the Join / Host UX so lobby can be created
 	- just about ready to start testing I guess? Need to run gamemaker (and steam under a 2nd account) on a 2nd comp
 - A Multiplayer-only enemy that shows its equation only to one player. 

@@ -99,7 +99,7 @@ function build_solution_from_keyboard_input(_input, _blocks) {
  * @param {number} _y -- y position
  * @param {Array<string>} _block -- the block content
  * @param {Array<string>} _styles -- the block styles
- * @param {boolean} _is_focused
+ * @param {Bool} _is_focused
  */
 function draw_word_blocks(_x, _y, _block, _styles, _is_focused) {
 	debug("DRAWING WORD BLOCK", _block, _styles, _is_focused)

@@ -52,7 +52,7 @@ global.ultimate_icons = {
 }
 
 // in-game configurable
-global.selected_ultimate = ULTIMATE_NONE;
+global.selected_ultimate = {};
 global.body_color = c_white;
 global.turret_color = c_white;
 global.is_math_mode = true
