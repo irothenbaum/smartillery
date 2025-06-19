@@ -30,6 +30,7 @@ function steam_image_create_sprite(_img) {
 }
 
 #macro NON_STEAM_PLAYER 999.0001
+#macro NON_STEAM_PLAYER_PARTNER 999.0002
 
 /**
  * @returns {Real}
@@ -41,6 +42,13 @@ function get_my_steam_id_safe() {
 		global.my_steam_id = NON_STEAM_PLAYER
 	}
 	return global.my_steam_id
+}
+
+function get_partner_steam_id_safe() {
+	if (is_undefined(global.partner_steam_id)) {
+		return NON_STEAM_PLAYER_PARTNER
+	}
+	return global.partner_steam_id
 }
 
 /**
@@ -66,5 +74,13 @@ function get_my_color() {
  * @returns {Bool}
  */
 function is_host(_player_id) {
-	return _player_id == NON_STEAM_PLAYER || _player_id == global.host_id
+	return _player_id == NON_STEAM_PLAYER || _player_id == global.host_steam_id
+}
+
+/**
+ * @param {Real} _player_id
+ * @returns {Bool}
+ */
+function is_guest(_player_id) {
+	return !is_host(_player_id)
 }

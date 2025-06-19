@@ -51,6 +51,17 @@ function has_ultimate(_player_id) {
 	return !is_ulting(_player_id) && ultimate_charge[$ _player_id] >= global.ultimate_requirement
 }
 
+/**
+ * @param {String} _ultimate_type
+ * @returns {Boolean}
+ */
+function is_ult_active(_ultimate_type) {
+	return instance_number(global._G.ultimate_object_map[$ _ultimate_type]) > 0
+}
+
+/**
+ * @returns {undefined}
+ */
 function mark_wave_completed() {
 	if (!is_undefined(enemy_controller)) {	
 		instance_destroy(enemy_controller)
@@ -70,6 +81,9 @@ function mark_wave_completed() {
 	return _controller
 }
 
+/**
+ * @returns {undefined}
+ */
 function end_game() {
 	function explode_enemy(_e, _index) {
 		with (_e) {
@@ -95,6 +109,9 @@ function end_game() {
 	var _game_over_message = instance_create_layer(x, y, LAYER_HUD, obj_game_over)
 }
 
+/**
+ * @returns {undefined}
+ */
 function reset_starting_values() {
 	// TODO: we should track each of these score items per player as well (or maybe just the total?)
 	combo_score = 0
@@ -153,7 +170,9 @@ function handle_enemy_killed(_enemy) {
 	}
 }
 
-
+/**
+ * @returns {undefined}
+ */
 function draw_point_indicators(_x, _y, _base, _streak, _combo) {
 	instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
 		amount: _base,
@@ -206,6 +225,9 @@ function handle_submit_code(_code, _player_id = undefined) {
 	}
 }
 
+/**
+ * @returns {undefined}
+ */
 function activate_ultimate(_player_id) {
 	if (!has_ultimate(_player_id) || is_scene_transitioning) {
 		return
@@ -237,16 +259,24 @@ function get_ulting_level(_player_id) {
 }
 
 /**
- * @param {String} _player_id
+ * @param {String?} _player_id
  * @returns {Bool}
  */
 function is_ulting(_player_id) {
+	
+	// if player id is not provided, check both* players
+	if (is_undefined(_player_id)) {
+		return is_ulting(get_my_steam_id_safe()) || (global.is_coop && is_ulting(get_partner_steam_id_safe()))
+	}
+	
 	if (is_undefined(inst_ultimate[$ _player_id])) {
 		return false
 	}
 	if (instance_exists(inst_ultimate[$ _player_id])) {
 		return true
 	}
+	
+	// this is an edge case, basically means our references are out of sync so we take this moment to update 
 	mark_ultimate_used(_player_id)
 	return false
 }

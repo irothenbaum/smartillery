@@ -35,7 +35,7 @@ function get_input(_player_id) {
 	}
 	
 	var _input = find_instance(obj_input, function (_inst, _i, _total) {
-		return _inst.owner_player_id == global.my_steam_id
+		return _inst.owner_player_id == get_my_steam_id_safe()
 	})
 	
 	if (is_undefined(_input)) {
@@ -348,7 +348,7 @@ function initialize_player_map(_val) {
 	_ret_val[$ get_my_steam_id_safe()] = _val
 	
 	if (global.is_coop) {
-		_ret_val[$ global.partner_steam_id] = _val
+		_ret_val[$ get_partner_steam_id_safe()] = _val
 	}
 	
 	return _ret_val

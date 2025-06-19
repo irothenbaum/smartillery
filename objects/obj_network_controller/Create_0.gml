@@ -7,9 +7,9 @@ instance_id_map = {}
 // Event Sending
 event_buffer = []
 
-var _both_player_channels = [global.my_steam_id, global.partner_steam_id]
+var _both_player_channels = [get_my_steam_id_safe(), get_partner_steam_id_safe()]
 
-if (is_host(global.my_steam_id)) {
+if (is_host(get_my_steam_id_safe())) {
 	subscribe(EVENT_SCORE_CHANGED, function(_payload) {
 		array_push(event_buffer, {
 			event_name: NET_EVENT_SCORE_CHANGED,

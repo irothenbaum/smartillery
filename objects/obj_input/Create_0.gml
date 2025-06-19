@@ -1,6 +1,6 @@
 message = "";
 
-is_controlled = owner_player_id == global.my_steam_id
+is_controlled = owner_player_id == get_my_steam_id_safe()
 streak_color = get_player_color(owner_player_id)
 
 y = 40

@@ -7,5 +7,5 @@ if (global.is_host) {
 	instance_create_layer(x, y, LAYER_CONTROLLERS, obj_guest_game_controller)
 }
 
-instance_create_layer(x, y, LAYER_INSTANCES, obj_input, {owner_player_id: global.my_steam_id})
-instance_create_layer(x, y, LAYER_INSTANCES, obj_input, {owner_player_id: global.partner_steam_id})
+instance_create_layer(x, y, LAYER_INSTANCES, obj_input, {owner_player_id: get_my_steam_id_safe()})
+instance_create_layer(x, y, LAYER_INSTANCES, obj_input, {owner_player_id: get_partner_steam_id_safe()})

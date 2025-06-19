@@ -15,7 +15,11 @@ pos_wave = {
 
 game_controller = get_game_controller()
 
-instance_create_layer(x, y, LAYER_HUD, obj_hud_ultimate_icon)
+instance_create_layer(x, y, LAYER_HUD, obj_hud_ultimate_icon, {owner_player_id: get_my_steam_id_safe()})
+
+if (global.is_coop) {
+	instance_create_layer(x, y, LAYER_HUD, obj_hud_ultimate_icon, {owner_player_id: get_partner_steam_id_safe()})
+}
 
 function draw_text_obj(_obj, _text) {
 	draw_set_font(fnt_large)

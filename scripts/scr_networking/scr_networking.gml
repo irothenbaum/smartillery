@@ -161,11 +161,11 @@ function send_event_to(_event, _peer_steam_id) {
 }
 
 function send_event(_event) {
-	return send_event_to(_event, global.partner_steam_id)
+	return send_event_to(_event, get_partner_steam_id_safe())
 }
 
 function send_events(_events) {
-	return send_events_to(_events, global.partner_steam_id)
+	return send_events_to(_events, get_partner_steam_id_safe())
 }
 
 // --------------------------------------------------------------------------------------
