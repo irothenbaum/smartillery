@@ -29,7 +29,7 @@ streak_fire = undefined
 function rotate_towards_next_target() {
 	if (array_length(aiming_at_instance) > 0) {
 		rotate_speed = rotate_aim_speed;
-		var _target = aiming_at_instance[0] 
+		var _target = aiming_at_instance[0].inst 
 		rotate_to = point_direction(x, y, _target.x, _target.y)
 		
 		broadcast(EVENT_NEW_TURRET_ANGLE, {
@@ -67,7 +67,7 @@ function execute_hit_target() {
 	
 	var _target_entry = array_shift(aiming_at_instance)
 	var _target = _target_entry.inst
-	var _player_who_shot_id = _target_entry.player-id
+	var _player_who_shot_id = _target_entry.player_id
 	
 	// Muzzle Flash
 	var _muzzle = get_turret_muzzle()

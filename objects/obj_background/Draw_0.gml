@@ -28,7 +28,7 @@ for(var _i = 0; _i < global.bg_number_of_circles; _i++) {
 	draw_set_circle_precision((global.bg_number_of_circles - _i) * 2 + 32)
 	var _this_radius = get_radius_at_i(_i)
 	draw_circle_color(x, y, _this_radius, _color, _color, false)
-	draw_set_composite_color(composite_color(grid_color, drawn_ring_line_alpha[_i]))
+	draw_set_composite_color(new CompositeColor(grid_color, drawn_ring_line_alpha[_i]))
 	draw_circle(x,y, _this_radius, true)
 	reset_composite_color()
 }

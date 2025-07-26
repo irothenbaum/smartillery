@@ -78,7 +78,7 @@ function mark_wave_completed() {
 	alarm[0] = 1 * game_get_speed(gamespeed_fps)
 	alarm[1] = (global.scene_transition_duration * 0.6) * game_get_speed(gamespeed_fps)
 	
-	return _controller
+	return enemy_controller
 }
 
 /**
@@ -131,6 +131,7 @@ function reset_starting_values() {
 	inst_ultimate = initialize_player_map(undefined)
 	random_set_seed(global.game_seed);
 }
+reset_starting_values()
 
 /// @func handle_enemy_killed(_enemy)
 /// @param {Id.Instance} _enemy
@@ -143,6 +144,12 @@ function handle_enemy_killed(_enemy) {
 	
 	var _player_id = _enemy.last_hit_by_player_id
 	release_answer(_enemy.answer);
+	
+	// if the player didn't hit them (they hit the player most likely)
+	if (is_undefined(_player_id)) {
+		return
+	}
+	
 	increase_streak(_player_id)
 	increase_combo(_player_id)
 	
@@ -219,7 +226,7 @@ function handle_submit_code(_code, _player_id = undefined) {
 		return true
 	} else {
 		// this was simply an inccorect submission, streak goes to 0
-		streak = 0
+		streak[$ _player_id] = 0
 		broadcast(EVENT_ON_OFF_STREAK, 0, _player_id)
 		return false
 	}
@@ -285,13 +292,13 @@ function is_ulting(_player_id) {
  * @param {String} _player_id
  */
 function increase_streak(_player_id) {
-	_had_sreak = has_point_streak(_player_id)
+	var _had_sreak = has_point_streak(_player_id)
 	streak[$ _player_id]++	
 	
 	longest_streak[$ _player_id] = max(longest_streak[$ _player_id], streak[$ _player_id])
 	
-	if (!_had_sreak && self.has_point_streak()) {
-		broadcast(EVENT_ON_OFF_STREAK, streak)
+	if (!_had_sreak && has_point_streak(_player_id)) {
+		broadcast(EVENT_ON_OFF_STREAK, streak[$ _player_id], _player_id)
 	}
 }
 

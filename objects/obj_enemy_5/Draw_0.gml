@@ -1,9 +1,19 @@
 /// @description Draw the enemy object(s)
 
 var _is_dying = alarm[0] > 0
-var _is_flickering = alarm[0] > death_duration / 2
+var _is_flickering = alarm[0] > (death_duration / 2)
 // we take n seconds to die. The first half of that time is spent flickering, then fading out
-var _alpha = _is_flickering ? (get_play_time() % 200 < 100 ? 1 : 0) : _is_dying ? alarm[0] / (death_duration / 2) : 1
+var _alpha = _is_flickering 
+	? (
+		(get_play_time() % 200) < 100 
+			? 1 
+			: 0
+	)
+	: (
+		_is_dying 
+			? (alarm[0] / (death_duration / 2))
+			: 1
+	)
 
 var _comp_color =new CompositeColor(c_white, _alpha)
 

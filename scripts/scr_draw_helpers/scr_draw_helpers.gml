@@ -14,7 +14,7 @@ function CompositeColor(_color, _opacity) constructor {
  * @param {Real} _y1
  * @param {Real} _progress -- [0,1]
  * @param {Struct.CompositeColor} _color
- * @returns {Struct.FormattedBounds}
+ * @returns {Struct.Bounds}
  */
 function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_color) {
 	draw_set_composite_color(_background_color)
@@ -24,12 +24,7 @@ function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_colo
 	draw_rectangle(_x, _y, _x + (min(max(0,_progress), 1) * _x_diff), _y1, false)
 	reset_composite_color()
 	
-	return new FormattedBounds({
-		x0: _x,
-		y0: _y,
-		x1: _x1,
-		y1: _y1,
-	})
+	return new Bounds(_x, _y, _x1, _y1)
 }
 
 /**
@@ -50,9 +45,9 @@ function draw_info_modal(_bounds, _step) {
 		)
 	}
 	
-	draw_set_composite_color(composite_color(c_white, 1))
+	draw_set_composite_color(new CompositeColor(c_white, 1))
 	draw_rectangle(_with_padding.x0, _with_padding.y0, _with_padding.x1, _with_padding.y1, true)
-	draw_set_composite_color(composite_color(c_black, 0.3))
+	draw_set_composite_color(new CompositeColor(c_black, 0.3))
 	draw_rectangle(_with_padding.x0, _with_padding.y0, _with_padding.x1, _with_padding.y1, false)
 }
 
@@ -60,7 +55,7 @@ function draw_info_modal(_bounds, _step) {
  * @param {Struct.Bounds} _bounds
  * @param {Real} _width
  * @param {Real} _height
- * @returns {Struct.FormattedBounds}
+ * @returns {Struct.Bounds}
  */
 function center_bounds_in_frame(_bounds, _width = 0, _height = 0) {
 	if (_width == 0) {
@@ -83,7 +78,7 @@ function center_bounds_in_frame(_bounds, _width = 0, _height = 0) {
 	_new_bounds.x1 = _new_bounds.x0 + _bounds.width
 	_new_bounds.y1 = _new_bounds.y0 + _bounds.height
 	
-	return new FormattedBounds(_new_bounds)
+	return new Bounds(_new_bounds.x0, _new_bounds.y0, _new_bounds.x1, _new_bounds.y1)
 }
 
 /**
@@ -92,7 +87,7 @@ function center_bounds_in_frame(_bounds, _width = 0, _height = 0) {
  * @param {String} _text
  * @param {String} _align
  * @param {Real} _line_height
- * @returns {Struct.FormattedBounds}
+ * @returns {Struct.Bounds}
  */
 
 function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_height = 1.1) {	
@@ -147,7 +142,7 @@ function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_heig
 		_final_bounds.y1 = max(_final_bounds.y1, _line_bounds.y1)
 	}
 	
-	return new FormattedBounds(_final_bounds)
+	return new Bounds(_final_bounds.x0, _final_bounds.y0, _final_bounds.x1, _final_bounds.y1)
 }
 
 /**
@@ -165,17 +160,18 @@ function draw_overlay(_alpha  = 0.5) {
  * @param {Struct.Bounds} _bounds
  * @param {Real} _radius
  * @param {Real} _thickness
+ * @returns {Struct.Bounds}
  */
 function draw_rounded_rectangle(_bounds, _radius, _thickness = 1) {
 	var _content_area = new Bounds(
 		_bounds.x0 + _radius,
-		_bounds.x1 - _radius,
 		_bounds.y0 + _radius,
+		_bounds.x1 - _radius,
 		_bounds.y1 - _radius
 	)
 	
 	draw_line_width(_content_area.x0, _bounds.y0, _content_area.x1, _bounds.y0, _thickness)
-	draw_arc(_content_area.x1, _bounds.y0, _radius, 90, 0, _thickness)
+	draw_arc(_content_area.x1, _content_area.y0, _radius, 90, 0, _thickness)
 	draw_line_width(_bounds.x1, _content_area.y0, _bounds.x1, _content_area.y1, _thickness)
 	draw_arc(_content_area.x1, _content_area.y1, _radius, 90, 270, _thickness)
 	draw_line_width(_content_area.x0, _bounds.y1, _content_area.x1, _bounds.y1, _thickness)
@@ -183,7 +179,7 @@ function draw_rounded_rectangle(_bounds, _radius, _thickness = 1) {
 	draw_line_width(_bounds.x0, _content_area.y0,_bounds.x0, _content_area.y1, _thickness)
 	draw_arc(_content_area.x0, _content_area.y0, _radius, 90, 90, _thickness)
 	
-	return new FormattedBounds(_bounds)
+	return new Bounds(_bounds.x0, _bounds.y0, _bounds.x1, _bounds.y1)
 }
 
 /**
@@ -219,14 +215,13 @@ function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1) {
 }
 
 /**
- * @param {Struct.Bounds} _bounds
+ * @param {Struct.Bounds} _rectangle_bounds
  * @param {Real} _ratio
  * @param {String} _align
+ * @returns {Struct.Bounds}
  */
-function draw_input_box_with_progress(_bounds, _ratio, _align) {
+function draw_input_box_with_progress(_rectangle_bounds, _ratio, _align) {
 	_ratio = max(0, min(_ratio, 1))
-	var _rectangle_bounds = new FormattedBounds(_bounds)
-
 	var _final_bounds = draw_rounded_rectangle(_rectangle_bounds, 8, 3)
 
 	draw_set_alpha(0.15)
@@ -252,7 +247,7 @@ function draw_input_box_with_progress(_bounds, _ratio, _align) {
 
 	reset_composite_color()
 	
-	return new FormattedBounds(_final_bounds)
+	return new Bounds(_final_bounds.x0, _final_bounds.y0, _final_bounds.x1, _final_bounds.y1)
 }
 
 /**

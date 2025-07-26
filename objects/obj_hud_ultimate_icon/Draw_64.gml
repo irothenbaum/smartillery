@@ -22,7 +22,7 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	// draw the ultimate circle progress if we have any charge
 	if (game_controller.ultimate_charge[$ owner_player_id] > 0) {
 		drawn_ultimate = lerp(drawn_ultimate, game_controller.ultimate_charge[$ owner_player_id] / global.ultimate_requirement, global.fade_speed)
-		draw_set_composite_color(composite_color(_ultimate_color, game_controller.has_ultimate(owner_player_id) ? 1 : 0.3))
+		draw_set_composite_color(new CompositeColor(_ultimate_color, game_controller.has_ultimate(owner_player_id) ? 1 : 0.3))
 		draw_circle_color(_xcenter, _ycenter, _circle_radius * drawn_ultimate, _ultimate_color, _ultimate_color, false)
 	}
 	
@@ -41,7 +41,7 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	}
 	
 	// draw the sprite on top
-	var _ult_sprite = global.ultimate_icons[$ global.selected_ultimate]
+	var _ult_sprite = global.ultimate_icons[$ ULTIMATE_STRIKE]
 	draw_sprite_ext(_ult_sprite, 0, _xcenter, _ycenter, icon_scale, icon_scale, 0, c_white, 1)
 	
 	// last we draw the level
@@ -57,10 +57,5 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	draw_set_font(fnt_base)
 	// ------------------------------------------------------------------
 	
-	my_bounds = new FormattedBounds({
-		x0: _xcenter - _circle_radius,
-		y0: _ycenter - _circle_radius,
-		x1: _xcenter + _circle_radius,
-		y1: _ycenter + _circle_radius,
-	})
+	my_bounds = new Bounds(_xcenter - _circle_radius,_ycenter - _circle_radius, _xcenter + _circle_radius, _ycenter + _circle_radius )
 }

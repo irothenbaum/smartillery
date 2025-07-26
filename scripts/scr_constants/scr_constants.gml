@@ -86,12 +86,12 @@ global.operations_order = ["+", "-", "x", "/", "^", "^"]
 global.max_math_difficulty = array_length(global.operations_order)
 global.min_word_length = 4
 global.max_word_length = 11
-global.directional_hint_bounds = new FormattedBounds({
-	x0: 40,
-	y0: 40,
-	x1: global.room_width - 40,
-	y1: global.room_height - 40
-})
+global.directional_hint_bounds = new Bounds(
+	40,
+	40,
+	global.room_width - 40,
+	global.room_height - 40
+)
 
 // enemy damage & points
 global.damage_enemy_1_collision = 30

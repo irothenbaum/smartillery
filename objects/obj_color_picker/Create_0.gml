@@ -5,11 +5,11 @@ box_size = 40
 margin = 10
 stroke_width = 4
 
-bounds = new FormattedBounds({x0: x, x1: x + (color_count * (box_size + margin)) - margin, y0: y, y1: y + box_size})
+bounds = new Bounds(x, x + (color_count * (box_size + margin)) - margin, y, y + box_size)
 // a hacky way to shift to center
 x = bounds.xcenter - bounds.width;
 y = bounds.ycenter - bounds.height;
-bounds = new FormattedBounds({x0: x, x1: x + (color_count * (box_size + margin)) - margin, y0: y, y1: y + box_size})
+bounds = new Bounds(x, x + (color_count * (box_size + margin)) - margin, y, y + box_size)
 // ---------------------------------
 
 // TODO: somehow selected via the menu

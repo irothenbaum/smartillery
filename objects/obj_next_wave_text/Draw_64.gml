@@ -11,7 +11,7 @@ if (fade_out) {
 	image_alpha = lerp(1, image_alpha, global.fade_speed)
 }
 
-draw_set_composite_color(composite_color(c_white, image_alpha))
+draw_set_composite_color(new CompositeColor(c_white, image_alpha))
 draw_set_font(fnt_title)
 var _bounds = draw_text_with_alignment(x, y, "Beginning Wave #" + string(get_current_wave_number()), ALIGN_CENTER)
 
@@ -26,7 +26,7 @@ if (global.is_math_mode) {
 	draw_text_with_alignment(_bounds.x0, _bounds.y1 + 10, "Operations: " + array_reduce(_copy, function(_aggr, _o) {
 		return _aggr + " " + _o 
 	}, ""), ALIGN_LEFT)
-	draw_text_with_alignment(_bounds.x1, _bounds.y1 + 10, "Max: " + string(math_determine_max_from_wave(get_current_wave_number())), ALIGN_RIGHT)
+	draw_text_with_alignment(_bounds.x1, _bounds.y1 + 10, "Max: " + string(math_determine_max_from_wave(_current_wave)), ALIGN_RIGHT)
 			
 	if (_current_wave % global.wave_difficulty_step == 0) {
 		var _new_operation_index = min(_number_of_operations-1, _wave_over_step)

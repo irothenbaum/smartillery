@@ -2,7 +2,7 @@ x = global.xcenter
 y = global.ycenter
 
 function start_game() {
-	room_goto(rm_waves)
+	room_goto(rm_play_solo)
 }
 
 function change_game_mode(_t) {

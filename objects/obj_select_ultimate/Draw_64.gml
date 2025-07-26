@@ -25,7 +25,7 @@ for (var _i = 0; _i < array_length(_keys); _i++) {
 	
 	_b.x1 = _b.x0 + square_size
 	_b.y1 = _b.y0 + square_size
-	var _bounds = new FormattedBounds(_b)
+	var _bounds = new Bounds(_b.x0,_b.y0, _b.x1, _b.y1)
 		
 	draw_sprite_ext(_spr, 0, _bounds.xcenter, _bounds.ycenter, _draw_scale, _draw_scale, 0 , c_white, 1)
 	

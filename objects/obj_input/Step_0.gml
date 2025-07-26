@@ -31,7 +31,7 @@ if (is_controlled) {
 	// do nothing, our string is modified by events
 }
 
-streak_ratio = min(get_game_controller().streak / global.point_streak_requirement, 1)
+streak_ratio = min(get_game_controller().streak[$ owner_player_id] / global.point_streak_requirement, 1)
 
 // if we're shaking
 if (!is_undefined(shake_start)) {

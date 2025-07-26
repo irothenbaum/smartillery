@@ -41,7 +41,7 @@ function enemy_initlaize(_e, _point_value, _skip_question_generation = false) {
  * @param {Id.Instance} _e
  */
 function enemy_handle_destroy(_e) {
-	get_game_controller().handle_enemy_killed(_e, _e.last_hit_by_player_id)
+	get_game_controller().handle_enemy_killed(_e)
 	with (_e) {
 		if (!is_undefined(slow_sparks)) {
 			destroy_particle(slow_sparks)
@@ -75,12 +75,12 @@ function enemy_draw_equation(_e) {
 		var _offset_y = (y > global.ycenter ? -1 : 1) * (25 + _string_height)
 		
 		// this logic is going to draw the equation within the game bounds even if the enemy us out of screen
-		var _string_directional_bounds = new FormattedBounds({
-			x0: global.directional_hint_bounds.x0 + _string_width / 2,
-			y0: global.directional_hint_bounds.y0 + _string_height / 2,
-			x1: global.directional_hint_bounds.x1 - _string_width / 2,
-			y1: global.directional_hint_bounds.y1 - _string_height / 2
-		})
+		var _string_directional_bounds = new Bounds(
+			global.directional_hint_bounds.x0 + _string_width / 2,
+			global.directional_hint_bounds.y0 + _string_height / 2,
+			global.directional_hint_bounds.x1 - _string_width / 2,
+			global.directional_hint_bounds.y1 - _string_height / 2
+		)
 		
 		var _target_position = {
 			x: x,

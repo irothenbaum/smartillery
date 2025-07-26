@@ -16,7 +16,7 @@ function debug() {
 }
 
 function get_game_controller() {
-	if (global.is_single_player || global.is_host) {
+	if (global.is_solo || global.is_host) {
 		return instance_find(obj_game_controller, 0)
 	} else {
 		return instance_find(obj_guest_game_controller, 0)
@@ -223,7 +223,7 @@ function color_to_array() {
 	}
 
 	// Convert hex to RGB
-	for( var _i = 0; _i < 3; ++i){
+	for( var _i = 0; _i < 3; ++_i){
 		_ret[_i] = _hex[_i * 2 + 1] * 16 + _hex[_i * 2];
 		_ret[_i] /= 255; // Change from 255 to float
 	}
@@ -242,12 +242,6 @@ function Bounds(_x0, _y0, _x1, _y1) constructor {
 	y0 = _y0
 	x1 = _x1
 	y1 = _y1
-}
-
-/**
- * @param {Struct.Bounds} _bounds
- */
-function FormattedBounds(_bounds) : Bounds(_bounds.x0, _bounds.y0, _bounds.x1, _bounds.y1) constructor {
 	width = x1 - x0
 	height = y1 - y0
 	xcenter = x0 + width / 2
@@ -255,7 +249,7 @@ function FormattedBounds(_bounds) : Bounds(_bounds.x0, _bounds.y0, _bounds.x1, _
 }
 
 function _apply_padding_to_bounds(_bounds, _vertical, _horizontal) {
-	return new FormattedBounds(new Bounds(_bounds.x0 - _horizontal,_bounds.y0 - _vertical,_bounds.x1 + _horizontal,_bounds.y1 + _vertical))
+	return new Bounds(_bounds.x0 - _horizontal,_bounds.y0 - _vertical,_bounds.x1 + _horizontal,_bounds.y1 + _vertical)
 }
 
 function get_max_bounds(_bounds_array) {
@@ -276,7 +270,7 @@ function get_max_bounds(_bounds_array) {
 		_ret_val.y1 = max(_ret_val.y1, _these_bounds.y1)
 	}
 	
-	return new FormattedBounds(_ret_val)
+	return new Bounds(_ret_val.x0, _ret_val.y0, _ret_val.x1, _ret_val.y1)
 }
 
 /// @return {number} -- will return 1 or -1, or 0

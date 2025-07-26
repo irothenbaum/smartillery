@@ -5,7 +5,7 @@ if (last_combo >= global.minimum_combo && !game_controller.is_selecting_ult) {
 	var _combo_y = global.ycenter + 200
 	var _combo_width = global.xcenter // shorthand for half the room width
 	
-	draw_set_composite_color(composite_color(global.combo_color, image_alpha))
+	draw_set_composite_color(new CompositeColor(global.combo_color, image_alpha))
 	draw_set_font(fnt_title)
 	draw_text_with_alignment(global.xcenter, _combo_y, string_concat(_phrase, " -- ", other.last_combo, "X"), ALIGN_CENTER)
 	

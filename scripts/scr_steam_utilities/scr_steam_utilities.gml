@@ -1,3 +1,9 @@
+global.host_steam_id = NON_STEAM_PLAYER
+global.my_steam_id = NON_STEAM_PLAYER
+global.partner_steam_id = undefined
+
+
+
 function steam_get_user_sprite(_user_id, _size) {
 	if (!steam_initialised()) {
 		return -1

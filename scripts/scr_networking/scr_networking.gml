@@ -27,7 +27,7 @@ global._G.numeric_id_to_event_name = [
 // we then create a reverse map of the array so we can get index from event name string
 global._G.event_name_to_numeric_id = {}
 array_foreach(global._G.numeric_id_to_event_name, method({lookup: global._G.event_name_to_numeric_id}, function(_item, _index) {
-	lookup[_item] = _index
+	lookup[$ _item] = _index
 }))
 
 // define the keys associated with each event
@@ -111,18 +111,21 @@ array_foreach(global.networking_instance_type_to_obj, function(_type, _index) {
 // --------------------------------------------------------------------------------------
 // Sending events
 
+/**
+ * @param {Array<Struct.NetworkingEvents>} _events
+ */
 function events_to_buffer(_events) {
 	var _events_count = array_length(_events)
 	
 	var _buffer = buffer_create(256, buffer_grow, 1);
-	buffer_write(_buffer, global._G.payload_key_types["events_count"], _events_count); 
+	buffer_write(_buffer, global._G.payload_key_types.events_count, _events_count); 
 	
 	for (var _i=0; _i < _events_count; _i++) {
 		var _event = _events[_i]
-		var _event_name = _event["event_name"]
+		var _event_name = _event.event_name
 		
 		// first we buffer the event type (numeric id)
-		buffer_write(buffer, global._G.payload_key_types["event_name"], global._G.event_name_to_numeric_id[_event_name])
+		buffer_write(buffer, global._G.payload_key_types.event_name, global._G.event_name_to_numeric_id[_event_name])
 		
 		// load all the keys we intend to send according to this event name
 		var _keys = global._G.event_payload_keys[_event_name]
@@ -150,20 +153,34 @@ function events_to_buffer(_events) {
 	return _buffer
 }
 
+/**
+ * @param {Array<Struct.NetworkingEvent>} _events
+ * @param {string} _peer_steam_id
+ */
 function send_events_to(_events, _peer_steam_id) {
 	var _buffer = events_to_buffer(_events)
 	steam_net_send(_peer_steam_id, _buffer, buffer_tell(_buffer))
 	buffer_delete(_buffer)
 }
 
+/**
+ * @param {Struct.NetworkingEvent} _event
+ * @param {string} _peer_steam_id
+ */
 function send_event_to(_event, _peer_steam_id) {
 	return send_events_to([_event], _peer_steam_id)
 }
 
+/**
+ * @param {Struct.NetworkingEvent} _event
+ */
 function send_event(_event) {
 	return send_event_to(_event, get_partner_steam_id_safe())
 }
 
+/**
+ * @param {Array<Struct.NetworkingEvent>} _events
+ */
 function send_events(_events) {
 	return send_events_to(_events, get_partner_steam_id_safe())
 }
@@ -171,15 +188,18 @@ function send_events(_events) {
 // --------------------------------------------------------------------------------------
 // Receiving events
 
+/**
+ * @returns {Array<Struct.NetworkingEvent>}
+ */
 function buffer_to_events(_buffer) {
 	var _ret_val = []
 	buffer_seek(_buffer, buffer_seek_start, 0);
 	
-	var _buffered_events_count = buffer_read(_buffer, global._G.payload_key_types["events_count"])
+	var _buffered_events_count = buffer_read(_buffer, global._G.payload_key_types.events_count)
 	
 	for (var _i = 0; _i < _buffered_events_count; _i++) {
 		// event_name (numeric type) is always the first item pushed on the buffer
-		var _event_numeric_id = buffer_read(_buffer, global._G.payload_key_types["event_name"])
+		var _event_numeric_id = buffer_read(_buffer, global._G.payload_key_types.event_name)
 		
 		// convert it back into its readable name
 		var _event_name = global._G.numeric_id_to_event_name[_event_numeric_id]
@@ -234,7 +254,7 @@ global.instance_type_to_meta_variables_array = {
 	obj_enemy_3: [],
 	obj_enemy_4: [],
 	obj_enemy_4_fragment: ["target_delay", "direction"],
-	obj_enemy_5: ["sequence_label", "sequence_length", "target_index", "answer"],
+	obj_enemy_5: ["sequence_key", "sequence_length", "target_index", "answer"],
 	obj_muzzle_flash: ["width", "color", "target_x", "target_y"]
 }
 
@@ -277,4 +297,20 @@ function instance_convert_network_payload_to_state_object(_instance_type, _paylo
 	}
 	
 	return _ret_val
+}
+
+
+/**
+ * @param {string} _event_name
+ * @param {Struct} _props
+ */
+function NetworkingEvent(_event_name, _props) constructor {
+	event_name = _event_name
+	
+	var _keys = variable_struct_get_names(_props);
+	for (var _i = array_length(_keys)-1; _i >= 0; --_i) {
+	    var _k = _keys[_i];
+	    var _v = _props[$ _k];
+	    self[$ _k] = _v
+	}
 }

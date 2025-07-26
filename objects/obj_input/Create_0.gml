@@ -1,5 +1,8 @@
 message = "";
 
+if (is_undefined(owner_player_id) || owner_player_id == "000") {
+	owner_player_id = get_my_steam_id_safe()
+}
 is_controlled = owner_player_id == get_my_steam_id_safe()
 streak_color = get_player_color(owner_player_id)
 

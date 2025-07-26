@@ -132,12 +132,13 @@ function generate_sequence_from_wave(_wave) {
 	return get_sequence_from_label_and_length(_selected_key, min(_max_length, array_length(_selected_sequence)))
 }
 
-function get_sequence_from_label_and_length(_label, _length) {
-	var _selected_sequence = global.sequences[$ _label]
+function get_sequence_from_label_and_length(_key, _length) {
+	var _selected_sequence = global.sequences[$ _key]
 	var _final_sequence = []
 	array_copy(_final_sequence, 0, _selected_sequence, 0, _length)
 	return {
-		label: _label,
+		key: _key,
+		label: string_replace(_key, "_", " "),
 		sequence: _final_sequence
 	}
 }
