@@ -28,6 +28,7 @@ is_game_over = false;
 is_scene_transitioning = false;
 
 combo_max_alarm = (global.combo_delay_ms / 1000) * game_get_speed(gamespeed_fps)
+instance_create_layer(x, y, LAYER_CONTROLLERS, obj_select_ultimate)
 instance_create_layer(x, y, LAYER_INSTANCES, obj_combo_drawer)
 
 debug("USING SEED :" + string(global.game_seed))
@@ -270,10 +271,10 @@ function get_ulting_level(_player_id) {
  * @returns {Bool}
  */
 function is_ulting(_player_id) {
-	
 	// if player id is not provided, check both* players
 	if (is_undefined(_player_id)) {
-		return is_ulting(get_my_steam_id_safe()) || (global.is_coop && is_ulting(get_partner_steam_id_safe()))
+		var _results = for_each_player(is_ulting)
+		return array_any(_results, function(_r) {return _r == true}) 
 	}
 	
 	if (is_undefined(inst_ultimate[$ _player_id])) {
@@ -389,11 +390,6 @@ function handle_submit_answer(_answer, _player_id) {
 function is_answer_active(_answer) {
 	return struct_exists(active_answers, _answer)
 }
-
-// start off marking wave completed so game can start
-mark_wave_completed();
-
-
 
 // TESTING
 function _handle_test_string(_code) {

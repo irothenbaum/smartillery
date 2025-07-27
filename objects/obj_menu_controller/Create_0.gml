@@ -1,6 +1,9 @@
 x = global.xcenter
 y = global.ycenter
 
+// Menu controller should always reset the game state on start
+reset_game_state()
+
 function start_game() {
 	room_goto(rm_play_solo)
 }

@@ -1,4 +1,4 @@
-if (global.paused && !is_ulting() && !is_selecting_ult && is_undefined(ultimate_level_up_controller)) {
+if (global.paused && !is_ulting()) {
 	draw_overlay()
 	draw_set_color(c_white)
 	draw_set_font(fnt_title)

@@ -60,6 +60,7 @@ global.total_paused_time = 0
 global.paused = false
 global.game_seed = randomize()
 
+global.lobby_id = undefined
 global.is_solo = false
 global.is_coop = false
 global.is_training = false

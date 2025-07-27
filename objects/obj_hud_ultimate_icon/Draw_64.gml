@@ -1,6 +1,8 @@
 if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	var _selected_ultimate = global.selected_ultimate[$ owner_player_id]
 	
+	debug(owner_player_id, _selected_ultimate, global.selected_ultimate)
+	
 	// draw ultimate box ----------------------------------------------
 	var _ultimate_color = global.ultimate_colors[$ _selected_ultimate];
 	var _ultimate_tint = global.ultimate_color_tints[$ _selected_ultimate];

@@ -175,14 +175,18 @@ function send_event_to(_event, _peer_steam_id) {
  * @param {Struct.NetworkingEvent} _event
  */
 function send_event(_event) {
-	return send_event_to(_event, get_partner_steam_id_safe())
+	for_each_player(method({e: _event}, function(_player_id) {
+		send_event_to(e, _player_id)
+	}), get_my_steam_id_safe())
 }
 
 /**
  * @param {Array<Struct.NetworkingEvent>} _events
  */
 function send_events(_events) {
-	return send_events_to(_events, get_partner_steam_id_safe())
+	for_each_player(method({e: _events}, function(_player_id) {
+		send_events_to(e, _player_id)
+	}), get_my_steam_id_safe())
 }
 
 // --------------------------------------------------------------------------------------

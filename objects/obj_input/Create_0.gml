@@ -1,6 +1,6 @@
 message = "";
 
-if (is_undefined(owner_player_id) || owner_player_id == "000") {
+if (is_undefined(owner_player_id) || owner_player_id == NON_STEAM_PLAYER) {
 	owner_player_id = get_my_steam_id_safe()
 }
 is_controlled = owner_player_id == get_my_steam_id_safe()

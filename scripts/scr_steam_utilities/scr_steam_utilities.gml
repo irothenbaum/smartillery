@@ -1,7 +1,7 @@
-global.host_steam_id = NON_STEAM_PLAYER
 global.my_steam_id = NON_STEAM_PLAYER
-global.partner_steam_id = undefined
 
+#macro NON_STEAM_PLAYER 999.0001
+#macro NON_STEAM_PLAYER_PARTNER 999.0002
 
 
 function steam_get_user_sprite(_user_id, _size) {
@@ -34,9 +34,6 @@ function steam_image_create_sprite(_img) {
 	buffer_delete(_cols)
 	return _sprite
 }
-
-#macro NON_STEAM_PLAYER 999.0001
-#macro NON_STEAM_PLAYER_PARTNER 999.0002
 
 /**
  * @returns {Real}
@@ -80,7 +77,7 @@ function get_my_color() {
  * @returns {Bool}
  */
 function is_host(_player_id) {
-	return _player_id == NON_STEAM_PLAYER || _player_id == global.host_steam_id
+	return _player_id == NON_STEAM_PLAYER || _player_id == steam_lobby_get_owner_id(global.lobby_id)
 }
 
 /**
@@ -89,4 +86,49 @@ function is_host(_player_id) {
  */
 function is_guest(_player_id) {
 	return !is_host(_player_id)
+}
+
+/**
+ * @param {method} _callback
+ * @returns {Array<Any>}
+ */
+function for_each_player(_callback, _skip_player_id) {
+	var _ret_val = []
+	
+	if (is_undefined(global.lobby_id)) {
+		if (is_undefined(_skip_player_id) || _skip_player_id == get_my_steam_id_safe()) {
+			array_push(_ret_val, _callback(get_my_steam_id_safe()))
+		}
+	} else {
+		var _count = get_players_count()
+		for (var _i = 0; _i < _count; ++_i) {
+			var _player_id = steam_lobby_get_member_id(global.lobby_id, _i);
+		
+			if (!is_undefined(_skip_player_id) && _player_id == _skip_player_id) {
+				continue
+			}
+		
+			array_push(_ret_val, _callback(_player_id))
+		}
+	}
+	
+	return _ret_val
+}
+
+/**
+ * @returns {number}
+ */
+function get_players_count() {
+	if (is_undefined(global.lobby_id)) {
+		return 1
+	}
+	
+	return steam_lobby_get_member_count(global.lobby_id)
+}
+
+/**
+ * @returns {Array<number>}
+ */
+function get_player_ids() {
+	return for_each_player(function(_p){return _p})
 }

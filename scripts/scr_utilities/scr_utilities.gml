@@ -16,7 +16,7 @@ function debug() {
 }
 
 function get_game_controller() {
-	if (global.is_solo || global.is_host) {
+	if (global.is_solo || is_host(get_my_steam_id_safe())) {
 		return instance_find(obj_game_controller, 0)
 	} else {
 		return instance_find(obj_guest_game_controller, 0)
@@ -339,11 +339,22 @@ function object_keys_copy(_target_object, _source_object) {
  */
 function initialize_player_map(_val) {
 	var _ret_val = {}
-	_ret_val[$ get_my_steam_id_safe()] = _val
 	
-	if (global.is_coop) {
-		_ret_val[$ get_partner_steam_id_safe()] = _val
-	}
+	for_each_player(method({r: _ret_val, v: _val}, function(_player_id) {
+		r[_player_id] = v
+	}))
 	
 	return _ret_val
+}
+
+function reset_game_state() {
+	global.is_math_mode = true
+	global.total_paused_time = 0
+	global.paused = false
+	global.game_seed = randomize()
+	global.is_solo = false
+	global.is_coop = false
+	global.is_training = false
+	global.focused_input = undefined
+	global.lobby_id = undefined
 }

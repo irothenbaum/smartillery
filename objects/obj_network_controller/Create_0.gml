@@ -7,7 +7,7 @@ instance_id_map = {}
 // Event Sending
 event_buffer = []
 
-var _both_player_channels = [get_my_steam_id_safe(), get_partner_steam_id_safe()]
+var _all_player_channels = get_player_ids()
 
 if (is_host(get_my_steam_id_safe())) {
 	subscribe(EVENT_SCORE_CHANGED, function(_payload) {
@@ -44,7 +44,7 @@ if (is_host(get_my_steam_id_safe())) {
 			player_id: get_my_steam_id_safe(),
 			input: undefined,
 			streak_count: _streak_count,
-		}, _both_player_channels)
+		}, _all_player_channels)
 	})
 
 	subscribe(EVENT_ENEMY_SPAWNED, function(_enemy) {
@@ -64,7 +64,7 @@ if (is_host(get_my_steam_id_safe())) {
 			instance_id: _enemy.id,
 			player_id: _enemy.last_hit_by_player_id
 		})
-	}, _both_player_channels)
+	}, _all_player_channels)
 	
 	// TODO: more event types to relay
 } else {

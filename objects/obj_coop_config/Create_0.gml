@@ -31,8 +31,7 @@ function handle_cancel() {
 function handle_start() {
 	send_event({
 		"event_name": NET_EVENT_GAME_START,
-		"host_id": global.is_host ? get_my_steam_id_safe() : get_partner_steam_id_safe(),
-		"guest_id": global.is_host ? get_partner_steam_id_safe() : get_my_steam_id_safe()
+		"host_id": steam_lobby_get_owner(global.lobby_id)
 	})
 	
 	room_goto(rm_play_coop)
