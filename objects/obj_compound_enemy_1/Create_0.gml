@@ -14,7 +14,7 @@ alarm[0] = 1
 
 function spawn_enemy() {
 	var _e = instance_create_layer(x, y, LAYER_INSTANCES, obj_enemy_1, {
-		waypoints: waypoints
+		waypoints: array_copy_all(waypoints)
 	})
 	enemy_count--;
 }

@@ -1,5 +1,3 @@
-toggle_pause(true)
-
 staged_selection = undefined
 x = global.xcenter
 y = global.ycenter
@@ -30,7 +28,18 @@ drawn_icon_opacity = {
 }
 
 function handle_select(_ult) {
-	global.selected_ultimate[$ owner_player_id] = _ult
-	broadcast(EVENT_SELECT_ULTIMATE, _ult, owner_player_id)
-	instance_destroy()
+	global.selected_ultimate[$ get_my_steam_id_safe()] = _ult
+	broadcast(EVENT_SELECT_ULTIMATE, _ult, get_my_steam_id_safe())
+	
+	if (global.is_solo) {
+		handle_start_game()
+	}
+}
+
+function handle_start_game() {
+	if (global.is_coop) {
+		room_goto(rm_play_coop)
+	} else {
+		room_goto(rm_play_solo)
+	}
 }

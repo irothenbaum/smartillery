@@ -5,7 +5,15 @@ y = global.ycenter
 reset_game_state()
 
 function start_game() {
-	room_goto(rm_play_solo)
+	global.is_solo = true
+	global.is_coop = false
+	room_goto(rm_select_ultimates)
+}
+
+function start_coop() {
+	global.is_coop = true
+	global.is_solo = false
+	room_goto(rm_coop_setup)
 }
 
 function change_game_mode(_t) {
@@ -25,3 +33,4 @@ instance_create_layer(x, y, LAYER_INSTANCES, obj_menu_number_input, {get_value: 
 	global.game_seed = real(_v)
 }})
 instance_create_layer(x, y + 80, LAYER_INSTANCES, obj_menu_button, {label: "Play", on_click: start_game})
+instance_create_layer(x, y + 160, LAYER_INSTANCES, obj_menu_button, {label: "CoOp", on_click: start_coop})

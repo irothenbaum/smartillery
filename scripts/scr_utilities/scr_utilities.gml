@@ -273,7 +273,7 @@ function get_max_bounds(_bounds_array) {
 	return new Bounds(_ret_val.x0, _ret_val.y0, _ret_val.x1, _ret_val.y1)
 }
 
-/// @return {number} -- will return 1 or -1, or 0
+/// @return {Real} -- will return 1 or -1, or 0
 function normalize(_num) {
 	return _num < 0 ? -1 : (_num > 0 ? 1 : 0)
 }
@@ -303,7 +303,7 @@ function get_tangent_point(_from_x, _from_y, _to_x, _to_y, _distance) {
 }
 
 /// @param {string} _str
-/// @param {number} _pos
+/// @param {Real} _pos
 /// @param {string} _insert
 function string_replace_at(_str, _pos, _insert) {
 	return string_copy(_str, 1, _pos-1) + _insert + string_delete(_str, 1, _pos);
@@ -341,9 +341,10 @@ function initialize_player_map(_val) {
 	var _ret_val = {}
 	
 	for_each_player(method({r: _ret_val, v: _val}, function(_player_id) {
-		r[_player_id] = v
+		r[$ _player_id] = v
 	}))
 	
+	debug("Retuning final map", _ret_val)
 	return _ret_val
 }
 
@@ -357,4 +358,10 @@ function reset_game_state() {
 	global.is_training = false
 	global.focused_input = undefined
 	global.lobby_id = undefined
+}
+
+function array_copy_all(_arr) {
+	var _copy = []
+	array_copy(_copy, 0, _arr, 0, array_length(_arr));
+	return _copy
 }

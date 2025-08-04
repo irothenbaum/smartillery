@@ -1,8 +1,6 @@
 if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	var _selected_ultimate = global.selected_ultimate[$ owner_player_id]
 	
-	debug(owner_player_id, _selected_ultimate, global.selected_ultimate)
-	
 	// draw ultimate box ----------------------------------------------
 	var _ultimate_color = global.ultimate_colors[$ _selected_ultimate];
 	var _ultimate_tint = global.ultimate_color_tints[$ _selected_ultimate];
@@ -43,7 +41,7 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	}
 	
 	// draw the sprite on top
-	var _ult_sprite = global.ultimate_icons[$ ULTIMATE_STRIKE]
+	var _ult_sprite = global.ultimate_icons[$ _selected_ultimate]
 	draw_sprite_ext(_ult_sprite, 0, _xcenter, _ycenter, icon_scale, icon_scale, 0, c_white, 1)
 	
 	// last we draw the level

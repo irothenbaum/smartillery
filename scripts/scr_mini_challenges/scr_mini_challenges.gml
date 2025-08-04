@@ -95,8 +95,8 @@ function build_solution_from_keyboard_input(_input, _blocks) {
 #macro MINI_CHALLENGE_BLOCK_STYLE_RIGHT "right"
 
 /**
- * @param {number} _x -- x position
- * @param {number} _y -- y position
+ * @param {Real} _x -- x position
+ * @param {Real} _y -- y position
  * @param {Array<string>} _block -- the block content
  * @param {Array<string>} _styles -- the block styles
  * @param {Bool} _is_focused

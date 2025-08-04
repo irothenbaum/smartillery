@@ -14,7 +14,7 @@ var _ultimate_names = variable_struct_get_names(global.ultimate_icons)
 var _is_hovering = false
 for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
     var _this_ultimate = _ultimate_names[_i];
-	var _is_selected_by_other_player = _selected_ultimates_lookup[$ _this_ultimate] && _selected_ultimates_lookup[$ _this_ultimate] != owner_player_id
+	var _is_selected_by_other_player = _selected_ultimates_lookup[$ _this_ultimate] && _selected_ultimates_lookup[$ _this_ultimate] != get_my_steam_id_safe()
 	var _spr = global.ultimate_icons[$ _this_ultimate];
 	var _new_scale = _this_ultimate == staged_selection ? hovered_scale : default_scale
 	var _draw_scale = lerp(drawn_icon_scales[$ _this_ultimate], _new_scale, global.fade_speed)

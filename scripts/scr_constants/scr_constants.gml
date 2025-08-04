@@ -20,8 +20,6 @@
 
 // colors
 global.bg_color = #260b26
-global.p1_color = #0398fc
-global.p2_color = #fc8403
 global.combo_color = c_red
 global.beam_color = c_white
 global.ultimate_colors = {
@@ -60,11 +58,13 @@ global.total_paused_time = 0
 global.paused = false
 global.game_seed = randomize()
 
+// <ultiplayer stuff
 global.lobby_id = undefined
 global.is_solo = false
 global.is_coop = false
 global.is_training = false
 global.focused_input = undefined
+global.max_players = 4
 
 // seemingly magic numbers
 global.turret_length = 53
@@ -75,7 +75,7 @@ global.ycenter = global.room_height / 2
 
 // gameplay
 global.point_streak_requirement = 3
-global.combo_delay_ms = 1600
+global.combo_delay_ms = 1200
 global.minimum_combo = 2
 global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower!", "Menace!!", "Untouchable!!!", "Impossible!!!!"]
 global.ultimate_requirement = 6

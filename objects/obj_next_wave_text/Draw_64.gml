@@ -19,8 +19,7 @@ var _current_wave = get_current_wave_number()
 if (global.is_math_mode) {
 	var _number_of_operations = array_length(global.operations_order)
 	var _wave_over_step = floor(_current_wave / global.wave_difficulty_step)
-	var _copy = []
-	array_copy(_copy, 0, global.operations_order, 0, _number_of_operations)
+	var _copy = array_copy_all(global.operations_order)
 	array_resize(_copy, min(_wave_over_step+1, _number_of_operations))
 	draw_set_font(fnt_base)
 	draw_text_with_alignment(_bounds.x0, _bounds.y1 + 10, "Operations: " + array_reduce(_copy, function(_aggr, _o) {

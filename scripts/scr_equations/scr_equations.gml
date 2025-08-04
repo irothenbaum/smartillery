@@ -134,8 +134,7 @@ function generate_sequence_from_wave(_wave) {
 
 function get_sequence_from_label_and_length(_key, _length) {
 	var _selected_sequence = global.sequences[$ _key]
-	var _final_sequence = []
-	array_copy(_final_sequence, 0, _selected_sequence, 0, _length)
+	var _final_sequence = array_copy_all(_selected_sequence)
 	return {
 		key: _key,
 		label: string_replace(_key, "_", " "),

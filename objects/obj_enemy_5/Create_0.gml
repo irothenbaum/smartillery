@@ -4,7 +4,7 @@ enemy_initlaize(self, global.points_enemy_5, false)
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
-sequence_data = is_undefined(sequence_key) ? generate_sequence_from_wave(get_game_controller().current_wave) : get_sequence_from_label_and_length(sequence_key, sequence_length)
+sequence_data = is_undefined(sequence_key) ? generate_sequence_from_wave(get_current_wave_number()) : get_sequence_from_label_and_length(sequence_key, sequence_length)
 sequence = sequence_data.sequence
 sequence_key = sequence_data.key
 sequence_label = sequence_data.label

@@ -28,13 +28,17 @@ is_game_over = false;
 is_scene_transitioning = false;
 
 combo_max_alarm = (global.combo_delay_ms / 1000) * game_get_speed(gamespeed_fps)
-instance_create_layer(x, y, LAYER_CONTROLLERS, obj_select_ultimate)
-instance_create_layer(x, y, LAYER_INSTANCES, obj_combo_drawer)
+
+for_each_player(function(_player_id) {
+	instance_create_layer(x, y, LAYER_HUD, obj_input, {owner_player_id: _player_id})
+	instance_create_layer(x, y, LAYER_INSTANCES, obj_combo_drawer, {owner_player_id: _player_id})
+})
+
 
 debug("USING SEED :" + string(global.game_seed))
 
 /**
- * @param {String} _player_id
+ * @param {Real} _player_id
  * @returns {Bool}
  */
 function has_point_streak(_player_id) {
@@ -45,7 +49,7 @@ function has_point_streak(_player_id) {
 }
 
 /**
- * @param {String} _player_id
+ * @param {Real} _player_id
  * @returns {Bool}
  */
 function has_ultimate(_player_id) {
@@ -132,7 +136,6 @@ function reset_starting_values() {
 	inst_ultimate = initialize_player_map(undefined)
 	random_set_seed(global.game_seed);
 }
-reset_starting_values()
 
 /// @func handle_enemy_killed(_enemy)
 /// @param {Id.Instance} _enemy
@@ -158,7 +161,7 @@ function handle_enemy_killed(_enemy) {
 	var _streak_score = has_point_streak() ? floor(_enemy.point_value * 0.3) : 0;
 	var _combo_score = combo_count[$ _player_id] >= global.minimum_combo ? combo_count[$ _player_id] : 0
 	
-	draw_point_indicators(_enemy.x, _enemy.y, _enemy.point_value, _streak_score, _combo_score)
+	draw_point_indicators(_player_id, _enemy.x, _enemy.y, _enemy.point_value, _streak_score, _combo_score)
 	
 	unit_score += _enemy.point_value
 	streak_score += _streak_score
@@ -181,7 +184,7 @@ function handle_enemy_killed(_enemy) {
 /**
  * @returns {undefined}
  */
-function draw_point_indicators(_x, _y, _base, _streak, _combo) {
+function draw_point_indicators(_player_id, _x, _y, _base, _streak, _combo) {
 	instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
 		amount: _base,
 		font: fnt_large
@@ -191,7 +194,7 @@ function draw_point_indicators(_x, _y, _base, _streak, _combo) {
 	if (_streak) {	
 		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
 			amount: _streak,
-			color: global.p1_color
+			color: get_player_color(_player_id)
 		})
 		_y -= 20
 	}
@@ -247,7 +250,7 @@ function activate_ultimate(_player_id) {
 }
 
 /**
- * @param {String} _player_id
+ * @param {Real} _player_id
  */
 function mark_ultimate_used(_player_id) {
 	if (!is_undefined(inst_ultimate[$ _player_id])) {
@@ -259,7 +262,7 @@ function mark_ultimate_used(_player_id) {
 }
 
 /**
- * @param {String} _player_id
+ * @param {Real} _player_id
  * @returns {Real}
  */
 function get_ulting_level(_player_id) {
@@ -290,7 +293,7 @@ function is_ulting(_player_id) {
 }
 
 /**
- * @param {String} _player_id
+ * @param {Real} _player_id
  */
 function increase_streak(_player_id) {
 	var _had_sreak = has_point_streak(_player_id)
@@ -304,22 +307,31 @@ function increase_streak(_player_id) {
 }
 
 /**
- * @param {String} _player_id
+ * @param {Real} _player_id
  */
 function increase_combo(_player_id) {
+	debug("Increasing combo", _player_id, combo_count[$ _player_id], variable_struct_names_count(combo_count))
+	
 	// can only combo if you're on streak
 	if (!has_point_streak(_player_id)) {
 		return
 	}
 	
 	combo_count[$ _player_id]++
-	// TODO: we need a different alarm per player
-	alarm[2] = combo_max_alarm
+	alarm[get_combo_alarm_for_player_id(_player_id)] = combo_max_alarm
 	longest_combo[$ _player_id] = max(longest_combo[$ _player_id], combo_count[$ _player_id])
 }
 
+function get_combo_alarm_for_player_id(_player_id) {
+	return 2 + get_player_number(_player_id)
+}
+
+function get_player_id_for_combo_alarm(_num) {
+	return get_player_id_from_num(_num - 2)
+}
+
 /**
- * @param {String} _player_id
+ * @param {Real} _player_id
  */ 
 function increase_ult_score(_player_id) {
 	if (!is_ulting(_player_id)) {
@@ -340,7 +352,7 @@ function increase_ult_score(_player_id) {
 }
 
 /**
- * @param {String} _player_id
+ * @param {Real} _player_id
  */ 
 function increate_ult_level(_player_id) {
 	ultimate_level[$ _player_id]++
@@ -412,3 +424,9 @@ function _handle_test_string(_code) {
 		return true
 	}
 }
+
+
+
+// These combined effectively start the game
+reset_starting_values()
+mark_wave_completed()

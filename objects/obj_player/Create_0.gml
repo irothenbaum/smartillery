@@ -5,8 +5,8 @@ hide_self = false;
 
 body_color_arr = color_to_array(global.body_color)
 turret_color_arr = color_to_array(global.turret_color)
-p1_color = color_to_array(global.p1_color)
-p2_color = color_to_array(global.p2_color)
+my_color = get_my_color()
+my_color_arr = color_to_array(my_color)
 
 rotate_aim_speed = 720 // in degrees per second
 rotate_idle_speed = 90 // in degrees per second
@@ -114,9 +114,11 @@ function get_turret_muzzle(_extra = 0) {
 	}
 }
 
+
+
 subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
 	if (_is_on_streak) {
-		streak_fire = draw_muzzle_smoke(x, y, global.p1_color)
+		streak_fire = draw_muzzle_smoke(x, y, my_color)
 	} else {	
 		if (is_undefined(streak_fire)) {
 			return

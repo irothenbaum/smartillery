@@ -208,9 +208,9 @@ function enemy_apply_slow(_enemy, _multiplier) {
 }
 
 
-/// @param {number} _rect_width
-/// @param {number} _rect_height
-/// @param {number} _angle // in degrees
+/// @param {Real} _rect_width
+/// @param {Real} _rect_height
+/// @param {Real} _angle // in degrees
 function find_intersection(_rect_width, _rect_height, _angle) {	
 	_rect_width = _rect_width / 2
 	_rect_height = _rect_height / 2

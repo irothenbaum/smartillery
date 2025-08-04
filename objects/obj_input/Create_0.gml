@@ -3,11 +3,28 @@ message = "";
 if (is_undefined(owner_player_id) || owner_player_id == NON_STEAM_PLAYER) {
 	owner_player_id = get_my_steam_id_safe()
 }
+
 is_controlled = owner_player_id == get_my_steam_id_safe()
 streak_color = get_player_color(owner_player_id)
 
-y = 40
-initial_x = global.xcenter - (!global.is_coop ? 0 : (is_host(owner_player_id) ? global.multiplayer_input_shift_off_center : -1 * global.multiplayer_input_shift_off_center))
+// --------------------------------------------------------
+// DETERMINE POSITION FOR THIS INPUT
+// this may not be immediately inuitive, but this logic ensures the correct input locations for each player
+var _top_y = 40
+var _bottom_y = global.room_height - 40
+var _left_x = global.xcenter - global.multiplayer_input_shift_off_center
+var _right_x = global.xcenter + global.multiplayer_input_shift_off_center
+
+// if it's solo or there are 3 and we're the third, we align center
+var _align_center = global.is_solo || get_players_count() == 3 && get_player_number(owner_player_id) == 2
+var _align_bottom = global.is_coop && get_player_number(owner_player_id) > 1
+
+
+y = _align_bottom ? _bottom_y : _top_y
+initial_x = _align_center ? global.xcenter : ((get_player_number(owner_player_id) % 2) == 0 ? _left_x : _right_x)
+
+// --------------------------------------------------------
+
 x = initial_x
 render_x = x
 
@@ -51,7 +68,7 @@ subscribe(EVENT_GAME_OVER, function() {
 
 subscribe(EVENT_ON_OFF_STREAK, function(_streak_count) {
 	if (_streak_count > 0) {
-		streak_fire = draw_muzzle_smoke(x, y, global.p1_color)
+		streak_fire = draw_muzzle_smoke(x, y, streak_color)
 		size_streak_fire()
 	} else {	
 		if (is_undefined(streak_fire)) {

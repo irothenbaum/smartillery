@@ -1,4 +1,4 @@
-next_combo = game_controller.combo_count
+next_combo = game_controller.combo_count[$ owner_player_id]
 if (next_combo != last_combo) {
 	if (next_combo == 0) {
 		decrease_opacity = true

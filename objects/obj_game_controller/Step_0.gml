@@ -1,5 +1,5 @@
 if (keyboard_check_pressed(vk_escape)) {
-	if (!is_ulting() && !is_selecting_ult && !is_game_over) {
+	if (!is_ulting() && !is_game_over) {
 		toggle_pause()
 		
 		if (global.paused) {

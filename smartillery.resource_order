@@ -70,6 +70,7 @@
     {"name":"rm_coop_setup","order":3,"path":"rooms/rm_coop_setup/rm_coop_setup.yy",},
     {"name":"rm_main_menu","order":1,"path":"rooms/rm_main_menu/rm_main_menu.yy",},
     {"name":"rm_play_coop","order":4,"path":"rooms/rm_play_coop/rm_play_coop.yy",},
+    {"name":"rm_select_ultimates","order":5,"path":"rooms/rm_select_ultimates/rm_select_ultimates.yy",},
     {"name":"scr_constants","order":1,"path":"scripts/scr_constants/scr_constants.yy",},
     {"name":"scr_dictionary","order":8,"path":"scripts/scr_dictionary/scr_dictionary.yy",},
     {"name":"scr_draw_helpers","order":6,"path":"scripts/scr_draw_helpers/scr_draw_helpers.yy",},

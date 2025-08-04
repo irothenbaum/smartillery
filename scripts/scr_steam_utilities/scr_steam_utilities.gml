@@ -1,7 +1,6 @@
 global.my_steam_id = NON_STEAM_PLAYER
 
-#macro NON_STEAM_PLAYER 999.0001
-#macro NON_STEAM_PLAYER_PARTNER 999.0002
+#macro NON_STEAM_PLAYER 999.1
 
 
 function steam_get_user_sprite(_user_id, _size) {
@@ -47,22 +46,26 @@ function get_my_steam_id_safe() {
 	return global.my_steam_id
 }
 
-function get_partner_steam_id_safe() {
-	if (is_undefined(global.partner_steam_id)) {
-		return NON_STEAM_PLAYER_PARTNER
+/**
+ * @param {Real} _player_id
+ * @returns {Colour}
+ */
+function get_player_color(_player_id) {
+	if (struct_exists(global.selected_ultimate, _player_id)) {
+		return global.ultimate_colors[$ global.selected_ultimate[$ _player_id]]
 	}
-	return global.partner_steam_id
+	return c_white
 }
 
 /**
  * @param {Real} _player_id
- * @returns {Real}
+ * @returns {Colour}
  */
-function get_player_color(_player_id) {
-	if (is_host(_player_id)) {
-		return global.p1_color
+function get_player_color_tint(_player_id) {
+	if (struct_exists(global.selected_ultimate, _player_id)) {
+		return global.ultimate_color_tints[$ global.selected_ultimate[$ _player_id]]
 	}
-	return global.p2_color
+	return c_ltgrey
 }
 
 /**
@@ -90,13 +93,14 @@ function is_guest(_player_id) {
 
 /**
  * @param {method} _callback
+ * @param {number?} _skip_player_id
  * @returns {Array<Any>}
  */
 function for_each_player(_callback, _skip_player_id) {
 	var _ret_val = []
 	
 	if (is_undefined(global.lobby_id)) {
-		if (is_undefined(_skip_player_id) || _skip_player_id == get_my_steam_id_safe()) {
+		if (is_undefined(_skip_player_id) || _skip_player_id != get_my_steam_id_safe()) {
 			array_push(_ret_val, _callback(get_my_steam_id_safe()))
 		}
 	} else {
@@ -104,11 +108,9 @@ function for_each_player(_callback, _skip_player_id) {
 		for (var _i = 0; _i < _count; ++_i) {
 			var _player_id = steam_lobby_get_member_id(global.lobby_id, _i);
 		
-			if (!is_undefined(_skip_player_id) && _player_id == _skip_player_id) {
-				continue
+			if (is_undefined(_skip_player_id) || _player_id != _skip_player_id) {
+				array_push(_ret_val, _callback(_player_id))
 			}
-		
-			array_push(_ret_val, _callback(_player_id))
 		}
 	}
 	
@@ -116,14 +118,18 @@ function for_each_player(_callback, _skip_player_id) {
 }
 
 /**
- * @returns {number}
+ * @returns {Real}
  */
 function get_players_count() {
 	if (is_undefined(global.lobby_id)) {
 		return 1
 	}
 	
-	return steam_lobby_get_member_count(global.lobby_id)
+	var _ret_val = steam_lobby_get_member_count(global.lobby_id)
+	if (_ret_val > global.max_players) {
+		throw "Too many players"
+	}
+		
 }
 
 /**
@@ -131,4 +137,34 @@ function get_players_count() {
  */
 function get_player_ids() {
 	return for_each_player(function(_p){return _p})
+}
+
+/**
+ * @param {Real} _player_id
+ * @returns {Real}
+ */
+function get_player_number(_player_id) {
+	if (is_undefined(global.lobby_id)) {
+		return 0
+	}
+	
+	var _count = get_players_count()
+	for (var _i = 0; _i < _count; ++_i) {
+		var _p = steam_lobby_get_member_id(_i);
+		if (_p == _player_id) {
+			return _i
+		}
+	}
+}
+
+/**
+ * @param {Real} _num
+ * @returns {Real}
+ */
+function get_player_id_from_num(_num) {
+	if (is_undefined(global.lobby_id)) {
+		return get_my_steam_id_safe()
+	}
+	
+	return steam_lobby_get_member_id(_num);
 }
