@@ -5,7 +5,7 @@ var _scatter_size = 40
 var _occurences = explosion_count == 0 ? 5 : (explosion_count > 0 ? 1 : 0)
 
 for (; _occurences > 0; _occurences--) {
-	instance_create_layer(global.xcenter + irandom_range(-_scatter_size, _scatter_size), global.ycenter + irandom_range(-_scatter_size, _scatter_size), LAYER_INSTANCES, obj_particle_effect, {effect: function(_x, _y) {draw_particle_sparks(_x, _y, 8)}})
+	instance_create_layer(global.xcenter + irandom_range(-_scatter_size, _scatter_size), global.ycenter + irandom_range(-_scatter_size, _scatter_size), LAYER_INSTANCES, obj_particle_effect, {effect: function(_x, _y) {return draw_particle_sparks(_x, _y, 8)}})
 	instance_create_layer(global.xcenter + irandom_range(-_scatter_size, _scatter_size), global.ycenter + irandom_range(-_scatter_size, _scatter_size), LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_shockwave})
 }
 

@@ -68,7 +68,6 @@ global._G.payload_key_types = {
 	// NET_EVENT_INPUT_CHANGED
 	"input": buffer_u8,
 	"streak_count": buffer_u8,
-	"is_wrong_guess": buffer_u8,
 	
 	// NET_EVENT_CREATE_INSTANCE
 	"instance_type": buffer_u8,

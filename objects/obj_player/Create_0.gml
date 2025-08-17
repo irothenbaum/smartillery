@@ -91,11 +91,10 @@ function execute_take_damage(_damage_amount) {
 	
 	if (my_health <= 0) {
 		aiming_at_instance = []
-		if (!is_undefined(streak_fire)) {
-			destroy_particle(streak_fire.system)
-		}
 		get_game_controller().end_game()
 	}
+	
+	get_game_controller().reset_streak()
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_shockwave})
 	
    with (screen_shake)
@@ -116,10 +115,13 @@ function get_turret_muzzle(_extra = 0) {
 
 
 
-subscribe(EVENT_ON_OFF_STREAK, function(_is_on_streak) {
-	if (_is_on_streak) {
-		streak_fire = draw_muzzle_smoke(x, y, my_color)
-	} else {	
+subscribe(EVENT_ON_OFF_STREAK, function(_streak_count) {
+	if (_streak_count >= global.point_streak_requirement) {
+		if (is_undefined(streak_fire)) {
+			streak_fire = draw_muzzle_smoke(x, y, my_color)
+		}
+	} else {
+		// not on streak, remove the fire if we have it
 		if (is_undefined(streak_fire)) {
 			return
 		}

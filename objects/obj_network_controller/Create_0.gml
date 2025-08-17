@@ -85,7 +85,6 @@ subscribe(EVENT_INPUT_CHANGED, function(_input) {
 		player_id: get_my_steam_id_safe(),
 		input: _input,
 		streak_count: undefined,
-		is_wrong_guess: undefined,
 	})
 })
 
@@ -111,19 +110,17 @@ function handle_game_start(_event) {
 }
 
 function handle_input_changed(_event) { 
-	if (typeof(_event.is_on_streak) == "bool") {
+	if (typeof(_event.streak_count) == "number") {
 		broadcast(EVENT_ON_OFF_STREAK, _event.is_on_streak, _event.player_id)
 	}
 	
-	if (typeof(_event.is_wrong_guess) == "bool") {
-		broadcast(EVENT_WRONG_GUESS, _event.is_wrong_guess, _event.player_id)
-	}
-	
-	if (_event.player_id == get_my_steam_id_safe()) {
-		// we don't set the message for ourselves, only the guest
-	} else {
-		var _input = get_input(_event.player_id)
-		_input.message = _event.input
+	if (typeof(_event.input) == "string") {
+		if (_event.player_id == get_my_steam_id_safe()) {
+			// we don't set the message for ourselves, only the guest
+		} else {
+			var _input = get_input(_event.player_id)
+			_input.message = _event.input
+		}
 	}
 }
 

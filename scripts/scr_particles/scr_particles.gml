@@ -84,10 +84,12 @@ function draw_particle_debirs(x,y, _number = 3) {
 	return _ps
 }
 
-function draw_particle_sparks(x,y, _number = 12, _color = c_white) {
+function draw_particle_sparks(x,y, _number = 12, _color = c_white, _direction=0, _sweep = 360) {
 	//par_sparks
 	var _ps = part_system_create();
 	part_system_draw_order(_ps, true);
+	
+	var _half_sweep = _sweep / 2
 
 	//GM_Electricity
 	var _ptype1 = part_type_create();
@@ -95,7 +97,7 @@ function draw_particle_sparks(x,y, _number = 12, _color = c_white) {
 	part_type_size(_ptype1, 8, 8, -0.2, 0);
 	part_type_scale(_ptype1, 1, 1);
 	part_type_speed(_ptype1, 4, 8, -0.1, 0);
-	part_type_direction(_ptype1, 80, 360, 0, 0);
+	part_type_direction(_ptype1, _direction - _half_sweep, _direction + _half_sweep, 0, 0);
 	part_type_gravity(_ptype1, 0, 270);
 	part_type_orientation(_ptype1, 0, 360, 0, 20, false);
 	part_type_color3(_ptype1, _color, _color, _color);

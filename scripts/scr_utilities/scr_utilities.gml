@@ -343,8 +343,6 @@ function initialize_player_map(_val) {
 	for_each_player(method({r: _ret_val, v: _val}, function(_player_id) {
 		r[$ _player_id] = v
 	}))
-	
-	debug("Retuning final map", _ret_val)
 	return _ret_val
 }
 

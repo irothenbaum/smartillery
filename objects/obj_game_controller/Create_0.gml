@@ -229,9 +229,7 @@ function handle_submit_code(_code, _player_id = undefined) {
 		// if this was a correct enemy answer
 		return true
 	} else {
-		// this was simply an inccorect submission, streak goes to 0
-		streak[$ _player_id] = 0
-		broadcast(EVENT_ON_OFF_STREAK, 0, _player_id)
+		reset_streak(_player_id)
 		return false
 	}
 }
@@ -301,9 +299,21 @@ function increase_streak(_player_id) {
 	
 	longest_streak[$ _player_id] = max(longest_streak[$ _player_id], streak[$ _player_id])
 	
-	if (!_had_sreak && has_point_streak(_player_id)) {
-		broadcast(EVENT_ON_OFF_STREAK, streak[$ _player_id], _player_id)
+	broadcast(EVENT_ON_OFF_STREAK, streak[$ _player_id], _player_id)
+}
+
+function reset_streak(_player_id) {
+	// if player id is not provided, reset for all players
+	if (is_undefined(_player_id)) {
+		for_each_player(reset_streak)
+		return
 	}
+	
+	var _had_sreak = has_point_streak(_player_id)
+	// this was simply an inccorect submission, streak goes to 0
+	streak[$ _player_id] = 0
+	
+	broadcast(EVENT_ON_OFF_STREAK, 0, _player_id)
 }
 
 /**

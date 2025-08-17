@@ -1,11 +1,13 @@
 enemy_initlaize(self, global.points_enemy_1)
+_u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
 approach_speed = 1.6
 rotate_speed = (irandom(1) == 0 ? -1 : 1) * (irandom(20) + 5) / 10
 
-turning_towards = false
+attack_color = c_fuchsia
+attack_color_arr = color_to_array(attack_color)
 
 // if waypoints wasn't set for us, we initialize
 if (is_undefined(waypoints) or array_length(waypoints) == 0) {	

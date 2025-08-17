@@ -3,9 +3,6 @@ CHECK THE obj_network_controller Create event for TODOs - that's the most recent
 Polish & effects:
 - Add glitter effect to background
 - When the point orbs hit the turret there should be feedback (like the turret gets brighter maybe?)
-  - The particle effect on collision should also "splash" through the turret rather than spawn in random directions
-- When the enemy_1 turns towards the turret, it should change colors
-- Shouldn't count towards streak if an enemy collides with player
 - Should show an effect while the enemies with multiple HP wait for a new equation
   - Maybe numbers cycling quickly, or visually scrambled
   - Should also show the new equation sooner. Give the player a chance to kill it before it starts moving agian?
@@ -19,6 +16,7 @@ Multiplayer:
 	- Need to finalize the Join / Host UX so lobby can be created
 	- just about ready to start testing I guess? Need to run gamemaker (and steam under a 2nd account) on a 2nd comp
 
+
 Gameplay:
 - Implement Collateral ult that destroys nearby enemies
 - Implement "Aim assist" ult that rounds your answer up/down to match
@@ -28,6 +26,14 @@ Gameplay:
   - Instead, if you start a round with < 50 health, half way through that round it will spawn a health bomb which is an equation you can solve to regain health up to 50
      - Maybe it's like, it shows an equation, you solve it, get 1 bar of health. Can repeat until your health = 50
 	 - Or maybe it always spawns if your health < 100 and you can get up to 3 hits on it (+3 bars of hp)?
+- The combo indicator should be more subtle and appear over your input bar (so each player can track their own)
+- Main Menu
+	- Logo,
+	- Wave select
+	- Save settings to ini
+- steam leaderboard integration
+    - https://partner.steamgames.com/
+	
 
 Premium:
 - A DLC that unlocks:
@@ -42,11 +48,4 @@ Pie In The Sky:
 	- Math ult puzzle
 - Pre-determine all enemies in a round and show them at the start as a sequence. Maybe you see them the whole time and slowly X your way through them??
 - Sound effects
-- Main Menu
-	- Logo,
-	- Wave select
-	- Power color selection
-	- Save settings to ini
-- steam leaderboard integration
-    - https://partner.steamgames.com/
 

@@ -3,7 +3,7 @@ var _game_controller = get_game_controller()
 if (!is_undefined(shake_start)) {
 	draw_set_color(c_red)
 } else if (_game_controller.has_point_streak()) {
-	draw_set_color(streak_color);
+	draw_set_color(my_color);
 } else {
 	draw_set_color(c_white)
 }

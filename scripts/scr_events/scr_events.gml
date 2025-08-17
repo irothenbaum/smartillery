@@ -3,7 +3,6 @@
 #macro EVENT_ENEMY_HIT "enemy-hit"
 #macro EVENT_ENEMY_KILLED "enemy-killed"
 #macro EVENT_TOGGLE_PAUSE "toggle-pause"
-#macro EVENT_WRONG_GUESS "wrong-guess"
 #macro EVENT_UTLTIMATE_LEVEL_UP "ultimate-level-up"
 #macro EVENT_ON_OFF_STREAK "on-streak"
 #macro EVENT_GAME_OVER "game-gover"
@@ -17,7 +16,7 @@ global._events = {};
 /**
  * @param {String} _event
  * @param {Function} _callback
- * @param {String|Array<String>} _steam_id
+ * @param {Real|Array<Real>} _steam_id
  */
 function subscribe(_event, _callback, _steam_id = undefined) {
 	if (is_undefined(_steam_id)) {

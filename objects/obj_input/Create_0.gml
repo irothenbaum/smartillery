@@ -5,7 +5,7 @@ if (is_undefined(owner_player_id) || owner_player_id == NON_STEAM_PLAYER) {
 }
 
 is_controlled = owner_player_id == get_my_steam_id_safe()
-streak_color = get_player_color(owner_player_id)
+my_color = get_player_color(owner_player_id)
 
 // --------------------------------------------------------
 // DETERMINE POSITION FOR THIS INPUT
@@ -67,10 +67,16 @@ subscribe(EVENT_GAME_OVER, function() {
 })
 
 subscribe(EVENT_ON_OFF_STREAK, function(_streak_count) {
-	if (_streak_count > 0) {
-		streak_fire = draw_muzzle_smoke(x, y, streak_color)
-		size_streak_fire()
-	} else {	
+	if (_streak_count >= global.point_streak_requirement) {
+		if (is_undefined(streak_fire)) {
+			streak_fire = draw_muzzle_smoke(x, y, my_color)
+			size_streak_fire()
+		}
+	} else if (_streak_count == 0) {
+		// whenever our streak drops back to 0, we shake
+		shake_start = get_play_time()
+		// total_shake_time is in milliseconds
+		alarm[0] = game_get_speed(gamespeed_fps) * total_shake_time / 1000
 		if (is_undefined(streak_fire)) {
 			return
 		}
