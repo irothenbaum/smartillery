@@ -26,10 +26,11 @@ function init_wave() {
 _enemy_order = [
 	obj_enemy_1,
 	obj_enemy_2,
-	obj_enemy_3,
-	obj_enemy_4,
 	obj_compound_enemy_1,
-	obj_compound_enemy_2
+	obj_enemy_3,
+	obj_compound_enemy_2,
+	obj_enemy_4,
+	obj_enemy_5,
 ]
 
 function _get_enemy_variables(_enemy_type) { 
@@ -77,12 +78,12 @@ function spawn_enemy() {
 	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? room_width + _oob_margin : _pos_x);
 	
 	
-	var _max_enemy = 1 + floor(current_wave / global.wave_difficulty_step)
+	var _max_enemy = floor(current_wave / global.wave_difficulty_step)
 	
 	var _next_enemy_type = undefined
 	var _next_enemy_params = undefined
 	do {
-		if (_max_enemy == 0 || flip_coin(max(2, (_max_enemy - 1) * 10 - current_wave))) {
+		if (_max_enemy == 0 || flip_coin(max(2, (_max_enemy) * 10 - current_wave))) {
 			_next_enemy_type = _enemy_order[_max_enemy]
 		} else {
 			_max_enemy--
@@ -92,8 +93,8 @@ function spawn_enemy() {
 	_next_enemy_params = _get_enemy_variables(_next_enemy_type)
 	
 	// JUST FOR TESTING:
-	_next_enemy_type = obj_compound_enemy_1
-	_next_enemy_params = {enemy_count: 7, waypoint_count: 4}
+	// _next_enemy_type = obj_compound_enemy_1
+	// _next_enemy_params = {enemy_count: 7, waypoint_count: 4}
 	// -----
 		
 	var _new_enemy =  instance_create_layer(

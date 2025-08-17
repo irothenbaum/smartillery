@@ -19,8 +19,6 @@ stunned_color = c_red
 normal_color_arr = color_to_array(normal_color)
 stunned_color_arr = color_to_array(stunned_color)
 
-var _shift_amount = 20
-
 // here we establish where we'll be heading and firing from
 var _shifted_degrees = irandom_range(5, 30)
 if (irandom(1) == 1) {
@@ -35,6 +33,7 @@ firing_position = {
 
 
 function register_hit(_insta_kill = false) {
+	var _shift_amount = 20
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_2_damage});
 	if (my_health > 0 && !_insta_kill) {
 		get_game_controller().release_answer(answer);

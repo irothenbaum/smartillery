@@ -1,18 +1,42 @@
 CHECK THE obj_network_controller Create event for TODOs - that's the most recent stuff you were working on
 
-
+Polish & effects:
 - Add glitter effect to background
-- Multiplayer
-  
+- When the point orbs hit the turret there should be feedback (like the turret gets brighter maybe?)
+  - The particle effect on collision should also "splash" through the turret rather than spawn in random directions
+- When the enemy_1 turns towards the turret, it should change colors
+- Shouldn't count towards streak if an enemy collides with player
+- Should show an effect while the enemies with multiple HP wait for a new equation
+  - Maybe numbers cycling quickly, or visually scrambled
+  - Should also show the new equation sooner. Give the player a chance to kill it before it starts moving agian?
+
+
+Multiplayer:
 	- I think any call to instance_create_layer should trigger a new INSTANCE_CREATED event. 
 	    - This is how enemy spawn events currently work so that could be refactored out.
 	- obj_player needs to determine whose streak color to use when drawing its barrel and muzzle flash
 	    - Need to pass the player who shot's ID around. I started this process, but need to follow through
 	- Need to finalize the Join / Host UX so lobby can be created
 	- just about ready to start testing I guess? Need to run gamemaker (and steam under a 2nd account) on a 2nd comp
+
+Gameplay:
+- Implement Collateral ult that destroys nearby enemies
+- Implement "Aim assist" ult that rounds your answer up/down to match
+- Implement simplify ult that makes the enemis equations way easier
+  - I don't like this one, but I think I do want 6 ults... Think of a new one!?
+- Adjust the end-of-round heal logic
+  - Instead, if you start a round with < 50 health, half way through that round it will spawn a health bomb which is an equation you can solve to regain health up to 50
+     - Maybe it's like, it shows an equation, you solve it, get 1 bar of health. Can repeat until your health = 50
+	 - Or maybe it always spawns if your health < 100 and you can get up to 3 hits on it (+3 bars of hp)?
+
+Premium:
+- A DLC that unlocks:
+  - Hosting CoOp (can join one with free version)
+  - 3 of the 6 ultimates
+
+Pie In The Sky:
 - A Multiplayer-only enemy that shows its equation only to one player. 
 	- Maybe the enemy appears as your teammate's color indiating you can't hit it?
-- Remove Heal and Slow ult. Implement a new Lightning ult that destroys nearby enemies
 - "Practice" mode for:
     - Main game (a modified enemy_1 that just travels right towards you, one at a time - next one as soon as you kill one, no power ups, just guessing answers)
 	- Math ult puzzle

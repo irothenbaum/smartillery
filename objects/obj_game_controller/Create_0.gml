@@ -244,7 +244,7 @@ function activate_ultimate(_player_id) {
 		return
 	}
 	
-	var _ult_obj = global._G.ultimate_object_map[get_player_ultimate(_player_id)]
+	var _ult_obj = global._G.ultimate_object_map[$ get_player_ultimate(_player_id)]
 	inst_ultimate[$ _player_id] = instance_create_layer(x, y, LAYER_HUD, _ult_obj, {level: ultimate_level[$ _player_id], owner_player_id: _player_id})
 	cached_ultimate_level[$ _player_id] = ultimate_level[$ _player_id]
 }
@@ -372,7 +372,7 @@ active_answers = {};
 /// @param {Id.Instance} _inst
 /// @return {undefined}
 function reserve_answer(_ans, _inst) {
-	if (is_answer_active(_ans)) {
+	if (is_answer_reserved(_ans)) {
 		throw "Answer in use";
 	}
 	active_answers[$ _ans] = _inst;
@@ -390,7 +390,7 @@ function release_answer(_ans) {
 /// @param {String} _player_id
 /// @return {Bool}
 function handle_submit_answer(_answer, _player_id) {
-	if (!is_answer_active(_answer)) {
+	if (!is_answer_reserved(_answer)) {
 		return false
 	}
 	
@@ -399,7 +399,7 @@ function handle_submit_answer(_answer, _player_id) {
 	return true;
 }
 
-function is_answer_active(_answer) {
+function is_answer_reserved(_answer) {
 	return struct_exists(active_answers, _answer)
 }
 

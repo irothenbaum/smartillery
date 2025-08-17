@@ -112,7 +112,7 @@ global.points_enemy_5 = 10
 // effects
 global.fade_speed = 0.1
 global.scene_transition_duration = 2
-global.bg_number_of_circles = 20
+global.bg_number_of_circles = 24
 global.bg_circle_max_radius = ceil(sqrt(power(global.room_width, 2) + power(global.room_height, 2)) / 2)
 global.bg_cicle_min_radius = global.turret_length
 global.bg_circle_magnitude = global.bg_circle_max_radius - global.bg_cicle_min_radius

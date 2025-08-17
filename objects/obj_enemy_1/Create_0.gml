@@ -8,11 +8,13 @@ rotate_speed = (irandom(1) == 0 ? -1 : 1) * (irandom(20) + 5) / 10
 turning_towards = false
 
 // if waypoints wasn't set for us, we initialize
-if (is_undefined(waypoints)) {	
-	waypoints = [get_tangent_point(x,y, global.xcenter, global.ycenter, global.room_height * 0.2)]
+if (is_undefined(waypoints) or array_length(waypoints) == 0) {	
+	waypoints = [get_tangent_point(x,y, global.xcenter, global.ycenter, global.room_height * 0.3)]
 }
 
-direction = point_direction(x, y, global.xcenter, global.ycenter) + (20 * (irandom(1) == 1 ? 1 : -1))
+debug("Spawned at ", x, y, "heading towards waypoints: ", array_length(waypoints))
+
+direction = point_direction(x, y, global.xcenter, global.ycenter)
 speed = approach_speed
 
 function register_hit(_player_who_shot_id) {

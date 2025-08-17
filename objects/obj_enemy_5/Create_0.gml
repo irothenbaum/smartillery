@@ -16,15 +16,30 @@ target_index = is_undefined(target_index) ? irandom(sequence_length - 1) : targe
 // ------------------------------------------------------
 // Swap the target number in sequence and register it with game controller
 var _num = sequence[target_index]
-// swap it with some number between 1 and 2*n
-answer = is_undefined(answer) ? roll_dice(_num * 2) : answer
-// in the unlikely event that our random number is exactly our starting number, we just add 1
-if (answer == _num) {
-	answer = _num + 1
-}
-equation = answer
+var _game_controller = get_game_controller()
 
-get_game_controller().reserve_answer(answer, self)
+var _attempts = 0
+while(is_undefined(answer)) {
+	// swap it with some number between 1 and 2*n
+	answer = roll_dice(_num * 2)
+	// in the unlikely event that our random number is exactly our starting number, we just add 1
+	if (answer == _num) {
+		answer = _num + 1
+	}
+	
+	if (_game_controller.is_answer_reserved(answer)) {
+		answer = undefined
+		_attempts++
+		
+		if (_attempts > 5) {
+			debug("Failed to select answer for enemy_5")
+			instance_destroy()
+		}
+	}
+}
+
+equation = answer
+_game_controller.reserve_answer(answer, self)
 // ------------------------------------------------------
 
 distance_to_player = point_distance(x, y, global.xcenter, global.ycenter) // this is updated at the start of every step
