@@ -12,4 +12,4 @@ function set_up_test() {
 
 
 // commend this out
-// set_up_test()
+set_up_test()

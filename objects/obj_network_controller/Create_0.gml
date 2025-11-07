@@ -51,7 +51,7 @@ if (is_host(get_my_steam_id_safe())) {
 		array_push(event_buffer, object_keys_copy({
 			event_name: NET_EVENT_CREATE_INSTANCE,
 			instance_id: _enemy.id,
-			instance_type: global.networking_obj_to_instance_type[$ _enemy.object_index],
+			instance_type: ds_map_find_value(global.networking_obj_to_instance_type, _enemy.object_index),
 			x: _enemy.x,
 			y: _enemy.y,
 			equation: _enemy.equation,

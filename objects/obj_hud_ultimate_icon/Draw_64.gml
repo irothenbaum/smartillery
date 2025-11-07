@@ -32,7 +32,7 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	reset_composite_color()
 	
 	// draw the experiece arc if we have any
-	if (game_controller.ultimate_experience > 0) {
+	if (game_controller.ultimate_experience[$ owner_player_id] > 0) {
 		var _next_amount = get_experience_needed_for_next_level(game_controller.ultimate_level[$ owner_player_id])
 		drawn_ultimate_experience = lerp(drawn_ultimate_experience, game_controller.ultimate_experience[$ owner_player_id] / _next_amount, global.fade_speed)
 		draw_arc(_xcenter, _ycenter, _circle_radius, 360 * drawn_ultimate_experience, 270, 8)
@@ -42,7 +42,7 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	
 	// draw the sprite on top
 	var _ult_sprite = global.ultimate_icons[$ _selected_ultimate]
-	draw_sprite_ext(_ult_sprite, 0, _xcenter, _ycenter, icon_scale, icon_scale, 0, c_white, 1)
+	draw_sprite_ext(_ult_sprite, 0, _xcenter, _ycenter, icon_scale, icon_scale, 0, c_white, game_controller.has_ultimate(owner_player_id) ? 1 : 0.3)
 	
 	// last we draw the level
 	var _level_center = {

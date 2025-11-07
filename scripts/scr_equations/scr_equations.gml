@@ -20,7 +20,8 @@ function generate_equation(_answer, _max, _difficulty = 0) {
 	do {
 		 _breaker --
 		 if (_breaker == 0) {
-			throw "Cannot create equation with a: " + string(_answer) + " m: " + string(_max) + " d: " + string(_difficulty)
+			 // just use addition I guess
+			_dice = 0
 		}
 		
 		_dice = irandom(_difficulty)
@@ -83,7 +84,7 @@ function generate_answer(_max) {
 }
 
 function math_determine_max_from_wave(_wave) {
-	return global.starting_max_answer + (5 * floor(_wave / 3))
+	return global.starting_max_answer + (2 * _wave)
 }
 
 function generate_equation_and_answer(_wave) {
@@ -127,7 +128,7 @@ function generate_sequence_from_wave(_wave) {
 	
 	var _selected_index = irandom(_max_index)
 	var _selected_key = _keys[_selected_index]
-	var _selected_sequence = global.sequences[_keys[_selected_index]]
+	var _selected_sequence = global.sequences[$ _selected_key]
 	
 	return get_sequence_from_label_and_length(_selected_key, min(_max_length, array_length(_selected_sequence)))
 }

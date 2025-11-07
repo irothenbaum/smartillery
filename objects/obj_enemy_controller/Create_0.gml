@@ -2,12 +2,12 @@ can_spawn = false;
 enemy_count = 0;
 spawned_count = 0;
 spawn_delay_seconds = 0;
-current_wave = get_current_wave_number()
-game_controller = get_game_controller()
+current_wave = get_current_wave_number();
+game_controller = get_game_controller();
 
-min_spawn_delay_seconds = 0.5
-max_spawn_delay_seconds = 10
-round_duration_seconds = 60
+min_spawn_delay_seconds = 0.5;
+max_spawn_delay_seconds = 10;
+round_duration_seconds = 60;
 
 
 /// @func init()
@@ -30,7 +30,7 @@ _enemy_order = [
 	obj_enemy_3,
 	obj_compound_enemy_2,
 	obj_enemy_4,
-	obj_enemy_5,
+	// obj_enemy_5, not working right
 ]
 
 function _get_enemy_variables(_enemy_type) { 
@@ -57,7 +57,7 @@ function spawn_enemy() {
 	can_spawn = false
 	
 	// out of bounds margin
-	var _oob_margin = 100
+	var _oob_margin = 30
 	
 	var _rotation = irandom(360)
 	var _pos_x = global.xcenter + lengthdir_x(global.bg_circle_max_radius, _rotation)
@@ -90,12 +90,11 @@ function spawn_enemy() {
 		}
 	} until (!is_undefined(_next_enemy_type))
 	
-	_next_enemy_params = _get_enemy_variables(_next_enemy_type)
 	
 	// JUST FOR TESTING:
-	// _next_enemy_type = obj_compound_enemy_1
-	// _next_enemy_params = {enemy_count: 7, waypoint_count: 4}
+	// _next_enemy_type = obj_enemy_5
 	// -----
+	_next_enemy_params = _get_enemy_variables(_next_enemy_type)
 		
 	var _new_enemy =  instance_create_layer(
 		_pos_x,

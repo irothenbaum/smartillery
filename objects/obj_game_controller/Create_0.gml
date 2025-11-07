@@ -7,7 +7,6 @@ enemy_controller = undefined;
 
 current_wave = 0
 game_score = 0
-drawn_game_score = 0
 unit_score = 0
 streak_score = 0
 combo_score = 0
@@ -123,8 +122,7 @@ function reset_starting_values() {
 	unit_score = 0
 	streak_score = 0
 	game_score = 0
-	current_wave = 0
-	drawn_game_score = 0
+	current_wave = 0 // TODO revert to 0
 	combo_count = initialize_player_map(0)
 	longest_combo = initialize_player_map(0)
 	streak = initialize_player_map(0)
@@ -154,31 +152,16 @@ function handle_enemy_killed(_enemy) {
 		return
 	}
 	
-	increase_streak(_player_id)
-	increase_combo(_player_id)
+	if (!_enemy.streak_ineligible) {
+		increase_combo(_player_id)
+	}
 	
 	// streak is + 30% of base
-	var _streak_score = has_point_streak() ? floor(_enemy.point_value * 0.3) : 0;
+	var _streak_score = (has_point_streak() && !_enemy.streak_ineligible) ? floor(_enemy.point_value * 0.3) : 0;
 	var _combo_score = combo_count[$ _player_id] >= global.minimum_combo ? combo_count[$ _player_id] : 0
 	
 	draw_point_indicators(_player_id, _enemy.x, _enemy.y, _enemy.point_value, _streak_score, _combo_score)
-	
-	unit_score += _enemy.point_value
-	streak_score += _streak_score
-	combo_score += _combo_score
-	game_score += _enemy.point_value + _streak_score + _combo_score
-	
-	broadcast(EVENT_SCORE_CHANGED, {
-		unit_score: unit_score,
-		streak_score: streak_score,
-		combo_score: combo_score,
-		game_score: game_score,
-	})
 	broadcast(EVENT_ENEMY_KILLED, _enemy)
-		
-	if (has_point_streak(_player_id)) {
-		increase_ult_score(_player_id)
-	}
 }
 
 /**
@@ -187,14 +170,18 @@ function handle_enemy_killed(_enemy) {
 function draw_point_indicators(_player_id, _x, _y, _base, _streak, _combo) {
 	instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
 		amount: _base,
-		font: fnt_large
+		font: fnt_large,
+		owner_player_id: _player_id,
 	})
 	_y -= 20
 	
 	if (_streak) {	
 		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
 			amount: _streak,
-			color: get_player_color(_player_id)
+			color: get_player_color(_player_id),
+			owner_player_id: _player_id,
+			is_streak: true,
+			
 		})
 		_y -= 20
 	}
@@ -202,14 +189,38 @@ function draw_point_indicators(_player_id, _x, _y, _base, _streak, _combo) {
 	if (_combo) {
 		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
 			amount: _combo,
-			color: global.combo_color
+			color: global.combo_color,
+			owner_player_id: _player_id,
+			is_combo: true
 		})
 	}
 }
 
+// streak and combo orbs add to ultimate charge
+function handle_point_orb_collision(_orb) {
+	if (_orb.is_streak) {
+		streak_score += _orb.amount
+		increase_ult_score(_orb.owner_player_id, _orb.amount)
+	} else if (_orb.is_combo) {
+		combo_score += _orb.amount
+		increase_ult_score(_orb.owner_player_id, _orb.amount)
+	} else {
+		unit_score += _orb.amount
+	}
+
+	game_score += _orb.amount
+	
+	broadcast(EVENT_SCORE_CHANGED, {
+		unit_score: unit_score,
+		streak_score: streak_score,
+		combo_score: combo_score,
+		game_score: game_score,
+	})
+}
+
 
 /// @param {String} _code
-/// @param {String} _player_id
+/// @param {Real} _player_id
 /// @returns {Bool}
 function handle_submit_code(_code, _player_id = undefined) {
 	_player_id = is_undefined(_player_id) ? get_my_steam_id_safe() : _player_id
@@ -227,6 +238,7 @@ function handle_submit_code(_code, _player_id = undefined) {
 		return true
 	} else if (handle_submit_answer(_code, _player_id)) {
 		// if this was a correct enemy answer
+		increase_streak(_player_id)
 		return true
 	} else {
 		reset_streak(_player_id)
@@ -320,8 +332,6 @@ function reset_streak(_player_id) {
  * @param {Real} _player_id
  */
 function increase_combo(_player_id) {
-	debug("Increasing combo", _player_id, combo_count[$ _player_id], variable_struct_names_count(combo_count))
-	
 	// can only combo if you're on streak
 	if (!has_point_streak(_player_id)) {
 		return
@@ -343,20 +353,19 @@ function get_player_id_for_combo_alarm(_num) {
 /**
  * @param {Real} _player_id
  */ 
-function increase_ult_score(_player_id) {
-	if (!is_ulting(_player_id)) {
-		// if we're ulting then we don't count kills to our ult bar
-		if (ultimate_charge[$ _player_id] < global.ultimate_requirement) {
-			ultimate_charge[$ _player_id]++
-		} else {
-			ultimate_experience[$ _player_id]++
-			
-			var _next_level_experience = get_experience_needed_for_next_level(ultimate_level[$ _player_id])
-			if (ultimate_experience[$ _player_id] >= _next_level_experience) {
-				// disabling level up mini game for now
-				// ultimate_level_up_controller = instance_create_layer(x, y, LAYER_HUD, global.is_math_mode ? obj_ult_upgrade_math : obj_ult_upgrade_typing)
-				increate_ult_level(_player_id)
-			}
+function increase_ult_score(_player_id, _amount = 1) {
+	var _amount_to_charge = min(_amount, global.ultimate_requirement - ultimate_charge[$ _player_id])
+	var _amount_to_experience = _amount - _amount_to_charge
+	
+	ultimate_charge[$ _player_id] += _amount_to_charge
+	ultimate_experience[$ _player_id] += _amount_to_experience
+	
+	if (_amount_to_experience > 0) {
+		var _next_level_experience = get_experience_needed_for_next_level(ultimate_level[$ _player_id])
+		if (ultimate_experience[$ _player_id] >= _next_level_experience) {
+			// disabling level up mini game for now
+			// ultimate_level_up_controller = instance_create_layer(x, y, LAYER_HUD, global.is_math_mode ? obj_ult_upgrade_math : obj_ult_upgrade_typing)
+			increate_ult_level(_player_id)
 		}
 	}
 }
@@ -409,6 +418,9 @@ function handle_submit_answer(_answer, _player_id) {
 	return true;
 }
 
+/// @func handle_submit_answer(_answer)
+/// @param {String} _answer
+/// @return {Bool}
 function is_answer_reserved(_answer) {
 	return struct_exists(active_answers, _answer)
 }
@@ -419,14 +431,7 @@ function _handle_test_string(_code) {
 		get_player().execute_take_damage(20)
 		return true;
 	}
-	
 
-	if (_code == "_level") {
-		increase_ult_score()
-		ultimate_level++
-		ultimate_charge = global.ultimate_requirement
-		return true;
-	}
 	
 	if (_code == "_wave") {
 		enemy_controller.spawned_count = enemy_controller.enemy_count

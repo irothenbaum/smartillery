@@ -20,9 +20,11 @@ x = global.xcenter
 y = global.ycenter
 
 image_scale = 0.16
+body_diameter = 50 // this is the sprite size (326) x image_scale (0.16)
 image_xscale = image_scale;
 image_yscale = image_scale;
 
+hull_flashes = []
 screen_shake = instance_create_layer(x,y, LAYER_INSTANCES, obj_screen_shake)
 streak_fire = undefined
 
@@ -113,7 +115,12 @@ function get_turret_muzzle(_extra = 0) {
 	}
 }
 
-
+function flash_hull(_color) {
+	array_push(hull_flashes, {
+		step: 0,
+		color: _color,
+	})
+}
 
 subscribe(EVENT_ON_OFF_STREAK, function(_streak_count) {
 	if (_streak_count >= global.point_streak_requirement) {

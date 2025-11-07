@@ -1,4 +1,4 @@
-enemy_initlaize(self, global.points_enemy_4_fragment)
+enemy_initlaize(self)
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale

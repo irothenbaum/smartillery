@@ -53,7 +53,7 @@ function get_current_wave_number() {
 }
 
 /**
- * @param {Object} _instance_type
+ * @param {Asset.GMObject} _instance_type
  * @param {Function} _condition
  * @returns {Id.Instance|undefined}
  */
@@ -72,27 +72,21 @@ function find_instance(_instance_type, _condition) {
 }
 
 /// @func get_all_enemy_instances()
-/// @return {Array<Id.Instance>}
+/// @return {Array}
 function get_all_enemy_instances() {
-	var _instances = []
-	var _enemy1 = instance_number(obj_enemy_1)
-	var _enemy2 = instance_number(obj_enemy_2)
-	var _enemy3 = instance_number(obj_enemy_3)
-	var _enemy4 = instance_number(obj_enemy_4)
-	for (var _i = 0; _i < _enemy1; _i++) {
-		array_push(_instances, instance_find(obj_enemy_1, _i))
-	}
-	for (var _i = 0; _i < _enemy2; _i++) {
-		array_push(_instances, instance_find(obj_enemy_2, _i))
-	}
-	for (var _i = 0; _i < _enemy3; _i++) {
-		array_push(_instances, instance_find(obj_enemy_3, _i))
-	}
-	for (var _i = 0; _i < _enemy4; _i++) {
-		array_push(_instances, instance_find(obj_enemy_4, _i))
-	}
+	var _enemy1 = get_array_of_instances(obj_enemy_1)
+	var _enemy2 = get_array_of_instances(obj_enemy_2)
+	var _enemy3 = get_array_of_instances(obj_enemy_3)
+	var _enemy4 = get_array_of_instances(obj_enemy_4)
+	var _enemy5 = get_array_of_instances(obj_enemy_5)
 	
-	return _instances
+	return array_concat(
+		_enemy1,
+		_enemy2,
+		_enemy3,
+		_enemy4,
+		_enemy5
+	)
 }
 
 /// @func count_all_enemies()
@@ -101,6 +95,9 @@ function count_all_enemies() {
 	return 0 
 	+ instance_number(obj_enemy_1) 
 	+ instance_number(obj_enemy_2)
+	+ instance_number(obj_enemy_3)
+	+ instance_number(obj_enemy_4)
+	+ instance_number(obj_enemy_5)
 }
 
 /// takes a function that receives 2 params: enemy instance, index
@@ -112,6 +109,19 @@ function for_each_enemy() {
 		// we pass any other argument back to the callback
 		script_execute(argument[0], _instances[_i], _i, argument[1], argument[2], argument[3])
 	}
+}
+
+/**
+ * @param {Asset.GMObject} _instance_type
+ * @returns {Array<Id.Instance>}
+ */
+function get_array_of_instances(_instance_type) {
+	var _count = instance_number(_instance_type)
+	var _instances = []
+	for (var _i = 0; _i < _count; _i++) {
+		array_push(_instances, instance_find(_instance_type, _i))
+	}
+	return _instances
 }
 
 /// @param {Bool} [_status] 

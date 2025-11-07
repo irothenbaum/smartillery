@@ -1,4 +1,4 @@
-enemy_initlaize(self, global.points_enemy_2)
+enemy_initialize(self)
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 shooting = false
 // fire at the center of third circle -- this should be less than ult_slow_get_radius(1)
@@ -40,8 +40,10 @@ function register_hit(_insta_kill = false) {
 		my_health--;
 		// pause the approach
 		speed = 0
-		equation = ""
 		shooting = false
+		
+		// create a new equation
+		enemy_generate_question(self)
 
 		// restart approach in 3 seconds
 		alarm[1] = 3 * game_get_speed(gamespeed_fps)

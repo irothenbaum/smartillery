@@ -3,8 +3,10 @@ hud = instance_find(obj_hud, 0)
 player = get_player()
 input = instance_find(obj_input, 0)
 game_controller = get_game_controller()
-ultimate_icon = instance_find(obj_hud_ultimate_icon, 0)
 
+
+ultimate_icons = get_array_of_instances(obj_hud_ultimate_icon)
+user_inputs = get_array_of_instances(obj_input)
 
 wave_description = {
 	x: 100,
@@ -18,46 +20,7 @@ score_description = {
 	align: ALIGN_CENTER
 }
 
-input_description = {
-	x: global.room_width / 2 - 300,
-	y: 100,
-	align: ALIGN_CENTER
-}
-
-ultimate_description = {
-	x: global.room_width / 2 - 200 ,
-	y: 300,
-	align: ALIGN_CENTER
-}
-
-
-function draw_line_between(_x0, _y0, _x1, _y1, _horizontal_first = false) {
-	var _y_direction = normalize(_y1 - _y0)
-	_y1 -= 30 * _y_direction
-	
-	if (_horizontal_first) {
-		var _x_direction = normalize(_x1 - _x0)
-		_x0 += 10 * _x_direction
-	} else {
-		_y0 += 10 * _y_direction
-	}
-	
-	var _thickness = 2
-	
-	var _half_y = _y0 + _y_direction * (_y1 - _y0) / 2
-	if (_horizontal_first) {
-		_half_y = _y0
-	}
-	
-	draw_line_width(_x0, _y0, _x0, _half_y, _thickness)	
-	
-	if (_x0 != _x1) {
-		draw_line_width(_x0, _half_y, _x1, _half_y, _thickness)
-	}
-	draw_line_width(_x1, _half_y, _x1, _y1, _thickness)
-}
-
-function draw_ultimate_level_details(_ult_bounds) {
+function draw_ultimate_level_details(_player_id, _ult_bounds) {
 	var _circle_radius = _ult_bounds.y1 - _ult_bounds.ycenter
 	var _level_center = {
 		x: _ult_bounds.xcenter + lengthdir_x(_circle_radius, 315),
@@ -70,8 +33,8 @@ function draw_ultimate_level_details(_ult_bounds) {
 	}
 	draw_line_between(_level_center.x, _level_center.y, _details_center.x, _details_center.y, true)
 	
-	var _this_level_stats = get_ultimate_stats(game_controller.ultimate_level)
-	var _next_level_stats = get_ultimate_stats(game_controller.ultimate_level + 1)
+	var _this_level_stats = get_ultimate_stats(get_player_ultimate(_player_id), game_controller.ultimate_level[$ _player_id])
+	var _next_level_stats = get_ultimate_stats(get_player_ultimate(_player_id), game_controller.ultimate_level[$ _player_id] + 1)
 	
 	draw_set_font(fnt_large)
 	var _new_bounds = draw_text_with_alignment(_details_center.x, _details_center.y, string_concat(global.ultimate_descriptions[$ get_player_ultimate(get_my_steam_id_safe())].title, " -- lvl ", game_controller.ultimate_level), ALIGN_CENTER)
@@ -108,9 +71,8 @@ function get_ultimate_stats(_ultimate, _level) {
 			break
 	}
 	
-	if (array_length(_stats) == 2) {
-		return string_join("\n", _stats[0], _stats[1])
-	} else {
-		return string_join("\n", _stats[0], _stats[1], _stats[2])
-	}
+	return array_reduce(_stats, function(_agr, _s) {
+		return string_join(_agr, "\n", _s)
+	}, "")
+	
 }

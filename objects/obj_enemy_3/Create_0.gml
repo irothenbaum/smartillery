@@ -1,4 +1,4 @@
-enemy_initlaize(self, global.points_enemy_3)
+enemy_initialize(self)
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 max_speed = 4;
 shift_position = undefined

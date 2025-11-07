@@ -1,20 +1,18 @@
-CHECK THE obj_network_controller Create event for TODOs - that's the most recent stuff you were working on
+------------------------------------------------------------
+BEFORE ALPHA RELEASE:
+------------------------------------------------------------
+
+"Bugs" and things to fix:
+- don't allow 0 answers
+- Tutorial overlay overlapping your strike and strike level
+- Since we removed strike radius, maybe we make the strike count go up by 1 every level?
 
 Polish & effects:
 - Add glitter effect to background
-- When the point orbs hit the turret there should be feedback (like the turret gets brighter maybe?)
-- Should show an effect while the enemies with multiple HP wait for a new equation
-  - Maybe numbers cycling quickly, or visually scrambled
-  - Should also show the new equation sooner. Give the player a chance to kill it before it starts moving agian?
-
-
-Multiplayer:
-	- I think any call to instance_create_layer should trigger a new INSTANCE_CREATED event. 
-	    - This is how enemy spawn events currently work so that could be refactored out.
-	- obj_player needs to determine whose streak color to use when drawing its barrel and muzzle flash
-	    - Need to pass the player who shot's ID around. I started this process, but need to follow through
-	- Need to finalize the Join / Host UX so lobby can be created
-	- just about ready to start testing I guess? Need to run gamemaker (and steam under a 2nd account) on a 2nd comp
+- Sounds effects!
+  - Shoot
+  - Explode
+  - Round ending crescendo
 
 
 Gameplay:
@@ -31,9 +29,29 @@ Gameplay:
 	- Logo,
 	- Wave select
 	- Save settings to ini
+
+------------------------------------------------------------
+BEFORE BETA RELEASE:	
+------------------------------------------------------------
+	
 - steam leaderboard integration
     - https://partner.steamgames.com/
-	
+- achievements
+
+------------------------------------------------------------
+BEFORE FINAL RELEASE:	
+------------------------------------------------------------
+
+
+Multiplayer:
+    - CHECK THE obj_network_controller Create event for TODOs - that's the most recent stuff you were working on
+	- I think any call to instance_create_layer should trigger a new INSTANCE_CREATED event. 
+	    - This is how enemy spawn events currently work so that could be refactored out.
+	- obj_player needs to determine whose streak color to use when drawing its barrel and muzzle flash
+	    - Need to pass the player who shot's ID around. I started this process, but need to follow through
+	- Need to finalize the Join / Host UX so lobby can be created
+	- just about ready to start testing I guess? Need to run gamemaker (and steam under a 2nd account) on a 2nd comp
+
 
 Premium:
 - A DLC that unlocks:

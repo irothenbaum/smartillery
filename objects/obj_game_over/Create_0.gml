@@ -20,7 +20,7 @@ function draw_buttons() {
 		image_alpha: 0,
 		on_click: function() {
 			get_game_controller().reset_starting_values()
-			room_goto(rm_menu)
+			room_goto(rm_main_menu)
 		}
 	})
 

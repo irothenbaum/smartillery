@@ -114,6 +114,7 @@ function draw_particle_sparks(x,y, _number = 12, _color = c_white, _direction=0,
 	return _ps
 }
 
+
 function draw_muzzle_smoke(x, y, _color) {
 	//par_muzzle_smoke
 	var _ps = part_system_create();

@@ -1,4 +1,4 @@
-enemy_initlaize(self, global.points_enemy_1)
+enemy_initialize(self)
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 image_scale = 0.12
 image_xscale = image_scale
@@ -19,7 +19,7 @@ debug("Spawned at ", x, y, "heading towards waypoints: ", array_length(waypoints
 direction = point_direction(x, y, global.xcenter, global.ycenter)
 speed = approach_speed
 
-function register_hit(_player_who_shot_id) {
+function register_hit(_insta_kill = false) {
 	instance_destroy()
 }
 broadcast(EVENT_ENEMY_SPAWNED, self)

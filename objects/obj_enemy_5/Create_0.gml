@@ -1,17 +1,17 @@
 /// @description spawn entries
-enemy_initlaize(self, global.points_enemy_5, false)
+enemy_initialize(self, true)
 
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
-sequence_data = is_undefined(sequence_key) ? generate_sequence_from_wave(get_current_wave_number()) : get_sequence_from_label_and_length(sequence_key, sequence_length)
+sequence_data = string_length(sequence_key) == 0 ? generate_sequence_from_wave(get_current_wave_number()) : get_sequence_from_label_and_length(sequence_key, sequence_length)
 sequence = sequence_data.sequence
 sequence_key = sequence_data.key
 sequence_label = sequence_data.label
 sequence_length = array_length(sequence)
 sequence_label_length = string_length(sequence_label)
 angle_between_entries = 360 / sequence_length
-target_index = is_undefined(target_index) ? irandom(sequence_length - 1) : target_index
+target_index = target_index < 0 ? irandom(sequence_length - 1) : target_index
 
 // ------------------------------------------------------
 // Swap the target number in sequence and register it with game controller
@@ -19,6 +19,7 @@ var _num = sequence[target_index]
 var _game_controller = get_game_controller()
 
 var _attempts = 0
+answer = undefined
 while(is_undefined(answer)) {
 	// swap it with some number between 1 and 2*n
 	answer = roll_dice(_num * 2)
@@ -26,6 +27,8 @@ while(is_undefined(answer)) {
 	if (answer == _num) {
 		answer = _num + 1
 	}
+	
+	answer = string(answer)
 	
 	if (_game_controller.is_answer_reserved(answer)) {
 		answer = undefined
@@ -35,8 +38,12 @@ while(is_undefined(answer)) {
 			debug("Failed to select answer for enemy_5")
 			instance_destroy()
 		}
+	} else {
+		debug("Answer not reserved,", answer)
 	}
 }
+
+debug("Reserving answer", answer, typeof(answer), _game_controller.is_answer_reserved(answer))
 
 equation = answer
 _game_controller.reserve_answer(answer, self)
@@ -48,7 +55,7 @@ direction = direction_to_target + 180
 speed = 1.6
 
 death_duration = 2 * game_get_speed(gamespeed_fps)
-function register_hit(_insta_kill) {
+function register_hit(_insta_kill = false) {
 	speed = 0
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_1_destroy});
 	alarm[0] = death_duration
@@ -72,15 +79,15 @@ function get_entry_position(_index) {
 	
 	// work back the x,y, and rotation using this angle
 	return {
-		x: lengthdir_x(distance_to_player, _direction_to_entry),
-		y: lengthdir_y(distance_to_player, _direction_to_entry),
+		x: global.xcenter + lengthdir_x(distance_to_player, _direction_to_entry),
+		y: global.ycenter + lengthdir_y(distance_to_player, _direction_to_entry),
 		rotation: _direction_to_entry + 180,
 	}
 }
 
 function draw_label_on_curve(_start_angle) {
 	draw_set_font(fnt_small)
-	var _circumference = 2 * TAU * distance_to_player
+	var _circumference = TAU * distance_to_player
 	var _label_width = string_width(sequence_label)
 	
 	// this is the distance in pixels available to draw in, 

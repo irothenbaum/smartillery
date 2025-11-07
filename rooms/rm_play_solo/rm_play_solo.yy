@@ -1,7 +1,7 @@
 {
   "$GMRoom":"",
   "%Name":"rm_play_solo",
-  "creationCodeFile":"",
+  "creationCodeFile":"rooms/rm_play_solo/RoomCreationCode.gml",
   "inheritCode":false,
   "inheritCreationOrder":false,
   "inheritLayers":false,

@@ -102,9 +102,9 @@ global.networking_instance_type_to_obj = [
 	
 ]
 
-global.networking_obj_to_instance_type = {}
+global.networking_obj_to_instance_type = ds_map_create()
 array_foreach(global.networking_instance_type_to_obj, function(_type, _index) {
-	global.networking_obj_to_instance_type[$ _type] = _index
+	ds_map_add(global.networking_obj_to_instance_type, _type, _index)
 })
 
 // --------------------------------------------------------------------------------------
@@ -251,22 +251,19 @@ function check_for_network_events() {
 
 // -------------------------------------------------------------------------------------
 // Meta state and networking tools
-global.instance_type_to_meta_variables_array = {
-	obj_enemy_1: ["waypoints", "direction"],
-	obj_enemy_2: ["firing_position"],
-	obj_enemy_3: [],
-	obj_enemy_4: [],
-	obj_enemy_4_fragment: ["target_delay", "direction"],
-	obj_enemy_5: ["sequence_key", "sequence_length", "target_index", "answer"],
-	obj_muzzle_flash: ["width", "color", "target_x", "target_y"]
-}
+global.instance_type_to_meta_variables_array = ds_map_create()
+ds_map_add(global.instance_type_to_meta_variables_array, obj_enemy_1, ["waypoints", "direction"])
+ds_map_add(global.instance_type_to_meta_variables_array, obj_enemy_2, ["firing_position"])
+ds_map_add(global.instance_type_to_meta_variables_array, obj_enemy_3, [])
+ds_map_add(global.instance_type_to_meta_variables_array, obj_enemy_4, [])
+ds_map_add(global.instance_type_to_meta_variables_array, obj_enemy_4_fragment, ["target_delay", "direction"])
 
 // this converts the enemy instance variables inta meta0, meta1, meta2, etc
 // the meta order matches the relevant_meta_vars array order
 /// @returns {Struct}
 function instance_get_meta_state(_inst) {
 	var _ret_val = {}
-	var _meta_vars = global.instance_type_to_meta_variables_array[_inst.object_index]
+	var _meta_vars = ds_map_find_value(global.instance_type_to_meta_variables_array, _inst.object_index);
 	var _relevant_meta_vars_length = array_length(_meta_vars)
 	for (var _i = 0; _i < NET_TOTAL_META_PROPS; _i++) {
 		var _meta_val = 0
@@ -291,7 +288,7 @@ function instance_get_meta_state(_inst) {
 /// @param {Struct} _payload
 /// @return {Struct}
 function instance_convert_network_payload_to_state_object(_instance_type, _payload) {
-	var _relevant_meta_vars = global.instance_type_to_meta_variables_array[_instance_type]
+	var _relevant_meta_vars = ds_map_find_value(global.instance_type_to_meta_variables_array, _instance_type);
 	var _ret_val = {}
 	var _relevant_meta_vars_length = array_length(_relevant_meta_vars)
 	for (var _i = 0; _i < _relevant_meta_vars_length; _i++) {

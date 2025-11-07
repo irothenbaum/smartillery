@@ -1,4 +1,4 @@
-enemy_initlaize(self, global.points_enemy_4)
+enemy_initialize(self)
 speed = 1
 image_scale = 0.12
 image_xscale = image_scale

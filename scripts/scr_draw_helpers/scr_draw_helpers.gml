@@ -284,7 +284,6 @@ function get_ring_from_distance(_distance) {
 }
 
 /**
-
  * @param {Struct.Bounds} _bounds
  * @param {Real} _color
  * @param {Real} _spr
@@ -311,4 +310,37 @@ function draw_rectangle_clipped(_bounds, _color, _spr, _scale) {
 	// Reset the shader
 	shader_reset();
 
+}
+
+/**
+ * @param {Real} _x0
+ * @param {Real} _y0
+ * @param {Real} _x1
+ * @param {Real} _y1
+ * @param {Bool} _horizontal_first
+ */
+function draw_line_between(_x0, _y0, _x1, _y1, _horizontal_first = false) {
+	var _y_direction = normalize(_y1 - _y0)
+	_y1 -= 30 * _y_direction
+	
+	if (_horizontal_first) {
+		var _x_direction = normalize(_x1 - _x0)
+		_x0 += 10 * _x_direction
+	} else {
+		_y0 += 10 * _y_direction
+	}
+	
+	var _thickness = 2
+	
+	var _half_y = _y0 + _y_direction * (_y1 - _y0) / 2
+	if (_horizontal_first) {
+		_half_y = _y0
+	}
+	
+	draw_line_width(_x0, _y0, _x0, _half_y, _thickness)	
+	
+	if (_x0 != _x1) {
+		draw_line_width(_x0, _half_y, _x1, _half_y, _thickness)
+	}
+	draw_line_width(_x1, _half_y, _x1, _y1, _thickness)
 }

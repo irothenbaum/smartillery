@@ -10,7 +10,8 @@ function ult_base_get_duration(_level) {
 }
 
 function get_experience_needed_for_next_level(_curent_level) {
-	return min(5 * _curent_level, 50)
+	// these are basically points needed
+	return global.ultimate_requirement * _curent_level
 }
 
 // -------------------------------------------------------------------------------------------

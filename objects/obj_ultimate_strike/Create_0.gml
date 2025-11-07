@@ -33,6 +33,7 @@ function strike_nearest_enemy() {
 	
 	with(_target) {
 		_target.last_hit_by_player_id = other.owner_player_id
+		_target.streak_ineligible = true
 		register_hit(true)
 		instance_create_layer(x, y, LAYER_INSTANCES, obj_ultimate_strike_explosion, {radius: 0})
 	}

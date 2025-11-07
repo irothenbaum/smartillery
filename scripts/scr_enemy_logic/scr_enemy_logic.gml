@@ -1,29 +1,18 @@
-/* 
-	// this code is an example Create script for an enemy class object
-	
-	// all enemies must implement these private variables:
-	spawn_time = get_play_time()
-	equation = "";
-	point_value = 10
-
-	// they must also implement this functions:
-	function register_hit(_insta_kill=false) {} // report hit by player
-*/
-
 /**
  * @param {Id.Instance} _e
- * @param {Real} _point_value
  * @param {Bool} _skip_question_generation
  */
-function enemy_initlaize(_e, _point_value, _skip_question_generation = false) {
+function enemy_initialize(_e, _skip_question_generation = false) {
 	with (_e) {
 		spawn_time = get_play_time()
 		draw_equation_position = undefined
 		equation = "";
-		point_value = _point_value
+		point_value = ds_map_find_value(global.points_map, object_index)
+		debug("Point value:",  point_value)
 		slow_multiplier = 1
 		slow_sparks = undefined
 		last_hit_by_player_id = undefined
+		streak_ineligible = false
 		
 		subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
 			if (!is_undefined(slow_sparks)) {
@@ -66,13 +55,32 @@ function enemy_step(_e) {
  */
 function enemy_draw_equation(_e) {
 	with (_e) {
-		draw_set_font(fnt_large);
-		draw_set_color(c_white);
 		var _string = global.paused ? " " : equation
+		var _positions = get_draw_equation_position(_string, x, y)
+		var _actual_position = _positions[0]
+		var _target_position = _positions[1]
+				
+		draw_equation_position = is_undefined(draw_equation_position) ? _target_position : {
+			x: lerp(draw_equation_position.x, _actual_position.x, global.fade_speed * 2),
+			y: lerp(draw_equation_position.y, _actual_position.y, global.fade_speed * 2)
+		}
+		draw_text_with_alignment(draw_equation_position.x, draw_equation_position.y, _string, ALIGN_CENTER);
+	}
+}
+
+/**
+ * @param {String} _string
+ * @param {Real} _x
+ * @param {Real} _y
+ * Returns a tuple. The first value is the actual render position, the second is the target render position
+ */
+function get_draw_equation_position(_string, _x, _y) {
+	draw_set_font(fnt_large);
+		draw_set_color(c_white);
 		var _string_height = string_height(_string)
 		var _string_width = string_width(_string)
 		// 25 is a constant that basically indicates half the sprite size
-		var _offset_y = (y > global.ycenter ? -1 : 1) * (25 + _string_height)
+		var _offset_y = (_y > global.ycenter ? -1 : 1) * (25 + _string_height)
 		
 		// this logic is going to draw the equation within the game bounds even if the enemy us out of screen
 		var _string_directional_bounds = new Bounds(
@@ -83,8 +91,8 @@ function enemy_draw_equation(_e) {
 		)
 		
 		var _target_position = {
-			x: x,
-			y: y + _offset_y
+			x: _x,
+			y: _y + _offset_y
 		}
 		var _actual_position = _target_position
 		
@@ -119,16 +127,12 @@ function enemy_draw_equation(_e) {
 			)
 		}
 		
-		draw_equation_position = is_undefined(draw_equation_position) ? _target_position : {
-			x: lerp(draw_equation_position.x, _actual_position.x, global.fade_speed * 2),
-			y: lerp(draw_equation_position.y, _actual_position.y, global.fade_speed * 2)
-		}
-		draw_text_with_alignment(draw_equation_position.x, draw_equation_position.y, _string, ALIGN_CENTER);
-	}
+		return [_actual_position, _target_position]
 }
 
 function enemy_generate_question(_e) {
 	var _wave = get_current_wave_number()
+	var _functional_wave = ceil(_wave / ds_map_find_value(global.enemy_difficulty_multiplier, _e.object_index))
 	equation = ""
 	answer = ""
 	
@@ -137,7 +141,7 @@ function enemy_generate_question(_e) {
 		do {
 			try {
 				_attempts--;
-				var _values = global.is_math_mode ? generate_equation_and_answer(_wave) : generate_text_and_answer(_wave)
+				var _values = global.is_math_mode ? generate_equation_and_answer(_functional_wave) : generate_text_and_answer(_functional_wave)
 				get_game_controller().reserve_answer(_values.answer, self)
 				equation = _values.equation
 				answer = _values.answer
