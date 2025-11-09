@@ -57,8 +57,9 @@ global.is_math_mode = true
 global.total_paused_time = 0
 global.paused = false
 global.game_seed = randomize()
+global.starting_wave = 0
 
-// <ultiplayer stuff
+// multiplayer stuff
 global.lobby_id = undefined
 global.is_solo = false
 global.is_coop = false
@@ -72,6 +73,19 @@ global.room_width = 1440
 global.room_height = 1000
 global.xcenter = global.room_width / 2
 global.ycenter = global.room_height / 2
+
+// layout
+global.margin_xs = 8
+global.margin_sm = 12
+global.margin_md = 20
+global.margin_lg = 32
+global.margin_xl = 60
+ 
+// these match the font settings
+global.font_size_sm = 8
+global.font_size_md = 12
+global.font_size_lg = 16
+global.font_size_xl = 24
 
 // gameplay
 global.point_streak_requirement = 3
@@ -125,9 +139,6 @@ global.bg_circle_max_radius = ceil(sqrt(power(global.room_width, 2) + power(glob
 global.bg_cicle_min_radius = global.turret_length
 global.bg_circle_magnitude = global.bg_circle_max_radius - global.bg_cicle_min_radius
 global.bg_circle_ring_width = global.bg_circle_magnitude / global.bg_number_of_circles
-
-// layout
-global.multiplayer_input_shift_off_center = 200
 
 
 global._G = {}

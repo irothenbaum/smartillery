@@ -104,7 +104,6 @@ function build_solution_from_keyboard_input(_input, _blocks) {
 function draw_word_blocks(_x, _y, _block, _styles, _is_focused) {
 	debug("DRAWING WORD BLOCK", _block, _styles, _is_focused)
 	
-	var _padding = 20
 	var _bounds = {
 		x0: _x,
 		y0: _y,
@@ -120,15 +119,15 @@ function draw_word_blocks(_x, _y, _block, _styles, _is_focused) {
 		_bounds.x1 = _this_square_bounds.x1
 		// apply padding to all internal squares
 		if (_i > 0 && _i < _squares_count - 1) {
-			_bounds.x1 = _bounds.x1 + _padding
+			_bounds.x1 = _bounds.x1 + global.margin_md
 			// draw vertical line indicating space between characters
-			draw_line(_bounds.x1, _bounds.y0 - _padding, _bounds.x1, _bounds.y1 + _padding)
-			_bounds.x1 = _bounds.x1 + _padding
+			draw_line(_bounds.x1, _bounds.y0 - global.margin_md, _bounds.x1, _bounds.y1 + global.margin_md)
+			_bounds.x1 = _bounds.x1 + global.margin_md
 		}
 	}
 	
 	// draw external padding and then draw the word containing box
-	_bounds = _apply_padding_to_bounds(_bounds, _padding, _padding)
-	draw_rounded_rectangle(_bounds, _padding / 2, _is_focused ? 6 : 2)
+	_bounds = _apply_padding_to_bounds(_bounds, global.margin_md, global.margin_md)
+	draw_rounded_rectangle(_bounds, global.margin_md / 2, _is_focused ? 6 : 2)
 	return _bounds
 }

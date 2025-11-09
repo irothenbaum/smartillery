@@ -35,12 +35,11 @@ array_foreach(ultimate_icons, method({game_controller: game_controller, draw_ult
 	var _ult_bounds = _icon.my_bounds
 	if (!is_undefined(_ult_bounds)) {
 		var _ultimate_description = {
-			x: _ult_bounds.xcenter + ((_ult_bounds.xcenter - global.xcenter) / 2), // shift further from center horizontally
-			y: global.ycenter + ((_ult_bounds.ycenter - global.ycenter) / 2), // shift towards the middle vertically
+			x: _ult_bounds.xcenter,
+			y: global.ycenter + ((_ult_bounds.ycenter - global.ycenter) / 1.8), // shift towards the middle vertically
 			align: (_ult_bounds.xcenter > global.xcenter) ? ALIGN_LEFT : ALIGN_RIGHT
 		}
 	
-		draw_set_font(fnt_large)
 		draw_line_between(_ult_bounds.xcenter, _ult_bounds.y1, _ultimate_description.x, _ultimate_description.y)
 	
 		var _ultimate = get_player_ultimate(_icon.owner_player_id)

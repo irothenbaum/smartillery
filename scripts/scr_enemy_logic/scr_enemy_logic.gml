@@ -201,7 +201,7 @@ function enemy_apply_slow(_enemy, _multiplier) {
 				}
 				slow_sparks = undefined
 			} else {
-				slow_sparks = draw_particle_sparkle(x, y, global.ultimate_color_tints[$ ULTIMATE_SLOW], 20)
+				slow_sparks = draw_particle_sparkle(x, y, global.ultimate_color_tints[$ ULTIMATE_SLOW], sprite_width / 2)
 			}
 		}
 		

@@ -15,7 +15,7 @@ if (is_controlled) {
 		keyboard_string = "";
 		broadcast(EVENT_INPUT_CHANGED, "")
 	} else {
-		keyboard_string = string_copy(keyboard_string, 0, 20);
+		keyboard_string = string_copy(keyboard_string, 0, global.is_math_mode ? 4 : global.max_word_length + 1);
 	
 		if (keyboard_string != message) {
 			message = keyboard_string

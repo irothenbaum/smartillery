@@ -69,7 +69,7 @@ for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
 		
 		draw_set_color(c_white)
 		draw_set_font(fnt_large)
-		draw_text_with_alignment(x, _title_bounds.y1 + 20, global.ultimate_descriptions[$ _this_ultimate].description, ALIGN_CENTER)
+		draw_text_with_alignment(x, _title_bounds.y1 + global.margin_md, global.ultimate_descriptions[$ _this_ultimate].description, ALIGN_CENTER)
 	}
 }
 

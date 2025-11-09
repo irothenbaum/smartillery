@@ -80,7 +80,7 @@ function generate_equation(_answer, _max, _difficulty = 0) {
 }
 
 function generate_answer(_max) {
-	return irandom(_max);
+	return irandom(_max - 1) + 1;
 }
 
 function math_determine_max_from_wave(_wave) {

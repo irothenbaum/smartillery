@@ -33,8 +33,7 @@ function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_colo
  */
 function draw_info_modal(_bounds, _step) {
 	_step = min(1, max(0, _step))
-	var _padding = 20;
-	var _with_padding = _apply_padding_to_bounds(_bounds, _padding, _padding)
+	var _with_padding = _apply_padding_to_bounds(_bounds, global.margin_md, global.margin_md)
 	
 	if (_step < 1) {
 		_with_padding = new Bounds(

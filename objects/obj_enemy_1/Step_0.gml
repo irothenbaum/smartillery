@@ -10,7 +10,7 @@ if (array_length(waypoints) > 0) {
 	direction -= angle_difference(direction, point_direction(x, y, _target.x, _target.y)) * 0.05;
 	
 	// when we close to a waypoint, we shift it off
-	if (point_distance(x, y, _target.x, _target.y) < 20) {
+	if (point_distance(x, y, _target.x, _target.y) < global.margin_md) {
 		array_shift(waypoints)
 	}
 } else {

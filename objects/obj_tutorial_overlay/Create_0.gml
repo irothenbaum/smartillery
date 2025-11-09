@@ -1,7 +1,6 @@
 /// @description Store references to postitions
 hud = instance_find(obj_hud, 0)
 player = get_player()
-input = instance_find(obj_input, 0)
 game_controller = get_game_controller()
 
 
@@ -9,14 +8,14 @@ ultimate_icons = get_array_of_instances(obj_hud_ultimate_icon)
 user_inputs = get_array_of_instances(obj_input)
 
 wave_description = {
-	x: 100,
-	y: 200,
+	x: hud.pos_wave.bounds.xcenter,
+	y: hud.pos_wave.bounds.y1 + global.margin_xl,
 	align: ALIGN_CENTER
 }
 
 score_description = {
 	x: hud.pos_score.bounds.xcenter,
-	y: 200,
+	y: hud.pos_score.bounds.y1 + global.margin_xl,
 	align: ALIGN_CENTER
 }
 
@@ -27,23 +26,27 @@ function draw_ultimate_level_details(_player_id, _ult_bounds) {
 		y: _ult_bounds.ycenter + lengthdir_y(_circle_radius, 315),
 	}
 	
-	var _details_center = {
-		x: _ult_bounds.xcenter + lengthdir_x(260, 330),
-		y: _ult_bounds.ycenter + lengthdir_y(260, 330),
+	var _details_title_center = {
+		x: _ult_bounds.xcenter + _circle_radius * 2,
+		y: _ult_bounds.ycenter,
 	}
-	draw_line_between(_level_center.x, _level_center.y, _details_center.x, _details_center.y, true)
 	
-	var _this_level_stats = get_ultimate_stats(get_player_ultimate(_player_id), game_controller.ultimate_level[$ _player_id])
-	var _next_level_stats = get_ultimate_stats(get_player_ultimate(_player_id), game_controller.ultimate_level[$ _player_id] + 1)
+	var _ultimate_level = game_controller.ultimate_level[$ _player_id]
+	var _player_ultimate = get_player_ultimate(_player_id)
+	
+	var _this_level_stats = get_ultimate_stats(_player_ultimate, _ultimate_level)
+	var _next_level_stats = get_ultimate_stats(_player_ultimate, _ultimate_level + 1)
+	
+	draw_line_between(_level_center.x, _level_center.y, _details_title_center.x, _details_title_center.y)
 	
 	draw_set_font(fnt_large)
-	var _new_bounds = draw_text_with_alignment(_details_center.x, _details_center.y, string_concat(global.ultimate_descriptions[$ get_player_ultimate(get_my_steam_id_safe())].title, " -- lvl ", game_controller.ultimate_level), ALIGN_CENTER)
+	var _new_bounds = draw_text_with_alignment(_details_title_center.x, _details_title_center.y, string_concat(global.ultimate_descriptions[$ _player_ultimate].title, " -- lvl ", _ultimate_level), ALIGN_LEFT)
 	draw_set_font(fnt_base)
-	_new_bounds = draw_text_with_alignment(_new_bounds.x0, _new_bounds.y1 + 20, _this_level_stats, ALIGN_LEFT)
+	_new_bounds = draw_text_with_alignment(_new_bounds.x0, _new_bounds.y1 + global.margin_md, _this_level_stats, ALIGN_LEFT)
 	
-	draw_line_width(_new_bounds.x0, _new_bounds.y1 + 20, _new_bounds.x1 + 60, _new_bounds.y1 + 20, 1)
+	draw_line_width(_new_bounds.x0, _new_bounds.y1 + global.margin_md, _new_bounds.x1 + global.margin_xl, _new_bounds.y1 + global.margin_md, 1)
 	
-	draw_text_with_alignment(_new_bounds.x0, _new_bounds.y1 + 50, string_concat("Next Level:\n", _next_level_stats), ALIGN_LEFT)
+	draw_text_with_alignment(_new_bounds.x0, _new_bounds.y1 + global.margin_xl, string_concat("Next Level:\n", _next_level_stats), ALIGN_LEFT)
 }
 
 /**

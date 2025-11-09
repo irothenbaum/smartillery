@@ -3,6 +3,7 @@ function set_up_test() {
 	global.is_solo = true
 	global.is_coop = false
 	global.selected_ultimate[$ get_my_steam_id_safe()] = ULTIMATE_STRIKE
+	global.starting_wave = 6;
 	
 	room_goto(rm_play_solo)
 }

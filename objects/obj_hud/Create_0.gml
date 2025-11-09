@@ -1,16 +1,18 @@
-margin = 20
+margin = global.margin_md
 drawn_score = 0
 
 pos_score = {
 	x: room_width - 2 * margin,
 	y: margin,
-	align: ALIGN_RIGHT
+	align: ALIGN_RIGHT,
+	bounds: undefined // set after drawing
 }
 
 pos_wave = {
 	x: margin,
 	y: margin,
-	align: ALIGN_LEFT
+	align: ALIGN_LEFT,
+	bounds: undefined // set after drawing
 }
 
 game_controller = get_game_controller()

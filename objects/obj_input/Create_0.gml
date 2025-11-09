@@ -12,8 +12,12 @@ my_color = get_player_color(owner_player_id)
 // this may not be immediately inuitive, but this logic ensures the correct input locations for each player
 var _top_y = 40
 var _bottom_y = global.room_height - 40
-var _left_x = global.xcenter - global.multiplayer_input_shift_off_center
-var _right_x = global.xcenter + global.multiplayer_input_shift_off_center
+
+// TODO: DeviceSizeCheck
+var _multiplayer_input_shift_off_center = global.room_width * 0.15
+
+var _left_x = global.xcenter - _multiplayer_input_shift_off_center
+var _right_x = global.xcenter + _multiplayer_input_shift_off_center
 
 // if it's solo or there are 3 and we're the third, we align center
 var _align_center = global.is_solo || get_players_count() == 3 && get_player_number(owner_player_id) == 2

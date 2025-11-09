@@ -5,7 +5,7 @@ random_set_seed(global.game_seed);
 tutorial = undefined;
 enemy_controller = undefined;
 
-current_wave = 0
+current_wave = global.starting_wave
 game_score = 0
 unit_score = 0
 streak_score = 0
@@ -122,7 +122,7 @@ function reset_starting_values() {
 	unit_score = 0
 	streak_score = 0
 	game_score = 0
-	current_wave = 0 // TODO revert to 0
+	current_wave = global.starting_wave
 	combo_count = initialize_player_map(0)
 	longest_combo = initialize_player_map(0)
 	streak = initialize_player_map(0)
@@ -173,7 +173,7 @@ function draw_point_indicators(_player_id, _x, _y, _base, _streak, _combo) {
 		font: fnt_large,
 		owner_player_id: _player_id,
 	})
-	_y -= 20
+	_y -= global.margin_md
 	
 	if (_streak) {	
 		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
@@ -183,7 +183,7 @@ function draw_point_indicators(_player_id, _x, _y, _base, _streak, _combo) {
 			is_streak: true,
 			
 		})
-		_y -= 20
+		_y -= global.margin_md
 	}
 	
 	if (_combo) {
