@@ -6,7 +6,7 @@
 #macro ULT_DURATION_INCREMENT 3
 // in frames
 function ult_base_get_duration(_level) {
-	return (ULT_BASE_DURATION + _level * ULT_DURATION_INCREMENT) * game_get_speed(gamespeed_fps)
+	return (ULT_BASE_DURATION + (_level * ULT_DURATION_INCREMENT)) * game_get_speed(gamespeed_fps)
 }
 
 function get_experience_needed_for_next_level(_curent_level) {
@@ -22,8 +22,8 @@ function ult_heal_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-#macro LEECH_MINIMUM_AMOUNT 5
-#macro LEECH_MINIMUM_INCREMENT 2
+#macro LEECH_MINIMUM_AMOUNT 3
+#macro LEECH_MINIMUM_INCREMENT 1
 // in health
 function ult_heal_get_leech_amount(_level) {
 	return LEECH_MINIMUM_AMOUNT + (_level  - 1) * LEECH_MINIMUM_INCREMENT
@@ -34,7 +34,7 @@ function ult_heal_get_leech_amount(_level) {
 // -------------------------------------------------------------------------------------------
 
 #macro STRIKE_MINIMUM 4
-#macro STRIKE_INCREMENT_LEVEL_STEP 3
+#macro STRIKE_INCREMENT_LEVEL_STEP 1
 // n > 0
 function ult_strike_get_count(_level) {
 	// level 4 we get our first bump, then level 7, then 10
@@ -56,17 +56,6 @@ function ult_slow_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-#macro SLOW_BASE_RADIUS 3 // outside the fire distance of enemy2
-// this is the area of effect in pixels
-function ult_slow_get_radius(_level) {
-	return get_radius_at_i(ult_slow_get_rings(_level))
-}
-
-// this is the area of effect in rings
-function ult_slow_get_rings(_level) {
-	return max(0, global.bg_number_of_circles - (SLOW_BASE_RADIUS + _level))
-}
-
 // -------------------------------------------------------------------------------------------
 // AIM ASSIST
 // -------------------------------------------------------------------------------------------
@@ -81,12 +70,6 @@ function ult_assist_get_range(_level) {
 	return ASSIST_BASE_RANGE + (_level-1)
 }
 
-#macro ASSIST_BASE_TARGET_COUNT 1
-#macro ASSIST_SECONDARY_STRIKE_LEVEL_STEP 3 // every 3 levels we add another secondary target
-function ult_assist_get_number_of_targets(_level) {
-	return ASSIST_BASE_TARGET_COUNT + floor((_level - 1) / ASSIST_SECONDARY_STRIKE_LEVEL_STEP)
-}
-
 // -------------------------------------------------------------------------------------------
 // COLLATERAL DAMAGE
 // -------------------------------------------------------------------------------------------
@@ -95,18 +78,17 @@ function ult_collateral_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-#macro CIKKATERAL_BASE_RADIUS 50
-#macro CIKKATERAL_RADIUS_INCREMENT_STEP 10
-#macro CIKKATERAL_RADIUS_REDUCTION 3 // how much our radius reduces by when we increase strike count 
+#macro COLLATERAL_BASE_RADIUS 40
+#macro COLLATERAL_RADIUS_INCREMENT_STEP 10
 // in pixels
 function ult_collateral_get_radius(_level) {
-	return CIKKATERAL_BASE_RADIUS + (_level - 1) * CIKKATERAL_RADIUS_INCREMENT_STEP
+	return COLLATERAL_BASE_RADIUS + (_level - 1) * COLLATERAL_RADIUS_INCREMENT_STEP
 }
 
 // -------------------------------------------------------------------------------------------
 // SIMPLIFICATION
 // -------------------------------------------------------------------------------------------
-
+/*
 function ult_simplification_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
@@ -120,6 +102,7 @@ function ult_simplification_get_difficulty_multiplier(_level) {
 	// .... etc
 	return power(SIMPLIFICATION_BASE_MULTIPLIER, _level)
 }
+*/
 
 // -------------------------------------------------------------------------------------------
 // Utilities
@@ -132,13 +115,24 @@ function get_player_ultimate(_player_id) {
 	return global.selected_ultimate[$ _player_id]
 }
 
+function is_duration_ult(_ult_type) {
+	return _ult_type != ULTIMATE_STRIKE
+}
+
 /**
  * @param {Id.Instance} _obj
  */
-function ultimate_initialize(_obj) {
+function ultimate_initialize(_obj, _type) {
 	with (_obj) {
 		ult_overlay = 1
-		ult_type = ULTIMATE_NONE
+		ult_type = _type
+		game_controller = get_game_controller()
+		if (is_duration_ult(ult_type)) {
+			starting_duration = ult_collateral_get_duration(level)
+			alarm[0] = starting_duration
+		} else {
+			start_duration = 0
+		}
 	}
 }
 
@@ -152,8 +146,16 @@ function ultimate_step(_obj) {
 		} else {
 			ult_overlay = 0
 		}
+		
+		if (is_duration_ult(ult_type)) {
+			game_controller.ultimate_charge[$ owner_player_id] = max(0, global.ultimate_requirement * alarm[0] / starting_duration)
+		} else {
+			game_controller.ultimate_charge[$ owner_player_id] = lerp(0, game_controller.ultimate_charge, global.fade_speed)
+		}
 	}
 }
+
+#macro ULT_TIMER_CIRCLE_THICKNESS 6
 
 /**
  * @param {Id.Instance} _obj
@@ -166,15 +168,24 @@ function ultimate_draw(_obj) {
 			draw_sprite_ext(global.ultimate_icons[$ ult_type], 0, global.xcenter, global.ycenter, _scale, _scale, 0, global.ultimate_colors[$ ult_type], ult_overlay)
 			// draw_rectangle_clipped(new Bounds(0, 0, global.room_width, global.room_height), global.ultimate_colors[$ global.selected_ultimate], global.ultimate_icons[$ global.selected_ultimate], _scale)
 		}
+		
+		if (is_duration_ult(ult_type)) {
+			var _remaining_ratio = (game_controller.ultimate_charge[$ owner_player_id] / global.ultimate_requirement)
+			var _thickness = (max(1, ULT_TIMER_CIRCLE_THICKNESS * _remaining_ratio))
+			var _radius = global.player_body_radius + _thickness + (_remaining_ratio * (global.bg_cicle_min_radius - global.player_body_radius))
+			draw_set_color(global.ultimate_colors[$ ult_type])
+			draw_arc(global.xcenter, global.ycenter, _radius, 360, 0, _thickness)
+			reset_composite_color()
+		}
 	}
 }
 
 // TOOD: This needs to contorl more ultimate types
 global._G.ultimate_object_map = {
 	ULTIMATE_STRIKE: obj_ultimate_strike,
-	ULTIMATE_HEAL: obj_heal_power,
-	ULTIMATE_SLOW: obj_slow_time,
+	ULTIMATE_HEAL: obj_ultimate_heal,
+	ULTIMATE_SLOW: obj_ultimate_slow,
 	ULTIMATE_ASSIST: "todo",
 	ULTIMATE_SIMPLIFY: "todo",
-	ULTIMATE_COLLATERAL: "todo",
+	ULTIMATE_COLLATERAL: obj_ultimate_collateral,
 }

@@ -7,9 +7,11 @@ speed = is_paused ? 0 : paused_speed
 orbs = []
 cloud_radius = 30
 
+color = type == ORB_TYPE_HEALTH ? global.ultimate_color_tints[$ ULTIMATE_HEAL] : (type == ORB_TYPE_ULT ? get_player_color(owner_player_id) : global.near_white);
+
 var _amount_copy = amount
 do {
-	var _this_orb = min(5, _amount_copy)
+	var _this_orb = min(10, _amount_copy)
 	array_push(orbs, {
 		x_diff: 0,
 		y_diff: 0,

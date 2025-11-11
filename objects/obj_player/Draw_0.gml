@@ -10,7 +10,7 @@ var _flash_count = array_length(hull_flashes)
 if (_flash_count > 0) {
 	for(var _i = 0; _i < _flash_count; _i++) {
 		var _this_flash = hull_flashes[_i]
-		var _step_scale = body_diameter / 2 + (20 * _this_flash.step)
+		var _step_scale = global.player_body_radius + (20 * _this_flash.step)
 		
 		draw_set_composite_color(new CompositeColor(_this_flash.color, 1 - _this_flash.step))
 		draw_circle(_body_x, _body_y, _step_scale, false)

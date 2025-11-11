@@ -15,30 +15,39 @@
 #macro ULTIMATE_COLLATERAL "collateral"
 #macro ULTIMATE_SIMPLIFY "simplify"
 
+#macro ORB_TYPE_SCORE "score"
+#macro ORB_TYPE_ULT "ult"
+#macro ORB_TYPE_HEALTH "health"
+#macro ORB_TYPE_COMBO "combo"
+
+
 #macro TAU (2 * pi)
 
 
 // colors
 global.bg_color = #260b26
-global.combo_color = c_red
+global.combo_color = #ff0000
 global.beam_color = c_white
+global.near_white = #c7c7c7
+
 global.ultimate_colors = {
 	ULTIMATE_NONE: c_white, 
 	ULTIMATE_STRIKE: #e03a3a, 
-	ULTIMATE_SLOW: #3e7bed, 
+	ULTIMATE_SLOW: #4ccdfc, 
 	ULTIMATE_HEAL: #11d94e,
 	ULTIMATE_SIMPLIFY: #11d94e, // TODO:
-	ULTIMATE_ASSIST: #11d94e, // TODO:
-	ULTIMATE_COLLATERAL: #11d94e, // TODO:
+	ULTIMATE_ASSIST: #a711d9,
+	ULTIMATE_COLLATERAL: #f5fc90,
 }
+// TODO: Revisit these
 global.ultimate_color_tints = {
 	ULTIMATE_NONE: #eeeeee, 
 	ULTIMATE_STRIKE: #e0773a, 
 	ULTIMATE_SLOW: #0ce7eb, 
 	ULTIMATE_HEAL: #c0ed2b,
 	ULTIMATE_SIMPLIFY: #c0ed2b, // TODO:
-	ULTIMATE_ASSIST: #c0ed2b, // TODO:
-	ULTIMATE_COLLATERAL: #c0ed2b, // TODO:
+	ULTIMATE_ASSIST: #a711d9,
+	ULTIMATE_COLLATERAL: #f5fc90,
 }
 global.ultimate_icons = {
 	ULTIMATE_STRIKE: spr_ult_strike,
@@ -69,10 +78,13 @@ global.max_players = 4
 
 // seemingly magic numbers
 global.turret_length = 53
+global.player_body_radius = 26 // player sprite_width * image_scale / 2 =  (326 * 0.16 / 2)
 global.room_width = 1440
 global.room_height = 1000
 global.xcenter = global.room_width / 2
 global.ycenter = global.room_height / 2
+global.beam_width = 12
+global.beam_width_lg = 16
 
 // layout
 global.margin_xs = 8
@@ -92,7 +104,7 @@ global.point_streak_requirement = 3
 global.combo_delay_ms = 1200
 global.minimum_combo = 2
 global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower!", "Menace!!", "Untouchable!!!", "Impossible!!!!"]
-global.ultimate_requirement = 40 // the streak point values needed to charge ult
+global.ultimate_requirement = 100
 global.ultimate_code = "000"
 global.max_health = 100
 global.starting_max_answer = 10

@@ -7,9 +7,6 @@ enemy_controller = undefined;
 
 current_wave = global.starting_wave
 game_score = 0
-unit_score = 0
-streak_score = 0
-combo_score = 0
 
 // these are player specific values that we track
 combo_count = {}
@@ -71,7 +68,9 @@ function mark_wave_completed() {
 		instance_destroy(enemy_controller)
 		enemy_controller = undefined
 	}
-	get_player().my_health = global.max_health
+
+	// no longer get health back automatically at round end
+	// get_player().my_health = global.max_health
 	current_wave++;
 	// Even those the enemy controller is a controller, 
 	enemy_controller = instance_create_layer(x, y, LAYER_INSTANCES, obj_enemy_controller);
@@ -117,10 +116,6 @@ function end_game() {
  * @returns {undefined}
  */
 function reset_starting_values() {
-	// TODO: we should track each of these score items per player as well (or maybe just the total?)
-	combo_score = 0
-	unit_score = 0
-	streak_score = 0
 	game_score = 0
 	current_wave = global.starting_wave
 	combo_count = initialize_player_map(0)
@@ -156,64 +151,62 @@ function handle_enemy_killed(_enemy) {
 		increase_combo(_player_id)
 	}
 	
-	// streak is + 30% of base
-	var _streak_score = (has_point_streak() && !_enemy.streak_ineligible) ? floor(_enemy.point_value * 0.3) : 0;
-	var _combo_score = combo_count[$ _player_id] >= global.minimum_combo ? combo_count[$ _player_id] : 0
 	
-	draw_point_indicators(_player_id, _enemy.x, _enemy.y, _enemy.point_value, _streak_score, _combo_score)
+	var _ult_increase = (has_point_streak(_player_id) && !_enemy.streak_ineligible) ? _enemy.point_value / 2 : 0;
+	var _combo_bonus = combo_count[$ _player_id] >= global.minimum_combo ? combo_count[$ _player_id] : 0
+	
+	draw_point_indicators(_player_id, _enemy.x, _enemy.y, _enemy.point_value, _ult_increase, _combo_bonus)
 	broadcast(EVENT_ENEMY_KILLED, _enemy)
 }
 
 /**
  * @returns {undefined}
  */
-function draw_point_indicators(_player_id, _x, _y, _base, _streak, _combo) {
+function draw_point_indicators(_player_id, _x, _y, _score_increase, _ult_increase, _combo_bonus) {
 	instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
-		amount: _base,
-		font: fnt_large,
+		amount: _score_increase,
+		type: ORB_TYPE_SCORE,
 		owner_player_id: _player_id,
 	})
 	_y -= global.margin_md
 	
-	if (_streak) {	
+	if (_ult_increase) {	
 		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
-			amount: _streak,
-			color: get_player_color(_player_id),
+			amount: _ult_increase,
+			type: ORB_TYPE_ULT,
 			owner_player_id: _player_id,
-			is_streak: true,
-			
 		})
 		_y -= global.margin_md
 	}
 	
-	if (_combo) {
+	if (_combo_bonus) {
 		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
-			amount: _combo,
-			color: global.combo_color,
+			amount: _combo_bonus,
+			type: ORB_TYPE_COMBO,
 			owner_player_id: _player_id,
-			is_combo: true
 		})
 	}
 }
 
 // streak and combo orbs add to ultimate charge
 function handle_point_orb_collision(_orb) {
-	if (_orb.is_streak) {
-		streak_score += _orb.amount
+	if (_orb.type == ORB_TYPE_ULT) {
 		increase_ult_score(_orb.owner_player_id, _orb.amount)
-	} else if (_orb.is_combo) {
-		combo_score += _orb.amount
+	} else if (_orb.type == ORB_TYPE_COMBO) {
+		// combo bonus adds to both score and ultimate charge
+		game_score += _orb.amount
 		increase_ult_score(_orb.owner_player_id, _orb.amount)
+	} else if (_orb.type == ORB_TYPE_HEALTH) {
+		get_player().increase_health(_orb.amount)
+	} else if (_orb.type == ORB_TYPE_SCORE) {
+		game_score += _orb.amount
 	} else {
-		unit_score += _orb.amount
+		debug("UNRECOGNIZED ORB TYPE", _orb.type)
 	}
 
-	game_score += _orb.amount
+	
 	
 	broadcast(EVENT_SCORE_CHANGED, {
-		unit_score: unit_score,
-		streak_score: streak_score,
-		combo_score: combo_score,
 		game_score: game_score,
 	})
 }
@@ -354,7 +347,8 @@ function get_player_id_for_combo_alarm(_num) {
  * @param {Real} _player_id
  */ 
 function increase_ult_score(_player_id, _amount = 1) {
-	var _amount_to_charge = min(_amount, global.ultimate_requirement - ultimate_charge[$ _player_id])
+	debug("HERE", _player_id, _amount)
+	var _amount_to_charge = min(_amount, max(0, global.ultimate_requirement - ultimate_charge[$ _player_id]))
 	var _amount_to_experience = _amount - _amount_to_charge
 	
 	ultimate_charge[$ _player_id] += _amount_to_charge
@@ -427,16 +421,8 @@ function is_answer_reserved(_answer) {
 
 // TESTING
 function _handle_test_string(_code) {
-	if(_code == "_damage") {
-		get_player().execute_take_damage(20)
-		return true;
-	}
-
-	
-	if (_code == "_wave") {
-		enemy_controller.spawned_count = enemy_controller.enemy_count
-		current_wave++;
-		return true
+	if(_code == "_l") {
+		ultimate_charge[$ get_my_steam_id_safe()] = global.ultimate_requirement
 	}
 }
 

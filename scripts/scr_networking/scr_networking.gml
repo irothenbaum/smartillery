@@ -34,7 +34,7 @@ array_foreach(global._G.numeric_id_to_event_name, method({lookup: global._G.even
 global._G.event_payload_keys = {
 	// "event_name" is also an implied item on all these payloads
 	NET_EVENT_GAME_START: ["host_id", "guest_id"],
-	NET_EVENT_SCORE_CHANGED: ["player_id", "unit_score", "streak_score", "combo_score", "game_score"],
+	NET_EVENT_SCORE_CHANGED: ["player_id", "game_score"],
 	NET_EVENT_CREATE_INSTANCE: ["instance_id", "instance_type", "x", "y", "equation", "meta0", "meta1", "meta2", "meta3", "meta4", "meta5"],
 	NET_EVENT_DESTROY_INSTANCE: ["instance_id"],
 	NET_EVENT_TURRET_ANGLE_CHANGED: ["rotate_to", "rotate_speed"],
@@ -56,9 +56,6 @@ global._G.payload_key_types = {
 	"host_id": buffer_u8,
 	
 	// NET_EVENT_SCORE_CHANGED
-	"unit_score": buffer_u8,
-	"streak_score": buffer_u8,
-	"combo_score": buffer_u8,
 	"game_score": buffer_u8,
 	
 	// NET_EVENT_TURRET_ANGLE_CHANGED

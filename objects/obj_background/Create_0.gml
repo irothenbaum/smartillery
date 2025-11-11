@@ -27,17 +27,7 @@ function filter_by_distance_to_player(_instance, _index, _ring_enemy_counts) {
 	}
 }
 
-var _c1 = global.ultimate_colors[$ ULTIMATE_HEAL]
-var _c2 = global.ultimate_color_tints[$ ULTIMATE_HEAL]
-var _c12 = color_get_hue(_c1)
-var _c22 = color_get_hue(_c2)
-heal_hues = [_c12, _c22]
-heal_hues_count = array_length(heal_hues)
-
 strike_hue = color_get_hue(global.ultimate_colors[$ ULTIMATE_STRIKE])
-
-slow_hue = color_get_hue(global.ultimate_colors[$ ULTIMATE_SLOW])
-slow_tint_hue = color_get_hue(global.ultimate_color_tints[$ ULTIMATE_SLOW])
 
 function get_hue_for_ring(_i, _options) {
 	var _this_hue = _options.health_hue;

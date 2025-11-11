@@ -13,9 +13,6 @@ if (is_host(get_my_steam_id_safe())) {
 	subscribe(EVENT_SCORE_CHANGED, function(_payload) {
 		array_push(event_buffer, {
 			event_name: NET_EVENT_SCORE_CHANGED,
-			unit_score: _payload.unit_score,
-			streak_score: _payload.streak_score,
-			combo_score: _payload.combo_score,
 			game_score: _payload.game_score,
 			player_id: get_my_steam_id_safe()
 		})
@@ -127,9 +124,6 @@ function handle_input_changed(_event) {
 function handle_score_changed(_event) {
 	var _gc = get_game_controller()
 
-	_gc.unit_score = _event.unit_score
-	_gc.streak_score = _event.streak_score
-	_gc.combo_score = _event.combo_score
 	_gc.game_score = _event.game_score
 }
 

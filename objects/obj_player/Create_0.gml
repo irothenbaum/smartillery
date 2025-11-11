@@ -3,6 +3,7 @@ recoil_amount = 0
 max_recoil_amount = 20
 hide_self = false;
 
+game_controller = get_game_controller()
 body_color_arr = color_to_array(global.body_color)
 turret_color_arr = color_to_array(global.turret_color)
 my_color = get_my_color()
@@ -20,7 +21,6 @@ x = global.xcenter
 y = global.ycenter
 
 image_scale = 0.16
-body_diameter = 50 // this is the sprite size (326) x image_scale (0.16)
 image_xscale = image_scale;
 image_yscale = image_scale;
 
@@ -73,8 +73,20 @@ function execute_hit_target() {
 	
 	// Muzzle Flash
 	var _muzzle = get_turret_muzzle()
-	var _on_streak = get_game_controller().has_point_streak(_player_who_shot_id)
-	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, {target_x: _target.x, target_y: _target.y, width: _on_streak ? 16 : 12, color: _on_streak ? get_player_color(_player_who_shot_id) : global.beam_color})
+	var _on_streak = game_controller.has_point_streak(_player_who_shot_id)
+	var _flash_variables = {
+		target_x: _target.x, 
+		target_y: _target.y, 
+		width: _on_streak ? global.beam_width_lg : global.beam_width, 
+		color: _on_streak ? get_player_color(_player_who_shot_id) : global.beam_color
+	}
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, _flash_variables)
+	
+	if (game_controller.is_ult_active(ULTIMATE_COLLATERAL) || true) { // TODO: remove true
+		// override color, default to ult color if not fired by a player on streak
+		_flash_variables.color = _on_streak ? get_player_color(_player_who_shot_id) : global.ultimate_colors[$ ULTIMATE_COLLATERAL]
+		instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_electric_beam, _flash_variables)
+	}
 	
 	recoil_amount = max_recoil_amount
 	
@@ -93,10 +105,10 @@ function execute_take_damage(_damage_amount) {
 	
 	if (my_health <= 0) {
 		aiming_at_instance = []
-		get_game_controller().end_game()
+		game_controller.end_game()
 	}
 	
-	get_game_controller().reset_streak()
+	game_controller.reset_streak()
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_shockwave})
 	
    with (screen_shake)
@@ -106,6 +118,11 @@ function execute_take_damage(_damage_amount) {
       shake_magnitude = 4;
       shake_fade = 0.5;
    }
+}
+
+function increase_health(_amount) {
+	// TODO: Could show a cool animaton or something?
+	my_health = min(global.max_health, my_health + _amount)
 }
 
 function get_turret_muzzle(_extra = 0) {

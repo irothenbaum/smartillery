@@ -59,8 +59,8 @@ function get_ultimate_stats(_ultimate, _level) {
 	// TODO: More ultimate types
 	switch (_ultimate) {
 		case ULTIMATE_HEAL:
+			array_push(_stats, string_concat("+", ult_heal_get_leech_amount(_level), " health per strike"))
 			array_push(_stats, string_concat("Duration: ", round((ult_heal_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
-			array_push(_stats, string_concat("+", ult_heal_get_leech_amount(_level), " health per kill"))
 			break
 			
 		case ULTIMATE_STRIKE:
@@ -70,8 +70,14 @@ function get_ultimate_stats(_ultimate, _level) {
 		case ULTIMATE_SLOW:
 			array_push(_stats, string_concat("Slow amount: ", round(ult_slow_get_speed_multiplier(_level) * 100), "%"))
 			array_push(_stats, string_concat("Duration: ", round((ult_slow_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
-			array_push(_stats, string_concat("Effect distance: ", ult_slow_get_radius(_level)))
 			break
+			
+		case ULTIMATE_COLLATERAL:
+			array_push(_stats, string_concat("Chain distance: ", round(ult_collateral_get_radius(_level))))
+			array_push(_stats, string_concat("Duration: ", round((ult_collateral_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
+			break
+			
+		// TODO: More types here
 	}
 	
 	return array_reduce(_stats, function(_agr, _s) {

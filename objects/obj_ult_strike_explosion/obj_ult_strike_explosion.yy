@@ -1,11 +1,11 @@
 {
   "$GMObject":"",
-  "%Name":"obj_ultimate_strike_explosion",
+  "%Name":"obj_ult_strike_explosion",
   "eventList":[
     {"$GMEvent":"","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_ultimate_strike_explosion",
+  "name":"obj_ult_strike_explosion",
   "overriddenProperties":[],
   "parent":{
     "name":"ultimates",

@@ -3,7 +3,6 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	
 	// draw ultimate box ----------------------------------------------
 	var _ultimate_color = global.ultimate_colors[$ _selected_ultimate];
-	var _ultimate_tint = global.ultimate_color_tints[$ _selected_ultimate];
 
 	var _center_shift_amount = (margin * 2 + half_sprite_size)
 	

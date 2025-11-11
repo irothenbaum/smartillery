@@ -165,7 +165,8 @@ function enemy_generate_question(_e) {
 }
 
 function enemy_strike_nearby_enemies(_enemy, _radius) {
-	for_each_enemy(function(_e, _index, _enemy, _radius) {
+	var _struck_enemies = []
+	for_each_enemy(function(_e, _index, _enemy, _radius, _struck_enemies) {
 		if (!instance_exists(_e) || !instance_exists(_enemy)) {
 			return;
 		}
@@ -177,8 +178,10 @@ function enemy_strike_nearby_enemies(_enemy, _radius) {
 			_e.last_hit_by_player_id = _enemy.last_hit_by_player_id
 			_e.register_hit()
 			broadcast(EVENT_ENEMY_HIT, _e)
+			array_push(_struck_enemies, _e)
 		}
-	}, _enemy, _radius)
+	}, _enemy, _radius, _struck_enemies)
+	return _struck_enemies
 }
 
 function enemy_remove_slow(_enemy) {
@@ -201,7 +204,7 @@ function enemy_apply_slow(_enemy, _multiplier) {
 				}
 				slow_sparks = undefined
 			} else {
-				slow_sparks = draw_particle_sparkle(x, y, global.ultimate_color_tints[$ ULTIMATE_SLOW], sprite_width / 2)
+				slow_sparks = draw_particle_sparkle(x, y, global.ultimate_colors[$ ULTIMATE_SLOW], sprite_width / 2)
 			}
 		}
 		

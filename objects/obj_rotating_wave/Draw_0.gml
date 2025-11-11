@@ -5,7 +5,7 @@ for (var _i = 0; _i < _draw_steps; _i++) {
 	var _draw_direction_next = direction + ((_i + 1) / total_steps) * 360
 	
 	var _amplitude1 = amplitude * sin((_i / resolution) * TAU)
-	var _amplitude2 = amplitude * sin(((_i+1) / resolution) * 2 *  pi)
+	var _amplitude2 = amplitude * sin(((_i+1) / resolution) * TAU)
 	
 	var _x1 = x + lengthdir_x(circle_radius + _amplitude1, _draw_direction)
 	var _x2 = x + lengthdir_x(circle_radius + _amplitude2, _draw_direction + step_rotation)
