@@ -164,7 +164,7 @@ function enemy_generate_question(_e) {
 	}
 }
 
-function enemy_strike_nearby_enemies(_enemy, _radius) {
+function enemy_strike_nearby_enemies(_enemy, _radius, _player_who_shot_id) {
 	var _struck_enemies = []
 	for_each_enemy(function(_e, _index, _enemy, _radius, _struck_enemies) {
 		if (!instance_exists(_e) || !instance_exists(_enemy)) {
@@ -178,10 +178,35 @@ function enemy_strike_nearby_enemies(_enemy, _radius) {
 			_e.last_hit_by_player_id = _enemy.last_hit_by_player_id
 			_e.register_hit()
 			broadcast(EVENT_ENEMY_HIT, _e)
-			array_push(_struck_enemies, _e)
+			array_push(_struck_enemies, _e, _player_who_shot_id)
 		}
 	}, _enemy, _radius, _struck_enemies)
 	return _struck_enemies
+}
+
+function find_enemies_near_answer(_answer, _range) {
+	var _enemies = []
+	var _gc = get_game_controller()
+	
+	var _number = real(_answer)
+	var _low_guess =_number - _range
+	var _high_guess = _number + _range
+	
+	for (var _i = _low_guess; _i <= _high_guess; _i++ ){ 
+		if (_i == _number) {
+			// it was already handled by game controller
+			continue
+		}
+		
+		var _neighor_value = _low_guess + _i;
+		
+		if (_gc.is_answer_reserved(_neighor_value) ) {
+			var _instance = active_answers[$ _neighor_value];
+			array_push(_enemies, _instance)
+		}
+	}
+	
+	return _enemies
 }
 
 function enemy_remove_slow(_enemy) {

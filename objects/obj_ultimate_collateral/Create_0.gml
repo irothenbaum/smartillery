@@ -3,7 +3,7 @@ ultimate_initialize(self, ULTIMATE_COLLATERAL)
 
 subscribe(EVENT_ENEMY_HIT, method({_radius: range}, function(_target, _player_who_shot_id) {
 	instance_create_layer(_target.x, _target.y, LAYER_INSTANCES, obj_ult_collateral_explosion)
-	var _struck_enemies = enemy_strike_nearby_enemies(_target, _radius)
+	var _struck_enemies = enemy_strike_nearby_enemies(_target, _radius, owner_player_id)
 	
 	var _on_streak = get_game_controller().has_point_streak(_player_who_shot_id)
 	var _color = _on_streak ? get_player_color(_player_who_shot_id) : global.ultimate_colors[$ ULTIMATE_COLLATERAL]

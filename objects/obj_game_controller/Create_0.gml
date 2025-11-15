@@ -233,10 +233,19 @@ function handle_submit_code(_code, _player_id = undefined) {
 		// if this was a correct enemy answer
 		increase_streak(_player_id)
 		return true
-	} else {
-		reset_streak(_player_id)
-		return false
+	} else if (is_ult_active(ULTIMATE_ASSIST)) {
+		var _inst = instance_find(obj_ultimate_assist, 0)
+		var _range = ult_assist_get_range(_inst.level)
+		var _matches = find_enemies_near_answer(_code, _range)
+		// if there areany nearby, they'll be handled separately, but we don't count it as Wrong.
+		// If there are no nearby, then it is wrong (fall through)
+		if (array_length(_matches) > 0) {
+			return true
+		}
 	}
+	
+	reset_streak(_player_id)
+	return false
 }
 
 /**
@@ -409,6 +418,7 @@ function handle_submit_answer(_answer, _player_id) {
 	
 	var _instance = active_answers[$ _answer];
 	get_player().fire_at_instance(_instance, _player_id);
+	broadcast(EVENT_ANSWER_GIVEN, _answer, _player_id)
 	return true;
 }
 

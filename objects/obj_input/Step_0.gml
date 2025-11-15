@@ -10,6 +10,7 @@ if (is_controlled) {
 	if(keyboard_check_pressed(vk_enter)) {
 		if (string_length(message) > 0) {
 			_game_controller.handle_submit_code(message)
+			broadcast(EVENT_INPUT_SUBMIT, message, owner_player_id)
 			last_guess = message
 		}
 		keyboard_string = "";

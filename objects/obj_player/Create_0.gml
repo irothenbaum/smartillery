@@ -82,10 +82,13 @@ function execute_hit_target() {
 	}
 	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, _flash_variables)
 	
-	if (game_controller.is_ult_active(ULTIMATE_COLLATERAL) || true) { // TODO: remove true
+	if (game_controller.is_ult_active(ULTIMATE_COLLATERAL)) {
 		// override color, default to ult color if not fired by a player on streak
 		_flash_variables.color = _on_streak ? get_player_color(_player_who_shot_id) : global.ultimate_colors[$ ULTIMATE_COLLATERAL]
 		instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_electric_beam, _flash_variables)
+	}
+	
+	if (game_controller.is_ult_active(ULTIMATE_ASSIST)) {
 	}
 	
 	recoil_amount = max_recoil_amount
