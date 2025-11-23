@@ -235,13 +235,7 @@ function handle_submit_code(_code, _player_id = undefined) {
 		return true
 	} else if (is_ult_active(ULTIMATE_ASSIST)) {
 		var _inst = instance_find(obj_ultimate_assist, 0)
-		var _range = ult_assist_get_range(_inst.level)
-		var _matches = find_enemies_near_answer(_code, _range)
-		// if there areany nearby, they'll be handled separately, but we don't count it as Wrong.
-		// If there are no nearby, then it is wrong (fall through)
-		if (array_length(_matches) > 0) {
-			return true
-		}
+		return _inst.handle_answer_given(_code, _player_id)
 	}
 	
 	reset_streak(_player_id)
@@ -356,7 +350,6 @@ function get_player_id_for_combo_alarm(_num) {
  * @param {Real} _player_id
  */ 
 function increase_ult_score(_player_id, _amount = 1) {
-	debug("HERE", _player_id, _amount)
 	var _amount_to_charge = min(_amount, max(0, global.ultimate_requirement - ultimate_charge[$ _player_id]))
 	var _amount_to_experience = _amount - _amount_to_charge
 	
@@ -418,7 +411,13 @@ function handle_submit_answer(_answer, _player_id) {
 	
 	var _instance = active_answers[$ _answer];
 	get_player().fire_at_instance(_instance, _player_id);
-	broadcast(EVENT_ANSWER_GIVEN, _answer, _player_id)
+	
+	if (is_ult_active(ULTIMATE_ASSIST)) {
+		var _inst = instance_find(obj_ultimate_assist, 0)
+		// don't care about the return value here because, see below
+		_inst.handle_answer_given(_answer, _player_id)
+	}
+	// regardless, we return true because they had a direct hit
 	return true;
 }
 
@@ -431,8 +430,11 @@ function is_answer_reserved(_answer) {
 
 // TESTING
 function _handle_test_string(_code) {
-	if(_code == "_l") {
+	if(_code == "_c") { // charge
 		ultimate_charge[$ get_my_steam_id_safe()] = global.ultimate_requirement
+	}
+	if (_code == "_l") { // level up
+		ultimate_level[$ get_my_steam_id_safe()]++
 	}
 }
 

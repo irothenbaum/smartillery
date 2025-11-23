@@ -64,7 +64,7 @@ function spawn_enemy() {
 	var _pos_y = global.ycenter + lengthdir_x(global.bg_circle_max_radius, _rotation)
 	
 	// the no spawn zone is the middle 33%, so if pos_x is in that range, we shift it
-	var _no_spawn_marker = room_width * 0.33
+	var _no_spawn_marker = global.room_width * 0.33
 	if (_pos_x > _no_spawn_marker && _pos_x < _no_spawn_marker * 2) {
 		var _distance_to_center = _pos_x - global.xcenter
 		// if _distance_to_center is negative, then pos_x is to the right of center, in the middle 33%.
@@ -74,9 +74,9 @@ function spawn_enemy() {
 	
 	// quad 1 is TOP, 2 is RIGHT, 3 is BOTTOM, 0 is LEFT
 	var _quad = irandom(3)
-	_pos_y = _quad == 1 ? -_oob_margin : (_quad == 3 ? room_height + _oob_margin : _pos_y);
-	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? room_width + _oob_margin : _pos_x);
 	
+	_pos_y = _quad == 1 ? -_oob_margin : (_quad == 3 ? global.room_height + _oob_margin : _pos_y);
+	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? global.room_width + _oob_margin : _pos_x);
 	
 	var _max_enemy = floor(current_wave / global.wave_difficulty_step)
 	

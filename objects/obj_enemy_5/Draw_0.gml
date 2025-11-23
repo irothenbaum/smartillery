@@ -15,7 +15,7 @@ var _alpha = _is_flickering
 			: 1
 	)
 
-var _comp_color =new CompositeColor(c_white, _alpha)
+var _comp_color = new CompositeColor(c_white, _alpha)
 
 draw_set_composite_color(_comp_color)
 

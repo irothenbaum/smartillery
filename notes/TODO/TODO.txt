@@ -5,6 +5,7 @@ BEFORE ALPHA RELEASE:
 "Bugs" and things to fix:
 - Tutorial overlay overlapping your strike and strike level
 - Since we removed strike radius, maybe we make the strike count go up by 1 every level?
+- Play again breaks
 
 Polish & effects:
 - Add glitter effect to background

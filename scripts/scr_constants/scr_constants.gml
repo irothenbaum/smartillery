@@ -35,7 +35,7 @@ global.ultimate_colors = {
 	ULTIMATE_STRIKE: #e03a3a, 
 	ULTIMATE_SLOW: #4ccdfc, 
 	ULTIMATE_HEAL: #11d94e,
-	ULTIMATE_SIMPLIFY: #11d94e, // TODO:
+	// ULTIMATE_SIMPLIFY: #11d94e, // TODO:
 	ULTIMATE_ASSIST: #a711d9,
 	ULTIMATE_COLLATERAL: #f5fc90,
 }
@@ -45,7 +45,7 @@ global.ultimate_color_tints = {
 	ULTIMATE_STRIKE: #e0773a, 
 	ULTIMATE_SLOW: #0ce7eb, 
 	ULTIMATE_HEAL: #c0ed2b,
-	ULTIMATE_SIMPLIFY: #c0ed2b, // TODO:
+	// ULTIMATE_SIMPLIFY: #c0ed2b, // TODO:
 	ULTIMATE_ASSIST: #a711d9,
 	ULTIMATE_COLLATERAL: #f5fc90,
 }
@@ -53,7 +53,7 @@ global.ultimate_icons = {
 	ULTIMATE_STRIKE: spr_ult_strike,
 	ULTIMATE_SLOW: spr_ult_slow,
 	ULTIMATE_HEAL: spr_ult_heal,
-	ULTIMATE_SIMPLIFY: spr_ult_heal, // TODO:
+	// ULTIMATE_SIMPLIFY: spr_ult_heal, // TODO:
 	ULTIMATE_ASSIST: spr_ult_heal, // TODO:
 	ULTIMATE_COLLATERAL: spr_ult_heal, // TODO:
 }
@@ -162,5 +162,5 @@ global.ultimate_descriptions = {
 	ULTIMATE_HEAL: {title: "Leech", description: "Destroying enemies repairs damage to your ship so you can stay in the fight longer"},
 	ULTIMATE_COLLATERAL: {title: "Collateral Damage", description: "Destroying an enemy will also explode nearby foes"},
 	ULTIMATE_ASSIST: {title: "Aim Assist", description: "Near misses will magically turn into direct strikes on target"},
-	ULTIMATE_SIMPLIFY: {title: "Simplifcation", description: "Enemies become much easier to target"},
+	// ULTIMATE_SIMPLIFY: {title: "Simplifcation", description: "Enemies become much easier to target"},
 }

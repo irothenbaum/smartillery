@@ -78,8 +78,8 @@ function ult_collateral_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-#macro COLLATERAL_BASE_RADIUS 40
-#macro COLLATERAL_RADIUS_INCREMENT_STEP 10
+#macro COLLATERAL_BASE_RADIUS 100
+#macro COLLATERAL_RADIUS_INCREMENT_STEP 20
 // in pixels
 function ult_collateral_get_radius(_level) {
 	return COLLATERAL_BASE_RADIUS + (_level - 1) * COLLATERAL_RADIUS_INCREMENT_STEP
@@ -155,7 +155,7 @@ function ultimate_step(_obj) {
 	}
 }
 
-#macro ULT_TIMER_CIRCLE_THICKNESS 6
+#macro ULT_TIMER_CIRCLE_THICKNESS 4
 
 /**
  * @param {Id.Instance} _obj
@@ -171,8 +171,9 @@ function ultimate_draw(_obj) {
 		
 		if (is_duration_ult(ult_type)) {
 			var _remaining_ratio = (game_controller.ultimate_charge[$ owner_player_id] / global.ultimate_requirement)
-			var _thickness = (max(1, ULT_TIMER_CIRCLE_THICKNESS * _remaining_ratio))
-			var _radius = global.player_body_radius + _thickness + (_remaining_ratio * (global.bg_cicle_min_radius - global.player_body_radius))
+			var _thickness = ULT_TIMER_CIRCLE_THICKNESS + (ULT_TIMER_CIRCLE_THICKNESS * _remaining_ratio)
+			// thickness / 2 because the path runs through the middle
+			var _radius = global.player_body_radius - (_thickness / 2) + (_remaining_ratio * (global.bg_cicle_min_radius - global.player_body_radius))
 			draw_set_color(global.ultimate_colors[$ ult_type])
 			draw_arc(global.xcenter, global.ycenter, _radius, 360, 0, _thickness)
 			reset_composite_color()
@@ -185,7 +186,7 @@ global._G.ultimate_object_map = {
 	ULTIMATE_STRIKE: obj_ultimate_strike,
 	ULTIMATE_HEAL: obj_ultimate_heal,
 	ULTIMATE_SLOW: obj_ultimate_slow,
-	ULTIMATE_ASSIST: "todo",
-	ULTIMATE_SIMPLIFY: "todo",
+	ULTIMATE_ASSIST: obj_ultimate_assist,
+	// ULTIMATE_SIMPLIFY: "todo",
 	ULTIMATE_COLLATERAL: obj_ultimate_collateral,
 }

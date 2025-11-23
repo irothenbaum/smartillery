@@ -48,6 +48,7 @@ function draw_info_modal(_bounds, _step) {
 	draw_rectangle(_with_padding.x0, _with_padding.y0, _with_padding.x1, _with_padding.y1, true)
 	draw_set_composite_color(new CompositeColor(c_black, 0.3))
 	draw_rectangle(_with_padding.x0, _with_padding.y0, _with_padding.x1, _with_padding.y1, false)
+	reset_composite_color()
 }
 
 /**

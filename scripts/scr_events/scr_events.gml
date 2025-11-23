@@ -3,7 +3,6 @@
 #macro EVENT_INPUT_SUBMIT "input-submit"
 #macro EVENT_ENEMY_HIT "enemy-hit"
 #macro EVENT_ENEMY_KILLED "enemy-killed"
-#macro EVENT_ANSWER_GIVEN "answer-given"
 #macro EVENT_TOGGLE_PAUSE "toggle-pause"
 #macro EVENT_UTLTIMATE_LEVEL_UP "ultimate-level-up"
 #macro EVENT_ON_OFF_STREAK "on-streak"

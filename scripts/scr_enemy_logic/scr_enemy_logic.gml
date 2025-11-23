@@ -164,24 +164,23 @@ function enemy_generate_question(_e) {
 	}
 }
 
-function enemy_strike_nearby_enemies(_enemy, _radius, _player_who_shot_id) {
-	var _struck_enemies = []
-	for_each_enemy(function(_e, _index, _enemy, _radius, _struck_enemies) {
-		if (!instance_exists(_e) || !instance_exists(_enemy)) {
+function enemy_find_nearby_enemies(_x, _y, _radius) {
+	debug("Finding nearby", _x, _y, _radius)
+	var _nearby_enemies = []
+	for_each_enemy(function(_e, _index, _x, _y, _radius, _nearby_enemies) {
+		if (!instance_exists(_e)) {
+			debug("_e doesn't exist")
+			// make sure _e still exists
 			return;
 		}
-		if (_e.id == _enemy.id) {
-			// obviously don't count ourselves as nearby to ourselves
-			return
+		
+		if (point_distance(_e.x, _e.y, _x, _y) < _radius) {
+			debug("Found one!", _e)
+			array_push(_nearby_enemies, _e)
 		}
-		if (point_distance(_e.x, _e.y, _enemy.x, _enemy.y) < _radius) {
-			_e.last_hit_by_player_id = _enemy.last_hit_by_player_id
-			_e.register_hit()
-			broadcast(EVENT_ENEMY_HIT, _e)
-			array_push(_struck_enemies, _e, _player_who_shot_id)
-		}
-	}, _enemy, _radius, _struck_enemies)
-	return _struck_enemies
+		debug("This enemy isn't close enough ", _e)
+	}, _x, _y, _radius, _nearby_enemies)
+	return _nearby_enemies
 }
 
 function find_enemies_near_answer(_answer, _range) {
