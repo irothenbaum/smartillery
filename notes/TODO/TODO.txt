@@ -3,9 +3,16 @@ BEFORE ALPHA RELEASE:
 ------------------------------------------------------------
 
 "Bugs" and things to fix:
+- Need Collateral and Assist Icon + title/description
 - Tutorial overlay overlapping your strike and strike level
-- Since we removed strike radius, maybe we make the strike count go up by 1 every level?
-- Play again breaks
+- Game Over not destroying all instances
+   - obj_ultimates stay visible
+- "Play again" option breaks
+   - Some variables not properly reset
+
+Testing settings that need reverting:
+- main_menu create script skips the menu and selects defaults
+- game_controller starting on level 7
 
 Polish & effects:
 - Add glitter effect to background
@@ -16,15 +23,9 @@ Polish & effects:
 
 
 Gameplay:
-- Implement Collateral ult that destroys nearby enemies
-- Implement "Aim assist" ult that rounds your answer up/down to match
-- Implement simplify ult that makes the enemis equations way easier
-  - I don't like this one, but I think I do want 6 ults... Think of a new one!?
-- Adjust the end-of-round heal logic
-  - Instead, if you start a round with < 50 health, half way through that round it will spawn a health bomb which is an equation you can solve to regain health up to 50
-     - Maybe it's like, it shows an equation, you solve it, get 1 bar of health. Can repeat until your health = 50
-	 - Or maybe it always spawns if your health < 100 and you can get up to 3 hits on it (+3 bars of hp)?
-- The combo indicator should be more subtle and appear over your input bar (so each player can track their own)
+- Bonus "enemies"
+    - "enemies" that when hit drop favorable orbs for you like more health, more ult charge, extra points?
+	- They'll never actually crash into you
 - Main Menu
 	- Logo,
 	- Wave select
