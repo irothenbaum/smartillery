@@ -1,9 +1,12 @@
 /// @description Insert description here
-size = lerp(0, size, 0.05)
+animation_progress = (get_play_time() - spawn_time) / rotation_duration_ms
 
-if (size < 0.01 || !instance_exists(target)) {
+if (animation_progress >= 1 && (!instance_exists(target) || target_was_hit)) {
 	instance_destroy();
 }
 
-x = target.x
-y = target.y
+if (instance_exists(target)) {
+	x = target.x
+	y = target.y
+}
+

@@ -154,17 +154,17 @@ function enemy_generate_question(_e) {
 			}
 		} until (equation != "" || _attempts <= 0)
 	
-		debug("Generated equation:", equation, answer, _attempts)
-	
 		if (equation == "") {
 			instance_destroy();
 			debug("Could not create equation");
 			return
 		}
+		
+		debug("Generated equation:", equation, answer, _attempts)
 	}
 }
 
-function enemy_find_nearby_enemies(_x, _y, _radius) {
+function find_enemies_near_point(_x, _y, _radius) {
 	debug("Finding nearby", _x, _y, _radius)
 	var _nearby_enemies = []
 	for_each_enemy(function(_e, _index, _x, _y, _radius, _nearby_enemies) {
@@ -187,9 +187,17 @@ function find_enemies_near_answer(_answer, _range) {
 	var _enemies = []
 	var _gc = get_game_controller()
 	
-	var _number = real(_answer)
+	var _number
+	try {
+		_number = real(_answer)
+	} catch (e) {
+		return []
+	}
+	
 	var _low_guess =_number - _range
 	var _high_guess = _number + _range
+	
+	debug("Finding enemies within range", _low_guess, _high_guess)
 	
 	for (var _i = _low_guess; _i <= _high_guess; _i++ ){ 
 		if (_i == _number) {
@@ -197,11 +205,13 @@ function find_enemies_near_answer(_answer, _range) {
 			continue
 		}
 		
-		var _neighor_value = _low_guess + _i;
-		
-		if (_gc.is_answer_reserved(_neighor_value) ) {
-			var _instance = active_answers[$ _neighor_value];
+		// this is a little specific to the workings of the game_controller
+		if (_gc.is_answer_reserved(_i) ) {
+			var _instance = _gc.active_answers[$ _i];
+			debug("Found match with", _i, _instance)
 			array_push(_enemies, _instance)
+		} else {
+			debug("Answer not reserved", _i)
 		}
 	}
 	

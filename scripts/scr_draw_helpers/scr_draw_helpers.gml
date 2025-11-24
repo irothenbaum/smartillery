@@ -171,13 +171,21 @@ function draw_rounded_rectangle(_bounds, _radius, _thickness = 1) {
 	)
 	
 	draw_line_width(_content_area.x0, _bounds.y0, _content_area.x1, _bounds.y0, _thickness)
-	draw_arc(_content_area.x1, _content_area.y0, _radius, 90, 0, _thickness)
+	if (_radius > 0) {
+		draw_arc(_content_area.x1, _content_area.y0, _radius, 90, 0, _thickness)
+	}
 	draw_line_width(_bounds.x1, _content_area.y0, _bounds.x1, _content_area.y1, _thickness)
-	draw_arc(_content_area.x1, _content_area.y1, _radius, 90, 270, _thickness)
+	if (_radius > 0) {
+		draw_arc(_content_area.x1, _content_area.y1, _radius, 90, 270, _thickness)
+	}
 	draw_line_width(_content_area.x0, _bounds.y1, _content_area.x1, _bounds.y1, _thickness)
-	draw_arc(_content_area.x0, _content_area.y1, _radius, 90, 180, _thickness)
+	if (_radius > 0) {
+		draw_arc(_content_area.x0, _content_area.y1, _radius, 90, 180, _thickness)
+	}
 	draw_line_width(_bounds.x0, _content_area.y0,_bounds.x0, _content_area.y1, _thickness)
-	draw_arc(_content_area.x0, _content_area.y0, _radius, 90, 90, _thickness)
+	if (_radius > 0) {
+		draw_arc(_content_area.x0, _content_area.y0, _radius, 90, 90, _thickness)
+	}
 	
 	return new Bounds(_bounds.x0, _bounds.y0, _bounds.x1, _bounds.y1)
 }

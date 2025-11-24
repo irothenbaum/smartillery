@@ -18,7 +18,7 @@ subscribe(EVENT_ENEMY_HIT, method(self, function(_target, _player_who_shot_id) {
 	var _color = _on_streak ? get_player_color(_player_who_shot_id) : global.ultimate_colors[$ ULTIMATE_COLLATERAL]
 	
 	instance_create_layer(_target.x, _target.y, LAYER_INSTANCES, obj_ult_collateral_explosion)
-	var _nearby_enemies = enemy_find_nearby_enemies(_target.x, _target.y, range)
+	var _nearby_enemies = find_enemies_near_point(_target.x, _target.y, range)
 	
 	debug("Found _nearby_enemies", array_length(_nearby_enemies))
 	

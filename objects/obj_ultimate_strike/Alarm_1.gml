@@ -1,2 +1,2 @@
-///@description destroy self
-instance_destroy()
+///@description strike enemy
+strike_nearest_enemy()
