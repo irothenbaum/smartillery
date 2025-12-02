@@ -104,7 +104,7 @@ global.point_streak_requirement = 3
 global.combo_delay_ms = 1200
 global.minimum_combo = 2
 global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower!", "Menace!!", "Untouchable!!!", "Impossible!!!!"]
-global.ultimate_requirement = 100
+global.ultimate_requirement = 40 // how many seconds until your charge is ready
 global.ultimate_code = "000"
 global.max_health = 100
 global.starting_max_answer = 10
@@ -153,6 +153,7 @@ global.bg_circle_magnitude = global.bg_circle_max_radius - global.bg_cicle_min_r
 global.bg_circle_ring_width = global.bg_circle_magnitude / global.bg_number_of_circles
 
 
+// this is a dynamic global variable lookup
 global._G = {}
 
 // copy

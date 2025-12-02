@@ -22,36 +22,22 @@ subscribe(EVENT_ENEMY_HIT, method(self, function(_target, _player_who_shot_id) {
 	
 	debug("Found _nearby_enemies", array_length(_nearby_enemies))
 	
-	// if target still eixsts, we exclude it from 
-	if (instance_exists(_target)) {
-		// track that we struck the original target
-		array_push(recently_struck_enemies, _target)
-		
-		// remove it from nearby enemies
-		_nearby_enemies = array_filter(_nearby_enemies, method({_target: _target}, function(_e) {
+	// add all nearby enemies to our list of recently struck (so we can ignore them) if they still exist
+	_nearby_enemies = array_filter(_nearby_enemies, method({_target: _target, _recently_struck_enemies: recently_struck_enemies}, function(_e) {
+		if (instance_exists(_e)) {
+			array_push(_recently_struck_enemies, _e)
+			
+			// this basically removes the initial target from the list
 			return _e.id != _target.id
-		}))
-	}
-	
-	debug("Found FINAL _nearby_enemies", array_length(_nearby_enemies))
-	
-	var _new_enemies_to_strike = []
-	array_foreach(_nearby_enemies, method({_recently_struck_enemies: recently_struck_enemies, _new_enemies_to_strike: _new_enemies_to_strike}, function(_enemy) {
-		if (array_contains(_recently_struck_enemies, _enemy)) {
-			debug("Already hit ", _enemy)
-			return
-		} else {
-			debug("New hit on ", _enemy)
-			// add each of these enemies to our list, indicating we've already hit them once
-			array_push(_recently_struck_enemies, _enemy)
-			array_push(_new_enemies_to_strike, _enemy)
 		}
+		return false
 	}))
 	
-	debug("Found _new_enemies_to_strike", array_length(_new_enemies_to_strike))
+	debug("Final _nearby_enemies", array_length(_nearby_enemies))
 	
-	array_foreach(_new_enemies_to_strike, method({_origin: _target, _c: _color, _player_who_shot_id: _player_who_shot_id}, function(_enemy) {
-		debug("Striking new nearby enemy", _enemy)
+	// we now strike all nearby enemies
+	array_foreach(_nearby_enemies, method({_origin: _target, _c: _color, _player_who_shot_id: _player_who_shot_id}, function(_enemy) {
+		debug("Striking nearby enemy", _enemy)
 		
 		instance_create_layer(_origin.x, _origin.y, LAYER_INSTANCES, obj_electric_beam, {
 			target_x: _enemy.x,

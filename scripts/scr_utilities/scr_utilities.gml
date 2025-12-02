@@ -373,3 +373,7 @@ function array_copy_all(_arr) {
 	array_copy(_copy, 0, _arr, 0, array_length(_arr));
 	return _copy
 }
+
+function delta_time_seconds() {
+	return delta_time / 1000000; // Convert delta_time to seconds
+}

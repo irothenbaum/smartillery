@@ -1,5 +1,6 @@
 if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	var _selected_ultimate = global.selected_ultimate[$ owner_player_id]
+	var _player_has_ultimate = game_controller.has_ultimate(owner_player_id)
 	
 	// draw ultimate box ----------------------------------------------
 	var _ultimate_color = global.ultimate_colors[$ _selected_ultimate];
@@ -21,8 +22,17 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	// draw the ultimate circle progress if we have any charge
 	if (game_controller.ultimate_charge[$ owner_player_id] > 0) {
 		drawn_ultimate = lerp(drawn_ultimate, game_controller.ultimate_charge[$ owner_player_id] / global.ultimate_requirement, global.fade_speed)
-		draw_set_composite_color(new CompositeColor(_ultimate_color, game_controller.has_ultimate(owner_player_id) ? 1 : 0.3))
-		draw_circle_color(_xcenter, _ycenter, _circle_radius * drawn_ultimate, _ultimate_color, _ultimate_color, false)
+		var _visible_height = (_circle_radius * 2) * drawn_ultimate
+		
+		// Turn on clipping
+		gpu_set_scissor(_xcenter - _circle_radius, _ycenter + _circle_radius - _visible_height, _circle_radius * 2, _visible_height);
+
+		// Draw the filled part (solid circle)
+		draw_set_composite_color(new CompositeColor(_ultimate_color, _player_has_ultimate ? 1 : 0.8))
+		draw_circle_color(_xcenter, _ycenter, _circle_radius, _ultimate_color, _ultimate_color, false)
+		
+		// Turn off clipping
+		gpu_set_scissor(0, 0, display_get_width(), display_get_height());
 	}
 	
 	// draw the empty experience bar
@@ -41,7 +51,7 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	
 	// draw the sprite on top
 	var _ult_sprite = global.ultimate_icons[$ _selected_ultimate]
-	draw_sprite_ext(_ult_sprite, 0, _xcenter, _ycenter, icon_scale, icon_scale, 0, c_white, game_controller.has_ultimate(owner_player_id) ? 1 : 0.3)
+	draw_sprite_ext(_ult_sprite, 0, _xcenter, _ycenter, icon_scale, icon_scale, 0, c_white, _player_has_ultimate ? 1 : 0.2)
 	
 	// last we draw the level
 	var _level_center = {

@@ -40,8 +40,8 @@ function render_bomb_lands() {
 	
 	with(bombing_target) {
 		last_hit_by_player_id = other.owner_player_id
-		streak_ineligible = true
 		register_hit(true)
+		broadcast(EVENT_ENEMY_HIT, self, last_hit_by_player_id)
 		instance_create_layer(x, y, LAYER_INSTANCES, obj_ult_strike_explosion, {radius: 0})
 	}
 

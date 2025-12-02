@@ -147,12 +147,8 @@ function handle_enemy_killed(_enemy) {
 		return
 	}
 	
-	if (!_enemy.streak_ineligible) {
-		increase_combo(_player_id)
-	}
 	
-	
-	var _ult_increase = (has_point_streak(_player_id) && !_enemy.streak_ineligible) ? _enemy.point_value / 2 : 0;
+	var _ult_increase = (has_point_streak(_player_id)) ? _enemy.point_value / 2 : 0;
 	var _combo_bonus = combo_count[$ _player_id] >= global.minimum_combo ? combo_count[$ _player_id] : 0
 	
 	draw_point_indicators(_player_id, _enemy.x, _enemy.y, _enemy.point_value, _ult_increase, _combo_bonus)
@@ -348,7 +344,7 @@ function get_player_id_for_combo_alarm(_num) {
 
 /**
  * @param {Real} _player_id
- */ 
+ 
 function increase_ult_score(_player_id, _amount = 1) {
 	var _amount_to_charge = min(_amount, max(0, global.ultimate_requirement - ultimate_charge[$ _player_id]))
 	var _amount_to_experience = _amount - _amount_to_charge
@@ -363,6 +359,17 @@ function increase_ult_score(_player_id, _amount = 1) {
 			// ultimate_level_up_controller = instance_create_layer(x, y, LAYER_HUD, global.is_math_mode ? obj_ult_upgrade_math : obj_ult_upgrade_typing)
 			increate_ult_level(_player_id)
 		}
+	}
+}
+*/ 
+
+function increase_ult_score(_player_id, _amount = 1) {
+	ultimate_experience[$ _player_id] += _amount
+	var _next_level_experience = get_experience_needed_for_next_level(ultimate_level[$ _player_id])
+	if (ultimate_experience[$ _player_id] >= _next_level_experience) {
+		// disabling level up mini game for now
+		// ultimate_level_up_controller = instance_create_layer(x, y, LAYER_HUD, global.is_math_mode ? obj_ult_upgrade_math : obj_ult_upgrade_typing)
+		increate_ult_level(_player_id)
 	}
 }
 
@@ -438,6 +445,11 @@ function _handle_test_string(_code) {
 	}
 }
 
+// whenever an enemy is hit, we increase the player's combo
+subscribe(EVENT_ENEMY_HIT, function(_enemy, _player_id) {
+	debug("INCREASING COMBO FOR PLAYER", _player_id)
+	increase_combo(_player_id)
+})
 
 
 // These combined effectively start the game

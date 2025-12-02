@@ -1,3 +1,12 @@
+In the middle of:
+- Making the ultimates charge automatically over time
+   - Check game controller step
+- Enemy strikes are not increasing combo???
+   - Recently refactored this to happen on every HIT, not KILL. But now it's not working? I added debugs, need to investigate
+   - Check Game Controller Create, subscribe(EVENT_ENEMY_HIT at the bottom
+- Created obj_bonus_drop, need to create logic to spawn it, make it "targetable", and test
+
+
 ------------------------------------------------------------
 BEFORE ALPHA RELEASE:
 ------------------------------------------------------------
@@ -5,6 +14,7 @@ BEFORE ALPHA RELEASE:
 "Bugs" and things to fix:
 - Need Collateral and Assist Icon + title/description
 - Tutorial overlay overlapping your strike and strike level
+   - Make it so it only shows text in the center when you hover on an element
 - Game Over not destroying all instances
    - obj_ultimates stay visible
 - "Play again" option breaks
@@ -20,12 +30,17 @@ Polish & effects:
   - Shoot
   - Explode
   - Round ending crescendo
-
+- Thought of a cool effect to stylize the innermost circle (the one around your ship) with some kind of animated border
+  Maybe something like Audio Equalizer bars pointing in 360 around the circle, jumping up slightly when an enemy is close
+  Or if you fire in that direction? ... Need to give it more thought.
+- Create indicator on the side showing what ults are active (instead of the circle around the player)
 
 Gameplay:
-- Bonus "enemies"
-    - "enemies" that when hit drop favorable orbs for you like more health, more ult charge, extra points?
-	- They'll never actually crash into you
+- Spawn the perk orbs randomly after kills
+    - The likelihood of them spawning should flex with how despearate you are
+- Boss levels
+    - Coreographed compound enemies
+	- Maybe showcasing the "sequence" logic somehow?
 - Main Menu
 	- Logo,
 	- Wave select

@@ -56,7 +56,6 @@ function draw_ultimate_level_details(_player_id, _ult_bounds) {
 function get_ultimate_stats(_ultimate, _level) {
 	var _stats = []
 	var _frames_to_seconds = game_get_speed(gamespeed_fps)
-	// TODO: More ultimate types
 	switch (_ultimate) {
 		case ULTIMATE_HEAL:
 			array_push(_stats, string_concat("+", ult_heal_get_leech_amount(_level), " health per strike"))
@@ -75,6 +74,11 @@ function get_ultimate_stats(_ultimate, _level) {
 		case ULTIMATE_COLLATERAL:
 			array_push(_stats, string_concat("Chain distance: ", round(ult_collateral_get_radius(_level))))
 			array_push(_stats, string_concat("Duration: ", round((ult_collateral_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
+			break
+			
+		case ULTIMATE_ASSIST:
+			array_push(_stats, string_concat("Assist range: +/- ", round(ult_assist_get_range(_level))))
+			array_push(_stats, string_concat("Duration: ", round((ult_assist_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
 			break
 			
 		// TODO: More types here

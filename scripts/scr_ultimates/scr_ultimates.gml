@@ -78,8 +78,8 @@ function ult_collateral_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-#macro COLLATERAL_BASE_RADIUS 100
-#macro COLLATERAL_RADIUS_INCREMENT_STEP 20
+#macro COLLATERAL_BASE_RADIUS 120
+#macro COLLATERAL_RADIUS_INCREMENT_STEP 30
 // in pixels
 function ult_collateral_get_radius(_level) {
 	return COLLATERAL_BASE_RADIUS + (_level - 1) * COLLATERAL_RADIUS_INCREMENT_STEP
@@ -146,7 +146,7 @@ function ultimate_step(_obj) {
 		} else {
 			ult_overlay = 0
 		}
-		
+
 		if (is_duration_ult(ult_type)) {
 			game_controller.ultimate_charge[$ owner_player_id] = max(0, global.ultimate_requirement * alarm[0] / starting_duration)
 		} else {
@@ -168,7 +168,8 @@ function ultimate_draw(_obj) {
 			draw_sprite_ext(global.ultimate_icons[$ ult_type], 0, global.xcenter, global.ycenter, _scale, _scale, 0, global.ultimate_colors[$ ult_type], ult_overlay)
 			// draw_rectangle_clipped(new Bounds(0, 0, global.room_width, global.room_height), global.ultimate_colors[$ global.selected_ultimate], global.ultimate_icons[$ global.selected_ultimate], _scale)
 		}
-		
+/*
+I don't want to draw the circle around the player anymore
 		if (is_duration_ult(ult_type)) {
 			var _remaining_ratio = (game_controller.ultimate_charge[$ owner_player_id] / global.ultimate_requirement)
 			var _thickness = ULT_TIMER_CIRCLE_THICKNESS + (ULT_TIMER_CIRCLE_THICKNESS * _remaining_ratio)
@@ -178,6 +179,7 @@ function ultimate_draw(_obj) {
 			draw_arc(global.xcenter, global.ycenter, _radius, 360, 0, _thickness)
 			reset_composite_color()
 		}
+*/
 	}
 }
 
