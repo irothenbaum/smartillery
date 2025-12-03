@@ -53,8 +53,8 @@ function broadcast(_event, _payload, _steam_id = undefined) {
     if(struct_exists(global._events, _composite_event_name)){
         var _listeners = global._events[$ _composite_event_name];
         for(var _i = 0; _i < array_length(_listeners); _i++){
-			// passes payload, the event name, the steam id, and the composite event name as params
-            _listeners[_i](_payload, _event, _steam_id, _composite_event_name)
+			// passes payload, the steam id, the event name, and the composite event name as params
+            _listeners[_i](_payload, _steam_id, _event, _composite_event_name)
         }
     }
 }

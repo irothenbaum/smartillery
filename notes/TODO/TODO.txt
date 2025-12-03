@@ -1,10 +1,8 @@
 In the middle of:
-- Making the ultimates charge automatically over time
-   - Check game controller step
-- Enemy strikes are not increasing combo???
-   - Recently refactored this to happen on every HIT, not KILL. But now it's not working? I added debugs, need to investigate
-   - Check Game Controller Create, subscribe(EVENT_ENEMY_HIT at the bottom
 - Created obj_bonus_drop, need to create logic to spawn it, make it "targetable", and test
+- The Ult Icon looks weird as it charges (overlapping semi-transparent colors)
+- I thjink subscriptions exist event after the instance dies - need to implement an unsubscribe
+   - The fact that Collateral ult is still having effects after being removed leads me to conclude this
 
 
 ------------------------------------------------------------

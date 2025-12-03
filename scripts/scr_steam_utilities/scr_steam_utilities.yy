@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"scr_steam_utilities",
   "isCompatibility":false,
   "isDnD":false,

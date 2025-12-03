@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"scr_mini_challenges",
   "isCompatibility":false,
   "isDnD":false,
