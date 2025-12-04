@@ -142,7 +142,7 @@ function flash_hull(_color) {
 	})
 }
 
-subscribe(EVENT_ON_OFF_STREAK, function(_streak_count) {
+subscribe(self, EVENT_ON_OFF_STREAK, function(_streak_count) {
 	if (_streak_count >= global.point_streak_requirement) {
 		if (is_undefined(streak_fire)) {
 			streak_fire = draw_muzzle_smoke(x, y, my_color)
@@ -157,7 +157,7 @@ subscribe(EVENT_ON_OFF_STREAK, function(_streak_count) {
 	}
 })
 
-subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
+subscribe(self, EVENT_TOGGLE_PAUSE, function(_status) {
 	if (!is_undefined(streak_fire)) {
 		pause_particle(streak_fire.system, _status)
 	}

@@ -15,17 +15,18 @@
 global._events = {};
 
 /**
+ * @param {Id.Instance} _inst
  * @param {String} _event
  * @param {Function} _callback
  * @param {Real|Array<Real>} _steam_id
  */
-function subscribe(_event, _callback, _steam_id = undefined) {
+function subscribe(_inst, _event, _callback, _steam_id = undefined) {
 	if (is_undefined(_steam_id)) {
 		_steam_id = get_my_steam_id_safe()
 	} else if (is_array(_steam_id)) {
 		// if you pass an array, you'll subscribe to each of those channels
-		array_foreach(_steam_id, method({_e: _event, _c: _callback}, function(_s_id) {
-			subscribe(_e, _c, _s_id)
+		array_foreach(_steam_id, method({_i: _inst, _e: _event, _c: _callback}, function(_s_id) {
+			subscribe(_i, _e, _c, _s_id)
 		}))
 		return
 	}
@@ -34,7 +35,10 @@ function subscribe(_event, _callback, _steam_id = undefined) {
     if(!struct_exists(global._events, _composite_event_name)){
         global._events[$ _composite_event_name] = [];
     }
-    array_push(global._events[$ _composite_event_name], _callback);
+    array_push(global._events[$ _composite_event_name], {
+		instance: _inst,
+		callback: _callback
+	});
 }
 
 /**
@@ -54,7 +58,15 @@ function broadcast(_event, _payload, _steam_id = undefined) {
         var _listeners = global._events[$ _composite_event_name];
         for(var _i = 0; _i < array_length(_listeners); _i++){
 			// passes payload, the steam id, the event name, and the composite event name as params
-            _listeners[_i](_payload, _steam_id, _event, _composite_event_name)
+            var _listener_payload = _listeners[_i]
+			if (instance_exists(_listener_payload.instance)) {
+				_listener_payload.callback(_payload, _steam_id, _event, _composite_event_name)
+			} else {
+				// if the listeneing element is now gone, remove it
+				array_delete(_listeners, _i, 1)
+				global._events[$ _composite_event_name] = _listeners
+				_i--;
+			}
         }
     }
 }

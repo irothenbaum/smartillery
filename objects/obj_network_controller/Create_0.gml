@@ -10,7 +10,7 @@ event_buffer = []
 var _all_player_channels = get_player_ids()
 
 if (is_host(get_my_steam_id_safe())) {
-	subscribe(EVENT_SCORE_CHANGED, function(_payload) {
+	subscribe(self, EVENT_SCORE_CHANGED, function(_payload) {
 		array_push(event_buffer, {
 			event_name: NET_EVENT_SCORE_CHANGED,
 			game_score: _payload.game_score,
@@ -18,7 +18,7 @@ if (is_host(get_my_steam_id_safe())) {
 		})
 	})
 
-	subscribe(EVENT_ENEMY_KILLED, function(_enemy) {
+	subscribe(self, EVENT_ENEMY_KILLED, function(_enemy) {
 		array_push(event_buffer, {
 			event_name: NET_EVENT_DESTROY_INSTANCE,
 			instance_id: _enemy.id
@@ -27,7 +27,7 @@ if (is_host(get_my_steam_id_safe())) {
 	
 	// TODO: I think instead of new turret angle, the event should pass new Target_Instance or something
 	// host and client can then treat it like a execute_hit_target
-	subscribe(EVENT_NEW_TURRET_ANGLE, function(_payload) {
+	subscribe(self, EVENT_NEW_TURRET_ANGLE, function(_payload) {
 		array_push(event_bufer, {
 			event_name: NET_EVENT_TURRET_ANGLE_CHANGED,
 			rotate_to: _payload.rotate_to,
@@ -35,7 +35,7 @@ if (is_host(get_my_steam_id_safe())) {
 		})
 	})
 	
-	subscribe(EVENT_ON_OFF_STREAK, function(_streak_count) {
+	subscribe(self, EVENT_ON_OFF_STREAK, function(_streak_count) {
 		array_push(event_bufer, {
 			event_name: NET_EVENT_INPUT_CHANGED,
 			player_id: get_my_steam_id_safe(),
@@ -44,7 +44,7 @@ if (is_host(get_my_steam_id_safe())) {
 		}, _all_player_channels)
 	})
 
-	subscribe(EVENT_ENEMY_SPAWNED, function(_enemy) {
+	subscribe(self, EVENT_ENEMY_SPAWNED, function(_enemy) {
 		array_push(event_buffer, object_keys_copy({
 			event_name: NET_EVENT_CREATE_INSTANCE,
 			instance_id: _enemy.id,
@@ -55,7 +55,7 @@ if (is_host(get_my_steam_id_safe())) {
 		}, instance_get_meta_state(_enemy)))
 	})
 
-	subscribe(EVENT_ENEMY_HIT, function(_enemy) {
+	subscribe(self, EVENT_ENEMY_HIT, function(_enemy) {
 		array_push(event_buffer, {
 			event_name: NET_EVENT_ENEMY_HIT,
 			instance_id: _enemy.id,
@@ -66,7 +66,7 @@ if (is_host(get_my_steam_id_safe())) {
 	// TODO: more event types to relay
 } else {
 	// Guest event handlers
-	subscribe(EVENT_SUBMIT_CODE, function(_code) {
+	subscribe(self, EVENT_SUBMIT_CODE, function(_code) {
 		array_push(event_buffer, {
 			event_name: NET_EVENT_SUBMIT_CODE,
 			code: _code,
@@ -76,7 +76,7 @@ if (is_host(get_my_steam_id_safe())) {
 }
 
 // both host and partner trigger input changed events
-subscribe(EVENT_INPUT_CHANGED, function(_input) {
+subscribe(self, EVENT_INPUT_CHANGED, function(_input) {
 	array_push(event_bufer, {
 		event_name: NET_EVENT_INPUT_CHANGED,
 		player_id: get_my_steam_id_safe(),

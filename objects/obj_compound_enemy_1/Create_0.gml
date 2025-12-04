@@ -19,6 +19,6 @@ function spawn_enemy() {
 	enemy_count--;
 }
 
-subscribe(EVENT_GAME_OVER, function() {
+subscribe(self, EVENT_GAME_OVER, function() {
 	instance_destroy()
 })

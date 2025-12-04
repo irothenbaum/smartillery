@@ -377,3 +377,14 @@ function array_copy_all(_arr) {
 function delta_time_seconds() {
 	return delta_time / 1000000; // Convert delta_time to seconds
 }
+
+function set_viewport_dimensions() {
+	var _cam = camera_create_view(0, 0, global.room_width, global.room_height);
+	view_set_camera(0, _cam);
+
+	view_set_wport(0, global.room_width);
+	view_set_hport(0, global.room_height);
+
+	view_enabled = true;
+	view_visible[0] = true;
+}

@@ -1,8 +1,5 @@
 In the middle of:
 - Created obj_bonus_drop, need to create logic to spawn it, make it "targetable", and test
-- The Ult Icon looks weird as it charges (overlapping semi-transparent colors)
-- I thjink subscriptions exist event after the instance dies - need to implement an unsubscribe
-   - The fact that Collateral ult is still having effects after being removed leads me to conclude this
 
 
 ------------------------------------------------------------
@@ -17,6 +14,14 @@ BEFORE ALPHA RELEASE:
    - obj_ultimates stay visible
 - "Play again" option breaks
    - Some variables not properly reset
+- Improve enemy spawning logic by using some hidden notion of a "enemy value" bar
+   - This would store the number of enemy assets allowed in existence at once time
+     For example, level 1 might have a asset value of 50, level 10 might be like 500
+	 Each enemy that spawns has a certain value (enemy_1 = 10?, enemy_4 = 100?)
+	 The bar gradually increases over time and decreases when an enemy is spawned.
+	 Thus the likelihood to get bigger enemies goes up with time
+	 - Possibly downsides are that you may only ever get smaller enemies?
+
 
 Testing settings that need reverting:
 - main_menu create script skips the menu and selects defaults
@@ -32,6 +37,8 @@ Polish & effects:
   Maybe something like Audio Equalizer bars pointing in 360 around the circle, jumping up slightly when an enemy is close
   Or if you fire in that direction? ... Need to give it more thought.
 - Create indicator on the side showing what ults are active (instead of the circle around the player)
+- On collateral, subtly show an enemy is in range before you shoot
+  - Maybe there's a thing line connecting them?
 
 Gameplay:
 - Spawn the perk orbs randomly after kills

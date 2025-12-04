@@ -37,12 +37,12 @@ function _get_enemy_variables(_enemy_type) {
 	var _ret_val = {}
 	switch(_enemy_type) {
 		case obj_compound_enemy_1:
-			_ret_val.enemy_count = max(3, current_wave / global.wave_difficulty_step)
-			_ret_val.waypoint_count = floor(_ret_val.enemy_count / 2)
+			_ret_val.enemy_count = 4 + floor(current_wave / global.wave_difficulty_step)
+			_ret_val.waypoint_count = floor(_ret_val.enemy_count / 3)
 			break
 		
 		case obj_compound_enemy_2:
-			_ret_val.enemy_count = max(2, current_wave / global.wave_difficulty_step)
+			_ret_val.enemy_count = 3 + floor(current_wave / global.wave_difficulty_step)
 			break
 	}
 	

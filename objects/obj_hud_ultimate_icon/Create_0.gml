@@ -13,7 +13,7 @@ color_shadow = new CompositeColor(c_black, 0.4)
 color_shadow_dark = new CompositeColor(c_black, 0.8)
 my_bounds = undefined
 
-subscribe(EVENT_UTLTIMATE_LEVEL_UP, method({
+subscribe(self, EVENT_UTLTIMATE_LEVEL_UP, method({
 	input: input, 
 	margin: margin, 
 	half_sprite_size: half_sprite_size

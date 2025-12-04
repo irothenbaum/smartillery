@@ -57,7 +57,7 @@ function size_streak_fire() {
 }
 
 // whenver we pause or unpause we clear the input
-subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
+subscribe(self, EVENT_TOGGLE_PAUSE, function(_status) {
 	message = ""
 	
 	if (!is_undefined(streak_fire)) {
@@ -65,12 +65,12 @@ subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
 	}
 })
 
-subscribe(EVENT_GAME_OVER, function() {
+subscribe(self, EVENT_GAME_OVER, function() {
 	// effectively destroy the particle system
 	broadcast(EVENT_ON_OFF_STREAK, false, owner_player_id)
 })
 
-subscribe(EVENT_ON_OFF_STREAK, function(_streak_count) {
+subscribe(self, EVENT_ON_OFF_STREAK, function(_streak_count) {
 	if (_streak_count >= global.point_streak_requirement) {
 		if (is_undefined(streak_fire)) {
 			streak_fire = draw_muzzle_smoke(x, y, my_color)

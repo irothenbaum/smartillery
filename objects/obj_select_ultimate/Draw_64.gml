@@ -5,6 +5,7 @@ draw_set_color(c_white)
 draw_set_font(fnt_title)
 draw_text_with_alignment(x, y - icon_space, "Select your Ultimate", ALIGN_CENTER)
 
+// global.selected_ultimate is keyed by user_id, _selected_ultimates_lookup is keyed by ultimate name
 var _selected_ultimates_lookup = {}
 var _selected_users = variable_struct_get_names(global.selected_ultimate);
 for (var _i = 0;_i < array_length(_selected_users); _i++) {
@@ -12,6 +13,7 @@ for (var _i = 0;_i < array_length(_selected_users); _i++) {
 }
 var _ultimate_names = variable_struct_get_names(global.ultimate_icons)
 var _is_hovering = false
+
 for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
     var _this_ultimate = _ultimate_names[_i];
 	var _is_selected_by_other_player = _selected_ultimates_lookup[$ _this_ultimate] && _selected_ultimates_lookup[$ _this_ultimate] != get_my_steam_id_safe()
@@ -34,7 +36,12 @@ for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
 	
 	var _b = {
 		x0: x + ((_i - 1) * icon_space) - square_size / 2,
-		y0: y - square_size / 2,
+		y0: y - square_size,
+	}
+	
+	if (_i >= 3) {
+		_b.x0 -= icon_space * 2.5
+		_b.y0 += square_size + global.margin_lg
 	}
 	
 	_b.x1 = _b.x0 + square_size
@@ -54,7 +61,7 @@ for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
 		
 		reset_composite_color()
 	}
-	
+
 	if (is_spot_in_bounds(mouse_x, mouse_y, _bounds) && !_is_selected_by_other_player) {
 		_is_hovering = true
 		staged_selection = _this_ultimate
@@ -77,5 +84,5 @@ if (!_is_hovering) {
 	staged_selection = undefined
 }
 
-draw_set_color(c_white)
+reset_composite_color()
 draw_set_font(fnt_base)

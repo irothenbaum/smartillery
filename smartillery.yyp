@@ -45,6 +45,7 @@
     {"id":{"name":"fnt_large","path":"fonts/fnt_large/fnt_large.yy",},},
     {"id":{"name":"fnt_small","path":"fonts/fnt_small/fnt_small.yy",},},
     {"id":{"name":"fnt_title","path":"fonts/fnt_title/fnt_title.yy",},},
+    {"id":{"name":"fnt_wave_text","path":"fonts/fnt_wave_text/fnt_wave_text.yy",},},
     {"id":{"name":"TODO","path":"notes/TODO/TODO.yy",},},
     {"id":{"name":"obj_background","path":"objects/obj_background/obj_background.yy",},},
     {"id":{"name":"obj_bonus_drop","path":"objects/obj_bonus_drop/obj_bonus_drop.yy",},},

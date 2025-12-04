@@ -7,7 +7,7 @@ rotation_duration_ms = 300
 color = is_undefined(color) ? global.ultimate_colors[$ ULTIMATE_ASSIST] : color
 target_was_hit = false
 
-subscribe(EVENT_ENEMY_HIT, method(self, function(_e) {
+subscribe(self, EVENT_ENEMY_HIT, method(self, function(_e) {
 	if (_e == target) {
 		target_was_hit = true
 	}

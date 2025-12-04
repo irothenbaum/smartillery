@@ -446,7 +446,7 @@ function _handle_test_string(_code) {
 }
 
 // whenever an enemy is hit, we increase the player's combo
-subscribe(EVENT_ENEMY_HIT, function(_enemy, _player_id) {
+subscribe(self, EVENT_ENEMY_HIT, function(_enemy, _player_id) {
 	debug("INCREASING COMBO FOR PLAYER", _player_id)
 	increase_combo(_player_id)
 })

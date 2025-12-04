@@ -3,7 +3,7 @@ ultimate_initialize(self, ULTIMATE_COLLATERAL)
 
 recently_struck_enemies = []
 
-subscribe(EVENT_ENEMY_HIT, method(self, function(_target, _player_who_shot_id) {
+subscribe(self, EVENT_ENEMY_HIT, method(self, function(_target, _player_who_shot_id) {
 	debug("Reveived HIT on ", _target)
 	debug("_recently_struck_enemies length is", array_length(recently_struck_enemies))
 	// wait 1/10th of a second before resetting recently_struck_enemies

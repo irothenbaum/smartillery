@@ -13,6 +13,6 @@ for (var _i = 0; _i < enemy_count; _i++ ) {
 	) 
 }
 
-subscribe(EVENT_GAME_OVER, function() {
+subscribe(self, EVENT_GAME_OVER, function() {
 	instance_destroy()
 })

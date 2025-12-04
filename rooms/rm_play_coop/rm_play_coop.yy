@@ -1,7 +1,7 @@
 {
   "$GMRoom":"v1",
   "%Name":"rm_play_coop",
-  "creationCodeFile":"",
+  "creationCodeFile":"rooms/rm_play_coop/RoomCreationCode.gml",
   "inheritCode":false,
   "inheritCreationOrder":false,
   "inheritLayers":false,

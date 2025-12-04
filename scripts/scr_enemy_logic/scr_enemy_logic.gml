@@ -14,7 +14,7 @@ function enemy_initialize(_e, _skip_question_generation = false) {
 		last_hit_by_player_id = undefined
 		streak_ineligible = false
 		
-		subscribe(EVENT_TOGGLE_PAUSE, function(_status) {
+		subscribe(self, EVENT_TOGGLE_PAUSE, function(_status) {
 			if (!is_undefined(slow_sparks)) {
 				pause_particle(slow_sparks, _status)
 			}

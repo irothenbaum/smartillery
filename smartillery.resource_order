@@ -24,6 +24,7 @@
     {"name":"fnt_base","order":1,"path":"fonts/fnt_base/fnt_base.yy",},
     {"name":"fnt_large","order":2,"path":"fonts/fnt_large/fnt_large.yy",},
     {"name":"fnt_small","order":3,"path":"fonts/fnt_small/fnt_small.yy",},
+    {"name":"fnt_wave_text","order":4,"path":"fonts/fnt_wave_text/fnt_wave_text.yy",},
     {"name":"obj_background","order":8,"path":"objects/obj_background/obj_background.yy",},
     {"name":"obj_bonus_drop","order":10,"path":"objects/obj_bonus_drop/obj_bonus_drop.yy",},
     {"name":"obj_combo_drawer","order":9,"path":"objects/obj_combo_drawer/obj_combo_drawer.yy",},
