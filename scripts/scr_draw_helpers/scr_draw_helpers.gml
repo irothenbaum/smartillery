@@ -169,7 +169,7 @@ function draw_rounded_rectangle(_bounds, _radius, _thickness = 1) {
 		_bounds.x1 - _radius,
 		_bounds.y1 - _radius
 	)
-	
+
 	draw_line_width(_content_area.x0, _bounds.y0, _content_area.x1, _bounds.y0, _thickness)
 	if (_radius > 0) {
 		draw_arc(_content_area.x1, _content_area.y0, _radius, 90, 0, _thickness)
@@ -190,14 +190,15 @@ function draw_rounded_rectangle(_bounds, _radius, _thickness = 1) {
 	return new Bounds(_bounds.x0, _bounds.y0, _bounds.x1, _bounds.y1)
 }
 
-/**
+
+/*
  * @param {Real} _x
  * @param {Real} _y
  * @param {Real} _radius
  * @param {Real} _degrees
  * @param {Real} _start
  * @param {Real} _thickness
- */
+ 
 function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1) {
 	var _steps = ceil((_radius * ((_degrees / 360) * TAU)) / 10)
 	var _step_degree = _degrees / _steps
@@ -220,6 +221,67 @@ function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1) {
 		_last_point.x = _end_x
 		_last_point.y = _end_y
 	}
+}
+*/
+
+function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1, _segment_override = 0) {
+	var _segments = _segment_override > 0 ? _segment_override : floor(log2(max(1, ceil(_radius / 10))) * 10 * (_degrees / 360))
+	
+	// the +1 is to fix a minor bug that makes the arc appear shifted, not sure where in the logic it's occuring
+	return __draw_circle_ext(_x + 1, _y + 1, _radius, _segments, _start, _degrees, _thickness, true)
+}
+
+// From https://marketplace.yoyogames.com/assets/1423/advanced-circle-drawing
+// by Patych
+// Upgraded to GMS2 and cleaned up by Matt
+// 
+// Arguments: 
+// x, y — Center of circle.
+// r — Radius.
+// bones — Amount of bones. More bones = more quality, but less speed. Minimum — 3.
+// ang — Angle of first circle's point.
+// angadd — Angle of last circle's point (relative to ang). 
+// width — Width of circle (may be positive or negative).
+// outline — 0 = curve, 1 = sector. 
+function __draw_circle_ext(_x, _y, r, bones = 15, ang = 0, angadd = 360, width = 1, outline = false)
+{
+    bones = max(3, bones);
+ 
+    var a = angadd / bones;
+    var halfWidth = width / 2;
+    var lp = r + halfWidth;
+    var lm = r - halfWidth;
+    var AAa = ang + angadd;
+    
+    if(outline)
+    {
+        //OUTLINE
+        draw_primitive_begin(pr_trianglestrip); //Change to pr_linestrip, to see how it works.
+        draw_vertex(_x + lengthdir_x(lm, ang), _y + lengthdir_y(lm, ang)); //First point.
+        for(var i = 1; i <= bones; i++)
+        {
+            var dp = ang + a * i;
+            var dm = dp - a;
+            draw_vertex(_x + lengthdir_x(lp, dm), _y + lengthdir_y(lp, dm));
+            draw_vertex(_x + lengthdir_x(lm, dp), _y + lengthdir_y(lm, dp));
+        }
+        draw_vertex(_x + lengthdir_x(lp, AAa), _y + lengthdir_y(lp,AAa));
+        draw_vertex(_x + lengthdir_x(lm, AAa), _y + lengthdir_y(lm,AAa)); //Last two points to make circle look right.
+    }
+    else
+    {
+        //SECTOR
+        draw_primitive_begin(pr_trianglefan); //Change to pr_linestrip, to see how it works.
+        draw_vertex(_x, _y); //First point in the circle's center.
+        for(var i = 1; i <= bones; i += 1)
+        {
+            var dp = ang + a * i;
+            var dm = dp - a;
+            draw_vertex(_x + lengthdir_x(lp,dm), _y + lengthdir_y(lp,dm));
+        }
+        draw_vertex(_x + lengthdir_x(lp,AAa), _y + lengthdir_y(lp,AAa)); //Last point.
+    }
+    draw_primitive_end();
 }
 
 /**

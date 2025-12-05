@@ -6,7 +6,7 @@ current_wave = get_current_wave_number();
 game_controller = get_game_controller();
 
 min_spawn_delay_seconds = 0.5;
-max_spawn_delay_seconds = 10;
+max_spawn_delay_seconds = 6;
 round_duration_seconds = 60;
 
 
@@ -14,7 +14,7 @@ round_duration_seconds = 60;
 /// @returns {undefined}
 function init_wave() {
 	can_spawn = false;
-	enemy_count = ceil(current_wave * 1.5);
+	enemy_count = 6 + ceil(current_wave * 1.5);
 	spawned_count = 0;
 	spawn_delay_seconds = max(min_spawn_delay_seconds, min(max_spawn_delay_seconds, 30 / enemy_count))
 	

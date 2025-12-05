@@ -24,7 +24,7 @@ for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
 	
 	drawn_icon_scales[$ _this_ultimate] = _draw_scale
 	
-	var _overlay_color_opacity = _this_ultimate == staged_selection ? 1 : 0
+	var _overlay_color_opacity = (_this_ultimate == staged_selection || _this_ultimate == hovered_selection) ? 1 : 0
 	
 	if (_is_selected_by_other_player) {
 		_ult_color = c_grey;
@@ -47,14 +47,16 @@ for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
 	_b.x1 = _b.x0 + square_size
 	_b.y1 = _b.y0 + square_size
 	var _bounds = new Bounds(_b.x0,_b.y0, _b.x1, _b.y1)
+	
 		
 	draw_sprite_ext(_spr, 0, _bounds.xcenter, _bounds.ycenter, _draw_scale, _draw_scale, 0 , c_white, 1)
+	// draw_rounded_rectangle(_bounds, 10, 5)
 	
 	if (_draw_opacity > 0) {
 		draw_set_color(global.ultimate_colors[$ _this_ultimate])
 		draw_sprite_ext(_spr, 0, _bounds.xcenter, _bounds.ycenter, _draw_scale, _draw_scale, 0 , _ult_color, _draw_opacity)
 		draw_set_alpha(_draw_opacity)
-		if (_this_ultimate == staged_selection) {
+		if (_this_ultimate == staged_selection || _this_ultimate == hovered_selection) {
 			draw_set_alpha(min(_draw_opacity, 1 -  0.8 * (_draw_scale - default_scale) / (hovered_scale - default_scale)))
 		}
 		draw_rounded_rectangle(_bounds, 10, 5)
@@ -64,24 +66,26 @@ for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
 
 	if (is_spot_in_bounds(mouse_x, mouse_y, _bounds) && !_is_selected_by_other_player) {
 		_is_hovering = true
-		staged_selection = _this_ultimate
-		
+		hovered_selection = _this_ultimate
 		if (mouse_check_button_pressed(mb_left)) {
 			handle_select(_this_ultimate)
 		}
-		
-		draw_set_color(global.ultimate_colors[$ _this_ultimate])
-		draw_set_font(fnt_title)
-		var _title_bounds = draw_text_with_alignment(x, y + icon_space, global.ultimate_descriptions[$ _this_ultimate].title, ALIGN_CENTER)
-		
-		draw_set_color(c_white)
-		draw_set_font(fnt_large)
-		draw_text_with_alignment(x, _title_bounds.y1 + global.margin_md, global.ultimate_descriptions[$ _this_ultimate].description, ALIGN_CENTER)
 	}
 }
 
 if (!_is_hovering) {
-	staged_selection = undefined
+	hovered_selection = undefined
+}
+
+var _focued_ult = is_undefined(hovered_selection) ? staged_selection : hovered_selection
+if (!is_undefined(_focued_ult)) {
+	draw_set_color(global.ultimate_colors[$ _focued_ult])
+	draw_set_font(fnt_title)
+	var _title_bounds = draw_text_with_alignment(x, y + icon_space, global.ultimate_descriptions[$ _focued_ult].title, ALIGN_CENTER)
+		
+	draw_set_color(c_white)
+	draw_set_font(fnt_large)
+	draw_text_with_alignment(x, _title_bounds.y1 + global.margin_md, global.ultimate_descriptions[$ _focued_ult].description, ALIGN_CENTER)
 }
 
 reset_composite_color()

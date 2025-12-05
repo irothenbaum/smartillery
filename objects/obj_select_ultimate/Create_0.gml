@@ -1,4 +1,5 @@
 staged_selection = undefined
+hovered_selection = undefined
 x = global.xcenter
 y = global.ycenter
 
@@ -28,12 +29,14 @@ drawn_icon_opacity = {
 }
 
 function handle_select(_ult) {
+	if (staged_selection == _ult and global.is_solo) {
+		handle_start_game()
+		return
+	}
+	
+	staged_selection = _ult
 	global.selected_ultimate[$ get_my_steam_id_safe()] = _ult
 	broadcast(EVENT_SELECT_ULTIMATE, _ult, get_my_steam_id_safe())
-	
-	if (global.is_solo) {
-		handle_start_game()
-	}
 }
 
 function handle_start_game() {

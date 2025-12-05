@@ -7,14 +7,31 @@ if (is_controlled) {
 		return
 	}
 
-	if(keyboard_check_pressed(vk_enter)) {
+	if(keyboard_check_pressed(vk_enter) or keyboard_check_pressed(vk_space)) {
 		if (string_length(message) > 0) {
 			_game_controller.handle_submit_code(message)
 			broadcast(EVENT_INPUT_SUBMIT, message, owner_player_id)
 			last_guess = message
+			guess_numeric = 0
 		}
 		keyboard_string = "";
 		broadcast(EVENT_INPUT_CHANGED, "")
+	} else if(keyboard_check_pressed(vk_up)) {
+		guess_numeric = 0
+		message = string(guess_numeric)
+		keyboard_string = string(guess_numeric)
+	} else if(keyboard_check_pressed(vk_down)) {
+		guess_numeric += 5
+		message = string(guess_numeric)
+		keyboard_string = string(guess_numeric)
+	} else if(keyboard_check_pressed(vk_left)) {
+		guess_numeric += 1
+		message = string(guess_numeric)
+		keyboard_string = string(guess_numeric)
+	} else if(keyboard_check_pressed(vk_right)) {
+		guess_numeric += 10
+		message = string(guess_numeric)
+		keyboard_string = string(guess_numeric)
 	} else {
 		keyboard_string = string_copy(keyboard_string, 0, global.is_math_mode ? 4 : global.max_word_length + 1);
 	

@@ -1,6 +1,6 @@
 
 // the smallest combo_count is 2 (double kill)
-if (last_combo >= global.minimum_combo) {
+if (last_combo >= global.minimum_combo and instance_exists(player_input)) {
 	var _phrase = global.combo_phrases[min(array_length(global.combo_phrases) - 1, other.last_combo - global.minimum_combo)]
 	var _input_bounds = player_input.my_bounds
 	var _combo_y = _input_bounds.y1 + global.margin_lg

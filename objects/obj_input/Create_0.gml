@@ -43,6 +43,7 @@ total_shake_time = 500
 total_shakes = 3
 shake_magnitude = 10
 last_guess = ""
+guess_numeric = 0
 
 if (is_undefined(owner_player_id) || owner_player_id == 0) {
 	owner_player_id = get_my_steam_id_safe()

@@ -1,7 +1,6 @@
 if (is_undefined(owner_player_id) || owner_player_id == NON_STEAM_PLAYER) {
 	owner_player_id = get_my_steam_id_safe()
 }
-margin = 20
 drawn_ultimate = 0
 drawn_ultimate_experience = 0
 sprite_size = 40
@@ -15,10 +14,9 @@ my_bounds = undefined
 
 subscribe(self, EVENT_UTLTIMATE_LEVEL_UP, method({
 	input: input, 
-	margin: margin, 
 	half_sprite_size: half_sprite_size
 }, function() {
-	var _xcenter = input.my_bounds.x1 + margin * 2 + half_sprite_size
+	var _xcenter = input.my_bounds.x1 + global.margin_md * 2 + half_sprite_size
 	var _ycenter = input.my_bounds.ycenter
 	draw_particle_shockwave(_xcenter, _ycenter, 0.5)
 }))

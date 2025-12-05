@@ -5,23 +5,24 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	// draw ultimate box ----------------------------------------------
 	var _ultimate_color = global.ultimate_colors[$ _selected_ultimate];
 
-	var _center_shift_amount = (margin * 2 + half_sprite_size)
+	var _center_shift_amount = half_sprite_size + (global.margin_md * 2)
 	
 	// this places the icon to the right of the input
 	var _xcenter = input.my_bounds.x1 + _center_shift_amount
 	
-	if (is_guest(owner_player_id)) {
+	// this matches the logic in obj_input to determine what side of the input the icon should be
+	if (!global.is_solo && (get_player_number(owner_player_id) % 2) == 0) {
 		// this places the icon to the left of the input
 		_xcenter = input.my_bounds.x0 - _center_shift_amount
 	}
 
 	var _ycenter = input.my_bounds.ycenter
 	
-	var _circle_radius = half_sprite_size + margin / 2
+	var _circle_radius = half_sprite_size + (global.margin_md / 2)
 	
 	// draw the ultimate circle progress if we have any charge
 	if (game_controller.ultimate_charge[$ owner_player_id] > 0) {
-		var _visible_height = (_circle_radius * 2) * game_controller.ultimate_charge[$ owner_player_id] / global.ultimate_requirement
+		var _visible_height = ceil((_circle_radius * 2) * game_controller.ultimate_charge[$ owner_player_id] / global.ultimate_requirement)
 		
 		// Turn on clipping
 		gpu_set_scissor(_xcenter - _circle_radius, _ycenter + _circle_radius - _visible_height, _circle_radius * 2, _visible_height);

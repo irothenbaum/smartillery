@@ -84,14 +84,6 @@ function is_host(_player_id) {
 }
 
 /**
- * @param {Real} _player_id
- * @returns {Bool}
- */
-function is_guest(_player_id) {
-	return !is_host(_player_id)
-}
-
-/**
  * @param {method} _callback
  * @param {number?} _skip_player_id
  * @returns {Array<Any>}
