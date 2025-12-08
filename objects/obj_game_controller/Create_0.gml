@@ -231,7 +231,10 @@ function handle_submit_code(_code, _player_id = undefined) {
 		return true
 	} else if (is_ult_active(ULTIMATE_ASSIST)) {
 		var _inst = instance_find(obj_ultimate_assist, 0)
-		return _inst.handle_answer_given(_code, _player_id)
+		var _found_target = _inst.handle_answer_given(_code, _player_id)
+		if (_found_target) {
+			return true
+		}
 	}
 	
 	reset_streak(_player_id)

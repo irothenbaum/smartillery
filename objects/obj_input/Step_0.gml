@@ -21,7 +21,7 @@ if (is_controlled) {
 		message = string(guess_numeric)
 		keyboard_string = string(guess_numeric)
 	} else if(keyboard_check_pressed(vk_down)) {
-		guess_numeric += 5
+		guess_numeric += 4
 		message = string(guess_numeric)
 		keyboard_string = string(guess_numeric)
 	} else if(keyboard_check_pressed(vk_left)) {

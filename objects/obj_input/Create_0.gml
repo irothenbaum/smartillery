@@ -75,6 +75,8 @@ subscribe(self, EVENT_ON_OFF_STREAK, function(_streak_count) {
 	if (_streak_count >= global.point_streak_requirement) {
 		if (is_undefined(streak_fire)) {
 			streak_fire = draw_muzzle_smoke(x, y, my_color)
+			// make it not auto draw so we can control where it gets drawn
+			part_system_automatic_draw(streak_fire.system,false);
 			size_streak_fire()
 		}
 	} else if (_streak_count == 0) {

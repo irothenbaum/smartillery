@@ -1,9 +1,6 @@
-var _game_controller = get_game_controller()
-
+// change the text & box color if we're shaking, otherwise default is white
 if (!is_undefined(shake_start)) {
 	draw_set_color(c_red)
-} else if (_game_controller.has_point_streak()) {
-	draw_set_color(my_color);
 } else {
 	draw_set_color(c_white)
 }
@@ -28,4 +25,13 @@ my_bounds = new Bounds(
 	_bounds.y1
 )
 
+// we change the box color if we're on streak
+if (get_game_controller().has_point_streak(owner_player_id) && is_undefined(shake_start)) {
+	draw_set_color(my_color);
+}
 draw_input_box_with_progress(my_bounds, draw_streak_ratio)
+
+// draw our fire on the GUI layer
+if (!is_undefined(streak_fire)) {
+	part_system_drawit(streak_fire.system);
+}
