@@ -16,7 +16,7 @@ drawn_icon_scales = {
 	ULTIMATE_HEAL: default_scale,
 	ULTIMATE_ASSIST: default_scale,
 	ULTIMATE_COLLATERAL: default_scale,
-	ULTIMATE_SIMPLIFY: default_scale,
+	ULTIMATE_TURRET: default_scale,
 }
 
 drawn_icon_opacity = {
@@ -25,7 +25,7 @@ drawn_icon_opacity = {
 	ULTIMATE_HEAL: 0,
 	ULTIMATE_ASSIST: 0,
 	ULTIMATE_COLLATERAL: 0,
-	ULTIMATE_SIMPLIFY: 0,
+	ULTIMATE_TURRET: 0,
 }
 
 function handle_select(_ult) {

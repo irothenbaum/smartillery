@@ -86,23 +86,18 @@ function ult_collateral_get_radius(_level) {
 }
 
 // -------------------------------------------------------------------------------------------
-// SIMPLIFICATION
+// TURRET
 // -------------------------------------------------------------------------------------------
-/*
-function ult_simplification_get_duration(_level) {
+
+function ult_turret_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-#macro SIMPLIFICATION_BASE_MULTIPLIER 0.8 // starts of 20% easier
-// this will return a number strictly between 0 and 1
-function ult_simplification_get_difficulty_multiplier(_level) {
-	// level 1 is 80% easier
-	// level 2 is 64% easier
-	// level 3 is 51% easier
-	// .... etc
-	return power(SIMPLIFICATION_BASE_MULTIPLIER, _level)
+// this will return a number indicating how many turrets should be in orbit
+function ult_turret_get_turret_count(_level) {
+	return _level
 }
-*/
+
 
 // -------------------------------------------------------------------------------------------
 // Utilities
@@ -189,6 +184,6 @@ global._G.ultimate_object_map = {
 	ULTIMATE_HEAL: obj_ultimate_heal,
 	ULTIMATE_SLOW: obj_ultimate_slow,
 	ULTIMATE_ASSIST: obj_ultimate_assist,
-	// ULTIMATE_SIMPLIFY: "todo",
+	ULTIMATE_TURRET: obj_ultimate_turret,
 	ULTIMATE_COLLATERAL: obj_ultimate_collateral,
 }

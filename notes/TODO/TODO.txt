@@ -1,16 +1,18 @@
 In the middle of:
 - Created obj_bonus_drop, need to create logic to spawn it, make it "targetable", and test
+- Turret Ultimate
 
 ------------------------------------------------------------
 BEFORE ALPHA RELEASE:
 ------------------------------------------------------------
 
 "Bugs" and things to fix:
-- Need Collateral and Assist Icon + title/description
+- Need Collateral, Assist, + Turret Icons & title/description
 - Tutorial overlay overlapping your strike and strike level
    - Make it so it only shows text in the center when you hover on an element
 - Game Over not destroying all instances
-   - obj_ultimates stay visible
+   - for example obj_ultimates stay visible
+   - Can possibly get by by destroying everything in certain layers? IDK...
 - "Play again" option breaks
    - Some variables not properly reset
 - Improve enemy spawning logic by using some hidden notion of a "enemy value" bar
@@ -23,10 +25,6 @@ BEFORE ALPHA RELEASE:
 - When an enemy collides with you the input box shrinks vertically to 0???
 
 
-Testing settings that need reverting:
-- main_menu create script skips the menu and selects defaults
-- game_controller starting on level 7
-
 Polish & effects:
 - Add glitter effect to background
 - Sounds effects!
@@ -36,9 +34,7 @@ Polish & effects:
 - Thought of a cool effect to stylize the innermost circle (the one around your ship) with some kind of animated border
   Maybe something like Audio Equalizer bars pointing in 360 around the circle, jumping up slightly when an enemy is close
   Or if you fire in that direction? ... Need to give it more thought.
-- Create indicator on the side showing what ults are active (instead of the circle around the player)
-- On collateral, subtly show an enemy is in range before you shoot
-  - Maybe there's a thing line connecting them?
+- Create indicator on the side showing what ults are active (instead of the circle around the player)?
 
 Gameplay:
 - Spawn the perk orbs randomly after kills
