@@ -27,7 +27,7 @@ combo_max_alarm = (global.combo_delay_ms / 1000) * game_get_speed(gamespeed_fps)
 
 for_each_player(function(_player_id) {
 	instance_create_layer(x, y, LAYER_HUD, obj_input, {owner_player_id: _player_id})
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_combo_drawer, {owner_player_id: _player_id})
+	instance_create_layer(x, y, LAYER_HUD, obj_combo_drawer, {owner_player_id: _player_id})
 })
 
 
@@ -73,7 +73,7 @@ function mark_wave_completed() {
 	// get_player().my_health = global.max_health
 	current_wave++;
 	// Even those the enemy controller is a controller, 
-	enemy_controller = instance_create_layer(x, y, LAYER_INSTANCES, obj_enemy_controller);
+	enemy_controller = instance_create_layer(x, y, LAYER_CONTROLLERS, obj_enemy_controller);
 	with (enemy_controller) {
 		init_wave()
 	}
@@ -159,7 +159,7 @@ function handle_enemy_killed(_enemy) {
  * @returns {undefined}
  */
 function draw_point_indicators(_player_id, _x, _y, _score_increase, _ult_increase, _combo_bonus) {
-	instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
+	instance_create_layer(_x, _y, LAYER_FG_EFFECTS, obj_orb_score_increase, {
 		amount: _score_increase,
 		type: ORB_TYPE_SCORE,
 		owner_player_id: _player_id,
@@ -167,7 +167,7 @@ function draw_point_indicators(_player_id, _x, _y, _score_increase, _ult_increas
 	_y -= global.margin_md
 	
 	if (_ult_increase) {	
-		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
+		instance_create_layer(_x, _y, LAYER_FG_EFFECTS, obj_orb_score_increase, {
 			amount: _ult_increase,
 			type: ORB_TYPE_ULT,
 			owner_player_id: _player_id,
@@ -176,7 +176,7 @@ function draw_point_indicators(_player_id, _x, _y, _score_increase, _ult_increas
 	}
 	
 	if (_combo_bonus) {
-		instance_create_layer(_x, _y, LAYER_INSTANCES, obj_orb_score_increase, {
+		instance_create_layer(_x, _y, LAYER_FG_EFFECTS, obj_orb_score_increase, {
 			amount: _combo_bonus,
 			type: ORB_TYPE_COMBO,
 			owner_player_id: _player_id,
@@ -444,7 +444,7 @@ function _handle_test_string(_code) {
 		ultimate_charge[$ get_my_steam_id_safe()] = global.ultimate_requirement
 	}
 	if (_code == "_l") { // level up
-		ultimate_level[$ get_my_steam_id_safe()]++
+		ultimate_level[$ get_my_steam_id_safe()] += 5
 	}
 }
 

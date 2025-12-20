@@ -1,4 +1,6 @@
-// width, target_x, target_y, and color are passed values
+// width, target, and color are passed values
+target_x = target.x
+target_y = target.y
 
 direction = point_direction(x,y, target_x, target_y)
 length = point_distance(x,y, target_x, target_y)
@@ -55,15 +57,26 @@ function draw_all_lines() {
 	})
 }
 
+function generate_all_lines() {
+	lines = []
 
-// prerender all our lines
-for (var _i = 0; _i < arc_count; _i++) {
-	var _this_shift = irandom(width) - half_width
-	var _that_shift = irandom(width) - half_width
-	var _x0 = x + lengthdir_x(_this_shift, direction - 90)
-	var _y0 = y + lengthdir_y(_this_shift, direction - 90)
-	var _x1 = target_x + lengthdir_x(_that_shift, direction - 90)
-	var _y1 = target_y + lengthdir_y(_that_shift, direction - 90)
+	for (var _i = 0; _i < arc_count; _i++) {
+		var _this_shift = irandom(width) - half_width
+		var _that_shift = irandom(width) - half_width
+		var _x0 = x + lengthdir_x(_this_shift, direction - 90)
+		var _y0 = y + lengthdir_y(_this_shift, direction - 90)
+		var _x1 = target_x + lengthdir_x(_that_shift, direction - 90)
+		var _y1 = target_y + lengthdir_y(_that_shift, direction - 90)
 	
-	render_zig_zag_line(_x0, _y0, _x1, _y1, number_of_zags, max_zig_shift)	
+		render_zig_zag_line(_x0, _y0, _x1, _y1, number_of_zags, max_zig_shift)	
+	}
+}
+
+
+// if we have a change frequency set, we generate lines periodically throughout our life
+if (persist) {
+	alarm[0] = 1
+} else {
+	// else, we generate them only once immediately
+	generate_all_lines()
 }

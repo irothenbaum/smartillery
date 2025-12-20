@@ -8,5 +8,5 @@ if (is_host(get_my_steam_id_safe())) {
 }
 
 for_each_player(function(_player_id) {
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_input, {owner_player_id: _player_id})
+	instance_create_layer(x, y, LAYER_HUD, obj_input, {owner_player_id: _player_id})
 })

@@ -20,6 +20,7 @@ BEFORE ALPHA RELEASE:
 	 The bar gradually increases over time and decreases when an enemy is spawned.
 	 Thus the likelihood to get bigger enemies goes up with time
 	 - Possibly downsides are that you may only ever get smaller enemies?
+- When an enemy collides with you the input box shrinks vertically to 0???
 
 
 Testing settings that need reverting:

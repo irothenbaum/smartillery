@@ -30,19 +30,19 @@ function strike_nearest_enemy() {
 	}
 	
 	bombing_target = _target
-	var _targeting_effect = instance_create_layer(_target.x, _target.y, LAYER_INSTANCES, obj_ult_assist_target, {target: _target, color: c_white})
+	var _targeting_effect = instance_create_layer(_target.x, _target.y, LAYER_FG_EFFECTS, obj_ult_assist_target, {target: _target, color: c_white})
 	alarm[2] = _targeting_effect.rotation_duration_ms * game_get_speed(gamespeed_fps) / 1000 
 }
 
 function render_bomb_lands() {
 	// flash the screen
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_flash_screen, {duration: game_get_speed(gamespeed_fps) * 0.1})
+	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_flash_screen, {duration: game_get_speed(gamespeed_fps) * 0.1})
 	
 	with(bombing_target) {
 		last_hit_by_player_id = other.owner_player_id
 		register_hit(true)
 		broadcast(EVENT_ENEMY_HIT, self, last_hit_by_player_id)
-		instance_create_layer(x, y, LAYER_INSTANCES, obj_ult_strike_explosion, {radius: 0})
+		instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_ult_strike_explosion, {radius: 0})
 	}
 
 	if (strikes_launched < number_of_strikes) {

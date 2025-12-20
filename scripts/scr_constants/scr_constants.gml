@@ -2,6 +2,8 @@
 #macro LAYER_INSTANCES "Instances"
 #macro LAYER_CONTROLLERS "Controllers"
 #macro LAYER_HUD "HUD"
+#macro LAYER_BG_EFFECTS "BG_Effects"
+#macro LAYER_FG_EFFECTS "FG_Effects"
 
 #macro ALIGN_CENTER "center"
 #macro ALIGN_LEFT "left"
@@ -19,6 +21,10 @@
 #macro ORB_TYPE_ULT "ult"
 #macro ORB_TYPE_HEALTH "health"
 #macro ORB_TYPE_COMBO "combo"
+
+#macro BONUS_TYPE_ITEM "item"
+#macro BONUS_TYPE_ULT "ult"
+
 
 
 #macro TAU (2 * pi)
@@ -85,6 +91,7 @@ global.xcenter = global.room_width / 2
 global.ycenter = global.room_height / 2
 global.beam_width = 12
 global.beam_width_lg = 16
+global.beam_width_sm = 6
 
 // layout
 global.margin_xs = 8

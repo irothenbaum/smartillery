@@ -1,10 +1,10 @@
 /// @description Draw perk
 switch (type) {
-	case ORB_TYPE_SCORE:
-		draw_score_perk()
+	case BONUS_TYPE_ITEM:
+		draw_item_perk()
 		break;
 		
-	case ORB_TYPE_ULT:
+	case BONUS_TYPE_ULT:
 		draw_ult_perk()
 }
 

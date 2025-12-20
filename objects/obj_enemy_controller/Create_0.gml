@@ -18,7 +18,7 @@ function init_wave() {
 	spawned_count = 0;
 	spawn_delay_seconds = max(min_spawn_delay_seconds, min(max_spawn_delay_seconds, 30 / enemy_count))
 	
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_next_wave_text)
+	instance_create_layer(x, y, LAYER_HUD, obj_next_wave_text)
 	
 	alarm[0] = global.scene_transition_duration * 2 * game_get_speed(gamespeed_fps);
 }

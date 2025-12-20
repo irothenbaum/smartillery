@@ -20,7 +20,7 @@ direction = point_direction(x, y, global.xcenter, global.ycenter)
 function register_hit(_insta_kill=false) {
 	var _shift_amount = 100
 	
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_enemy_3_damage});
+	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: draw_particle_enemy_3_damage});
 	if (my_health > 0 && !_insta_kill) {
 		get_game_controller().release_answer(answer);
 		my_health--;

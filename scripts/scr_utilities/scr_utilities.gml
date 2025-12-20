@@ -78,6 +78,7 @@ function get_all_enemy_instances() {
 	var _enemy2 = get_array_of_instances(obj_enemy_2)
 	var _enemy3 = get_array_of_instances(obj_enemy_3)
 	var _enemy4 = get_array_of_instances(obj_enemy_4)
+	var _enemy4_fragment = get_array_of_instances(obj_enemy_4_fragment)
 	var _enemy5 = get_array_of_instances(obj_enemy_5)
 	
 	return array_concat(
@@ -85,6 +86,7 @@ function get_all_enemy_instances() {
 		_enemy2,
 		_enemy3,
 		_enemy4,
+		_enemy4_fragment,
 		_enemy5
 	)
 }
@@ -97,6 +99,7 @@ function count_all_enemies() {
 	+ instance_number(obj_enemy_2)
 	+ instance_number(obj_enemy_3)
 	+ instance_number(obj_enemy_4)
+	+ instance_number(obj_enemy_4_fragment)
 	+ instance_number(obj_enemy_5)
 }
 
@@ -138,15 +141,21 @@ function toggle_pause(_status) {
 	broadcast(EVENT_TOGGLE_PAUSE, global.paused)
 	
 	var _layer = layer_get_id(LAYER_INSTANCES);
+	var _layer_fg = layer_get_id(LAYER_FG_EFFECTS);
+	var _layer_bg = layer_get_id(LAYER_BG_EFFECTS);
 	var _instances = layer_get_all_elements(_layer);
-	var _instance_count = array_length(_instances)	
+	var _instances_fg = layer_get_all_elements(_layer_fg);
+	var _instances_bg = layer_get_all_elements(_layer_bg);
+	
+	var _all_instances = array_concat(_instances, _instances_fg, _instances_bg)
+	var _instance_count = array_length(_all_instances)	
 	
 	
 	debug("Turning pause " + (global.paused ? "ON" : "OFF") + " for " + string(_instance_count) + " instances")
 	var _alarm_length = 12
 	
 	for (var _i = 0; _i < _instance_count; _i++) {
-		var _inst = layer_instance_get_instance(_instances[_i])
+		var _inst = layer_instance_get_instance(_all_instances[_i])
 	
 		with (_inst) {
 			if (global.paused) {

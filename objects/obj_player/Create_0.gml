@@ -75,17 +75,16 @@ function execute_hit_target() {
 	var _muzzle = get_turret_muzzle()
 	var _on_streak = game_controller.has_point_streak(_player_who_shot_id)
 	var _flash_variables = {
-		target_x: _target.x, 
-		target_y: _target.y, 
+		target: _target,
 		width: _on_streak ? global.beam_width_lg : global.beam_width, 
 		color: _on_streak ? get_player_color(_player_who_shot_id) : global.beam_color
 	}
-	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_muzzle_flash, _flash_variables)
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_BG_EFFECTS, obj_muzzle_flash, _flash_variables)
 	
 	if (game_controller.is_ult_active(ULTIMATE_COLLATERAL)) {
 		// override color, default to ult color if not fired by a player on streak
 		_flash_variables.color = _on_streak ? get_player_color(_player_who_shot_id) : global.ultimate_colors[$ ULTIMATE_COLLATERAL]
-		instance_create_layer(_muzzle.x, _muzzle.y, LAYER_INSTANCES, obj_electric_beam, _flash_variables)
+		instance_create_layer(_muzzle.x, _muzzle.y, LAYER_BG_EFFECTS, obj_electric_beam, _flash_variables)
 	}
 	
 	if (game_controller.is_ult_active(ULTIMATE_ASSIST)) {
@@ -112,7 +111,7 @@ function execute_take_damage(_damage_amount) {
 	}
 	
 	game_controller.reset_streak()
-	instance_create_layer(x, y, LAYER_INSTANCES, obj_particle_effect, {effect: draw_particle_shockwave})
+	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: draw_particle_shockwave})
 	
    with (screen_shake)
    {
