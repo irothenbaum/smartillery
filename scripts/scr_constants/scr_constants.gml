@@ -91,7 +91,7 @@ global.xcenter = global.room_width / 2
 global.ycenter = global.room_height / 2
 global.beam_width = 12
 global.beam_width_lg = 16
-global.beam_width_sm = 6
+global.beam_width_sm = 8
 
 // layout
 global.margin_xs = 8

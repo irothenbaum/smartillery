@@ -140,6 +140,7 @@
     {"id":{"name":"spr_ult_heal","path":"sprites/spr_ult_heal/spr_ult_heal.yy",},},
     {"id":{"name":"spr_ult_slow","path":"sprites/spr_ult_slow/spr_ult_slow.yy",},},
     {"id":{"name":"spr_ult_strike","path":"sprites/spr_ult_strike/spr_ult_strike.yy",},},
+    {"id":{"name":"spr_ult_turret_turret","path":"sprites/spr_ult_turret_turret/spr_ult_turret_turret.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

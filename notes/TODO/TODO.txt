@@ -1,6 +1,5 @@
 In the middle of:
 - Created obj_bonus_drop, need to create logic to spawn it, make it "targetable", and test
-- Turret Ultimate
 
 ------------------------------------------------------------
 BEFORE ALPHA RELEASE:

@@ -87,10 +87,9 @@ function execute_hit_target() {
 		instance_create_layer(_muzzle.x, _muzzle.y, LAYER_BG_EFFECTS, obj_electric_beam, _flash_variables)
 	}
 	
-	if (game_controller.is_ult_active(ULTIMATE_ASSIST)) {
-	}
-	
 	recoil_amount = max_recoil_amount
+	
+	broadcast(EVENT_PLAYER_FIRED, _target, _player_who_shot_id)
 	
 	_target.last_hit_by_player_id = _player_who_shot_id
 	_target.register_hit()

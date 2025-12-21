@@ -427,6 +427,9 @@ function handle_submit_answer(_answer, _player_id) {
 		// don't care about the return value here because, see below
 		_inst.handle_answer_given(_answer, _player_id)
 	}
+	
+	broadcast(EVENT_CORRECT_ANSWER_GIVEN, _answer, _player_id)
+	
 	// regardless, we return true because they had a direct hit
 	return true;
 }
@@ -444,7 +447,10 @@ function _handle_test_string(_code) {
 		ultimate_charge[$ get_my_steam_id_safe()] = global.ultimate_requirement
 	}
 	if (_code == "_l") { // level up
-		ultimate_level[$ get_my_steam_id_safe()] += 5
+		ultimate_level[$ get_my_steam_id_safe()] += 1
+	}
+	if (_code == "_x") { // level up
+		mark_ultimate_used(get_my_steam_id_safe())
 	}
 }
 

@@ -105,7 +105,7 @@ function get_draw_equation_position(_string, _x, _y) {
 			
 		if (_is_out_of_bounds) {
 			var _direction_from_center = point_direction(global.xcenter, global.ycenter, _target_position.x, _target_position.y)
-			_actual_position = find_intersection(_string_directional_bounds.width, _string_directional_bounds.height, _direction_from_center)
+			_actual_position = find_point_on_rectangle_boundary_at_angle(_string_directional_bounds.width, _string_directional_bounds.height, _direction_from_center)
 		}
 		
 		// make sure we never draw the equation ontop of the HUD elements
@@ -245,40 +245,5 @@ function enemy_apply_slow(_enemy, _multiplier) {
 		if (!is_undefined(slow_sparks)) {
 			part_system_position(slow_sparks, x, y)
 		}
-	}
-}
-
-
-/// @param {Real} _rect_width
-/// @param {Real} _rect_height
-/// @param {Real} _angle // in degrees
-function find_intersection(_rect_width, _rect_height, _angle) {	
-	_rect_width = _rect_width / 2
-	_rect_height = _rect_height / 2
-	
-	// Convert angle to radians
-    var _angle_radians = (_angle * pi) / 180
-	
-	// Calculate direction vector components
-    var _dx = cos(_angle_radians)
-    var _dy = -1 * sin(_angle_radians)
-	
-	// Find intersection with each edge of the rectangle
-    var _t_max = 99999
-	
-	// Intersection with left and right sides
-    if (_dx != 0) {
-        _t_max = min(_t_max, (_rect_width / abs(_dx)))
-    }
-
-    // Intersection with left and right sides
-    if (_dy != 0) {
-        _t_max = min(_t_max, (_rect_height / abs(_dy)))
-    }
-
-    // Calculate intersection point
-    return { 
-		x: _t_max * _dx + global.xcenter, 
-		y: _t_max * _dy + global.ycenter
 	}
 }

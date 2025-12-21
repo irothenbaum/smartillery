@@ -40,7 +40,7 @@ for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
 	}
 	
 	if (_i >= 3) {
-		_b.x0 -= icon_space * 2.5
+		_b.x0 -= icon_space * 3
 		_b.y0 += square_size + global.margin_lg
 	}
 	

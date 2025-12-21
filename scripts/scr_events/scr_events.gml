@@ -10,6 +10,8 @@
 #macro EVENT_NEW_TURRET_ANGLE "new-turret-angle"
 #macro EVENT_ENEMY_SPAWNED "new-enemy-spawned"
 #macro EVENT_SUBMIT_CODE "submit-code"
+#macro EVENT_CORRECT_ANSWER_GIVEN "correct-answer"
+#macro EVENT_PLAYER_FIRED "player-fired"
 #macro EVENT_SELECT_ULTIMATE "select-ultimate"
 
 global._events = {};

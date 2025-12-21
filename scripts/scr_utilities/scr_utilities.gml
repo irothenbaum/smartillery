@@ -110,7 +110,7 @@ function for_each_enemy() {
 	
 	for (var _i =0; _i < _count; _i++) {
 		// we pass any other argument back to the callback
-		script_execute(argument[0], _instances[_i], _i, argument[1], argument[2], argument[3], argument[4], argument[5])
+		script_execute(argument[0], _instances[_i], _i, argument[1], argument[2], argument[3], argument[4], argument[5], argument[6])
 	}
 }
 
@@ -396,4 +396,66 @@ function set_viewport_dimensions() {
 
 	view_enabled = true;
 	view_visible[0] = true;
+}
+
+// this takes an angle from a point at the center of a rectangle and returns the position along the boundary that it intersects
+/// @param {Real} _rect_width
+/// @param {Real} _rect_height
+/// @param {Real} _angle // in degrees
+function find_point_on_rectangle_boundary_at_angle(_rect_width, _rect_height, _angle) {	
+	_rect_width = _rect_width / 2
+	_rect_height = _rect_height / 2
+	
+	// Convert angle to radians
+    var _angle_radians = (_angle * pi) / 180
+	
+	// Calculate direction vector components
+    var _dx = cos(_angle_radians)
+    var _dy = -1 * sin(_angle_radians)
+	
+	// Find intersection with each edge of the rectangle
+    var _t_max = 99999
+	
+	// Intersection with left and right sides
+    if (_dx != 0) {
+        _t_max = min(_t_max, (_rect_width / abs(_dx)))
+    }
+
+    // Intersection with top and bottom sides
+    if (_dy != 0) {
+        _t_max = min(_t_max, (_rect_height / abs(_dy)))
+    }
+
+    // Calculate intersection point
+    return { 
+		x: _t_max * _dx + global.xcenter, 
+		y: _t_max * _dy + global.ycenter
+	}
+}
+
+/**
+ */
+ 
+function find_point_distance_to_line(_line_x1, _line_y1, _line_x2, _line_y2, _point_x, _point_y) {
+	// Calculate perpendicular distance from enemy to line segment
+		var _dx = _line_x2 - _line_x1
+		var _dy = _line_y2 - _line_y1
+		var _line_length_sq = _dx * _dx + _dy * _dy
+
+		if (_line_length_sq == 0) {
+			return
+		}
+
+		// Calculate projection parameter t
+		var _t = ((_point_x - _line_x1) * _dx + (_point_y - _line_y1) * _dy) / _line_length_sq
+		_t = clamp(_t, 0, 1)
+
+		// Find closest point on line segment
+		var _closest_x = _line_x1 + _t * _dx
+		var _closest_y = _line_y1 + _t * _dy
+
+		// Calculate distance from enemy to closest point
+		var _dist = point_distance(_point_x, _point_y, _closest_x, _closest_y)
+		
+		return _dist
 }
