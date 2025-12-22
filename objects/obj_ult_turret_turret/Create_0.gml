@@ -8,20 +8,27 @@ orbit_speed = 360 / (4 * game_get_speed(gamespeed_fps)) // complete an orbit eve
 image_scale = 0.06
 image_xscale = image_scale;
 image_yscale = image_scale;
+recoil_amount = 0
+max_recoil_amount = 10
 
 // Subscribe to player fire event
 subscribe(self, EVENT_PLAYER_FIRED, method(self, function(_target, _player_who_shot_id) {
 	// Calculate the end point of the turret's line
 	var _target_x = x + lengthdir_x(global.bg_circle_max_radius, image_angle)
 	var _target_y = y + lengthdir_y(global.bg_circle_max_radius, image_angle)
+	
+	var _on_streak = get_game_controller().has_point_streak(_player_who_shot_id)
+	var _color = _on_streak ? get_player_color(_player_who_shot_id) : global.ultimate_colors[$ ULTIMATE_TURRET]
 
 	// Create muzzle flash
 	instance_create_layer(x, y, LAYER_BG_EFFECTS, obj_muzzle_flash, {
 		target_x: _target_x,
 		target_y: _target_y,
-		width: global.beam_width_sm,
-		color: get_player_color(_player_who_shot_id)
+		width: global.beam_width_lg,
+		color: _color
 	})
+	
+	recoil_amount = max_recoil_amount
 
 	// Find enemies along the line
 	var _hit_enemies = []
@@ -38,8 +45,7 @@ subscribe(self, EVENT_PLAYER_FIRED, method(self, function(_target, _player_who_s
 		var _dist = find_point_distance_to_line(_line_x1, _line_y1, _line_x2, _line_y2, _enemy.x, _enemy.y)
 		
 		// this distance is overly generous because otherwise it may never strike; instead of being half width its 75%
-		var _functional_strike_distance = ceil(global.beam_width_sm * 0.75 + _enemy.sprite_width / 2)
-		debug("DIST:", _dist, _functional_strike_distance)
+		var _functional_strike_distance = ceil(global.beam_width_lg / 2 + _enemy.sprite_width * 0.75)
 		if (_dist <= _functional_strike_distance) {
 			array_push(_hit_enemies, _enemy)
 		}

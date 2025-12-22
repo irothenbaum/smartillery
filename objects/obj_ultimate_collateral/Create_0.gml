@@ -89,6 +89,8 @@ subscribe(self, EVENT_ENEMY_HIT, method(self, function(_target, _player_who_shot
 	var _color = _on_streak ? get_player_color(_player_who_shot_id) : global.ultimate_colors[$ ULTIMATE_COLLATERAL]
 	
 	instance_create_layer(_target.x, _target.y, LAYER_FG_EFFECTS, obj_ult_collateral_explosion)
+	
+	// TODO: rather than find the nearby enemies again, lets just reference the proximity map to see who should be hit
 	var _nearby_enemies = find_enemies_near_point(_target.x, _target.y, range)
 	
 	debug("Found _nearby_enemies", array_length(_nearby_enemies))

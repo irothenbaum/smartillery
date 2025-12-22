@@ -3,9 +3,11 @@ if (is_undefined(owner_player_id) || owner_player_id == NON_STEAM_PLAYER) {
 }
 drawn_ultimate = 0
 drawn_ultimate_experience = 0
-sprite_size = 40
-half_sprite_size = 20
-icon_scale = 0.02
+selected_ultimate = global.selected_ultimate[$ owner_player_id]
+ult_sprite = global.ultimate_icons[$ selected_ultimate]
+icon_scale = 0.03
+sprite_size = sprite_get_width(ult_sprite) * icon_scale
+half_sprite_size = sprite_size / 2
 input = get_input(owner_player_id)
 game_controller = get_game_controller()
 color_shadow = new CompositeColor(c_black, 0.4)

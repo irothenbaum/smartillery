@@ -3,7 +3,7 @@ hovered_selection = undefined
 x = global.xcenter
 y = global.ycenter
 
-hovered_scale = 0.18
+hovered_scale = 0.20
 default_scale = 0.12
 
 square_size = 240

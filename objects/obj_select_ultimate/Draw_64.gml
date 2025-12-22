@@ -81,7 +81,7 @@ var _focued_ult = is_undefined(hovered_selection) ? staged_selection : hovered_s
 if (!is_undefined(_focued_ult)) {
 	draw_set_color(global.ultimate_colors[$ _focued_ult])
 	draw_set_font(fnt_title)
-	var _title_bounds = draw_text_with_alignment(x, y + icon_space, global.ultimate_descriptions[$ _focued_ult].title, ALIGN_CENTER)
+	var _title_bounds = draw_text_with_alignment(x, y + icon_space + global.margin_lg, global.ultimate_descriptions[$ _focued_ult].title, ALIGN_CENTER)
 		
 	draw_set_color(c_white)
 	draw_set_font(fnt_large)

@@ -15,4 +15,4 @@ function set_up_test() {
 
 
 // comment this out
-set_up_test()
+// set_up_test()

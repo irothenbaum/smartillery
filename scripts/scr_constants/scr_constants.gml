@@ -38,30 +38,30 @@ global.near_white = #c7c7c7
 
 global.ultimate_colors = {
 	ULTIMATE_NONE: c_white, 
-	ULTIMATE_STRIKE: #e03a3a, 
-	ULTIMATE_SLOW: #4ccdfc, 
-	ULTIMATE_HEAL: #11d94e,
-	ULTIMATE_TURRET: #11d94e,  // TODO:
-	ULTIMATE_ASSIST: #a711d9,
-	ULTIMATE_COLLATERAL: #f5fc90,
+	ULTIMATE_STRIKE: #eb1e1e, 
+	ULTIMATE_SLOW: #1e69eb, 
+	ULTIMATE_HEAL: #1eeb2c,
+	ULTIMATE_TURRET: #eba31e,
+	ULTIMATE_ASSIST: #b81eeb,
+	ULTIMATE_COLLATERAL: #1eebe0,
 }
-// TODO: Revisit these
+
 global.ultimate_color_tints = {
 	ULTIMATE_NONE: #eeeeee, 
-	ULTIMATE_STRIKE: #e0773a, 
-	ULTIMATE_SLOW: #0ce7eb, 
-	ULTIMATE_HEAL: #c0ed2b,
-	ULTIMATE_TURRET: #c0ed2b,  // TODO:
-	ULTIMATE_ASSIST: #a711d9,
-	ULTIMATE_COLLATERAL: #f5fc90,
+	ULTIMATE_STRIKE: #e64d32, 
+	ULTIMATE_SLOW: #4baee3, 
+	ULTIMATE_HEAL: #4cd98e,
+	ULTIMATE_TURRET: #ebd059,
+	ULTIMATE_ASSIST: #c858ed,
+	ULTIMATE_COLLATERAL: #f5f569,
 }
 global.ultimate_icons = {
 	ULTIMATE_STRIKE: spr_ult_strike,
 	ULTIMATE_SLOW: spr_ult_slow,
 	ULTIMATE_HEAL: spr_ult_heal,
-	ULTIMATE_TURRET: spr_ult_heal, // TODO:
-	ULTIMATE_ASSIST: spr_ult_heal, // TODO:
-	ULTIMATE_COLLATERAL: spr_ult_heal, // TODO:
+	ULTIMATE_TURRET: spr_ult_turret,
+	ULTIMATE_ASSIST: spr_ult_assist,
+	ULTIMATE_COLLATERAL: spr_ult_collateral,
 }
 
 // in-game configurable

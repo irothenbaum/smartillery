@@ -103,10 +103,12 @@
     {"name":"spr_pixel","order":13,"path":"sprites/spr_pixel/spr_pixel.yy",},
     {"name":"spr_player_body","order":5,"path":"sprites/spr_player_body/spr_player_body.yy",},
     {"name":"spr_player_turret","order":4,"path":"sprites/spr_player_turret/spr_player_turret.yy",},
-    {"name":"spr_test","order":21,"path":"sprites/spr_test/spr_test.yy",},
+    {"name":"spr_ult_assist","order":24,"path":"sprites/spr_ult_assist/spr_ult_assist.yy",},
+    {"name":"spr_ult_collateral","order":25,"path":"sprites/spr_ult_collateral/spr_ult_collateral.yy",},
     {"name":"spr_ult_heal","order":19,"path":"sprites/spr_ult_heal/spr_ult_heal.yy",},
     {"name":"spr_ult_slow","order":18,"path":"sprites/spr_ult_slow/spr_ult_slow.yy",},
     {"name":"spr_ult_strike","order":20,"path":"sprites/spr_ult_strike/spr_ult_strike.yy",},
     {"name":"spr_ult_turret_turret","order":23,"path":"sprites/spr_ult_turret_turret/spr_ult_turret_turret.yy",},
+    {"name":"spr_ult_turret","order":26,"path":"sprites/spr_ult_turret/spr_ult_turret.yy",},
   ],
 }

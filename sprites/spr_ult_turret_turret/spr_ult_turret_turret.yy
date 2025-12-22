@@ -4,7 +4,7 @@
   "bboxMode":0,
   "bbox_bottom":325,
   "bbox_left":0,
-  "bbox_right":275,
+  "bbox_right":386,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,18 +12,18 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"02ae801c-e93f-466c-a355-5df0524ff772","name":"02ae801c-e93f-466c-a355-5df0524ff772","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"98929eee-04f3-451f-8e93-632ae55468d7","name":"98929eee-04f3-451f-8e93-632ae55468d7","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":326,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"6f834f0a-5275-44ed-97ff-395831e1c2bf","blendMode":0,"displayName":"default","isLocked":false,"name":"6f834f0a-5275-44ed-97ff-395831e1c2bf","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"7c57d0ec-d0b2-440a-a554-eb1f174f2c76","blendMode":0,"displayName":"default","isLocked":false,"name":"7c57d0ec-d0b2-440a-a554-eb1f174f2c76","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_ult_turret_turret",
   "nineSlice":null,
-  "origin":4,
+  "origin":9,
   "parent":{
     "name":"Sprites",
     "path":"folders/Sprites.yy",
@@ -69,13 +69,13 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"02ae801c-e93f-466c-a355-5df0524ff772","path":"sprites/spr_ult_turret_turret/spr_ult_turret_turret.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"6d3223b0-d1a0-4174-9c78-77cea2290a6c","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"98929eee-04f3-451f-8e93-632ae55468d7","path":"sprites/spr_ult_turret_turret/spr_ult_turret_turret.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"5f6a897c-a052-498e-abdb-582a92211ec5","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":138,
+    "xorigin":262,
     "yorigin":163,
   },
   "swatchColours":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":276,
+  "width":387,
 }
