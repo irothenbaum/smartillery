@@ -172,3 +172,6 @@ global.ultimate_descriptions = {
 	ULTIMATE_ASSIST: {title: "Aim Assist", description: "Near misses will magically turn into direct strikes on target"},
 	ULTIMATE_TURRET: {title: "Turrets", description: "Spawn turrets to bolster your attack"},
 }
+
+
+global.debug = true

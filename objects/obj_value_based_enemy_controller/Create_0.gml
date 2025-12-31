@@ -2,11 +2,10 @@ can_spawn = false;
 enemy_count = 0;
 spawned_count = 0;
 current_wave = get_current_wave_number();
-game_controller = get_game_controller();
 
 max_value = 0
 current_value = 0
-
+value_per_second = 0
 
 /// @func init()
 /// @returns {undefined}
@@ -16,24 +15,35 @@ function init_wave() {
 	spawned_count = 0;
 	max_value = current_wave * 10
 	current_value = floor(max_value / 2)
+	// should get to full value within 10 seconds
+	value_per_second = max_value / 10
 	
 	instance_create_layer(x, y, LAYER_HUD, obj_next_wave_text)
 	
 	alarm[0] = global.scene_transition_duration * 2 * game_get_speed(gamespeed_fps);
 }
 
+// The minimum level the enemy is allowed to spawn on
 _enemy_levels_map = ds_map_create()
 ds_map_add(_enemy_levels_map, 0, obj_enemy_1)
 ds_map_add(_enemy_levels_map, 5, obj_enemy_2)
 ds_map_add(_enemy_levels_map, 10, obj_enemy_3)
 ds_map_add(_enemy_levels_map, 15, obj_enemy_4)
 
+// The minimum value needed to spawn an enemy of this type
 _enemy_weights_map = ds_map_create()
 ds_map_add(_enemy_weights_map, obj_enemy_1, 10)
 ds_map_add(_enemy_weights_map, obj_enemy_2, 20)
 ds_map_add(_enemy_weights_map, obj_enemy_3, 30)
 ds_map_add(_enemy_weights_map, obj_enemy_4, 40)
 
+// The mapping between single enemy and the compound spawner
+// If an enemy of `key` type is selected, and there exists enough additional value in the 
+// difference between current_value and max_value equal to at least 3x the (key) enemy's min spawn amount
+// (refer to _enemy_weights_map), then there's a 50% chance the spawning logic will favor (/switch) to spawn
+// the compound enemy.
+// For example, if a spawn value of 15 is selected, this would identify the obj_enemy_1. But if there was an available
+// spawn value of at least 45 (15 x 3), then there's a 50% chance the enemy that spawns is actually an obj_compound_enemy_1 instead
 _enemy_compound_maps = ds_map_create()
 ds_map_add(_enemy_compound_maps, obj_enemy_1, obj_compound_enemy_1)
 ds_map_add(_enemy_compound_maps, obj_enemy_2, obj_compound_enemy_2)
@@ -43,7 +53,7 @@ ds_map_add(_enemy_compound_maps, obj_enemy_2, obj_compound_enemy_2)
 
 
 function attempt_spawn() {
-	var _min_value = ds_map_get(_enemy_weights_map, obj_enemy_1)
+	var _min_value = ds_map_find_value(_enemy_weights_map, obj_enemy_1)
 	var _value_dif = max_value - current_value
 	
 	if (_value_dif < _min_value) {
@@ -92,30 +102,96 @@ function get_random_spawn_point() {
 	}
 }
 
+function get_compound_spawn_details(_single_enemy_type, _value_diff = 0) { 
+	var _type = ds_map_find_value(_enemy_compound_maps, _single_enemy_type)
+	var _single_value = ds_map_find_value(_enemy_weights_map, _single_enemy_type)
+	var _params = {
+		enemy_count: floor(_value_diff / _single_value)
+	}
+	var _cost = _params.enemy_count * _single_value
+
+	switch(_enemy_type) {
+		case obj_compound_enemy_1:
+			
+			// this a magic number, just feels like a good scaling factor
+			_params.waypoint_count = floor(_ret_val.enemy_count / 3)
+			break
+		
+		case obj_compound_enemy_2:
+			break
+	}
+	
+	return [_type, _params, _cost]
+}
+
 /// @return {Id.Instance}
 function spawn_enemy(_enemy_value) {
 	var _spawn_position = get_random_spawn_point()
-	
-	var _new_enemy_type = undefined
-	var _new_enemy_params = undefined
 
-	
-	
-	// JUST FOR TESTING:
-	// _new_enemy_type = obj_enemy_5
-	// -----
-	_new_enemy_params = _get_enemy_variables(_new_enemy_type)
-		
+	var _new_enemy_type = undefined
+	var _new_enemy_params = {}
+
+	// Find the best enemy type that can be spawned based on available value and current wave
+	var _selected_enemy_type = undefined
+	var _selected_enemy_weight = 0
+
+	// Iterate through the levels map to find available enemies
+	var _key = ds_map_find_first(_enemy_levels_map)
+	while (!is_undefined(_key)) {
+		var _enemy_type = ds_map_find_value(_enemy_levels_map, _key)
+		var _min_level = _key
+		var _enemy_weight = ds_map_find_value(_enemy_weights_map, _enemy_type)
+
+		// Check if this enemy is unlocked at current wave and affordable
+		if (_min_level <= current_wave && _enemy_weight <= _enemy_value) {
+			// Select the enemy with the highest weight that fits
+			if (_enemy_weight > _selected_enemy_weight) {
+				_selected_enemy_type = _enemy_type
+				_selected_enemy_weight = _enemy_weight
+			}
+		}
+
+		_key = ds_map_find_next(_enemy_levels_map, _key)
+	}
+
+	// If no enemy could be selected, default to the cheapest one
+	if (is_undefined(_selected_enemy_type)) {
+		_selected_enemy_type = obj_enemy_1
+		_selected_enemy_weight = ds_map_find_value(_enemy_weights_map, obj_enemy_1)
+	}
+
+	_new_enemy_type = _selected_enemy_type
+
+	// Check if we should spawn a compound enemy instead
+	var _value_dif = max_value - current_value
+	var _compound_threshold = _selected_enemy_weight * 3
+
+	if (_value_dif >= _compound_threshold) {
+		// Check if a compound mapping exists for this enemy type
+		if (ds_map_exists(_enemy_compound_maps, _selected_enemy_type)) {
+			// 50% chance to spawn compound
+			if (flip_coin()) {
+				var _compound_spawn_details = get_compound_spawn_details(_selected_enemy_type, _value_dif)
+				debug("Spawning compound", _compound_spawn_details)
+				_new_enemy_type = _compound_spawn_details[0]
+				_new_enemy_params = _compound_spawn_details[1]
+				_selected_enemy_weight = _compound_spawn_details[2]
+			}
+		}
+	}
+
+	// Update current_value
+	current_value += _selected_enemy_weight
+
 	var _new_enemy =  instance_create_layer(
 		_spawn_position.x,
-		_spawn_position.y, 
-		LAYER_INSTANCES, 
-		_new_enemy_type, 
+		_spawn_position.y,
+		LAYER_INSTANCES,
+		_new_enemy_type,
 		_new_enemy_params
 	);
-	alarm[0] = game_get_speed(gamespeed_fps) * spawn_delay_seconds
-	
+
 	spawned_count++;
-	
+
 	return _new_enemy
 }

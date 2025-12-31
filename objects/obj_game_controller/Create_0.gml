@@ -73,7 +73,7 @@ function mark_wave_completed() {
 	// get_player().my_health = global.max_health
 	current_wave++;
 	// Even those the enemy controller is a controller, 
-	enemy_controller = instance_create_layer(x, y, LAYER_CONTROLLERS, obj_enemy_controller);
+	enemy_controller = instance_create_layer(x, y, LAYER_CONTROLLERS, obj_value_based_enemy_controller);
 	with (enemy_controller) {
 		init_wave()
 	}
