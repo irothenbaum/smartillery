@@ -17,7 +17,7 @@ var _text_opacity = min(image_alpha, 0.9)
 var _current_wave = get_current_wave_number()
 draw_set_composite_color(new CompositeColor(c_black, _text_opacity))
 draw_set_font(fnt_wave_text)
-var _bounds = draw_text_with_alignment(x, y, "WAVE #" + string(_current_wave), ALIGN_CENTER)
+var _bounds = draw_text_with_alignment(x, y, "WAVE " + string(_current_wave), ALIGN_CENTER)
 
 // next draw the black borders
 var _top_border_height = image_alpha * (_bounds.y0 - global.margin_lg)

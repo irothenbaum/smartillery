@@ -2,8 +2,8 @@
 // General & Shared functions
 // -------------------------------------------------------------------------------------------
 
-#macro ULT_BASE_DURATION 9
-#macro ULT_DURATION_INCREMENT 3
+#macro ULT_BASE_DURATION 20
+#macro ULT_DURATION_INCREMENT 1
 // in frames
 function ult_base_get_duration(_level) {
 	return (ULT_BASE_DURATION + (_level * ULT_DURATION_INCREMENT)) * game_get_speed(gamespeed_fps)

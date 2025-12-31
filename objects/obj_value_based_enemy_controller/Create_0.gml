@@ -1,12 +1,11 @@
 can_spawn = false;
 enemy_count = 0;
 spawned_count = 0;
-spawn_delay_seconds = 0;
 current_wave = get_current_wave_number();
 game_controller = get_game_controller();
 
-min_spawn_delay_seconds = 0.5;
-max_spawn_delay_seconds = 6;
+max_value = 0
+current_value = 0
 
 
 /// @func init()
@@ -15,46 +14,56 @@ function init_wave() {
 	can_spawn = false;
 	enemy_count = 6 + ceil(current_wave * 1.5);
 	spawned_count = 0;
-	spawn_delay_seconds = max(min_spawn_delay_seconds, min(max_spawn_delay_seconds, 30 / enemy_count))
+	max_value = current_wave * 10
+	current_value = floor(max_value / 2)
 	
 	instance_create_layer(x, y, LAYER_HUD, obj_next_wave_text)
 	
 	alarm[0] = global.scene_transition_duration * 2 * game_get_speed(gamespeed_fps);
 }
 
-_enemy_order = [
-	obj_enemy_1,
-	obj_enemy_2,
-	obj_compound_enemy_1,
-	obj_enemy_3,
-	obj_compound_enemy_2,
-	obj_enemy_4,
-	// obj_enemy_5, not working right
-]
+_enemy_levels_map = ds_map_create()
+ds_map_add(_enemy_levels_map, 0, obj_enemy_1)
+ds_map_add(_enemy_levels_map, 5, obj_enemy_2)
+ds_map_add(_enemy_levels_map, 10, obj_enemy_3)
+ds_map_add(_enemy_levels_map, 15, obj_enemy_4)
 
-function _get_enemy_variables(_enemy_type) { 
-	var _ret_val = {}
-	switch(_enemy_type) {
-		case obj_compound_enemy_1:
-			_ret_val.enemy_count = 4 + floor(current_wave / global.wave_difficulty_step)
-			_ret_val.waypoint_count = floor(_ret_val.enemy_count / 3)
-			break
-		
-		case obj_compound_enemy_2:
-			_ret_val.enemy_count = 3 + floor(current_wave / global.wave_difficulty_step)
-			break
+_enemy_weights_map = ds_map_create()
+ds_map_add(_enemy_weights_map, obj_enemy_1, 10)
+ds_map_add(_enemy_weights_map, obj_enemy_2, 20)
+ds_map_add(_enemy_weights_map, obj_enemy_3, 30)
+ds_map_add(_enemy_weights_map, obj_enemy_4, 40)
+
+_enemy_compound_maps = ds_map_create()
+ds_map_add(_enemy_compound_maps, obj_enemy_1, obj_compound_enemy_1)
+ds_map_add(_enemy_compound_maps, obj_enemy_2, obj_compound_enemy_2)
+// TODO:
+// ds_map_add(_enemy_compound_maps, obj_enemy_3, obj_compound_enemy_3)
+// ds_map_add(_enemy_compound_maps, obj_enemy_4, obj_compound_enemy_4)
+
+
+function attempt_spawn() {
+	var _min_value = ds_map_get(_enemy_weights_map, obj_enemy_1)
+	var _value_dif = max_value - current_value
+	
+	if (_value_dif < _min_value) {
+		// if we don't have enough credits even to spawn the smallest enemy
+		return
 	}
 	
-	return _ret_val
+	random_set_seed(global.game_seed + current_wave * 10000 + spawned_count);
+	var _select = random(max_value)
+	if (_select < current_value) {
+		// this is the statistical case where we don't spawn
+		return
+	}
+	
+	var _enemy_value = _select - current_value
+	
+	spawn_enemy(_enemy_value)
 }
 
-/// @func spawn_enemy()
-/// @return {Id.Instance}
-function spawn_enemy() {
-	// we want each wave to progress the same way regardless of play so we reset the random seed deterministically each time
-	random_set_seed(global.game_seed + current_wave * 10000 + spawned_count);
-	can_spawn = false
-	
+function get_random_spawn_point() {
 	// out of bounds margin
 	var _oob_margin = 30
 	
@@ -77,30 +86,32 @@ function spawn_enemy() {
 	_pos_y = _quad == 1 ? -_oob_margin : (_quad == 3 ? global.room_height + _oob_margin : _pos_y);
 	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? global.room_width + _oob_margin : _pos_x);
 	
-	var _max_enemy = floor(current_wave / global.wave_difficulty_step)
+	return {
+		x: _pos_x,
+		y: _pos_y
+	}
+}
+
+/// @return {Id.Instance}
+function spawn_enemy(_enemy_value) {
+	var _spawn_position = get_random_spawn_point()
 	
-	var _next_enemy_type = undefined
-	var _next_enemy_params = undefined
-	do {
-		if (_max_enemy == 0 || flip_coin(max(2, (_max_enemy) * 10 - current_wave))) {
-			_next_enemy_type = _enemy_order[_max_enemy]
-		} else {
-			_max_enemy--
-		}
-	} until (!is_undefined(_next_enemy_type))
+	var _new_enemy_type = undefined
+	var _new_enemy_params = undefined
+
 	
 	
 	// JUST FOR TESTING:
-	// _next_enemy_type = obj_enemy_5
+	// _new_enemy_type = obj_enemy_5
 	// -----
-	_next_enemy_params = _get_enemy_variables(_next_enemy_type)
+	_new_enemy_params = _get_enemy_variables(_new_enemy_type)
 		
 	var _new_enemy =  instance_create_layer(
-		_pos_x,
-		_pos_y, 
+		_spawn_position.x,
+		_spawn_position.y, 
 		LAYER_INSTANCES, 
-		_next_enemy_type, 
-		_next_enemy_params
+		_new_enemy_type, 
+		_new_enemy_params
 	);
 	alarm[0] = game_get_speed(gamespeed_fps) * spawn_delay_seconds
 	

@@ -19,7 +19,7 @@ BEFORE ALPHA RELEASE:
      For example, level 1 might have a asset value of 50, level 10 might be like 500
 	 Each enemy that spawns has a certain value (enemy_1 = 10?, enemy_4 = 100?)
 	 The bar gradually increases over time and decreases when an enemy is spawned.
-	 Thus the likelihood to get bigger enemies goes up with time
+	 Thus the likelihood to get bigger enemies goes up with time but also ensuring the difficulty of material on the screen stays relatively steady
 	 - Possibly downsides are that you may only ever get smaller enemies?
 - When an enemy collides with you the input box shrinks vertically to 0???
 
@@ -41,10 +41,18 @@ Gameplay:
 - Boss levels
     - Coreographed compound enemies
 	- Maybe showcasing the "sequence" logic somehow?
+	- I'm thinking it could just be a level with only 1 enemy type (the new enemy introduced at that level 5, 10, 15, etc)
+	  - They would just be a series of coreographed waves
 - Main Menu
 	- Logo,
 	- Wave select
 	- Save settings to ini
+- Ultimate nerf/boost tweaks
+   - Aim Assist gets way too powerful at higher levels
+      - Maybe cap the number it can retarget so it doesn't just clear the screen after level 10
+   - Turret is way to weak
+      - Maybe double the # of turrets (level 1: 2 turrets, level 5: 10 turrets)
+	  - Would also be cool to increase the number of turrets per orbital at higher orbitals
 
 ------------------------------------------------------------
 BEFORE BETA RELEASE:	
