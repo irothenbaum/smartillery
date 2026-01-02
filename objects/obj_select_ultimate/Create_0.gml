@@ -3,12 +3,12 @@ hovered_selection = undefined
 x = global.xcenter
 y = global.ycenter
 
-hovered_scale = 0.20
-default_scale = 0.12
+hovered_scale = 0.18
+default_scale = 0.11
 
-square_size = 240
+square_size = 200
 
-icon_space = 300
+icon_space = 240
 
 drawn_icon_scales = {
 	ULTIMATE_STRIKE: default_scale,
@@ -17,6 +17,7 @@ drawn_icon_scales = {
 	ULTIMATE_ASSIST: default_scale,
 	ULTIMATE_COLLATERAL: default_scale,
 	ULTIMATE_TURRET: default_scale,
+	ULTIMATE_RINGS: default_scale,
 }
 
 drawn_icon_opacity = {
@@ -26,6 +27,7 @@ drawn_icon_opacity = {
 	ULTIMATE_ASSIST: 0,
 	ULTIMATE_COLLATERAL: 0,
 	ULTIMATE_TURRET: 0,
+	ULTIMATE_RINGS: 0
 }
 
 function handle_select(_ult) {

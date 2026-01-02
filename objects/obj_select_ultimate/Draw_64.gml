@@ -39,7 +39,7 @@ for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
 		y0: y - square_size,
 	}
 	
-	if (_i >= 3) {
+	if (_i >= 4) {
 		_b.x0 -= icon_space * 3
 		_b.y0 += square_size + global.margin_lg
 	}

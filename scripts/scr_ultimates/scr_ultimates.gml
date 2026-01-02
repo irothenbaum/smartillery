@@ -78,7 +78,7 @@ function ult_collateral_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-#macro COLLATERAL_BASE_RADIUS 120
+#macro COLLATERAL_BASE_RADIUS global.bg_circle_ring_width * 1.5 // base should be the rings above and below your target. Which means 1 above + target ring + 1 below = 3, 3 / 2 = 1.5
 #macro COLLATERAL_RADIUS_INCREMENT_STEP 30
 // in pixels
 function ult_collateral_get_radius(_level) {
@@ -96,6 +96,25 @@ function ult_turret_get_duration(_level) {
 // this will return a number indicating how many turrets should be in orbit
 function ult_turret_get_turret_count(_level) {
 	return _level
+}
+
+
+// -------------------------------------------------------------------------------------------
+// RINGS
+// -------------------------------------------------------------------------------------------
+
+function ult_rings_get_duration(_level) {
+	return ult_base_get_duration(_level)
+}
+
+// this will return a range (rings above and rings below a target) based on level
+// e.g., if you are level 4, the range would be [2,1], and strike ring 3 you'd apply range to include rings 1 (3 - 2) through 4 (3 + 1)
+function ult_rings_get_ring_range(_level) {
+	return [
+		// min ring 
+		floor(_level / 2),
+		floor((_level-1) / 2)
+	]
 }
 
 
@@ -123,7 +142,7 @@ function ultimate_initialize(_obj, _type) {
 		ult_type = _type
 		game_controller = get_game_controller()
 		if (is_duration_ult(ult_type)) {
-			starting_duration = ult_collateral_get_duration(level)
+			starting_duration = ult_base_get_duration(level)
 			alarm[0] = starting_duration
 		} else {
 			start_duration = 0
@@ -186,4 +205,5 @@ global._G.ultimate_object_map = {
 	ULTIMATE_ASSIST: obj_ultimate_assist,
 	ULTIMATE_TURRET: obj_ultimate_turret,
 	ULTIMATE_COLLATERAL: obj_ultimate_collateral,
+	ULTIMATE_RINGS: obj_ultimate_rings
 }

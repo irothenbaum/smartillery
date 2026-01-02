@@ -7,16 +7,21 @@ max_value = 0
 current_value = 0
 value_per_second = 0
 
+min_spawn_delay_seconds = 0.2;
+max_spawn_delay_seconds = 5;
+
 /// @func init()
 /// @returns {undefined}
 function init_wave() {
 	can_spawn = false;
 	enemy_count = 6 + ceil(current_wave * 1.5);
 	spawned_count = 0;
-	max_value = current_wave * 10
+	max_value = 20 + current_wave * 10
 	current_value = floor(max_value / 2)
 	// should get to full value within 10 seconds
 	value_per_second = max_value / 10
+	spawn_delay_seconds = max(min_spawn_delay_seconds, min(max_spawn_delay_seconds, 30 / enemy_count))
+	
 	
 	instance_create_layer(x, y, LAYER_HUD, obj_next_wave_text)
 	
@@ -52,7 +57,7 @@ ds_map_add(_enemy_compound_maps, obj_enemy_2, obj_compound_enemy_2)
 // ds_map_add(_enemy_compound_maps, obj_enemy_4, obj_compound_enemy_4)
 
 
-function attempt_spawn() {
+function attempt_spawn() {	
 	var _min_value = ds_map_find_value(_enemy_weights_map, obj_enemy_1)
 	var _value_dif = max_value - current_value
 	
@@ -110,7 +115,7 @@ function get_compound_spawn_details(_single_enemy_type, _value_diff = 0) {
 	}
 	var _cost = _params.enemy_count * _single_value
 
-	switch(_enemy_type) {
+	switch(_single_enemy_type) {
 		case obj_compound_enemy_1:
 			
 			// this a magic number, just feels like a good scaling factor

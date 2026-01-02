@@ -28,40 +28,54 @@ function filter_by_distance_to_player(_instance, _index, _ring_enemy_counts) {
 }
 
 strike_hue = color_get_hue(global.ultimate_colors[$ ULTIMATE_STRIKE])
+rings_hue = color_get_hue(global.ultimate_colors[$ ULTIMATE_RINGS])
+rings_saturation = color_get_saturation(global.ultimate_colors[$ ULTIMATE_RINGS])
+rings_lumosity = color_get_value(global.ultimate_colors[$ ULTIMATE_RINGS])
 
 function get_hue_for_ring(_i, _options) {
 	var _this_hue = _options.health_hue;
-	
+
 	if (_options.is_ulting_strike) {
 		_this_hue = _options.enemies_on_ring == 0 ? 0 : strike_hue
+	} else if (_options.is_ulting_rings && !is_undefined(_options.rings_ult_instance)) {
+		var _ring_strike_value = _options.rings_ult_instance.recently_struck_rings[_i]
+		if (_ring_strike_value > 0) {
+			_this_hue = lerp(_this_hue, rings_hue, _ring_strike_value)
+		}
 	} else if (_i < _options.rounded_skipped_rings) {
 		_this_hue = 0
 	}
-	
+
 	return _this_hue
 }
 
 function get_saturation_for_ring(_i, _options) {
 	var _this_saturation = idle_saturation
-	
+
 	if (_options.is_ulting_strike) {
 		_this_saturation = _options.enemies_on_ring == 0 ? 0 : 255
+	} else if (_options.is_ulting_rings && !is_undefined(_options.rings_ult_instance)) {
+		var _ring_strike_value = _options.rings_ult_instance.recently_struck_rings[_i]
+		_this_saturation = _ring_strike_value > 0 ? lerp(idle_saturation, rings_saturation, _ring_strike_value) : idle_saturation
 	} else if (_i < _options.rounded_skipped_rings) {
 		_this_saturation = 0
 	} else if (_options.player_health < global.max_health) {
 		_this_saturation = idle_saturation + ((255 - idle_saturation) * ease_in_quad((global.max_health - _options.player_health) / global.max_health))
 	}
-		
+
 	_this_saturation += 15 * _options.enemies_on_ring
-	
+
 	return _this_saturation
 }
 
 function get_lumosity_for_ring(_i, _options) {
 	var _this_lumosity = idle_lumosity
-	
+
 	if (_options.is_ulting_strike) {
 		_this_lumosity = _options.enemies_on_ring == 0 ? 0 : 128
+	} else if (_options.is_ulting_rings && !is_undefined(_options.rings_ult_instance)) {
+		var _ring_strike_value = _options.rings_ult_instance.recently_struck_rings[_i]
+		_this_lumosity = _ring_strike_value > 0 ? lerp(idle_lumosity, rings_lumosity, _ring_strike_value) : idle_lumosity
 	} else if (_i < _options.rounded_skipped_rings) {
 		_this_lumosity = idle_lumosity * 0.4
 	} else if (_options.player_health < global.max_health) {
@@ -69,7 +83,7 @@ function get_lumosity_for_ring(_i, _options) {
 	}
 
 	_this_lumosity += 10 * _options.enemies_on_ring
-	
+
 	return _this_lumosity
 }
 

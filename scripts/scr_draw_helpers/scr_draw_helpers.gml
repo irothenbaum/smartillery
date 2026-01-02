@@ -8,22 +8,43 @@ function CompositeColor(_color, _opacity) constructor {
 }
 
 /**
+ * @param {Struct.CompositeColor} _color1
+ * @param {Struct.CompositeColor} _color2
+ * @param {Real} _proportion -- [0,1] where 0 = full _color1, 1 = full _color2
+ * @returns {Struct.CompositeColor}
+ */
+function blend_composite_colors(_color1, _color2, _proportion = 0.5) {
+	var _blended_color = merge_color(_color1.c, _color2.c, _proportion)
+	var _blended_opacity = lerp(_color1.o, _color2.o, _proportion)
+	return new CompositeColor(_blended_color, _blended_opacity)
+}
+
+/**
  * @param {Real} _x
  * @param {Real} _y
  * @param {Real} _x1
  * @param {Real} _y1
  * @param {Real} _progress -- [0,1]
  * @param {Struct.CompositeColor} _color
+ * @param {Struct.CompositeColor} _background_color
+ * @param {Bool} _vertical
  * @returns {Struct.Bounds}
  */
-function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_color) {
+function draw_progress_bar(_x, _y, _x1, _y1, _progress, _color, _background_color, _vertical = false) {
 	draw_set_composite_color(_background_color)
 	draw_rectangle(_x, _y, _x1, _y1, false)
 	draw_set_composite_color(_color)
-	var _x_diff = _x1 - _x
-	draw_rectangle(_x, _y, _x + (min(max(0,_progress), 1) * _x_diff), _y1, false)
+
+	if (_vertical) {
+		var _y_diff = _y1 - _y
+		draw_rectangle(_x, _y1 - (min(max(0, _progress), 1) * _y_diff), _x1, _y1, false)
+	} else {
+		var _x_diff = _x1 - _x
+		draw_rectangle(_x, _y, _x + (min(max(0, _progress), 1) * _x_diff), _y1, false)
+	}
+
 	reset_composite_color()
-	
+
 	return new Bounds(_x, _y, _x1, _y1)
 }
 
@@ -340,12 +361,12 @@ function reset_composite_color() {
  * @param {Real} _i
  * @returns {Real}
  */
-function get_radius_at_i(_i) {
+function get_radius_for_ring(_i) {
 	return global.bg_circle_max_radius - ((_i / global.bg_number_of_circles) * global.bg_circle_magnitude)
 }
 
 /**
- * this inverse of get_radius_at_i
+ * this inverse of get_radius_for_ring
  * @param {Real} _distance
  * @returns {Real}
  */

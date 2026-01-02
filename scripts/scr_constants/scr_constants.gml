@@ -16,6 +16,7 @@
 #macro ULTIMATE_ASSIST "assist"
 #macro ULTIMATE_COLLATERAL "collateral"
 #macro ULTIMATE_TURRET "turret"
+#macro ULTIMATE_RINGS "rings"
 
 #macro ORB_TYPE_SCORE "score"
 #macro ORB_TYPE_ULT "ult"
@@ -42,8 +43,9 @@ global.ultimate_colors = {
 	ULTIMATE_SLOW: #1e69eb, 
 	ULTIMATE_HEAL: #1eeb2c,
 	ULTIMATE_TURRET: #eba31e,
-	ULTIMATE_ASSIST: #b81eeb,
+	ULTIMATE_ASSIST: #9131eb,
 	ULTIMATE_COLLATERAL: #1eebe0,
+	ULTIMATE_RINGS: #f01ff0,
 }
 
 global.ultimate_color_tints = {
@@ -52,8 +54,9 @@ global.ultimate_color_tints = {
 	ULTIMATE_SLOW: #4baee3, 
 	ULTIMATE_HEAL: #4cd98e,
 	ULTIMATE_TURRET: #ebd059,
-	ULTIMATE_ASSIST: #c858ed,
+	ULTIMATE_ASSIST: #ae71f5,
 	ULTIMATE_COLLATERAL: #f5f569,
+	ULTIMATE_RINGS: #ed6dcf,
 }
 global.ultimate_icons = {
 	ULTIMATE_STRIKE: spr_ult_strike,
@@ -62,6 +65,7 @@ global.ultimate_icons = {
 	ULTIMATE_TURRET: spr_ult_turret,
 	ULTIMATE_ASSIST: spr_ult_assist,
 	ULTIMATE_COLLATERAL: spr_ult_collateral,
+	ULTIMATE_RINGS: spr_ult_assist // TODO
 }
 
 // in-game configurable
@@ -171,6 +175,7 @@ global.ultimate_descriptions = {
 	ULTIMATE_COLLATERAL: {title: "Collateral Damage", description: "Destroying an enemy will also explode nearby foes"},
 	ULTIMATE_ASSIST: {title: "Aim Assist", description: "Near misses will magically turn into direct strikes on target"},
 	ULTIMATE_TURRET: {title: "Turrets", description: "Spawn turrets to bolster your attack"},
+	ULTIMATE_RINGS:  {title: "Rings", description: "Extend your strike around"},
 }
 
 

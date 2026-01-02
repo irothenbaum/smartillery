@@ -96,6 +96,7 @@
     {"id":{"name":"obj_ultimate_assist","path":"objects/obj_ultimate_assist/obj_ultimate_assist.yy",},},
     {"id":{"name":"obj_ultimate_collateral","path":"objects/obj_ultimate_collateral/obj_ultimate_collateral.yy",},},
     {"id":{"name":"obj_ultimate_heal","path":"objects/obj_ultimate_heal/obj_ultimate_heal.yy",},},
+    {"id":{"name":"obj_ultimate_rings","path":"objects/obj_ultimate_rings/obj_ultimate_rings.yy",},},
     {"id":{"name":"obj_ultimate_slow","path":"objects/obj_ultimate_slow/obj_ultimate_slow.yy",},},
     {"id":{"name":"obj_ultimate_strike","path":"objects/obj_ultimate_strike/obj_ultimate_strike.yy",},},
     {"id":{"name":"obj_ultimate_turret","path":"objects/obj_ultimate_turret/obj_ultimate_turret.yy",},},

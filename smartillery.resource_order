@@ -68,6 +68,7 @@
     {"name":"obj_ultimate_assist","order":9,"path":"objects/obj_ultimate_assist/obj_ultimate_assist.yy",},
     {"name":"obj_ultimate_collateral","order":7,"path":"objects/obj_ultimate_collateral/obj_ultimate_collateral.yy",},
     {"name":"obj_ultimate_heal","order":1,"path":"objects/obj_ultimate_heal/obj_ultimate_heal.yy",},
+    {"name":"obj_ultimate_rings","order":13,"path":"objects/obj_ultimate_rings/obj_ultimate_rings.yy",},
     {"name":"obj_ultimate_slow","order":4,"path":"objects/obj_ultimate_slow/obj_ultimate_slow.yy",},
     {"name":"obj_ultimate_turret","order":11,"path":"objects/obj_ultimate_turret/obj_ultimate_turret.yy",},
     {"name":"obj_value_based_enemy_controller","order":25,"path":"objects/obj_value_based_enemy_controller/obj_value_based_enemy_controller.yy",},
