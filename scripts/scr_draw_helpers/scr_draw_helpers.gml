@@ -8,15 +8,94 @@ function CompositeColor(_color, _opacity) constructor {
 }
 
 /**
- * @param {Struct.CompositeColor} _color1
- * @param {Struct.CompositeColor} _color2
+ * @param {Struct.CompositeColor|Real|Constant.Color} _color1
+ * @param {Struct.CompositeColor|Real|Constant.Color} _color2
  * @param {Real} _proportion -- [0,1] where 0 = full _color1, 1 = full _color2
  * @returns {Struct.CompositeColor}
  */
 function blend_composite_colors(_color1, _color2, _proportion = 0.5) {
-	var _blended_color = merge_color(_color1.c, _color2.c, _proportion)
-	var _blended_opacity = lerp(_color1.o, _color2.o, _proportion)
+	var _c1 = get_color_from_composite(_color1)
+	var _c2 = get_color_from_composite(_color2)
+
+	var _o1 = is_struct(_color1) ? _color1.o : 1
+	var _o2 = is_struct(_color2) ? _color2.o : 1
+/*
+	// Deconstruct colors into HSV components
+	var _h1 = color_get_hue(_c1)
+	var _s1 = color_get_saturation(_c1)
+	var _v1 = color_get_value(_c1)
+
+	var _h2 = color_get_hue(_c2)
+	var _s2 = color_get_saturation(_c2)
+	var _v2 = color_get_value(_c2)
+
+	// Blend each component separately
+	var _blended_h = lerp(_h1, _h2, _proportion)
+	var _blended_s = lerp(_s1, _s2, _proportion)
+	var _blended_v = lerp(_v1, _v2, _proportion)
+
+	// Reconstruct the color from HSV
+	var _blended_color = make_color_hsv(_blended_h, _blended_s, _blended_v)
+*/
+	var _blended_color = merge_color(_c1, _c2, _proportion)
+	var _blended_opacity = lerp(_o1, _o2, _proportion)
+
 	return new CompositeColor(_blended_color, _blended_opacity)
+}
+
+/**
+ * There's some kind of rounding issue with blending similar colors where lerping between 
+ * c1 and c2 with a proportion like 0.2 ends up always returning c1. So this function uses
+ * additional logic to try and step it close to c2 and eventually returns c2 directly
+ * @param {Struct.CompositeColor|Real|Constant.Color} _color1
+ * @param {Struct.CompositeColor|Real|Constant.Color} _color2
+ * @param {Real} _proportion -- [0,1] where 0 = full _color1, 1 = full _color2
+ * @returns {Struct.CompositeColor}
+ */
+function lerp_color(_color1, _color2, _proportion) {
+	var _c1 = get_color_from_composite(_color1)
+	var _c2 = get_color_from_composite(_color2)
+	
+	if (_c1 == _c2) {
+		return get_composite_from_color(_color1)
+	}
+	
+	if (_proportion == 0) {
+		return get_composite_from_color(_color1)
+	} else if (_proportion == 1) {
+		return get_composite_from_color(_color2)
+	}
+	
+	var _result = blend_composite_colors(_color1, _color2, _proportion)
+	
+	var _result_is_1 = _result.c == _c1
+	var _result_is_2 = _result.c == _c2
+
+	if (_result_is_1) {
+		if (_proportion < 0.5) {
+			return lerp_color(_color1, _color2, 0.7)
+		} else {
+			return get_composite_from_color(_color2)
+		}
+	}
+	
+	return _result
+}
+
+/**
+ * @param {Struct.CompositeColor|Real|Constant.Color} _color
+ * @returns {Real|Constant.Color}
+ */
+function get_color_from_composite(_color) {
+	return is_struct(_color) ? _color.c : _color
+}
+
+/**
+ * @param {Struct.CompositeColor|Real|Constant.Color} _color
+ * @returns {Struct.CompositeColor}
+ */
+function get_composite_from_color(_color) {
+	return is_struct(_color) ? _color : new CompositeColor(_color, 1)
 }
 
 /**
@@ -245,8 +324,12 @@ function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1) {
 }
 */
 
+function get_circle_precision_from_radius_and_degrees(_radius, _degrees) {
+	return floor(log2(max(1, ceil(_radius / 10))) * 10 * (_degrees / 360))
+}
+
 function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1, _segment_override = 0) {
-	var _segments = _segment_override > 0 ? _segment_override : floor(log2(max(1, ceil(_radius / 10))) * 10 * (_degrees / 360))
+	var _segments = _segment_override > 0 ? _segment_override : get_circle_precision_from_radius_and_degrees(_radius, _degrees)
 	
 	// the +1 is to fix a minor bug that makes the arc appear shifted, not sure where in the logic it's occuring
 	return __draw_circle_ext(_x + 1, _y + 1, _radius, _segments, _start, _degrees, _thickness, true)

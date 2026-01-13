@@ -64,10 +64,15 @@ function ult_assist_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-
-#macro ASSIST_BASE_RANGE 1 // (1 each way so if you guess 8, it will count 9 and 7)
+// this will return a range (numbers above and numbers below a target) based on level
+// e.g., if you are level 4, the range would be [2,1], and guess number 10 you'd apply range to include numbers 8 (10 - 2) through 11 (10 + 1)
 function ult_assist_get_range(_level) {
-	return ASSIST_BASE_RANGE + (_level-1)
+	return [
+		// min number 
+		floor(_level / 2),
+		// max number
+		floor((_level-1) / 2)
+	]
 }
 
 // -------------------------------------------------------------------------------------------
@@ -95,7 +100,7 @@ function ult_turret_get_duration(_level) {
 
 // this will return a number indicating how many turrets should be in orbit
 function ult_turret_get_turret_count(_level) {
-	return _level
+	return _level * 2
 }
 
 

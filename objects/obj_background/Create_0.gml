@@ -1,16 +1,24 @@
 x = global.xcenter
 y = global.ycenter	
 
-idle_hue = color_get_hue(global.bg_color)
-idle_saturation = color_get_saturation(global.bg_color)
-idle_lumosity = color_get_value(global.bg_color)
+idle_color = new CompositeColor(global.bg_color, 1)
+no_health_color = new CompositeColor(c_black, 1)
+low_health_color = new CompositeColor(#bf1d1d, 1)
 
 grid_color = c_white
 
 drawn_ring_line_alpha = array_create(global.bg_number_of_circles, 0)
-drawn_ring_hue = array_create(global.bg_number_of_circles, idle_hue)
-drawn_ring_saturation = array_create(global.bg_number_of_circles, 0)
-drawn_ring_lumosity = array_create(global.bg_number_of_circles, 0)
+drawn_ring_color = array_create(global.bg_number_of_circles, idle_color)
+
+// we cache these computations since they never change
+ring_radius = array_create(global.bg_number_of_circles, 0)
+circle_precision = array_create(global.bg_number_of_circles, 0)
+
+array_foreach(ring_radius, function(_v, _i) {
+	ring_radius[_i] = get_radius_for_ring(_i)
+	circle_precision[_i] = get_circle_precision_from_radius_and_degrees(ring_radius[_i], 360)
+})
+
 gradient_shadow = 0.5
 drawn_skipped_rings = global.bg_number_of_circles
 game_controller = get_game_controller()
@@ -27,64 +35,27 @@ function filter_by_distance_to_player(_instance, _index, _ring_enemy_counts) {
 	}
 }
 
-strike_hue = color_get_hue(global.ultimate_colors[$ ULTIMATE_STRIKE])
-rings_hue = color_get_hue(global.ultimate_colors[$ ULTIMATE_RINGS])
-rings_saturation = color_get_saturation(global.ultimate_colors[$ ULTIMATE_RINGS])
-rings_lumosity = color_get_value(global.ultimate_colors[$ ULTIMATE_RINGS])
 
-function get_hue_for_ring(_i, _options) {
-	var _this_hue = _options.health_hue;
-
-	if (_options.is_ulting_strike) {
-		_this_hue = _options.enemies_on_ring == 0 ? 0 : strike_hue
-	} else if (_options.is_ulting_rings && !is_undefined(_options.rings_ult_instance)) {
-		var _ring_strike_value = _options.rings_ult_instance.recently_struck_rings[_i]
-		if (_ring_strike_value > 0) {
-			_this_hue = lerp(_this_hue, rings_hue, _ring_strike_value)
-		}
-	} else if (_i < _options.rounded_skipped_rings) {
-		_this_hue = 0
+function get_ring_color(_i, _options) {
+	if (_options.is_ulting_strike && _options.enemies_on_ring) {
+		return new CompositeColor(global.ultimate_colors[$ ULTIMATE_STRIKE], 1)
 	}
-
-	return _this_hue
-}
-
-function get_saturation_for_ring(_i, _options) {
-	var _this_saturation = idle_saturation
-
-	if (_options.is_ulting_strike) {
-		_this_saturation = _options.enemies_on_ring == 0 ? 0 : 255
-	} else if (_options.is_ulting_rings && !is_undefined(_options.rings_ult_instance)) {
-		var _ring_strike_value = _options.rings_ult_instance.recently_struck_rings[_i]
-		_this_saturation = _ring_strike_value > 0 ? lerp(idle_saturation, rings_saturation, _ring_strike_value) : idle_saturation
-	} else if (_i < _options.rounded_skipped_rings) {
-		_this_saturation = 0
-	} else if (_options.player_health < global.max_health) {
-		_this_saturation = idle_saturation + ((255 - idle_saturation) * ease_in_quad((global.max_health - _options.player_health) / global.max_health))
+	
+	var _ret_val = _i < _options.rounded_skipped_rings ? no_health_color : idle_color
+	
+	if (_options.player_health < global.max_health && _i >= _options.rounded_skipped_rings) {
+		_ret_val = blend_composite_colors(low_health_color, _ret_val, _options.player_health / global.max_health)
 	}
-
-	_this_saturation += 15 * _options.enemies_on_ring
-
-	return _this_saturation
-}
-
-function get_lumosity_for_ring(_i, _options) {
-	var _this_lumosity = idle_lumosity
-
-	if (_options.is_ulting_strike) {
-		_this_lumosity = _options.enemies_on_ring == 0 ? 0 : 128
-	} else if (_options.is_ulting_rings && !is_undefined(_options.rings_ult_instance)) {
-		var _ring_strike_value = _options.rings_ult_instance.recently_struck_rings[_i]
-		_this_lumosity = _ring_strike_value > 0 ? lerp(idle_lumosity, rings_lumosity, _ring_strike_value) : idle_lumosity
-	} else if (_i < _options.rounded_skipped_rings) {
-		_this_lumosity = idle_lumosity * 0.4
-	} else if (_options.player_health < global.max_health) {
-		_this_lumosity = idle_lumosity + ((180 - idle_lumosity) * ease_in_quad((global.max_health - _options.player_health) / global.max_health))
+	
+	if (_options.is_ulting_rings && !is_undefined(_options.rings_ult_instance)) {
+		_ret_val = blend_composite_colors(_ret_val, global.ultimate_colors[$ ULTIMATE_RINGS], _options.rings_ult_instance.recently_struck_rings[_i])
 	}
-
-	_this_lumosity += 10 * _options.enemies_on_ring
-
-	return _this_lumosity
+	
+	if (_options.enemies_on_ring > 0) {
+		_ret_val = blend_composite_colors(_ret_val, c_white, _options.enemies_on_ring / 20)
+	}
+	
+	return _ret_val	
 }
 
 function get_line_alpha_for_ring(_i, _options) {

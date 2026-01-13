@@ -6,7 +6,6 @@ BEFORE ALPHA RELEASE:
 ------------------------------------------------------------
 
 "Bugs" and things to fix:
-- Need Collateral, Assist, + Turret Icons & title/description
 - Tutorial overlay overlapping your strike and strike level
    - Make it so it only shows text in the center when you hover on an element
 - Game Over not destroying all instances
@@ -14,13 +13,6 @@ BEFORE ALPHA RELEASE:
    - Can possibly get by by destroying everything in certain layers? IDK...
 - "Play again" option breaks
    - Some variables not properly reset
-- Improve enemy spawning logic by using some hidden notion of a "enemy value" bar
-   - This would store the number of enemy assets allowed in existence at once time
-     For example, level 1 might have a asset value of 50, level 10 might be like 500
-	 Each enemy that spawns has a certain value (enemy_1 = 10?, enemy_4 = 100?)
-	 The bar gradually increases over time and decreases when an enemy is spawned.
-	 Thus the likelihood to get bigger enemies goes up with time but also ensuring the difficulty of material on the screen stays relatively steady
-	 - Possibly downsides are that you may only ever get smaller enemies?
 - When an enemy collides with you the input box shrinks vertically to 0???
 
 

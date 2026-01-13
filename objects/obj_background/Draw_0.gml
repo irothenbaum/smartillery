@@ -21,17 +21,23 @@ for(var _i = 0; _i < global.bg_number_of_circles; _i++) {
 	_options.enemies_on_ring = _ring_enemy_counts[_i]
 	
 	var _fade_speed = get_fade_speed_for_ring(_i,_options)
+	var _ring_color = get_ring_color(_i, _options)
 	
+	drawn_ring_color[_i] = lerp_color(drawn_ring_color[_i], _ring_color, 0.2)
+	
+	/*
 	drawn_ring_hue[_i] = lerp(drawn_ring_hue[_i], get_hue_for_ring(_i, _options), _fade_speed)
 	drawn_ring_saturation[_i] = lerp(drawn_ring_saturation[_i], get_saturation_for_ring(_i, _options), _fade_speed)
 	drawn_ring_lumosity[_i] = lerp(drawn_ring_lumosity[_i], get_lumosity_for_ring(_i, _options), _fade_speed)
-	drawn_ring_line_alpha[_i] = lerp(drawn_ring_line_alpha[_i], get_line_alpha_for_ring(_i, _options), global.fade_speed)
-	
 	var _color = make_color_hsv(drawn_ring_hue[_i], drawn_ring_saturation[_i], drawn_ring_lumosity[_i]);
-	draw_set_circle_precision((global.bg_number_of_circles - _i) * 2 + 32)
-	var _this_radius = get_radius_for_ring(_i)
-	draw_circle_color(x, y, _this_radius, _color, _color, false)
+	*/
+	
+	draw_set_composite_color(drawn_ring_color[_i])
+	draw_set_circle_precision(circle_precision[_i])
+	draw_circle(x, y, ring_radius[_i], false)
+	
+	drawn_ring_line_alpha[_i] = lerp(drawn_ring_line_alpha[_i], get_line_alpha_for_ring(_i, _options), global.fade_speed)
 	draw_set_composite_color(new CompositeColor(grid_color, drawn_ring_line_alpha[_i]))
-	draw_circle(x,y, _this_radius, true)
+	draw_circle(x,y, ring_radius[_i], true)
 	reset_composite_color()
 }

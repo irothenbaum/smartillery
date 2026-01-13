@@ -183,7 +183,7 @@ function find_enemies_near_point(_x, _y, _radius) {
 	return _nearby_enemies
 }
 
-function find_enemies_near_answer(_answer, _range) {
+function find_enemies_near_answer(_answer, _range_min, _range_max) {
 	var _enemies = []
 	var _gc = get_game_controller()
 	
@@ -194,8 +194,8 @@ function find_enemies_near_answer(_answer, _range) {
 		return []
 	}
 	
-	var _low_guess =_number - _range
-	var _high_guess = _number + _range
+	var _low_guess =_number - _range_min
+	var _high_guess = _number + _range_max
 	
 	debug("Finding enemies within range", _low_guess, _high_guess)
 	

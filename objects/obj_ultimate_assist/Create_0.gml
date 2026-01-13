@@ -2,7 +2,7 @@ range = ult_assist_get_range(level)
 ultimate_initialize(self, ULTIMATE_ASSIST)
 
 function handle_answer_given(_answer, _player_id) {
-	var _enemies = find_enemies_near_answer(_answer, range)
+	var _enemies = find_enemies_near_answer(_answer, range[0], range[1])
 	
 	debug("Found enemies near answe", array_length(_enemies))
 	

@@ -56,6 +56,7 @@ function draw_ultimate_level_details(_player_id, _ult_bounds) {
 function get_ultimate_stats(_ultimate, _level) {
 	var _stats = []
 	var _frames_to_seconds = game_get_speed(gamespeed_fps)
+	var _range
 	switch (_ultimate) {
 		case ULTIMATE_HEAL:
 			array_push(_stats, string_concat("+", ult_heal_get_leech_amount(_level), " health per strike"))
@@ -77,11 +78,16 @@ function get_ultimate_stats(_ultimate, _level) {
 			break
 			
 		case ULTIMATE_ASSIST:
-			array_push(_stats, string_concat("Assist range: +/- ", round(ult_assist_get_range(_level))))
+			_range = ult_assist_get_range(_level)
+			array_push(_stats, string_concat("Include answers range: -", round(_range[0]), " and +", _range[1]))
 			array_push(_stats, string_concat("Duration: ", round((ult_assist_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
 			break
 			
-		// TODO: More types here
+		case ULTIMATE_RINGS:
+			_range = ult_rings_get_ring_range(_level)
+			array_push(_stats, string_concat("Strike nearby rings range: -", round(_range[0]), " and +", _range[1]))
+			array_push(_stats, string_concat("Duration: ", round((ult_rings_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
+			break
 	}
 	
 	return array_reduce(_stats, function(_agr, _s) {

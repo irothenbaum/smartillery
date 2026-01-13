@@ -17,8 +17,8 @@ function init_wave() {
 	enemy_count = 6 + ceil(current_wave * 1.5);
 	spawned_count = 0;
 	max_value = 20 + current_wave * 10
-	current_value = floor(max_value / 2)
-	// should get to full value within 10 seconds
+	current_value = max_value // start off not able to spawn
+	// should get to full availability within 10 seconds
 	value_per_second = max_value / 10
 	spawn_delay_seconds = max(min_spawn_delay_seconds, min(max_spawn_delay_seconds, 30 / enemy_count))
 	
@@ -58,10 +58,12 @@ ds_map_add(_enemy_compound_maps, obj_enemy_2, obj_compound_enemy_2)
 
 
 function attempt_spawn() {	
+	debug("ATTEMPT SPAWN")
 	var _min_value = ds_map_find_value(_enemy_weights_map, obj_enemy_1)
 	var _value_dif = max_value - current_value
 	
 	if (_value_dif < _min_value) {
+		debug("NOT ENOUGH VALUE, CANNOT SPAWN")
 		// if we don't have enough credits even to spawn the smallest enemy
 		return
 	}
@@ -70,6 +72,7 @@ function attempt_spawn() {
 	var _select = random(max_value)
 	if (_select < current_value) {
 		// this is the statistical case where we don't spawn
+		debug("RANDOM DRAW, NO SPAWN")
 		return
 	}
 	
@@ -119,7 +122,7 @@ function get_compound_spawn_details(_single_enemy_type, _value_diff = 0) {
 		case obj_compound_enemy_1:
 			
 			// this a magic number, just feels like a good scaling factor
-			_params.waypoint_count = floor(_ret_val.enemy_count / 3)
+			_params.waypoint_count = floor(_params.enemy_count / 3)
 			break
 		
 		case obj_compound_enemy_2:
@@ -131,6 +134,7 @@ function get_compound_spawn_details(_single_enemy_type, _value_diff = 0) {
 
 /// @return {Id.Instance}
 function spawn_enemy(_enemy_value) {
+	debug("SPAWNING ENEMY VALUE", _enemy_value)
 	var _spawn_position = get_random_spawn_point()
 
 	var _new_enemy_type = undefined
