@@ -27,7 +27,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"spr_chevron",
+    "path":"sprites/spr_chevron/spr_chevron.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }

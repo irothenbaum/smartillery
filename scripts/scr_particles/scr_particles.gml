@@ -196,6 +196,18 @@ function draw_particle_enemy_4_fragment_destroy(x, y) {
 }
 
 function draw_particle_enemy_5_damage(x, y) {
+	return draw_particle_sparks(x, y, 6)
+}
+
+function draw_particle_enemy_5_destroy(x, y) {
+	return [draw_particle_shockwave(x, y), draw_particle_sparks(x, y, 12), draw_particle_debirs(x, y, 5)]
+}
+
+function draw_particle_enemy_5_missile_destroy(x, y) {
+	return [draw_particle_shockwave(x, y), draw_particle_sparks(x, y, 12), draw_particle_debirs(x, y, 5)]
+}
+
+function draw_particle_enemy_5_damage(x, y) {
 	debug("TODO: draw_particle_enemy_5_damage")
 }
 
