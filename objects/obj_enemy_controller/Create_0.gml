@@ -54,9 +54,7 @@ function spawn_enemy() {
 	// we want each wave to progress the same way regardless of play so we reset the random seed deterministically each time
 	random_set_seed(global.game_seed + current_wave * 10000 + spawned_count);
 	can_spawn = false
-	
-	// out of bounds margin
-	var _oob_margin = 30
+
 	
 	var _rotation = irandom(360)
 	var _pos_x = global.xcenter + lengthdir_x(global.bg_circle_max_radius, _rotation)
@@ -74,8 +72,8 @@ function spawn_enemy() {
 	// quad 1 is TOP, 2 is RIGHT, 3 is BOTTOM, 0 is LEFT
 	var _quad = irandom(3)
 	
-	_pos_y = _quad == 1 ? -_oob_margin : (_quad == 3 ? global.room_height + _oob_margin : _pos_y);
-	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? global.room_width + _oob_margin : _pos_x);
+	_pos_y = _quad == 1 ? -global.oob_margin : (_quad == 3 ? global.room_height + global.oob_margin : _pos_y);
+	_pos_x = _quad == 0 ? -global.oob_margin : (_quad == 2 ? global.room_width + global.oob_margin : _pos_x);
 	
 	var _max_enemy = floor(current_wave / global.wave_difficulty_step)
 	

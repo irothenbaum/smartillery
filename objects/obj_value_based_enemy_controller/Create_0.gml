@@ -1,4 +1,3 @@
-can_spawn = false;
 enemy_count = 0;
 spawned_count = 0;
 current_wave = get_current_wave_number();
@@ -10,10 +9,11 @@ value_per_second = 0
 min_spawn_delay_seconds = 0.2;
 max_spawn_delay_seconds = 5;
 
+_last_selected_value = 0
+
 /// @func init()
 /// @returns {undefined}
 function init_wave() {
-	can_spawn = false;
 	enemy_count = 6 + ceil(current_wave * 1.5);
 	spawned_count = 0;
 	max_value = 20 + current_wave * 10
@@ -21,7 +21,6 @@ function init_wave() {
 	// should get to full availability within 10 seconds
 	value_per_second = max_value / 10
 	spawn_delay_seconds = max(min_spawn_delay_seconds, min(max_spawn_delay_seconds, 30 / enemy_count))
-	
 	
 	instance_create_layer(x, y, LAYER_HUD, obj_next_wave_text)
 	
@@ -52,9 +51,8 @@ ds_map_add(_enemy_weights_map, obj_enemy_4, 40)
 _enemy_compound_maps = ds_map_create()
 ds_map_add(_enemy_compound_maps, obj_enemy_1, obj_compound_enemy_1)
 ds_map_add(_enemy_compound_maps, obj_enemy_2, obj_compound_enemy_2)
-// TODO:
-// ds_map_add(_enemy_compound_maps, obj_enemy_3, obj_compound_enemy_3)
-// ds_map_add(_enemy_compound_maps, obj_enemy_4, obj_compound_enemy_4)
+ds_map_add(_enemy_compound_maps, obj_enemy_3, obj_compound_enemy_3)
+ds_map_add(_enemy_compound_maps, obj_enemy_4, obj_compound_enemy_4)
 
 
 function attempt_spawn() {	
@@ -70,6 +68,7 @@ function attempt_spawn() {
 	
 	random_set_seed(global.game_seed + current_wave * 10000 + spawned_count);
 	var _select = random(max_value)
+	_last_selected_value = _select
 	if (_select < current_value) {
 		// this is the statistical case where we don't spawn
 		debug("RANDOM DRAW, NO SPAWN")
@@ -82,9 +81,6 @@ function attempt_spawn() {
 }
 
 function get_random_spawn_point() {
-	// out of bounds margin
-	var _oob_margin = 30
-	
 	var _rotation = irandom(360)
 	var _pos_x = global.xcenter + lengthdir_x(global.bg_circle_max_radius, _rotation)
 	var _pos_y = global.ycenter + lengthdir_x(global.bg_circle_max_radius, _rotation)
@@ -101,8 +97,8 @@ function get_random_spawn_point() {
 	// quad 1 is TOP, 2 is RIGHT, 3 is BOTTOM, 0 is LEFT
 	var _quad = irandom(3)
 	
-	_pos_y = _quad == 1 ? -_oob_margin : (_quad == 3 ? global.room_height + _oob_margin : _pos_y);
-	_pos_x = _quad == 0 ? -_oob_margin : (_quad == 2 ? global.room_width + _oob_margin : _pos_x);
+	_pos_y = _quad == 1 ? -global.oob_margin : (_quad == 3 ? global.room_height + global.oob_margin : _pos_y);
+	_pos_x = _quad == 0 ? -global.oob_margin : (_quad == 2 ? global.room_width + global.oob_margin : _pos_x);
 	
 	return {
 		x: _pos_x,
@@ -165,6 +161,7 @@ function spawn_enemy(_enemy_value) {
 
 	// If no enemy could be selected, default to the cheapest one
 	if (is_undefined(_selected_enemy_type)) {
+		debug("DEFAULTING TO CHEAPEST ENEMY TYPE")
 		_selected_enemy_type = obj_enemy_1
 		_selected_enemy_weight = ds_map_find_value(_enemy_weights_map, obj_enemy_1)
 	}
@@ -178,8 +175,8 @@ function spawn_enemy(_enemy_value) {
 	if (_value_dif >= _compound_threshold) {
 		// Check if a compound mapping exists for this enemy type
 		if (ds_map_exists(_enemy_compound_maps, _selected_enemy_type)) {
-			// 50% chance to spawn compound
-			if (flip_coin()) {
+			// 20% chance to spawn compound
+			if (flip_coin(5)) {
 				var _compound_spawn_details = get_compound_spawn_details(_selected_enemy_type, _value_dif)
 				debug("Spawning compound", _compound_spawn_details)
 				_new_enemy_type = _compound_spawn_details[0]

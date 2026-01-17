@@ -8,7 +8,7 @@ for (var _i = 0; _i < enemy_count; _i++ ) {
 		global.xcenter + lengthdir_x(_radius, _dir), 
 		global.ycenter + lengthdir_y(_radius, _dir), 
 		LAYER_INSTANCES, 
-		obj_enemy_2
+		obj_enemy_4
 	) 
 }
 

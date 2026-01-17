@@ -95,7 +95,7 @@ global.networking_instance_type_to_obj = [
 	obj_enemy_2,
 	obj_enemy_3,
 	obj_enemy_4,
-	obj_enemy_5,
+	obj_ring_enemy,
 	
 ]
 

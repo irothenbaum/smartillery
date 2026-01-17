@@ -1,9 +1,11 @@
 {
   "$GMObject":"",
-  "%Name":"obj_enemy_5",
-  "eventList":[],
+  "%Name":"obj_compound_enemy_4",
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
-  "name":"obj_enemy_5",
+  "name":"obj_compound_enemy_4",
   "overriddenProperties":[],
   "parent":{
     "name":"enemies",
@@ -23,14 +25,13 @@
   "physicsShape":1,
   "physicsShapePoints":[],
   "physicsStartAwake":true,
-  "properties":[],
+  "properties":[
+    {"$GMObjectProperty":"v1","%Name":"enemy_count","filters":[],"listItems":[],"multiselect":false,"name":"enemy_count","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"1","varType":0,},
+  ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"spr_player_body",
-    "path":"sprites/spr_player_body/spr_player_body.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

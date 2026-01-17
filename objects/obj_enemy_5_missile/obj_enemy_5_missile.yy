@@ -1,9 +1,9 @@
 {
   "$GMObject":"",
-  "%Name":"obj_enemy_5",
+  "%Name":"obj_enemy_5_missile",
   "eventList":[],
   "managed":true,
-  "name":"obj_enemy_5",
+  "name":"obj_enemy_5_missile",
   "overriddenProperties":[],
   "parent":{
     "name":"enemies",
@@ -27,10 +27,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"spr_player_body",
-    "path":"sprites/spr_player_body/spr_player_body.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }
