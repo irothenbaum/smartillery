@@ -20,5 +20,3 @@ shader_set_uniform_f_array(_u_color, _draw_color_arr);
 draw_sprite_ext(spr_enemy2_body, 0, _body_x, _body_y, image_scale, image_scale, direction, _draw_color, 1)
 draw_sprite_ext(spr_enemy2_turret, 0, _turret_x, _turret_y, image_scale * _turret_scale, image_scale, image_angle, _draw_color, 1)
 shader_reset();
-
-enemy_draw_equation(self)

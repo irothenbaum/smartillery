@@ -79,7 +79,9 @@ function get_all_enemy_instances() {
 	var _enemy3 = get_array_of_instances(obj_enemy_3)
 	var _enemy4 = get_array_of_instances(obj_enemy_4)
 	var _enemy4_fragment = get_array_of_instances(obj_enemy_4_fragment)
-	var _enemy5 = get_array_of_instances(obj_ring_enemy)
+	var _enemy5 = get_array_of_instances(obj_enemy_5)
+	var _enemy5_missile = get_array_of_instances(obj_enemy_5_missile)
+	var _enemy_ring = get_array_of_instances(obj_ring_enemy)
 	
 	return array_concat(
 		_enemy1,
@@ -100,6 +102,8 @@ function count_all_enemies() {
 	+ instance_number(obj_enemy_3)
 	+ instance_number(obj_enemy_4)
 	+ instance_number(obj_enemy_4_fragment)
+	+ instance_number(obj_enemy_5)
+	+ instance_number(obj_enemy_5_missile)
 	+ instance_number(obj_ring_enemy)
 }
 

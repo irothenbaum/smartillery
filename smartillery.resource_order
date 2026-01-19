@@ -40,6 +40,7 @@
     {"name":"obj_enemy_5_missile","order":13,"path":"objects/obj_enemy_5_missile/obj_enemy_5_missile.yy",},
     {"name":"obj_enemy_5","order":12,"path":"objects/obj_enemy_5/obj_enemy_5.yy",},
     {"name":"obj_enemy_controller","order":3,"path":"objects/obj_enemy_controller/obj_enemy_controller.yy",},
+    {"name":"obj_equations_renderer","order":15,"path":"objects/obj_equations_renderer/obj_equations_renderer.yy",},
     {"name":"obj_flash_screen","order":10,"path":"objects/obj_flash_screen/obj_flash_screen.yy",},
     {"name":"obj_game_controller","order":4,"path":"objects/obj_game_controller/obj_game_controller.yy",},
     {"name":"obj_game_over","order":5,"path":"objects/obj_game_over/obj_game_over.yy",},

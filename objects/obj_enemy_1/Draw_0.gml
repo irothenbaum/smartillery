@@ -6,4 +6,3 @@ if (array_length(waypoints) > 0) {
 	draw_sprite_ext(spr_enemy1_body, 0, x, y, image_scale, image_scale, image_angle, attack_color, 1)
 	shader_reset();
 }
-enemy_draw_equation(self)

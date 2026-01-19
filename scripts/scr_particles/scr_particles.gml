@@ -207,21 +207,9 @@ function draw_particle_enemy_5_missile_destroy(x, y) {
 	return [draw_particle_shockwave(x, y), draw_particle_sparks(x, y, 12), draw_particle_debirs(x, y, 5)]
 }
 
-function draw_particle_enemy_5_damage(x, y) {
-	debug("TODO: draw_particle_enemy_5_damage")
-}
-
-function draw_particle_enemy_5_destroy(x, y) {
-	debug("TODO: draw_particle_enemy_5_destroy")
-}
-
 function draw_particle_ultimate_strike(x, y, _radius) {
 	return [draw_particle_shockwave(x, y, _radius/100, pt_shape_ring), draw_particle_sparks(x, y, 18)]
 }
-
-
-
-
 
 function pause_particle(_p, _status) {
 	if (is_undefined(_p)) {
