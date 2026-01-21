@@ -53,6 +53,7 @@ ds_map_add(_enemy_compound_maps, obj_enemy_1, obj_compound_enemy_1)
 ds_map_add(_enemy_compound_maps, obj_enemy_2, obj_compound_enemy_2)
 ds_map_add(_enemy_compound_maps, obj_enemy_3, obj_compound_enemy_3)
 ds_map_add(_enemy_compound_maps, obj_enemy_4, obj_compound_enemy_4)
+ds_map_add(_enemy_compound_maps, obj_enemy_5, obj_compound_enemy_5)
 
 
 function attempt_spawn() {	
@@ -122,6 +123,9 @@ function get_compound_spawn_details(_single_enemy_type, _value_diff = 0) {
 			break
 		
 		case obj_compound_enemy_2:
+		case obj_compound_enemy_3:
+		case obj_compound_enemy_4:
+		case obj_compound_enemy_5:
 			break
 	}
 	
