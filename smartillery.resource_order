@@ -108,6 +108,8 @@
     {"name":"spr_enemy3_ghost","order":16,"path":"sprites/spr_enemy3_ghost/spr_enemy3_ghost.yy",},
     {"name":"spr_enemy4_body","order":15,"path":"sprites/spr_enemy4_body/spr_enemy4_body.yy",},
     {"name":"spr_enemy4_fragment","order":17,"path":"sprites/spr_enemy4_fragment/spr_enemy4_fragment.yy",},
+    {"name":"spr_enemy5_body","order":27,"path":"sprites/spr_enemy5_body/spr_enemy5_body.yy",},
+    {"name":"spr_enemy5_missile","order":28,"path":"sprites/spr_enemy5_missile/spr_enemy5_missile.yy",},
     {"name":"spr_pixel","order":13,"path":"sprites/spr_pixel/spr_pixel.yy",},
     {"name":"spr_player_body","order":5,"path":"sprites/spr_player_body/spr_player_body.yy",},
     {"name":"spr_player_turret","order":4,"path":"sprites/spr_player_turret/spr_player_turret.yy",},

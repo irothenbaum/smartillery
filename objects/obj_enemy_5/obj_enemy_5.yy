@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_player_body",
-    "path":"sprites/spr_player_body/spr_player_body.yy",
+    "name":"spr_enemy5_body",
+    "path":"sprites/spr_enemy5_body/spr_enemy5_body.yy",
   },
   "spriteMaskId":null,
   "visible":true,

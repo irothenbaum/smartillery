@@ -35,8 +35,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_chevron",
-    "path":"sprites/spr_chevron/spr_chevron.yy",
+    "name":"spr_enemy5_missile",
+    "path":"sprites/spr_enemy5_missile/spr_enemy5_missile.yy",
   },
   "spriteMaskId":null,
   "visible":true,

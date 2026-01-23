@@ -4,7 +4,7 @@ enemy_initialize(self)
 trail_particle_system = undefined
 trail_particle_type = undefined
 
-image_scale = 0.06 // TODO: change this if/when the sprite changes
+image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
 

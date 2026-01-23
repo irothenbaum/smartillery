@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_octagon_fill",
+  "name":"sh_octagon_fill",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
