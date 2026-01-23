@@ -171,6 +171,10 @@ function spawn_enemy(_enemy_value) {
 	}
 
 	_new_enemy_type = _selected_enemy_type
+	
+	// TESTING 
+	debug("TESTING ENEMY 5 SPWAN")
+	_new_enemy_type = obj_enemy_5
 
 	// Check if we should spawn a compound enemy instead
 	var _value_dif = max_value - current_value

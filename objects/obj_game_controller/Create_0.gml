@@ -88,15 +88,20 @@ function mark_wave_completed() {
  * @returns {undefined}
  */
 function end_game() {
+	// Guard against being called multiple times
+	if (is_game_over) {
+		return
+	}
+
 	function explode_enemy(_e, _index) {
 		with (_e) {
 			instance_destroy();
 		}
 	}
-	
+
 	// this will destroy the ult
 	mark_ultimate_used();
-	
+
 	is_game_over = true;
 	broadcast(EVENT_GAME_OVER, game_score)
 	

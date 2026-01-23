@@ -133,10 +133,11 @@ function get_draw_equation_position(_string, _x, _y) {
 function enemy_generate_question(_e) {
 	var _wave = get_current_wave_number()
 	var _functional_wave = ceil(_wave / ds_map_find_value(global.enemy_difficulty_multiplier, _e.object_index))
-	equation = ""
-	answer = ""
 	
 	with (_e) {
+		equation = ""
+		answer = ""
+
 		var _attempts = 10;
 		do {
 			try {

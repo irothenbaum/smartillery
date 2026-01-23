@@ -207,6 +207,32 @@ function draw_particle_enemy_5_missile_destroy(x, y) {
 	return [draw_particle_shockwave(x, y), draw_particle_sparks(x, y, 12), draw_particle_debirs(x, y, 5)]
 }
 
+function draw_missile_trail() {
+	var _ps = part_system_create();
+	part_system_draw_order(_ps, true);
+
+	// Growing circle that fades out
+	var _ptype1 = part_type_create();
+	part_type_shape(_ptype1, pt_shape_circle);
+	// Start at ~1px (size 0.03 * 64px circle = ~2px), grow to ~40px (size 0.625 * 64 = 40px)
+	part_type_size(_ptype1, 0.03, 0.03, 0.02, 0);
+	part_type_scale(_ptype1, 1, 1);
+	part_type_speed(_ptype1, 0, 0, 0, 0);
+	part_type_direction(_ptype1, 0, 0, 0, 0);
+	part_type_gravity(_ptype1, 0, 0);
+	part_type_orientation(_ptype1, 0, 0, 0, 0, false);
+	part_type_color1(_ptype1, c_white);
+	part_type_alpha3(_ptype1, 1, 0.5, 0);
+	part_type_blend(_ptype1, true);
+	// Life long enough for particle to grow from 1px to 40px: (0.625 - 0.03) / 0.02 = ~30 frames
+	part_type_life(_ptype1, 30, 30);
+
+	return {
+		system: _ps,
+		type: _ptype1,
+	}
+}
+
 function draw_particle_ultimate_strike(x, y, _radius) {
 	return [draw_particle_shockwave(x, y, _radius/100, pt_shape_ring), draw_particle_sparks(x, y, 18)]
 }

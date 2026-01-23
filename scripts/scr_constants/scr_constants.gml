@@ -138,7 +138,7 @@ global.damage_enemy_2_shot = 20
 global.damage_enemy_3_collision = 40
 global.damage_enemy_4_collision = 50
 global.damage_enemy_4_fragment_collision = 15
-global.damage_enemy_5_collision = 40
+global.damage_enemy_5_missile_collision = 40
 
 global.points_map = ds_map_create()
 ds_map_add(global.points_map, obj_enemy_1, 10)
@@ -146,14 +146,18 @@ ds_map_add(global.points_map, obj_enemy_2, 20)
 ds_map_add(global.points_map, obj_enemy_3, 30)
 ds_map_add(global.points_map, obj_enemy_4, 20)
 ds_map_add(global.points_map, obj_enemy_4_fragment, 10)
+ds_map_add(global.points_map, obj_enemy_5, 30)
+ds_map_add(global.points_map, obj_enemy_5_missile, 5)
 
 // the higher this number is, the easier the equations are
 global.enemy_difficulty_multiplier = ds_map_create()
 ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_1, 1)
 ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_2, 3)
-ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_3, 6)
+ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_3, 5)
 ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_4, 2)
 ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_4_fragment, 1)
+ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_5, 2)
+ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_5_missile, 5)
 
 // effects
 global.fade_speed = 0.1

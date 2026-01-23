@@ -89,7 +89,8 @@ function get_all_enemy_instances() {
 		_enemy3,
 		_enemy4,
 		_enemy4_fragment,
-		_enemy5
+		_enemy5,
+		_enemy5_missile
 	)
 }
 
