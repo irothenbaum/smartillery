@@ -8,9 +8,9 @@ _u_uvs = shader_get_uniform(sh_octagon_fill, "u_uvs")
 attack_color = c_fuchsia
 attack_color_arr = color_to_array(attack_color)
 
-// Position at random angle, distance from center
-var _spawn_distance = global.room_height / 4
-var _spawn_angle = irandom(360)
+// Teleport to the a closer location, at same angle from center
+var _spawn_distance = global.room_height / 2
+var _spawn_angle = point_direction(global.xcenter, global.ycenter, x, y)
 x = global.xcenter + lengthdir_x(_spawn_distance, _spawn_angle)
 y = global.ycenter + lengthdir_y(_spawn_distance, _spawn_angle)
 
@@ -22,10 +22,23 @@ image_yscale = image_scale
 // Delay between missile shots (in seconds)
 missile_delay = 6 * game_get_speed(gamespeed_fps)
 
-image_angle = point_direction(x,y,global.xcenter, global.ycenter)
+image_angle = point_direction(x, y, global.xcenter, global.ycenter)
 
-// Wait before first shot
-alarm[0] = missile_delay
+// Spawn animation state
+// Phases: 0 = black hole growing, 1 = enemy fading in, 2 = black hole shrinking, 3 = complete
+spawn_phase = 0
+spawn_timer = 0
+// circle grow, circle delay, enemy appear, circle shrink
+spawn_phase_durations = [1.0, 0.5, 0.5, 0.5] // seconds for each phase
+total_spawn_phases = array_length(spawn_phase_durations)
+
+// Calculate the visual radius of the sprite at full scale
+var _sprite_half_size = (sprite_get_width(sprite_index) * image_scale) / 2
+blackhole_max_radius = _sprite_half_size * 1.2 // slightly larger than sprite
+blackhole_radius = 1
+
+// Start enemy invisible during spawn
+image_alpha = 0
 
 function register_hit(_insta_kill = false) {
 	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: draw_particle_enemy_5_damage});
