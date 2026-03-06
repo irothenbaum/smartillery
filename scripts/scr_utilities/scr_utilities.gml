@@ -262,10 +262,10 @@ function color_to_array() {
  */
 function get_bounds_for_instance(_i) {
 	with (_i) {
-		var _left   = x - sprite_xoffset * image_xscale;
-		var _top    = y - sprite_yoffset * image_yscale;
-		var _right  = _left + sprite_width * image_xscale;
-		var _bottom = _top + sprite_height * image_yscale;
+		var _left   = x - sprite_xoffset;
+		var _top    = y - sprite_yoffset;
+		var _right  = _left + sprite_width;
+		var _bottom = _top + sprite_height;
 		
 		return new Bounds(_left, _top, _right, _bottom)
 	}
@@ -423,12 +423,11 @@ function set_viewport_dimensions() {
 }
 
 // this takes an angle from a point at the center of a rectangle and returns the position along the boundary that it intersects
-/// @param {Real} _rect_width
-/// @param {Real} _rect_height
+/// @param {Struct.Bounds} _bounds 
 /// @param {Real} _angle // in degrees
-function find_point_on_rectangle_boundary_at_angle(_rect_width, _rect_height, _angle) {	
-	_rect_width = _rect_width / 2
-	_rect_height = _rect_height / 2
+function find_point_on_bounds_at_angle(_bounds, _angle) {	
+	var _rect_width = _bounds.width / 2
+	var _rect_height = _bounds.height / 2
 	
 	// Convert angle to radians
     var _angle_radians = (_angle * pi) / 180
@@ -452,8 +451,8 @@ function find_point_on_rectangle_boundary_at_angle(_rect_width, _rect_height, _a
 
     // Calculate intersection point
     return { 
-		x: _t_max * _dx + global.xcenter, 
-		y: _t_max * _dy + global.ycenter
+		x: _t_max * _dx + _bounds.xcenter, 
+		y: _t_max * _dy + _bounds.ycenter
 	}
 }
 

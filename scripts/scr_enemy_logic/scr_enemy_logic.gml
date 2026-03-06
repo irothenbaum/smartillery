@@ -73,58 +73,59 @@ function enemy_draw_equation(_e) {
  */
 function get_draw_equation_position(_string, _x, _y) {
 	draw_set_font(fnt_large);
-		draw_set_color(c_white);
-		var _string_height = string_height(_string)
-		var _string_width = string_width(_string)
-		// 25 is a constant that basically indicates half the sprite size
-		var _offset_y = (_y > global.ycenter ? -1 : 1) * (25 + _string_height)
+	draw_set_color(c_white);
+	var _string_height = string_height(_string)
+	var _string_width = string_width(_string)
+	// we use player_body_radius a proxy that basically indicates half an emey sprite size
+	var _offset_y = (_y > global.ycenter ? -1 : 1) * (global.player_body_radius + _string_height)
 		
-		// this logic is going to draw the equation within the game bounds even if the enemy us out of screen
-		var _string_directional_bounds = new Bounds(
-			global.directional_hint_bounds.x0 + _string_width / 2,
-			global.directional_hint_bounds.y0 + _string_height / 2,
-			global.directional_hint_bounds.x1 - _string_width / 2,
-			global.directional_hint_bounds.y1 - _string_height / 2
-		)
+	// this logic is going to draw the equation within the game bounds even if the enemy us out of screen
+	var _string_directional_bounds = new Bounds(
+		global.directional_hint_bounds.x0 + _string_width / 2,
+		global.directional_hint_bounds.y0 + _string_height / 2,
+		global.directional_hint_bounds.x1 - _string_width / 2,
+		global.directional_hint_bounds.y1 - _string_height / 2
+	)
 		
-		var _target_position = {
-			x: _x,
-			y: _y + _offset_y
-		}
-		var _actual_position = _target_position
+	var _target_position = {
+		x: _x,
+		y: _y + _offset_y
+	}
+	var _actual_position = _target_position
 		
-		// we're out of bounds of any of our coordinates as off screen
-		var _is_out_of_bounds = 
-			_target_position.x < _string_directional_bounds.x0 || 
-			_target_position.y < _string_directional_bounds.y0 ||
-			_target_position.x > _string_directional_bounds.x1 || 
-			_target_position.y > _string_directional_bounds.y1
+	// we're out of bounds of any of our coordinates as off screen
+	var _is_out_of_bounds = 
+		_target_position.x < _string_directional_bounds.x0 || 
+		_target_position.y < _string_directional_bounds.y0 ||
+		_target_position.x > _string_directional_bounds.x1 || 
+		_target_position.y > _string_directional_bounds.y1
 			
-		if (_is_out_of_bounds) {
-			var _direction_from_center = point_direction(global.xcenter, global.ycenter, _target_position.x, _target_position.y)
-			_actual_position = find_point_on_rectangle_boundary_at_angle(_string_directional_bounds.width, _string_directional_bounds.height, _direction_from_center)
-		}
+	if (_is_out_of_bounds) {
+		var _direction_from_center = point_direction(global.xcenter, global.ycenter, _target_position.x, _target_position.y)
+		_actual_position = find_point_on_bounds_at_angle(_string_directional_bounds, _direction_from_center)
+	}
 		
-		// make sure we never draw the equation ontop of the HUD elements
-		_actual_position.y = max(70, _actual_position.y) // this 70 is basically the HUD height
+	// TODO: may need to revist this with more player Inputs on HUD
+	// make sure we never draw the equation ontop of the HUD elements
+	_actual_position.y = max(70, _actual_position.y) // this 70 is basically the HUD height
 		
-		// we check again here because we need _actual_position in its final state.
-		if (_is_out_of_bounds) {
-			var _direction_from_equation_to_enemy = point_direction(_actual_position.x, _actual_position.y, x, y) 
-			draw_sprite_ext(
-				spr_chevron, 
-				0, 
-				_actual_position.x + lengthdir_x(40, _direction_from_equation_to_enemy), 
-				_actual_position.y + lengthdir_y(40, _direction_from_equation_to_enemy),
-				0.07, 
-				0.07, 
-				_direction_from_equation_to_enemy, 
-				c_white, 
-				1
-			)
-		}
+	// we check again here because we need _actual_position in its final state.
+	if (_is_out_of_bounds) {
+		var _direction_from_equation_to_enemy = point_direction(_actual_position.x, _actual_position.y, x, y) 
+		draw_sprite_ext(
+			spr_chevron, 
+			0, 
+			_actual_position.x + lengthdir_x(40, _direction_from_equation_to_enemy), 
+			_actual_position.y + lengthdir_y(40, _direction_from_equation_to_enemy),
+			0.07, 
+			0.07, 
+			_direction_from_equation_to_enemy, 
+			c_white, 
+			1
+		)
+	}
 		
-		return [_actual_position, _target_position]
+	return [_actual_position, _target_position]
 }
 
 function enemy_generate_question(_e) {

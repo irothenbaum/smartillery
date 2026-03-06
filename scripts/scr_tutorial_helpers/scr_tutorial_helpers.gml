@@ -2,6 +2,11 @@
  * @param {Id.Instance} _i
  */
 function tip_step(_i) {
+	// tip only applies when paused
+	if (!global.paused || instance_number(obj_ultimate_strike) > 0) {
+		return
+	}
+	
 	with (_i) {
 		if (is_undefined(my_bounds)) {
 			debug("TIP ENABLED ELEMENT MISSING BOUNDS", self)

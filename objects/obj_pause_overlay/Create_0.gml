@@ -40,7 +40,7 @@ function draw_ultimate_level_details(_player_id, _ult_bounds) {
 	var _this_level_stats = get_ultimate_stats(_player_ultimate, _ultimate_level)
 	var _next_level_stats = get_ultimate_stats(_player_ultimate, _ultimate_level + 1)
 	
-	draw_line_between(_level_center.x, _level_center.y, _details_title_center.x, _details_title_center.y)
+	draw_line_width(_level_center.x, _level_center.y, _details_title_center.x, _details_title_center.y, 2)
 	
 	draw_set_font(fnt_large)
 	var _new_bounds = draw_text_with_alignment(_details_title_center.x, _details_title_center.y, string_concat(global.ultimate_descriptions[$ _player_ultimate].title, " -- lvl ", _ultimate_level), ALIGN_LEFT)

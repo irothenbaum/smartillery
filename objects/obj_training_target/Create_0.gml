@@ -1,6 +1,6 @@
 enemy_initialize(self)
 
-max_radius = 24 // 48px diameter at full health
+max_radius = global.player_body_radius // 52px diameter at full health
 min_radius_percent = 0.5
 outline_thickness = 5
 target_color = c_white
