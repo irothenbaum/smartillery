@@ -82,6 +82,7 @@ function get_all_enemy_instances() {
 	var _enemy5 = get_array_of_instances(obj_enemy_5)
 	var _enemy5_missile = get_array_of_instances(obj_enemy_5_missile)
 	var _enemy_ring = get_array_of_instances(obj_ring_enemy)
+	var _target = get_array_of_instances(obj_training_target)
 	
 	return array_concat(
 		_enemy1,
@@ -90,7 +91,8 @@ function get_all_enemy_instances() {
 		_enemy4,
 		_enemy4_fragment,
 		_enemy5,
-		_enemy5_missile
+		_enemy5_missile,
+		_target
 	)
 }
 
@@ -106,6 +108,7 @@ function count_all_enemies() {
 	+ instance_number(obj_enemy_5)
 	+ instance_number(obj_enemy_5_missile)
 	+ instance_number(obj_ring_enemy)
+	+ instance_number(obj_training_target)
 }
 
 /// takes a function that receives 2 params: enemy instance, index

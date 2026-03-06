@@ -324,6 +324,8 @@ function reset_streak(_player_id) {
 	var _had_sreak = has_point_streak(_player_id)
 	// this was simply an inccorect submission, streak goes to 0
 	streak[$ _player_id] = 0
+	combo_count[$ _player_id] = 0
+	alarm[get_combo_alarm_for_player_id(_player_id)] = -1
 	
 	broadcast(EVENT_ON_OFF_STREAK, 0, _player_id)
 }
@@ -338,8 +340,19 @@ function increase_combo(_player_id) {
 	}
 	
 	combo_count[$ _player_id]++
-	alarm[get_combo_alarm_for_player_id(_player_id)] = combo_max_alarm
-	longest_combo[$ _player_id] = max(longest_combo[$ _player_id], combo_count[$ _player_id])
+	
+	// Max combo is how every many phrases we support
+	var _max_combo = array_length(global.combo_phrases)
+	// if we surpass it, fully charge ultimate and reset
+	if (combo_count[$ _player_id] > _max_combo) {
+		combo_count[$ _player_id] = 0
+		ultimate_charge[$ _player_id] = global.ultimate_requirement
+		// Spawn level up particle effect
+		draw_particle_shockwave(get_player().x, get_player().y, 1, undefined, get_player_color(_player_id))
+	} else {
+		alarm[get_combo_alarm_for_player_id(_player_id)] = combo_max_alarm
+		longest_combo[$ _player_id] = max(longest_combo[$ _player_id], combo_count[$ _player_id])
+	}
 }
 
 function get_combo_alarm_for_player_id(_player_id) {
@@ -468,4 +481,10 @@ subscribe(self, EVENT_ENEMY_HIT, function(_enemy, _player_id) {
 
 // These combined effectively start the game
 reset_starting_values()
-mark_wave_completed()
+
+if (room == rm_play_training) {
+	instance_create_layer(x,y,LAYER_CONTROLLERS, obj_training_controller)
+} else {
+	// this effectively starts the regular game
+	mark_wave_completed()
+}

@@ -115,7 +115,8 @@ global.font_size_xl = 24
 global.point_streak_requirement = 3
 global.combo_delay_ms = 1200
 global.minimum_combo = 2
-global.combo_phrases = ["Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Feral firepower!", "Menace!!", "Untouchable!!!", "Impossible!!!!"]
+// we keep combo 1 even though it's not used because we want array_length to = longest combo count
+global.combo_phrases = ["N/A", "Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Impressive!", "Incredible!!", "Unimaginable!!!",]
 global.ultimate_requirement = 30 // how many seconds until your charge is ready
 global.ultimate_code = "000"
 global.max_health = 100
@@ -158,6 +159,7 @@ ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_4, 2)
 ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_4_fragment, 1)
 ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_5, 2)
 ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_5_missile, 5)
+ds_map_add(global.enemy_difficulty_multiplier, obj_training_target, 1)
 
 // effects
 global.fade_speed = 0.1

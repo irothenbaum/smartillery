@@ -7,7 +7,7 @@ function set_up_test() {
 	global.selected_ultimate[$ get_my_steam_id_safe()] = ULTIMATE_TURRET
 //	global.starting_wave = 5;
 	
-	room_goto(rm_play_solo)
+	room_goto(rm_play_training)
 }
 
 

@@ -3,7 +3,7 @@
  * @param {Real} _opacity
  */
 function CompositeColor(_color, _opacity) constructor {
-	c = _color
+	c = get_color_from_composite(_color)
 	o = _opacity
 }
 
