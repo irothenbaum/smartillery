@@ -15,8 +15,6 @@ if (is_undefined(waypoints) or array_length(waypoints) == 0) {
 	waypoints = [get_tangent_point(x,y, global.xcenter, global.ycenter, global.room_height * 0.3)]
 }
 
-debug("Spawned at ", x, y, "heading towards waypoints: ", array_length(waypoints))
-
 direction = point_direction(x, y, global.xcenter, global.ycenter)
 speed = approach_speed
 

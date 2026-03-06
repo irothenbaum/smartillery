@@ -3,6 +3,7 @@ hud = instance_find(obj_hud, 0)
 player = get_player()
 game_controller = get_game_controller()
 tip_copy = undefined
+fade_duration = 1 * game_get_speed(gamespeed_fps)
 
 /*
 ultimate_icons = get_array_of_instances(obj_hud_ultimate_icon)
@@ -102,5 +103,13 @@ function get_ultimate_stats(_ultimate, _level) {
  * @param {Id.Instance} _i
  */
 function set_hovered_instance(_i) {
+	debug("SETTING HOVERED", _i)
+	if (is_undefined(_i)) {
+		tip_copy = undefined
+		return
+	}
+	
 	tip_copy = ds_map_find_value(global.tip_copy_map, _i.object_index)
+	tip_copy.position = {x: _i.x, y: _i.y}
+	alarm[0] = fade_duration
 }

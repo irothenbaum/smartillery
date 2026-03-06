@@ -30,9 +30,6 @@ for_each_player(function(_player_id) {
 	instance_create_layer(x, y, LAYER_HUD, obj_combo_drawer, {owner_player_id: _player_id})
 })
 
-
-debug("USING SEED :" + string(global.game_seed))
-
 /**
  * @param {Real} _player_id
  * @returns {Bool}
@@ -204,8 +201,6 @@ function handle_point_orb_collision(_orb) {
 	} else {
 		debug("UNRECOGNIZED ORB TYPE", _orb.type)
 	}
-
-	
 	
 	broadcast(EVENT_SCORE_CHANGED, {
 		game_score: game_score,
@@ -263,6 +258,12 @@ function activate_ultimate(_player_id) {
  * @param {Real} _player_id
  */
 function mark_ultimate_used(_player_id) {
+	// if player id is not provided, check both* players
+	if (is_undefined(_player_id)) {
+		var _results = for_each_player(mark_ultimate_used)
+		return
+	}
+	
 	if (!is_undefined(inst_ultimate[$ _player_id])) {
 		instance_destroy(inst_ultimate[$ _player_id])
 	}
@@ -346,9 +347,13 @@ function increase_combo(_player_id) {
 	// if we surpass it, fully charge ultimate and reset
 	if (combo_count[$ _player_id] > _max_combo) {
 		combo_count[$ _player_id] = 0
-		ultimate_charge[$ _player_id] = global.ultimate_requirement
-		// Spawn level up particle effect
-		draw_particle_shockwave(get_player().x, get_player().y, 1, undefined, get_player_color(_player_id))
+		
+		// can only full charge if not currently popping ult
+		if (!is_ulting(_player_id)) {
+			ultimate_charge[$ _player_id] = global.ultimate_requirement
+			// Spawn level up particle effect
+			draw_particle_shockwave(get_player().x, get_player().y, 1, undefined, get_player_color(_player_id))
+		}
 	} else {
 		alarm[get_combo_alarm_for_player_id(_player_id)] = combo_max_alarm
 		longest_combo[$ _player_id] = max(longest_combo[$ _player_id], combo_count[$ _player_id])
@@ -474,7 +479,6 @@ function _handle_test_string(_code) {
 
 // whenever an enemy is hit, we increase the player's combo
 subscribe(self, EVENT_ENEMY_HIT, function(_enemy, _player_id) {
-	debug("INCREASING COMBO FOR PLAYER", _player_id)
 	increase_combo(_player_id)
 })
 

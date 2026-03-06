@@ -8,7 +8,6 @@ function enemy_initialize(_e, _skip_question_generation = false) {
 		draw_equation_position = undefined
 		equation = "";
 		point_value = ds_map_find_value(global.points_map, object_index)
-		debug("Point value:",  point_value)
 		slow_multiplier = 1
 		slow_sparks = undefined
 		last_hit_by_player_id = undefined
@@ -158,26 +157,20 @@ function enemy_generate_question(_e) {
 			debug("Could not create equation");
 			return
 		}
-		
-		debug("Generated equation:", equation, answer, _attempts)
 	}
 }
 
 function find_enemies_near_point(_x, _y, _radius) {
-	debug("Finding nearby", _x, _y, _radius)
 	var _nearby_enemies = []
 	for_each_enemy(function(_e, _index, _x, _y, _radius, _nearby_enemies) {
+		// make sure _e still exists
 		if (!instance_exists(_e)) {
-			debug("_e doesn't exist")
-			// make sure _e still exists
 			return;
 		}
 		
 		if (point_distance(_e.x, _e.y, _x, _y) < _radius) {
-			debug("Found one!", _e)
 			array_push(_nearby_enemies, _e)
 		}
-		debug("This enemy isn't close enough ", _e)
 	}, _x, _y, _radius, _nearby_enemies)
 	return _nearby_enemies
 }
@@ -196,8 +189,6 @@ function find_enemies_near_answer(_answer, _range_min, _range_max) {
 	var _low_guess =_number - _range_min
 	var _high_guess = _number + _range_max
 	
-	debug("Finding enemies within range", _low_guess, _high_guess)
-	
 	for (var _i = _low_guess; _i <= _high_guess; _i++ ){ 
 		if (_i == _number) {
 			// it was already handled by game controller
@@ -207,7 +198,6 @@ function find_enemies_near_answer(_answer, _range_min, _range_max) {
 		// this is a little specific to the workings of the game_controller
 		if (_gc.is_answer_reserved(_i) ) {
 			var _instance = _gc.active_answers[$ _i];
-			debug("Found match with", _i, _instance)
 			array_push(_enemies, _instance)
 		} else {
 			debug("Answer not reserved", _i)
@@ -224,7 +214,6 @@ function enemy_remove_slow(_enemy) {
 function enemy_apply_slow(_enemy, _multiplier) {
 	with(_enemy) {
 		if (slow_multiplier != _multiplier) {
-			debug("Applying multiplier ", _multiplier, _enemy)
 			// undo our last multiplier
 			speed = speed / slow_multiplier
 			// apply the new one

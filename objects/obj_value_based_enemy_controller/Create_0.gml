@@ -57,12 +57,10 @@ ds_map_add(_enemy_compound_maps, obj_enemy_5, obj_compound_enemy_5)
 
 
 function attempt_spawn() {	
-	debug("ATTEMPT SPAWN")
 	var _min_value = ds_map_find_value(_enemy_weights_map, obj_enemy_1)
 	var _value_dif = max_value - current_value
 	
 	if (_value_dif < _min_value) {
-		debug("NOT ENOUGH VALUE, CANNOT SPAWN")
 		// if we don't have enough credits even to spawn the smallest enemy
 		return
 	}
@@ -72,7 +70,6 @@ function attempt_spawn() {
 	_last_selected_value = _select
 	if (_select < current_value) {
 		// this is the statistical case where we don't spawn
-		debug("RANDOM DRAW, NO SPAWN")
 		return
 	}
 	
@@ -134,7 +131,6 @@ function get_compound_spawn_details(_single_enemy_type, _value_diff = 0) {
 
 /// @return {Id.Instance}
 function spawn_enemy(_enemy_value) {
-	debug("SPAWNING ENEMY VALUE", _enemy_value)
 	var _spawn_position = get_random_spawn_point()
 
 	var _new_enemy_type = undefined
@@ -165,7 +161,6 @@ function spawn_enemy(_enemy_value) {
 
 	// If no enemy could be selected, default to the cheapest one
 	if (is_undefined(_selected_enemy_type)) {
-		debug("DEFAULTING TO CHEAPEST ENEMY TYPE")
 		_selected_enemy_type = obj_enemy_1
 		_selected_enemy_weight = ds_map_find_value(_enemy_weights_map, obj_enemy_1)
 	}
@@ -173,8 +168,8 @@ function spawn_enemy(_enemy_value) {
 	_new_enemy_type = _selected_enemy_type
 	
 	// TESTING 
-	debug("TESTING ENEMY 5 SPWAN")
-	_new_enemy_type = obj_enemy_5
+	// debug("TESTING ENEMY 5 SPAWN")
+	// _new_enemy_type = obj_enemy_5
 
 	// Check if we should spawn a compound enemy instead
 	var _value_dif = max_value - current_value
@@ -186,7 +181,6 @@ function spawn_enemy(_enemy_value) {
 			// 20% chance to spawn compound
 			if (flip_coin(5)) {
 				var _compound_spawn_details = get_compound_spawn_details(_selected_enemy_type, _value_dif)
-				debug("Spawning compound", _compound_spawn_details)
 				_new_enemy_type = _compound_spawn_details[0]
 				_new_enemy_params = _compound_spawn_details[1]
 				_selected_enemy_weight = _compound_spawn_details[2]

@@ -146,16 +146,16 @@ function toggle_pause(_status) {
 	
 	broadcast(EVENT_TOGGLE_PAUSE, global.paused)
 	
-	var _layer = layer_get_id(LAYER_INSTANCES);
-	var _layer_fg = layer_get_id(LAYER_FG_EFFECTS);
-	var _layer_bg = layer_get_id(LAYER_BG_EFFECTS);
-	var _instances = layer_get_all_elements(_layer);
-	var _instances_fg = layer_get_all_elements(_layer_fg);
-	var _instances_bg = layer_get_all_elements(_layer_bg);
+	var _all_layers = layer_get_all()
+	var _all_instances = []
+	array_foreach(_all_layers, method({arr: _all_instances}, function(_l) {
+		var _instances = layer_get_all_elements(_l);
+		array_foreach(_instances, method({arr: arr}, function(_i) {
+			array_push(arr, _i)
+		}))
+	}))
 	
-	var _all_instances = array_concat(_instances, _instances_fg, _instances_bg)
 	var _instance_count = array_length(_all_instances)	
-	
 	
 	debug("Turning pause " + (global.paused ? "ON" : "OFF") + " for " + string(_instance_count) + " instances")
 	var _alarm_length = 12
@@ -291,7 +291,7 @@ function Bounds(_x0, _y0, _x1, _y1) constructor {
 /**
  * @returns {Struct.Bounds}
  */
-function _apply_padding_to_bounds(_bounds, _vertical, _horizontal) {
+function apply_padding_to_bounds(_bounds, _vertical, _horizontal) {
 	return new Bounds(_bounds.x0 - _horizontal,_bounds.y0 - _vertical,_bounds.x1 + _horizontal,_bounds.y1 + _vertical)
 }
 

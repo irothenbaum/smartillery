@@ -2,8 +2,6 @@ waypoints = [
 	get_tangent_point(x, y, global.xcenter, global.ycenter, global.room_height * 0.4),
 ]
 
-debug("Waypoint count is ", waypoint_count)
-
 do {
 	var _last_waypoint = waypoints[array_length(waypoints) - 1]
 	array_push(waypoints, get_tangent_point(_last_waypoint.x, _last_waypoint.y, global.xcenter, global.ycenter, global.room_height * 0.4))

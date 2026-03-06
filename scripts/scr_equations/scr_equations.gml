@@ -14,8 +14,6 @@ function generate_equation(_answer, _max, _difficulty = 0) {
 	var _dice = undefined
 	var _allowed_operations = get_allowed_operations_for_answer(_answer, _max)
 	
-	debug("Generating equation for values a: " + string(_answer) + " m: " + string(_max) + " d: " + string(_difficulty))
-	
 	var _breaker = 10;
 	do {
 		 _breaker --
@@ -113,8 +111,6 @@ function select_word_of_length(_length) {
 	}
 	
 	var _dictionary_name = string_concat("length", string(_length))
-	
-	debug("NAME", _dictionary_name)
 	
 	var _dictionary = global.dictionaries[$ _dictionary_name]
 	return _dictionary[irandom_range(0, array_length(_dictionary) - 1)]
