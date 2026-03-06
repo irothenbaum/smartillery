@@ -1,7 +1,7 @@
 var _game_controller = get_game_controller()
 
 if (is_controlled) {
-	if (global.paused && !_game_controller.is_ulting()) {
+	if (global.paused) {
 		// can't change message while paused
 		keyboard_string = message
 		return

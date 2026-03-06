@@ -185,5 +185,14 @@ global.ultimate_descriptions = {
 	ULTIMATE_RINGS:  {title: "Rings", description: "Extend your strike around"},
 }
 
+global.tip_copy_map = ds_map_create()
+ds_map_add(global.tip_copy_map, obj_enemy_1, {title: "Striker", description: "It may look simple, but don't blink- this little guy changes course rapidly and strikes with lethal effect."})	
+ds_map_add(global.tip_copy_map, obj_enemy_2, {title: "Tank", description: "Slow moving, armored, and sporting a powerful main gun. Destroy it before it can set up a firing position or you'll pay the price."})	
+ds_map_add(global.tip_copy_map, obj_enemy_3, {title: "Ram", description: "Reaching speeds over 100 kmh with a heavily armored front hull, this battering ram slams into its target with desctructive power."})	
+ds_map_add(global.tip_copy_map, obj_enemy_4, {title: "Frag", description: "You may think you've won, but when this hostile is destroyed it fragments into 3 highly explosive missiles that continue the attack."})
+ds_map_add(global.tip_copy_map, obj_enemy_4_fragment, {title: "Shard", description: "An explosive shard of a Frag enemy. It dips and weaves its way into an attack trajectory aimed directly at you."})
+ds_map_add(global.tip_copy_map, obj_enemy_5, {title: "Silo", description: "Carrying an endless supply of honing missiles, this hostile can appear out of nowhere, but patience and persistence will win you the day."})	
+ds_map_add(global.tip_copy_map, obj_enemy_5_missile, {title: "Missile", description: "Launched from a mobile silo, this missile never misses its target. You'll need to be fast and accurate to survive."})	
+
 
 global.debug = true

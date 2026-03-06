@@ -42,12 +42,10 @@ function enemy_handle_destroy(_e) {
  * @param {Id.Instance} _e
  */
 function enemy_step(_e) {
-	/*
 	// do nothing, was going to set depth but it's behaving oddly
 	with(_e) {
-		
+		my_bounds = get_bounds_for_instance(self)
 	}
-	*/
 }
 
 /**

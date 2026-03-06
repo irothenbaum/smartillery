@@ -81,7 +81,6 @@ function get_all_enemy_instances() {
 	var _enemy4_fragment = get_array_of_instances(obj_enemy_4_fragment)
 	var _enemy5 = get_array_of_instances(obj_enemy_5)
 	var _enemy5_missile = get_array_of_instances(obj_enemy_5_missile)
-	var _enemy_ring = get_array_of_instances(obj_ring_enemy)
 	var _target = get_array_of_instances(obj_training_target)
 	
 	return array_concat(
@@ -107,7 +106,6 @@ function count_all_enemies() {
 	+ instance_number(obj_enemy_4_fragment)
 	+ instance_number(obj_enemy_5)
 	+ instance_number(obj_enemy_5_missile)
-	+ instance_number(obj_ring_enemy)
 	+ instance_number(obj_training_target)
 }
 
@@ -259,6 +257,21 @@ function color_to_array() {
 }
 
 /**
+ * @param {Id.Instance} _i
+ * @returns {Struct.Bounds}
+ */
+function get_bounds_for_instance(_i) {
+	with (_i) {
+		var _left   = x - sprite_xoffset * image_xscale;
+		var _top    = y - sprite_yoffset * image_yscale;
+		var _right  = _left + sprite_width * image_xscale;
+		var _bottom = _top + sprite_height * image_yscale;
+		
+		return new Bounds(_left, _top, _right, _bottom)
+	}
+}
+
+/**
  * @param {Real} _x0
  * @param {Real} _y0
  * @param {Real} _x1
@@ -275,6 +288,9 @@ function Bounds(_x0, _y0, _x1, _y1) constructor {
 	ycenter = y0 + height / 2
 }
 
+/**
+ * @returns {Struct.Bounds}
+ */
 function _apply_padding_to_bounds(_bounds, _vertical, _horizontal) {
 	return new Bounds(_bounds.x0 - _horizontal,_bounds.y0 - _vertical,_bounds.x1 + _horizontal,_bounds.y1 + _vertical)
 }

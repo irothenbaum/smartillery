@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_easing_functions",
+  "%Name":"scr_tutorial_helpers",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_easing_functions",
+  "name":"scr_tutorial_helpers",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

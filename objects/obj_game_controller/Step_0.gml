@@ -1,11 +1,11 @@
 if (keyboard_check_pressed(vk_escape)) {
-	if (!is_ulting() && !is_game_over) {
+	if (instance_number(obj_ultimate_strike) == 0 && !is_game_over) {
 		toggle_pause()
 		
 		if (global.paused) {
-			tutorial = instance_create_layer(x,y, LAYER_HUD, obj_tutorial_overlay)
+			pause_overlay = instance_create_layer(x,y, LAYER_HUD, obj_pause_overlay)
 		} else {
-			instance_destroy(tutorial)
+			instance_destroy(pause_overlay)
 		}
 	} else {
 		debug("Cannot pause during ult or selection or game over")

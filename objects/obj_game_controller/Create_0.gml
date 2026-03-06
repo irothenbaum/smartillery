@@ -2,7 +2,7 @@ draw_set_halign(fa_left);
 
 random_set_seed(global.game_seed);
 
-tutorial = undefined;
+pause_overlay = undefined;
 enemy_controller = undefined;
 
 current_wave = global.starting_wave

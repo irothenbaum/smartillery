@@ -2,8 +2,9 @@
 hud = instance_find(obj_hud, 0)
 player = get_player()
 game_controller = get_game_controller()
+tip_copy = undefined
 
-
+/*
 ultimate_icons = get_array_of_instances(obj_hud_ultimate_icon)
 user_inputs = get_array_of_instances(obj_input)
 
@@ -18,6 +19,7 @@ score_description = {
 	y: hud.pos_score.bounds.y1 + global.margin_xl,
 	align: ALIGN_CENTER
 }
+*/
 
 function draw_ultimate_level_details(_player_id, _ult_bounds) {
 	var _circle_radius = _ult_bounds.y1 - _ult_bounds.ycenter
@@ -94,4 +96,11 @@ function get_ultimate_stats(_ultimate, _level) {
 		return string_join(_agr, "\n", _s)
 	}, "")
 	
+}
+
+/**
+ * @param {Id.Instance} _i
+ */
+function set_hovered_instance(_i) {
+	tip_copy = ds_map_find_value(global.tip_copy_map, _i.object_index)
 }

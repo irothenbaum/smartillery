@@ -10,5 +10,5 @@ function handle_enemy_killed(_e) {
 }
 
 function mark_wave_completed() {
-	// this is called by obj_select_ultimate , but for the guest it doesn't need to do anything
+	// the guest doesn't need to do anything
 }

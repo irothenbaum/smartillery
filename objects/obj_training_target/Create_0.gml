@@ -12,9 +12,9 @@ lerp_alpha = 0
 max_health = 100
 my_health = max_health
 damage_per_hit = 24
-regen_per_second = 18
+regen_per_second = 10
 is_exploded = false
-respawn_time = 3 * game_get_speed(gamespeed_fps)
+respawn_time = 5 * game_get_speed(gamespeed_fps)
 
 function get_health_percent() {
 	return clamp(my_health / max_health, 0, 1)
@@ -41,7 +41,12 @@ function register_hit(_insta_kill = false) {
 	}
 
 	// Spawn sparks effect
-	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: function(_x, _y) { return draw_particle_sparks(_x, _y, 8) }})
+	var _spark_color = get_target_color()
+	var _player = get_player()
+	var _spark_direction = point_direction(x, y, _player.x, _player.y)
+	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: method({c: _spark_color, d: _spark_direction}, function(_x, _y) {
+		return draw_particle_sparks(_x, _y, 6, c_white, d, 45)
+	})})
 
 	my_health = my_health - damage_per_hit
 
@@ -53,8 +58,12 @@ function register_hit(_insta_kill = false) {
 		equation = ""
 		answer = ""
 		my_health = 0;
-		draw_particle_shockwave(x,y,1, undefined, damaged_color)
+		draw_particle_shockwave(x, y, 3, undefined, damaged_color)
+		instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: method(self, function(_x, _y) { return draw_particle_sparks(_x, _y, 12, damaged_color) })})
+		instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: function(_x, _y) { return draw_particle_sparks(_x, _y, 12) }})
 		alarm[0] = respawn_time
+		// gets harder everytime you destroy a target
+		instance_find(obj_training_controller, 0).increase_difficulty()
 	} else {
 		enemy_generate_question(self)
 	}

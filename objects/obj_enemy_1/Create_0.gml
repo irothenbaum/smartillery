@@ -1,4 +1,5 @@
 enemy_initialize(self)
+
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 image_scale = 0.12
 image_xscale = image_scale

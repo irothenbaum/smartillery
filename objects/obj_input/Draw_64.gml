@@ -19,10 +19,10 @@ if (_bounds.width < min_box_width) {
 draw_streak_ratio = lerp(draw_streak_ratio, streak_ratio, global.fade_speed)
 
 my_bounds = new Bounds(
-	_bounds.x0 - 12,
-	_bounds.y0 - 6,
-	_bounds.x1 + 12,
-	_bounds.y1
+	_bounds.x0 - global.margin_sm,
+	_bounds.y0 - global.margin_xs,
+	_bounds.x1 + global.margin_sm,
+	_bounds.y1 // margin intentionally omitted for alignment
 )
 
 // we change the box color if we're on streak

@@ -2,6 +2,9 @@
 
 draw_set_font(fnt_base)
 
+draw_overlay()
+
+/*
 var _wave_bounds = hud.pos_wave.bounds
 draw_line_between(_wave_bounds.xcenter, _wave_bounds.y1, wave_description.x, wave_description.y)
 draw_text_with_alignment(wave_description.x, wave_description.y, "Current wave number", wave_description.align)
@@ -65,4 +68,5 @@ draw_set_font(fnt_large)
 
 draw_text_with_alignment(global.room_width / 2, global.room_height - 100, "[     Click escape to unpause     ]", ALIGN_CENTER)
 
+*/
 draw_set_font(fnt_base)
