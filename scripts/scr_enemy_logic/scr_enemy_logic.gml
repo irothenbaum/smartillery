@@ -11,7 +11,6 @@ function enemy_initialize(_e, _skip_question_generation = false) {
 		slow_multiplier = 1
 		slow_sparks = undefined
 		last_hit_by_player_id = undefined
-		streak_ineligible = false
 		
 		subscribe(self, EVENT_TOGGLE_PAUSE, function(_status) {
 			if (!is_undefined(slow_sparks)) {

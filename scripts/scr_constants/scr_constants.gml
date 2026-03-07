@@ -26,6 +26,12 @@
 #macro BONUS_TYPE_ITEM "item"
 #macro BONUS_TYPE_ULT "ult"
 
+#macro BONUS_ITEM_SHIELD "shield"
+#macro BONUS_ITEM_LEVEL_UP "level-up"
+#macro BONUS_ITEM_HEALTH "health"
+#macro BONUS_ITEM_POINTS "points"
+#macro BONUS_ITEM_TURRET "turret"
+
 
 
 #macro TAU (2 * pi)

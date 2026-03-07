@@ -8,10 +8,19 @@ image_angle += rotate_speed * slow_multiplier
 
 if (array_length(waypoints) > 0) {
 	var _target = waypoints[0]
-	direction -= angle_difference(direction, point_direction(x, y, _target.x, _target.y)) * 0.05;
-	
-	// when we close to a waypoint, we shift it off
-	if (point_distance(x, y, _target.x, _target.y) < global.margin_md) {
+	var _dist = point_direction(x, y, _target.x, _target.y)
+
+	// Add curve offset based on distance to waypoint
+	// Use waypoint position as seed for deterministic curve direction
+	var _curve_seed = floor(_target.x + _target.y * 1000)
+	var _curve_dir = ((_curve_seed mod 2) == 0) ? 1 : -1
+	var _distance_to_target = point_distance(x, y, _target.x, _target.y)
+	var _curve_strength = min(1, _distance_to_target / 200) * 25 * _curve_dir
+
+	direction -= angle_difference(direction, _dist + _curve_strength) * 0.05;
+
+	// when we're close to a waypoint, we shift it off
+	if (_distance_to_target < global.margin_md) {
 		array_shift(waypoints)
 	}
 } else {

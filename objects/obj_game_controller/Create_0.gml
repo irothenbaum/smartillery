@@ -333,8 +333,9 @@ function reset_streak(_player_id) {
 
 /**
  * @param {Real} _player_id
+ * @param {Id.Instance} _enemy
  */
-function increase_combo(_player_id) {
+function increase_combo(_player_id, _enemy) {
 	// can only combo if you're on streak
 	if (!has_point_streak(_player_id)) {
 		return
@@ -349,15 +350,43 @@ function increase_combo(_player_id) {
 		combo_count[$ _player_id] = 0
 		
 		// can only full charge if not currently popping ult
-		if (!is_ulting(_player_id)) {
+		if (ultimate_charge[$ _player_id] < global.ultimate_requirement && !is_ulting(_player_id)) {
 			ultimate_charge[$ _player_id] = global.ultimate_requirement
 			// Spawn level up particle effect
 			draw_particle_shockwave(get_player().x, get_player().y, 1, undefined, get_player_color(_player_id))
+		} else {
+			// drop an item
+			spawn_bonus_item(_enemy.x, _enemy.y, [BONUS_TYPE_ITEM])
 		}
 	} else {
 		alarm[get_combo_alarm_for_player_id(_player_id)] = combo_max_alarm
 		longest_combo[$ _player_id] = max(longest_combo[$ _player_id], combo_count[$ _player_id])
 	}
+}
+
+/**
+ * @param {Real} _x
+ * @param {Real} _y
+ * @param {Array<string>} _types
+ */
+function spawn_bonus_item(_x, _y, _types) {
+	var _type = _types[irandom(array_length(_types) - 1)]
+	var _obj
+
+	switch (_type) {
+		case BONUS_TYPE_ULT:
+			_obj = obj_extra_ultimate
+			break
+
+		case BONUS_TYPE_ITEM:
+			_obj = obj_power_item
+			break
+
+		default:
+			return
+	}
+
+	instance_create_layer(_x, _y, LAYER_FG_EFFECTS, _obj)
 }
 
 function get_combo_alarm_for_player_id(_player_id) {
@@ -479,7 +508,7 @@ function _handle_test_string(_code) {
 
 // whenever an enemy is hit, we increase the player's combo
 subscribe(self, EVENT_ENEMY_HIT, function(_enemy, _player_id) {
-	increase_combo(_player_id)
+	increase_combo(_player_id, _enemy)
 })
 
 
