@@ -11,6 +11,4 @@ subscribe(self, EVENT_ENEMY_HIT, method(self, function(_e) {
 	if (_e == target) {
 		target_was_hit = true
 	}
-	
-	debug("STILL LISTENING")
 }))

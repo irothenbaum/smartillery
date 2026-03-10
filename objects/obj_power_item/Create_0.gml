@@ -1,5 +1,6 @@
 /// @description Initialize settings
 initialize_instance_has_equation(self)
+my_bounds = get_bounds_for_instance(self)
 
 radius = global.player_body_radius
 
@@ -38,3 +39,7 @@ for (var _i = 0; _i < array_length(_types); _i++) {
 function register_hit() {
 	debug(string_concat("ITEM HIT by ", last_hit_by_player_id))
 }
+
+subscribe(self, EVENT_GAME_OVER, function() {
+	instance_destroy()
+})

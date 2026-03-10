@@ -74,39 +74,25 @@ function find_instance(_instance_type, _condition) {
 /// @func get_all_enemy_instances()
 /// @return {Array}
 function get_all_enemy_instances() {
-	var _enemy1 = get_array_of_instances(obj_enemy_1)
-	var _enemy2 = get_array_of_instances(obj_enemy_2)
-	var _enemy3 = get_array_of_instances(obj_enemy_3)
-	var _enemy4 = get_array_of_instances(obj_enemy_4)
-	var _enemy4_fragment = get_array_of_instances(obj_enemy_4_fragment)
-	var _enemy5 = get_array_of_instances(obj_enemy_5)
-	var _enemy5_missile = get_array_of_instances(obj_enemy_5_missile)
-	var _target = get_array_of_instances(obj_training_target)
-	
-	return array_concat(
-		_enemy1,
-		_enemy2,
-		_enemy3,
-		_enemy4,
-		_enemy4_fragment,
-		_enemy5,
-		_enemy5_missile,
-		_target,
-	)
+	return array_reduce(global.enemy_instance_types, function(_agr, _type) {
+		return array_concat(_agr, get_array_of_instances(_type))
+	}, [])
 }
 
 /// @func count_all_enemies()
 /// @return {Real}
 function count_all_enemies() {
-	return 0 
-	+ instance_number(obj_enemy_1) 
-	+ instance_number(obj_enemy_2)
-	+ instance_number(obj_enemy_3)
-	+ instance_number(obj_enemy_4)
-	+ instance_number(obj_enemy_4_fragment)
-	+ instance_number(obj_enemy_5)
-	+ instance_number(obj_enemy_5_missile)
-	+ instance_number(obj_training_target)
+	return array_reduce(global.enemy_instance_types, function(_agr, _type) {
+		return _agr + instance_number(_type)
+	}, 0)
+}
+
+/**
+ * @param {Id.Instance} _inst
+ * @return {Bool}
+ */
+function instance_is_enemy(_inst) {
+	return array_contains(global.enemy_instance_types, _inst.object_index)
 }
 
 /// takes a function that receives 2 params: enemy instance, index
@@ -262,6 +248,17 @@ function color_to_array() {
  */
 function get_bounds_for_instance(_i) {
 	with (_i) {
+		var _spr = object_get_sprite(object_index);
+		if (_spr == -1) {
+			// default bounds to a generic size
+			return new Bounds(
+				x - global.player_body_radius, 
+				y - global.player_body_radius, 
+				x + global.player_body_radius, 
+				y +  global.player_body_radius
+			)
+		}
+		
 		var _left   = x - sprite_xoffset;
 		var _top    = y - sprite_yoffset;
 		var _right  = _left + sprite_width;

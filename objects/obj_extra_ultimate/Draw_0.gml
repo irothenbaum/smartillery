@@ -18,12 +18,7 @@ var _ult_color = global.ultimate_color_tints[$ type]
 draw_set_color(_ult_color)
 draw_circle(x, y, _scaled_radius, false)
 
-// Draw 3 pixel thick white outline
-draw_set_color(c_white)
-for (var _i = 0; _i < 3; _i++) {
-	draw_circle(x, y, _scaled_radius - _i, true)
-}
-
 // Draw ultimate icon in center
 var _ult_sprite = global.ultimate_icons[$ type]
 draw_sprite_ext(_ult_sprite, 0, x, y, icon_scale * pulse_scale, icon_scale * pulse_scale, 0, c_white, 1)
+

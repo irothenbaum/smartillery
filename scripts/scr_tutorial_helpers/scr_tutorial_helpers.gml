@@ -3,7 +3,7 @@
  */
 function tip_step(_i) {
 	// tip only applies when paused
-	if (!global.paused || instance_number(obj_ultimate_strike) > 0) {
+	if (!global.paused) {
 		return
 	}
 	

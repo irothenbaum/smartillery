@@ -122,7 +122,7 @@ global.point_streak_requirement = 3
 global.combo_delay_ms = 1200
 global.minimum_combo = 2
 // we keep combo 1 even though it's not used because we want array_length to = longest combo count
-global.combo_phrases = ["N/A", "Double strike", "Triple strike", "Quadruple clap", "Monster stop", "Impressive!", "Incredible!!", "Unimaginable!!!",]
+global.combo_phrases = ["N/A", "Double tap", "Hat trick", "Connect four", "Cinco de Mayhem"]
 global.ultimate_requirement = 30 // how many seconds until your charge is ready
 global.ultimate_code = "000"
 global.max_health = 100
@@ -157,17 +157,28 @@ ds_map_add(global.points_map, obj_enemy_5, 30)
 ds_map_add(global.points_map, obj_enemy_5_missile, 5)
 
 // the higher this number is, the easier the equations are
-global.enemy_difficulty_multiplier = ds_map_create()
-ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_1, 1)
-ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_2, 3)
-ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_3, 5)
-ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_4, 2)
-ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_4_fragment, 1)
-ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_5, 2)
-ds_map_add(global.enemy_difficulty_multiplier, obj_enemy_5_missile, 5)
-ds_map_add(global.enemy_difficulty_multiplier, obj_training_target, 1)
-ds_map_add(global.enemy_difficulty_multiplier, obj_power_item, 4)
-ds_map_add(global.enemy_difficulty_multiplier, obj_extra_ultimate, 2)
+global.targetable_difficulty_multiplier = ds_map_create()
+ds_map_add(global.targetable_difficulty_multiplier, obj_enemy_1, 1)
+ds_map_add(global.targetable_difficulty_multiplier, obj_enemy_2, 3)
+ds_map_add(global.targetable_difficulty_multiplier, obj_enemy_3, 5)
+ds_map_add(global.targetable_difficulty_multiplier, obj_enemy_4, 2)
+ds_map_add(global.targetable_difficulty_multiplier, obj_enemy_4_fragment, 1)
+ds_map_add(global.targetable_difficulty_multiplier, obj_enemy_5, 2)
+ds_map_add(global.targetable_difficulty_multiplier, obj_enemy_5_missile, 5)
+ds_map_add(global.targetable_difficulty_multiplier, obj_training_target, 1)
+ds_map_add(global.targetable_difficulty_multiplier, obj_power_item, 4)
+ds_map_add(global.targetable_difficulty_multiplier, obj_extra_ultimate, 2)
+
+global.enemy_instance_types = [
+	obj_enemy_1,
+	obj_enemy_2,
+	obj_enemy_3,
+	obj_enemy_4,
+	obj_enemy_4_fragment,
+	obj_enemy_5,
+	obj_enemy_5_missile,
+	obj_training_target,
+]
 
 // effects
 global.fade_speed = 0.1

@@ -4,6 +4,7 @@
 function initialize_instance_has_equation(_e) {
 	draw_equation_position = undefined
 	equation = "";
+	last_hit_by_player_id = undefined
 	
 	enemy_generate_question(_e)
 }
@@ -18,8 +19,6 @@ function enemy_initialize(_e) {
 		point_value = ds_map_find_value(global.points_map, object_index)
 		slow_multiplier = 1
 		slow_sparks = undefined
-		last_hit_by_player_id = undefined
-		is_last_enemy = false
 		
 		subscribe(self, EVENT_TOGGLE_PAUSE, function(_status) {
 			if (!is_undefined(slow_sparks)) {
@@ -47,7 +46,6 @@ function enemy_handle_destroy(_e) {
 function enemy_step(_e) {
 	with(_e) {
 		my_bounds = get_bounds_for_instance(self)
-		is_last_enemy = get_game_controller()
 	}
 }
 
@@ -141,7 +139,7 @@ function get_draw_equation_position(_string, _x, _y, _offset_override) {
 
 function enemy_generate_question(_e) {
 	var _wave = get_current_wave_number()
-	var _functional_wave = ceil(_wave / ds_map_find_value(global.enemy_difficulty_multiplier, _e.object_index))
+	var _functional_wave = ceil(_wave / ds_map_find_value(global.targetable_difficulty_multiplier, _e.object_index))
 	
 	with (_e) {
 		equation = ""
@@ -210,7 +208,11 @@ function find_enemies_near_answer(_answer, _range_min, _range_max) {
 		// this is a little specific to the workings of the game_controller
 		if (_gc.is_answer_reserved(_i) ) {
 			var _instance = _gc.active_answers[$ _i];
-			array_push(_enemies, _instance)
+			if (instance_is_enemy(_instance)) {
+				array_push(_enemies, _instance)
+			} else {
+				debug("Targetable instance not an enemy")
+			}
 		} else {
 			debug("Answer not reserved", _i)
 		}

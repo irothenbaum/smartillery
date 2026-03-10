@@ -77,8 +77,8 @@ function cleanup_paired_enemies() {
 subscribe(self, EVENT_ENEMY_HIT, method(self, function(_target, _player_who_shot_id) {
 	// wait 1/10th of a second before resetting recently_struck_enemies
 	alarm[1] = 0.1 * game_get_speed(gamespeed_fps)
-	if (array_contains(recently_struck_enemies, _target)) {
-		// already struck this one recently, ignore
+	if (array_contains(recently_struck_enemies, _target) || !instance_exists(_target)) {
+		// already struck this one recently, or it no longer exists, ignore
 		return
 	}
 	

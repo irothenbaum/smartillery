@@ -1,9 +1,8 @@
 number_of_strikes = ult_strike_get_count(level)
 strikes_launched = 0
 bombing_target = undefined
-// wait 2 seconds, then strike
-alarm[1] = 2 * game_get_speed(gamespeed_fps)
-toggle_pause(true)
+// wait 0.2 seconds, then strike
+alarm[1] = 1
 
 function strike_nearest_enemy() {
 	strikes_launched++
@@ -46,11 +45,11 @@ function render_bomb_lands() {
 	}
 
 	if (strikes_launched < number_of_strikes) {
-		// if we have more to launch, reset the alarm
-		alarm[1] = random_range(0.2, 0.6) * game_get_speed(gamespeed_fps)
+		// if we have more to launch, reset the alarm (we support a delay, but let's just do it immediately)
+		alarm[1] = 1
 	} else {
-		// wait 3 seconds then destroy self
-		alarm[0] = 3 * game_get_speed(gamespeed_fps)
+		// wait 1 seconds then destroy self
+		alarm[0] = 1 * game_get_speed(gamespeed_fps)
 	}
 	bombing_target = undefined
 }

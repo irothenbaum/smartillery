@@ -1,5 +1,6 @@
 /// @description Initialize settings
 initialize_instance_has_equation(self)
+my_bounds = get_bounds_for_instance(self)
 
 radius = global.player_body_radius * 0.8
 icon_scale = 0.016 // this is a magic number, a property of the ultimate sprite sizes and the radius
@@ -51,3 +52,7 @@ function register_hit() {
 	get_game_controller().activate_extra_ultimate(last_hit_by_player_id, type)
 	instance_destroy()
 }
+
+subscribe(self, EVENT_GAME_OVER, function() {
+	instance_destroy()
+})
