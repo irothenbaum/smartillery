@@ -1,26 +1,31 @@
 /**
  * @param {Id.Instance} _e
- * @param {Bool} _skip_question_generation
  */
-function enemy_initialize(_e, _skip_question_generation = false) {
+function initialize_instance_has_equation(_e) {
+	draw_equation_position = undefined
+	equation = "";
+	
+	enemy_generate_question(_e)
+}
+
+/**
+ * @param {Id.Instance} _e
+ */
+function enemy_initialize(_e) {
+	initialize_instance_has_equation(_e)
 	with (_e) {
 		spawn_time = get_play_time()
-		draw_equation_position = undefined
-		equation = "";
 		point_value = ds_map_find_value(global.points_map, object_index)
 		slow_multiplier = 1
 		slow_sparks = undefined
 		last_hit_by_player_id = undefined
+		is_last_enemy = false
 		
 		subscribe(self, EVENT_TOGGLE_PAUSE, function(_status) {
 			if (!is_undefined(slow_sparks)) {
 				pause_particle(slow_sparks, _status)
 			}
 		})
-	}
-	
-	if (!_skip_question_generation) {
-		enemy_generate_question(_e)
 	}
 }
 
@@ -40,16 +45,16 @@ function enemy_handle_destroy(_e) {
  * @param {Id.Instance} _e
  */
 function enemy_step(_e) {
-	// do nothing, was going to set depth but it's behaving oddly
 	with(_e) {
 		my_bounds = get_bounds_for_instance(self)
+		is_last_enemy = get_game_controller()
 	}
 }
 
 /**
  * @param {Id.Instance} _e
  */
-function enemy_draw_equation(_e) {
+function instance_draw_equation(_e) {
 	with (_e) {
 		var _string = global.paused ? " " : equation
 		var _positions = get_draw_equation_position(_string, x, y)
@@ -60,6 +65,13 @@ function enemy_draw_equation(_e) {
 			x: lerp(draw_equation_position.x, _actual_position.x, global.fade_speed * 2),
 			y: lerp(draw_equation_position.y, _actual_position.y, global.fade_speed * 2)
 		}
+		// trial run
+		var _text_bounds = draw_text_with_alignment(draw_equation_position.x, draw_equation_position.y, _string, ALIGN_CENTER, undefined, true);
+		var _box_bounds = apply_padding_to_bounds(_text_bounds, 2, 12)
+		draw_set_composite_color(new CompositeColor(c_black, 0.6))
+		draw_rectangle(_box_bounds.x0, _box_bounds.y0, _box_bounds.x1, _box_bounds.y1, false)
+		reset_composite_color()
+		// draw again so it's on top
 		draw_text_with_alignment(draw_equation_position.x, draw_equation_position.y, _string, ALIGN_CENTER);
 	}
 }
@@ -68,15 +80,15 @@ function enemy_draw_equation(_e) {
  * @param {String} _string
  * @param {Real} _x
  * @param {Real} _y
- * Returns a tuple. The first value is the actual render position, the second is the target render position
+ * Returns a tuple. The first value is always within room bounds, the second is where it would like to render under or over the target
  */
-function get_draw_equation_position(_string, _x, _y) {
+function get_draw_equation_position(_string, _x, _y, _offset_override) {
 	draw_set_font(fnt_large);
 	draw_set_color(c_white);
 	var _string_height = string_height(_string)
 	var _string_width = string_width(_string)
 	// we use player_body_radius a proxy that basically indicates half an emey sprite size
-	var _offset_y = (_y > global.ycenter ? -1 : 1) * (global.player_body_radius + _string_height)
+	var _offset_y = is_undefined(_offset_override) ? (_y > global.ycenter ? -1 : 1) * (global.player_body_radius + _string_height) : _offset_override
 		
 	// this logic is going to draw the equation within the game bounds even if the enemy us out of screen
 	var _string_directional_bounds = new Bounds(

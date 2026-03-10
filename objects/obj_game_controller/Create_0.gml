@@ -19,6 +19,7 @@ ultimate_level = {}
 cached_ultimate_level = {};
 inst_ultimate = {};
 
+last_enemy_killed = undefined
 is_game_over = false;
 
 is_scene_transitioning = false;
@@ -64,6 +65,11 @@ function mark_wave_completed() {
 	if (!is_undefined(enemy_controller)) {	
 		instance_destroy(enemy_controller)
 		enemy_controller = undefined
+	}
+	
+	if (!is_undefined(last_enemy_killed)) {
+		spawn_bonus_item(last_enemy_killed.x, last_enemy_killed.y, [BONUS_TYPE_ULT])
+		last_enemy_killed = undefined
 	}
 
 	// no longer get health back automatically at round end
@@ -140,6 +146,8 @@ function handle_enemy_killed(_enemy) {
 	if (is_game_over) {
 		return 
 	}
+	
+	last_enemy_killed = _enemy
 	
 	var _player_id = _enemy.last_hit_by_player_id
 	release_answer(_enemy.answer);
@@ -242,6 +250,7 @@ function handle_submit_code(_code, _player_id = undefined) {
 }
 
 /**
+ * @param {string} _player_id
  * @returns {undefined}
  */
 function activate_ultimate(_player_id) {
@@ -252,6 +261,16 @@ function activate_ultimate(_player_id) {
 	var _ult_obj = global._G.ultimate_object_map[$ get_player_ultimate(_player_id)]
 	inst_ultimate[$ _player_id] = instance_create_layer(x, y, LAYER_HUD, _ult_obj, {level: ultimate_level[$ _player_id], owner_player_id: _player_id})
 	cached_ultimate_level[$ _player_id] = ultimate_level[$ _player_id]
+}
+
+/**
+ * @param {string} _player_id
+ * @param {string} _ultimate_type
+ * @returns {undefined}
+ */
+function activate_extra_ultimate(_player_id, _ultimate_type) {
+	var _ult_obj = global._G.ultimate_object_map[$ _ultimate_type]
+	instance_create_layer(x, y, LAYER_HUD, _ult_obj, {level: ultimate_level[$ _player_id], owner_player_id: _player_id, is_extra: true})
 }
 
 /**
@@ -385,8 +404,12 @@ function spawn_bonus_item(_x, _y, _types) {
 		default:
 			return
 	}
+	
+	// position it inside the room bounds
+	var _positions = get_draw_equation_position("", _x, _y, 0)
+	var _actual_position = _positions[0]
 
-	instance_create_layer(_x, _y, LAYER_FG_EFFECTS, _obj)
+	instance_create_layer(_actual_position.x, _actual_position.y, LAYER_FG_EFFECTS, _obj)
 }
 
 function get_combo_alarm_for_player_id(_player_id) {

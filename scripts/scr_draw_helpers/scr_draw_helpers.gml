@@ -190,7 +190,7 @@ function center_bounds_in_frame(_bounds, _width = 0, _height = 0) {
  * @returns {Struct.Bounds}
  */
 
-function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_height = 1.1) {	
+function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_height = 1.1, _trail_run = false) {	
 	var _lines = string_split(_text, "\n")
 	var _final_bounds = {
 		x0: _x,
@@ -233,7 +233,9 @@ function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_heig
 		_line_bounds.x1 = _line_bounds.x0 + _str_width
 		_line_bounds.y1 = _line_bounds.y0 + _str_height
 	
-		draw_text(_line_bounds.x0, _line_bounds.y0, _line_text);
+		if (!_trail_run) {
+			draw_text(_line_bounds.x0, _line_bounds.y0, _line_text);
+		}
 		_y += _str_height * _line_height
 		
 		_final_bounds.x0 = min(_final_bounds.x0, _line_bounds.x0)

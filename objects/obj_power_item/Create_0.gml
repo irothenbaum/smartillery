@@ -1,4 +1,5 @@
 /// @description Initialize settings
+initialize_instance_has_equation(self)
 
 radius = global.player_body_radius
 
@@ -32,4 +33,8 @@ for (var _i = 0; _i < array_length(_types); _i++) {
 		type = _types[_i]
 		break
 	}
+}
+
+function register_hit() {
+	debug(string_concat("ITEM HIT by ", last_hit_by_player_id))
 }

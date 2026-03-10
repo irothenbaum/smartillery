@@ -200,6 +200,14 @@ function spawn_enemy(_enemy_value) {
 	);
 
 	spawned_count++;
+	
+	if (has_finished_spawning()) {
+		// TODO: Start playing the ending crescendo
+	}
 
 	return _new_enemy
+}
+
+function has_finished_spawning() {
+	return spawned_count == enemy_count
 }

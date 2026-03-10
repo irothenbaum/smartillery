@@ -1,7 +1,13 @@
 /// @description Initialize settings
+initialize_instance_has_equation(self)
 
-radius = global.player_body_radius
-icon_scale = 0.02 // this is a magic number, a property of the ultimate sprite sizes and the radius
+radius = global.player_body_radius * 0.8
+icon_scale = 0.016 // this is a magic number, a property of the ultimate sprite sizes and the radius
+
+// Pulse animation variables
+pulse_scale = 1
+pulse_grow_speed = 0.001
+pulse_shrink_speed = 0.1
 
 // All selectable ultimates (excluding ULTIMATE_NONE)
 var _all_ultimates = [ULTIMATE_STRIKE, ULTIMATE_SLOW, ULTIMATE_HEAL, ULTIMATE_ASSIST, ULTIMATE_COLLATERAL, ULTIMATE_TURRET, ULTIMATE_RINGS]
@@ -38,4 +44,10 @@ if (array_length(_available) == 0) {
 	instance_destroy()
 } else {
 	type = _available[irandom(array_length(_available) - 1)]
+}
+
+function register_hit() {
+	get_game_controller().release_answer(answer)
+	get_game_controller().activate_extra_ultimate(last_hit_by_player_id, type)
+	instance_destroy()
 }

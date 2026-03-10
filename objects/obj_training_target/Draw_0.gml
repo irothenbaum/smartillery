@@ -14,7 +14,7 @@ draw_arc(x, y, lerp_radius, 360, 0, outline_thickness)
 
 // Only draw equation if not exploded
 if (!is_exploded) {
-	enemy_draw_equation(self)
+	instance_draw_equation(self)
 }
 
 reset_composite_color();

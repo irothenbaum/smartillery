@@ -37,12 +37,12 @@ function draw_particle_shockwave(x,y, _scale = 1, _sprite_override = pt_shape_ci
 	var _ptype1 = part_type_create();
 	part_type_shape(_ptype1, _sprite_override);
 	part_type_size(_ptype1, 1, 1, 1, 0);
-	part_type_scale(_ptype1, 0.1, 0.1);
+	part_type_scale(_ptype1, _scale / 10, _scale / 10);
 	part_type_speed(_ptype1, 0, 0, 0, 0);
 	part_type_direction(_ptype1, 0, 0, 0, 0);
 	part_type_gravity(_ptype1, 0, 0);
 	part_type_orientation(_ptype1, 0, 0, 0, 0, false);
-	part_type_color3(_ptype1, _color, $B3B3B3, $1A1A1A);
+	part_type_color3(_ptype1, _color, _color, _color);
 	part_type_alpha3(_ptype1, 1, 1, 1);
 	part_type_blend(_ptype1, true);
 	part_type_life(_ptype1, 20, 20);
@@ -205,6 +205,10 @@ function draw_particle_enemy_5_destroy(x, y) {
 
 function draw_particle_enemy_5_missile_destroy(x, y) {
 	return [draw_particle_shockwave(x, y), draw_particle_sparks(x, y, 12), draw_particle_debirs(x, y, 5)]
+}
+
+function draw_particle_extra_ultimate_destroy(x, y, _ult_color) {
+	return [draw_particle_shockwave(x, y, 0.6), draw_particle_sparks(x, y, 8), draw_particle_sparks(x, y, 8, _ult_color)]
 }
 
 function draw_missile_trail() {

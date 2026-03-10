@@ -146,6 +146,10 @@ function ultimate_initialize(_obj, _type) {
 		ult_overlay = 1
 		ult_type = _type
 		game_controller = get_game_controller()
+		// is_extra defaults to false; only true when passed via instance creation struct
+		if (!variable_instance_exists(id, "is_extra")) {
+			is_extra = false
+		}
 		if (is_duration_ult(ult_type)) {
 			starting_duration = ult_base_get_duration(level)
 			alarm[0] = starting_duration
