@@ -37,7 +37,9 @@ for (var _i = 0; _i < array_length(_types); _i++) {
 }
 
 function register_hit() {
+	get_game_controller().release_answer(answer)
 	debug(string_concat("ITEM HIT by ", last_hit_by_player_id))
+	instance_destroy()
 }
 
 subscribe(self, EVENT_GAME_OVER, function() {

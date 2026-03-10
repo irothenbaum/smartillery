@@ -170,6 +170,11 @@ function ultimate_step(_obj) {
 			ult_overlay = 0
 		}
 
+		if (is_extra) {
+			// extras don't animate the player charge icon
+			return
+		}
+
 		if (is_duration_ult(ult_type)) {
 			game_controller.ultimate_charge[$ owner_player_id] = max(0, global.ultimate_requirement * alarm[0] / starting_duration)
 		} else {

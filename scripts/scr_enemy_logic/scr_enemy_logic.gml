@@ -13,7 +13,6 @@ function initialize_instance_has_equation(_e) {
  * @param {Id.Instance} _e
  */
 function enemy_initialize(_e) {
-	initialize_instance_has_equation(_e)
 	with (_e) {
 		spawn_time = get_play_time()
 		point_value = ds_map_find_value(global.points_map, object_index)
@@ -26,6 +25,8 @@ function enemy_initialize(_e) {
 			}
 		})
 	}
+	// must go after the initializations due to edge conditions
+	initialize_instance_has_equation(_e)
 }
 
 /**
@@ -163,8 +164,8 @@ function enemy_generate_question(_e) {
 		} until (equation != "" || _attempts <= 0)
 	
 		if (equation == "") {
-			instance_destroy();
 			debug("Could not create equation");
+			instance_destroy();
 			return
 		}
 	}
