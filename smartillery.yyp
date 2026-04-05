@@ -153,6 +153,7 @@
     {"id":{"name":"spr_ult_assist","path":"sprites/spr_ult_assist/spr_ult_assist.yy",},},
     {"id":{"name":"spr_ult_collateral","path":"sprites/spr_ult_collateral/spr_ult_collateral.yy",},},
     {"id":{"name":"spr_ult_heal","path":"sprites/spr_ult_heal/spr_ult_heal.yy",},},
+    {"id":{"name":"spr_ult_rings","path":"sprites/spr_ult_rings/spr_ult_rings.yy",},},
     {"id":{"name":"spr_ult_slow","path":"sprites/spr_ult_slow/spr_ult_slow.yy",},},
     {"id":{"name":"spr_ult_strike","path":"sprites/spr_ult_strike/spr_ult_strike.yy",},},
     {"id":{"name":"spr_ult_turret_turret","path":"sprites/spr_ult_turret_turret/spr_ult_turret_turret.yy",},},

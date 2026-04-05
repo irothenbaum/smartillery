@@ -35,12 +35,12 @@ for (var _i = 0; _i < array_length(_ultimate_names); _i++) {
 	drawn_icon_opacity[$ _this_ultimate] = _draw_opacity
 	
 	var _b = {
-		x0: x + ((_i - 1) * icon_space) - square_size / 2,
+		x0: x + ((_i - 2) * icon_space),
 		y0: y - square_size,
 	}
 	
 	if (_i >= 4) {
-		_b.x0 -= icon_space * 3
+		_b.x0 -= icon_space * 3.5
 		_b.y0 += square_size + global.margin_lg
 	}
 	
@@ -81,7 +81,7 @@ var _focued_ult = is_undefined(hovered_selection) ? staged_selection : hovered_s
 if (!is_undefined(_focued_ult)) {
 	draw_set_color(global.ultimate_colors[$ _focued_ult])
 	draw_set_font(fnt_title)
-	var _title_bounds = draw_text_with_alignment(x, y + icon_space + global.margin_lg, global.ultimate_descriptions[$ _focued_ult].title, ALIGN_CENTER)
+	var _title_bounds = draw_text_with_alignment(x, y + icon_space + global.margin_xl, global.ultimate_descriptions[$ _focued_ult].title, ALIGN_CENTER)
 		
 	draw_set_color(c_white)
 	draw_set_font(fnt_large)

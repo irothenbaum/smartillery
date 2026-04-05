@@ -360,6 +360,11 @@ function increase_combo(_player_id, _enemy) {
 		return
 	}
 	
+	if (!instance_exists(_enemy)) {
+		debug("Hit enemy no longer exists", _enemy)
+		return
+	}
+	
 	combo_count[$ _player_id]++
 	
 	// Max combo is how every many phrases we support
@@ -518,14 +523,14 @@ function is_answer_reserved(_answer) {
 
 // TESTING
 function _handle_test_string(_code) {
-	if(_code == "_c") { // charge
+	if (_code == "_p") {
+		var _dir = random(360) 
+		spawn_bonus_item(global.xcenter + lengthdir_x(200, _dir), global.ycenter + lengthdir_y(200, _dir), [BONUS_TYPE_ULT])
+	}
+	
+	if (_code == "_c") {
+		increate_ult_level(get_my_steam_id_safe())
 		ultimate_charge[$ get_my_steam_id_safe()] = global.ultimate_requirement
-	}
-	if (_code == "_l") { // level up
-		ultimate_level[$ get_my_steam_id_safe()] += 1
-	}
-	if (_code == "_x") { // level up
-		mark_ultimate_used(get_my_steam_id_safe())
 	}
 }
 

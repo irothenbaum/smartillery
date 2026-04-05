@@ -221,3 +221,51 @@ global._G.ultimate_object_map = {
 	ULTIMATE_COLLATERAL: obj_ultimate_collateral,
 	ULTIMATE_RINGS: obj_ultimate_rings
 }
+
+
+/**
+ * @param {String} _ultimate
+ * @param {Real} _level
+ */
+function get_ultimate_stats(_ultimate, _level) {
+	var _stats = []
+	var _frames_to_seconds = game_get_speed(gamespeed_fps)
+	var _range
+	switch (_ultimate) {
+		case ULTIMATE_HEAL:
+			array_push(_stats, string_concat("+", ult_heal_get_leech_amount(_level), " health per strike"))
+			array_push(_stats, string_concat("Duration: ", round((ult_heal_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
+			break
+			
+		case ULTIMATE_STRIKE:
+			array_push(_stats, string_concat(ult_strike_get_count(_level), " strikes"))
+			break
+		
+		case ULTIMATE_SLOW:
+			array_push(_stats, string_concat("Slow amount: ", round(ult_slow_get_speed_multiplier(_level) * 100), "%"))
+			array_push(_stats, string_concat("Duration: ", round((ult_slow_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
+			break
+			
+		case ULTIMATE_COLLATERAL:
+			array_push(_stats, string_concat("Chain distance: ", round(ult_collateral_get_radius(_level))))
+			array_push(_stats, string_concat("Duration: ", round((ult_collateral_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
+			break
+			
+		case ULTIMATE_ASSIST:
+			_range = ult_assist_get_range(_level)
+			array_push(_stats, string_concat("Include answers range: -", round(_range[0]), " and +", _range[1]))
+			array_push(_stats, string_concat("Duration: ", round((ult_assist_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
+			break
+			
+		case ULTIMATE_RINGS:
+			_range = ult_rings_get_ring_range(_level)
+			array_push(_stats, string_concat("Strike nearby rings range: -", round(_range[0]), " and +", _range[1]))
+			array_push(_stats, string_concat("Duration: ", round((ult_rings_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
+			break
+	}
+	
+	return array_reduce(_stats, function(_agr, _s) {
+		return string_join(_agr, "\n", _s)
+	}, "")
+	
+}

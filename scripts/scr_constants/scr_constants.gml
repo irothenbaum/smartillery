@@ -71,7 +71,7 @@ global.ultimate_icons = {
 	ULTIMATE_TURRET: spr_ult_turret,
 	ULTIMATE_ASSIST: spr_ult_assist,
 	ULTIMATE_COLLATERAL: spr_ult_collateral,
-	ULTIMATE_RINGS: spr_ult_assist // TODO
+	ULTIMATE_RINGS: spr_ult_rings
 }
 
 // in-game configurable
@@ -212,6 +212,25 @@ ds_map_add(global.tip_copy_map, obj_enemy_4, {title: "Frag", description: "You m
 ds_map_add(global.tip_copy_map, obj_enemy_4_fragment, {title: "Shard", description: "An explosive shard of a Frag enemy. It dips and weaves its way into an attack trajectory aimed directly at you."})
 ds_map_add(global.tip_copy_map, obj_enemy_5, {title: "Silo", description: "Carrying an endless supply of honing missiles, this hostile can appear out of nowhere, but patience and persistence will win you the day."})	
 ds_map_add(global.tip_copy_map, obj_enemy_5_missile, {title: "Missile", description: "Launched from a mobile silo, this missile never misses its target. You'll need to be fast and accurate to survive."})	
-
+ds_map_add(global.tip_copy_map, obj_training_target, {title: "Dummy Target", description: "Take your time and hone your skills."})	
+ds_map_add(global.tip_copy_map, obj_extra_ultimate, function(_instance) {
+	var _ult_desc = global.ultimate_descriptions[$ _instance.type]
+	return {
+		title: string_concat("Bonus Ultimate: ", _ult_desc.title),
+		description: _ult_desc.description
+	}
+})	
+ds_map_add(global.tip_copy_map, obj_power_item, {title: "Power Item", description: "Activate this item when you're in a pinch."})	
+ds_map_add(global.tip_copy_map, obj_shield, {title: "Defensive Shield", description: "A last resort to protect yourself if an enemy makes it past your gun."})
+ds_map_add(global.tip_copy_map, obj_stationary_turret, {title: "Stationary Turret", description: "A temporary turret spawns to help defend against the horde."})
+ds_map_add(global.tip_copy_map, obj_hud_ultimate_icon, function(_instance) {
+	var _level = get_game_controller().ultimate_level[$ _instance.owner_player_id]
+	var _this_level_stats = get_ultimate_stats(_instance.selected_ultimate, _level)
+	var _next_level_stats = get_ultimate_stats(_instance.selected_ultimate, _level + 1)
+	return {
+		title: string_concat(_instance.selected_ultimate, " (Level ", string(_level), ")"),
+		description: string_concat("This Level:\n",_this_level_stats,"\n\nNext Level:\n", _next_level_stats),
+	}
+})
 
 global.debug = true
