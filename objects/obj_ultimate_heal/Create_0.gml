@@ -3,6 +3,7 @@ leach_amount = ult_heal_get_leech_amount(level)
 
 subscribe(self, EVENT_ENEMY_HIT, method(self, function(_enemy, _player_who_shot_id) {
 	if (!instance_exists(_enemy)) {
+		debug("`ult_heal` -> EVENT_ENEMY_HIT enemy no longer exists", _enemy)
 		return
 	}
 	instance_create_layer(_enemy.x, _enemy.y, LAYER_BG_EFFECTS, obj_orb_score_increase, {

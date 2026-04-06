@@ -39,6 +39,7 @@ subscribe(self, EVENT_PLAYER_FIRED, method(self, function(_target, _player_who_s
 
 	for_each_enemy(function(_enemy, _index, _line_x1, _line_y1, _line_x2, _line_y2, _hit_enemies) {
 		if (!instance_exists(_enemy)) {
+			debug("`ult_turret_turret -> EVENT_PLAYER_FIRED` -> Foreach enemy no longer exists", _enemy)
 			return
 		}
 		

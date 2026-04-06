@@ -176,6 +176,7 @@ function find_enemies_near_point(_x, _y, _radius) {
 	for_each_enemy(function(_e, _index, _x, _y, _radius, _nearby_enemies) {
 		// make sure _e still exists
 		if (!instance_exists(_e)) {
+			debug("`find_enemies_near_point` -> Foreach enemy no longer exists", _enemy)
 			return;
 		}
 		

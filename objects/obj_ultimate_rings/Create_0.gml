@@ -10,6 +10,7 @@ function find_enemies_on_rings(_target_ring, _ring_range) {
 	var _enemies_on_rings = []
 	for_each_enemy(function(_e, _index, _min_ring, _max_ring, _enemies_on_rings) {
 		if (!instance_exists(_e)) {
+			debug("`ult_rings -> find_enemies_on_rings` -> Foreach enemy no longer exists", _enemy)
 			return;
 		}
 
@@ -27,7 +28,7 @@ function find_enemies_on_rings(_target_ring, _ring_range) {
 subscribe(self, EVENT_ENEMY_HIT, method(self, function(_target, _player_who_shot_id) {
 	// wait 1/10th of a second before resetting recently_struck_enemies
 	alarm[1] = 0.1 * game_get_speed(gamespeed_fps)
-	if (array_contains(recently_struck_enemies, _target)) {
+	if (array_contains(recently_struck_enemies, _target) || !instance_exists(_target)) {
 		// already struck this one recently, ignore
 		return
 	}

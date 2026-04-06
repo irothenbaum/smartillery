@@ -1,24 +1,9 @@
 /// @description Draw perk
 
-// Update pulse animation
-if (pulse_scale >= 1.1) {
-	// Rapidly shrink back to 1x
-	pulse_scale = 1
-	// Draw shockwave at position
-	draw_particle_shockwave(x, y, 0.6, pt_shape_circle, global.ultimate_colors[$ type])
-} else {
-	// Slowly grow
-	pulse_scale += pulse_grow_speed
-}
-
-var _scaled_radius = radius * pulse_scale
-var _ult_color = global.ultimate_color_tints[$ type]
-
 // Draw filled circle with ultimate color
-draw_set_color(_ult_color)
-draw_circle(x, y, _scaled_radius, false)
+draw_set_color(global.ultimate_colors[$ type])
+draw_circle(x, y, radius * pulse_scale, false)
 
 // Draw ultimate icon in center
-var _ult_sprite = global.ultimate_icons[$ type]
-draw_sprite_ext(_ult_sprite, 0, x, y, icon_scale * pulse_scale, icon_scale * pulse_scale, 0, c_white, 1)
+draw_sprite_ext(global.ultimate_icons[$ type], 0, x, y, icon_scale * pulse_scale, icon_scale * pulse_scale, 0, c_white, 1)
 

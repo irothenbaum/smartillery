@@ -43,7 +43,7 @@ function draw_particle_shockwave(x,y, _scale = 1, _sprite_override = pt_shape_ci
 	part_type_gravity(_ptype1, 0, 0);
 	part_type_orientation(_ptype1, 0, 0, 0, 0, false);
 	part_type_color3(_ptype1, _color, _color, _color);
-	part_type_alpha3(_ptype1, 1, 1, 1);
+	part_type_alpha3(_ptype1, 1, 1, 0.1);
 	part_type_blend(_ptype1, true);
 	part_type_life(_ptype1, 20, 20);
 

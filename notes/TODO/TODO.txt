@@ -6,8 +6,12 @@ BEFORE ALPHA RELEASE:
 ------------------------------------------------------------
 
 "Bugs" and things to fix:
-- Tutorial overlay overlapping your strike and strike level
-   - Make it so it only shows text in the center when you hover on an element
+
+- Utilize the Expanding Circle instead of shockwave everywhere relevant
+- There's some race condition when trigger EVENT_ENEMY_HIT and that enemy not existing anymore? Need to rethink this pattern
+   - Sometimes it throws an error, sometimes it seems not to. I may be misunderstanding some nuance of GM instnace lifecycles
+   - It becomes apparent when stacking ults that try to strike enemies via different means
+- Confirm tutorial overlay working as intended
 - Game Over not destroying all instances
    - for example obj_ultimates stay visible
    - Can possibly get by by destroying everything in certain layers? IDK...

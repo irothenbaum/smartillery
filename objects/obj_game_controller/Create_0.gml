@@ -361,7 +361,7 @@ function increase_combo(_player_id, _enemy) {
 	}
 	
 	if (!instance_exists(_enemy)) {
-		debug("Hit enemy no longer exists", _enemy)
+		debug("`increase_combo` -> Hit enemy no longer exists", _enemy)
 		return
 	}
 	

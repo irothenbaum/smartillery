@@ -7,8 +7,9 @@ icon_scale = 0.016 // this is a magic number, a property of the ultimate sprite 
 
 // Pulse animation variables
 pulse_scale = 1
-pulse_grow_speed = 0.001
-pulse_shrink_speed = 0.1
+max_pulse_scale = 1.2
+// 3 = how many seconds it takes to fully grow
+pulse_grow_speed = (max_pulse_scale - pulse_scale) / 3
 
 // All selectable ultimates (excluding ULTIMATE_NONE)
 var _all_ultimates = [ULTIMATE_STRIKE, ULTIMATE_SLOW, ULTIMATE_HEAL, ULTIMATE_ASSIST, ULTIMATE_COLLATERAL, ULTIMATE_TURRET, ULTIMATE_RINGS]

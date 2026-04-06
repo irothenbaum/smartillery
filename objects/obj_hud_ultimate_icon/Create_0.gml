@@ -14,10 +14,7 @@ color_shadow = new CompositeColor(c_black, 0.4)
 color_shadow_dark = new CompositeColor(c_black, 0.8)
 my_bounds = undefined
 
-subscribe(self, EVENT_UTLTIMATE_LEVEL_UP, method({
-	input: input, 
-	half_sprite_size: half_sprite_size
-}, function() {
+subscribe(self, EVENT_UTLTIMATE_LEVEL_UP, method(self, function() {
 	var _xcenter = input.my_bounds.x1 + global.margin_md * 2 + half_sprite_size
 	var _ycenter = input.my_bounds.ycenter
 	draw_particle_shockwave(_xcenter, _ycenter, 0.5)
