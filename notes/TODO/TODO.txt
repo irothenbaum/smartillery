@@ -21,6 +21,7 @@ BEFORE ALPHA RELEASE:
 
 
 Polish & effects:
+- Need to show what ults are currently active with time remaining
 - Add glitter effect to background
 - Sounds effects!
   - Shoot
@@ -32,8 +33,6 @@ Polish & effects:
 - Create indicator on the side showing what ults are active (instead of the circle around the player)?
 
 Gameplay:
-- Spawn the perk orbs randomly after kills
-    - The likelihood of them spawning should flex with how despearate you are
 - Boss levels
     - Coreographed compound enemies
 	- Maybe showcasing the "sequence" logic somehow?

@@ -238,7 +238,7 @@ function get_ultimate_stats(_ultimate, _level) {
 			break
 			
 		case ULTIMATE_STRIKE:
-			array_push(_stats, string_concat(ult_strike_get_count(_level), " strikes"))
+			array_push(_stats, string_concat("Execute ", ult_strike_get_count(_level), " strikes on nearby targets"))
 			break
 		
 		case ULTIMATE_SLOW:

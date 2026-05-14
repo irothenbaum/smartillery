@@ -38,10 +38,9 @@
 
 
 // colors
-global.bg_color = #260b26
+global.bg_color = #1a031a
 global.combo_color = #ff0000
 global.beam_color = c_white
-global.near_white = #c7c7c7
 
 global.ultimate_colors = {
 	ULTIMATE_NONE: c_white, 
@@ -230,6 +229,14 @@ ds_map_add(global.tip_copy_map, obj_hud_ultimate_icon, function(_instance) {
 	return {
 		title: string_concat(_instance.selected_ultimate, " (Level ", string(_level), ")"),
 		description: string_concat("This Level:\n",_this_level_stats,"\n\nNext Level:\n", _next_level_stats),
+	}
+})
+ds_map_add(global.tip_copy_map, obj_input, function(_instance) {
+	var _is_on_streak = get_game_controller().has_point_streak(_instance.owner_player_id)
+	
+	return {
+		title: "Answer input",
+		description: string_concat("Enter your answers here.\nTyping \"", global.ultimate_code,"\" will activate your ultimate.", _is_on_streak ? "\nYou are currently on streak! Getting kills levels up your ultimate" : "\nAnswer correctly ", global.point_streak_requirement," times in a row to get on strewak."),
 	}
 })
 
