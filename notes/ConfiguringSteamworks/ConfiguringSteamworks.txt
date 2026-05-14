@@ -1,0 +1,10 @@
+# Setting up Steamworks SDK
+
+1. Download the Steamworks SDK (version 163) from here https://partner.steamgames.com/downloads/list
+  1.1 Extra the SDK to a persistent spot (it cannot be removed)
+2. Install the GameMaker Extension from here https://marketplace.gamemaker.io/assets/10709/steamworks-ext
+  2.1 Extract the extension anywhere (it CAN be removed)
+3. Go to Tools -> Import local package -> [Select the yymps file extracted in step 2.1]
+  3.1 This will add a new top-level directory in GameMaker called "Steamworks"
+4. Open the Steamworks Extension in Steamworks directory
+  4.1 Set the Application ID to 3420850 and ensure the path to the SDK matches step 1.1
