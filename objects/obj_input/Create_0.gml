@@ -4,7 +4,13 @@ if (is_undefined(owner_player_id) || owner_player_id == NON_STEAM_PLAYER) {
 	owner_player_id = get_my_steam_id_safe()
 }
 
-is_controlled = owner_player_id == get_my_steam_id_safe()
+// device_index: -1 = keyboard, 0+ = gamepad device number (set by obj_game_controller at creation)
+if (is_undefined(device_index)) {
+	device_index = global.player_device_map[$ owner_player_id] ?? -1
+}
+
+// All inputs are local in RPT couch co-op
+is_controlled = true
 my_color = get_player_color(owner_player_id)
 
 // --------------------------------------------------------

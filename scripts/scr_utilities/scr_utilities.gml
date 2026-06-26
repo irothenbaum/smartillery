@@ -395,7 +395,8 @@ function reset_game_state() {
 	global.is_coop = false
 	global.is_training = false
 	global.focused_input = undefined
-	global.lobby_id = undefined
+	global.active_player_ids = []
+	global.player_device_map = {}
 }
 
 function array_copy_all(_arr) {

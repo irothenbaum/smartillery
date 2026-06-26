@@ -80,7 +80,8 @@ function get_my_color() {
  * @returns {Bool}
  */
 function is_host(_player_id) {
-	return _player_id == NON_STEAM_PLAYER || _player_id == steam_lobby_get_owner_id(global.lobby_id)
+	var _ids = global.active_player_ids
+	return array_length(_ids) == 0 || _ids[0] == _player_id
 }
 
 /**
@@ -90,22 +91,15 @@ function is_host(_player_id) {
  */
 function for_each_player(_callback, _skip_player_id) {
 	var _ret_val = []
-	
-	if (is_undefined(global.lobby_id)) {
-		if (is_undefined(_skip_player_id) || _skip_player_id != get_my_steam_id_safe()) {
-			array_push(_ret_val, _callback(get_my_steam_id_safe()))
-		}
-	} else {
-		var _count = get_players_count()
-		for (var _i = 0; _i < _count; ++_i) {
-			var _player_id = steam_lobby_get_member_id(global.lobby_id, _i);
-		
-			if (is_undefined(_skip_player_id) || _player_id != _skip_player_id) {
-				array_push(_ret_val, _callback(_player_id))
-			}
+	var _ids = array_length(global.active_player_ids) > 0
+		? global.active_player_ids
+		: [get_my_steam_id_safe()]
+	for (var _i = 0; _i < array_length(_ids); _i++) {
+		var _pid = _ids[_i]
+		if (is_undefined(_skip_player_id) || _pid != _skip_player_id) {
+			array_push(_ret_val, _callback(_pid))
 		}
 	}
-	
 	return _ret_val
 }
 
@@ -113,15 +107,8 @@ function for_each_player(_callback, _skip_player_id) {
  * @returns {Real}
  */
 function get_players_count() {
-	if (is_undefined(global.lobby_id)) {
-		return 1
-	}
-	
-	var _ret_val = steam_lobby_get_member_count(global.lobby_id)
-	if (_ret_val > global.max_players) {
-		throw "Too many players"
-	}
-		
+	var _count = array_length(global.active_player_ids)
+	return _count > 0 ? _count : 1
 }
 
 /**
@@ -136,17 +123,7 @@ function get_player_ids() {
  * @returns {Real}
  */
 function get_player_number(_player_id) {
-	if (is_undefined(global.lobby_id)) {
-		return 0
-	}
-	
-	var _count = get_players_count()
-	for (var _i = 0; _i < _count; ++_i) {
-		var _p = steam_lobby_get_member_id(_i);
-		if (_p == _player_id) {
-			return _i
-		}
-	}
+	return array_get_index(global.active_player_ids, _player_id)
 }
 
 /**
@@ -154,9 +131,8 @@ function get_player_number(_player_id) {
  * @returns {Real}
  */
 function get_player_id_from_num(_num) {
-	if (is_undefined(global.lobby_id)) {
-		return get_my_steam_id_safe()
+	if (_num < array_length(global.active_player_ids)) {
+		return global.active_player_ids[_num]
 	}
-	
-	return steam_lobby_get_member_id(_num);
+	return get_my_steam_id_safe()
 }

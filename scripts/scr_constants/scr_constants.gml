@@ -81,7 +81,8 @@ global.game_seed = randomize()
 global.starting_wave = 0
 
 // multiplayer stuff
-global.lobby_id = undefined
+global.active_player_ids = []   // ordered slot list, populated before entering any game room
+global.player_device_map = {}   // player_id -> device_index (-1 = keyboard, 0+ = gamepad)
 global.is_solo = false
 global.is_coop = false
 global.is_training = false

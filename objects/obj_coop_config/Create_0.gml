@@ -1,38 +1,31 @@
-/// @description Define state change handlers
-bounds = {}
-states = {
-	menu: 0,
-	host: 1,
-	join: 2,
-	lobby: 3
-}
+/// @description Local co-op join screen
 
-gui_state = states.menu;
+var _host_id = get_my_steam_id_safe()
+global.active_player_ids = [_host_id]
+global.player_device_map[$ _host_id] = -1  // host always uses keyboard
 
-function handle_host_game() {
-	if (!steam_initialised()) {
-		return
+function try_join_with_device(_device_index) {
+	if (array_length(global.active_player_ids) >= global.max_players) {
+		return false
 	}
-	// Called when host clicks "Start Game"
-	steam_lobby_create(steam_lobby_type_friendsonly, 2);
-	gui_state = states.host	
-}
-
-function handle_join_game() {
-	steam_activate_overlay("Friends"); // open overlay to accept invite
-    gui_state = states.join;
-}
-
-function handle_cancel() {
-	steam_lobby_leave(global.lobby_id);
-	gui_state = states.menu
+	// Reject if this device is already assigned to a slot
+	var _ids = global.active_player_ids
+	for (var _i = 0; _i < array_length(_ids); _i++) {
+		if (global.player_device_map[$ _ids[_i]] == _device_index) {
+			return false
+		}
+	}
+	var _slot = array_length(global.active_player_ids)
+	array_push(global.active_player_ids, _slot)
+	global.player_device_map[$ _slot] = _device_index
+	return true
 }
 
 function handle_start() {
-	send_event({
-		"event_name": NET_EVENT_GAME_START,
-		"host_id": steam_lobby_get_owner(global.lobby_id)
-	})
-	
 	room_goto(rm_play_coop)
+}
+
+function handle_cancel() {
+	reset_game_state()
+	room_goto(rm_main_menu)
 }

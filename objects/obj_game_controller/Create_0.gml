@@ -27,7 +27,8 @@ is_scene_transitioning = false;
 combo_max_alarm = (global.combo_delay_ms / 1000) * game_get_speed(gamespeed_fps)
 
 for_each_player(function(_player_id) {
-	instance_create_layer(x, y, LAYER_HUD, obj_input, {owner_player_id: _player_id})
+	var _device = global.player_device_map[$ _player_id] ?? -1
+	instance_create_layer(x, y, LAYER_HUD, obj_input, {owner_player_id: _player_id, device_index: _device})
 	instance_create_layer(x, y, LAYER_HUD, obj_combo_drawer, {owner_player_id: _player_id})
 })
 
