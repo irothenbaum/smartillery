@@ -11,13 +11,12 @@ function handle_enemy_hit(_enemy, _player_id, _damage_amount, _from_player_shot 
 	
 	if (_from_player_shot) {
 		// mark target indications as hit satisfied
-		var _assit_ult_targets = get_array_of_instances(obj_ult_assist_target)
-		array_foreach(_assit_ult_targets, method({_enemy: _enemy}, function(_t) {
-			if (_enemy == _t.target) {
-				_t.target_was_hit = true
+		with(obj_ult_assist_target) {
+			if (other._enemy == target) {
+				target_was_hit = true
 			}
-		}))
-		
+		}
+
 		// trigger collateral damage
 		var _collateral_ult = instance_find(obj_ultimate_collateral, 0)
 		if (!is_undefined(_collateral_ult)) {
@@ -57,24 +56,17 @@ function handle_toggle_pause() {
 	})
 	
 	// pause particle effects
-	var _particles = get_array_of_instances(obj_particle_effect)
-	array_foreach(_particles, function(_p) {
-		with(_p) {
-			pause_particle(ps, global.paused)
-		}
-	})
+	with (obj_particle_effect) {
+		pause_particle(ps, global.paused)
+	}
 	
-	// reset inputs
-	var _inputs = get_array_of_instances(obj_input)
-	array_foreach(_inputs, function(_input){
-		with(_input) {
-			// message clears on pause toggle
-			message = ""
-			if (!is_undefined(streak_fire)) {
-				pause_particle(streak_fire.system, _status)
-			}
+	with (obj_input) {
+		// message clears on pause toggle
+		message = ""
+		if (!is_undefined(streak_fire)) {
+			pause_particle(streak_fire.system, _status)
 		}
-	})
+	}
 }
 
 function handle_player_streak(_player_id, _new_streak_value) {

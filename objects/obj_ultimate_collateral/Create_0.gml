@@ -30,7 +30,8 @@ function pair_enemies(_enemy1, _enemy2) {
 			target: _inst_2,
 			color: c_white,
 			width: proximity_beam_width,
-			persist: true
+			persist: true,
+			owner_instance: id
 		})
 	}
 }

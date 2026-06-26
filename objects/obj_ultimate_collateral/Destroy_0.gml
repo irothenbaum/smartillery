@@ -4,9 +4,8 @@ if (!is_extra) {
 }
 
 // we also want to remove any lingering proximity indicators
-var _e_beams = get_array_of_instances(obj_electric_beam)
-var _proximity_markers = array_foreach(_e_beams, function(_beam) {
-	if (_beam.width == proximity_beam_width) {
-		instance_destroy(_beam)
+with(obj_electric_beam) {
+	if (owner_instance == other.id) {
+		instance_destroy()
 	}
-})
+}

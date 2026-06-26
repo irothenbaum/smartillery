@@ -68,7 +68,14 @@ function mark_wave_completed() {
 	}
 	
 	if (!is_undefined(last_enemy_killed)) {
-		spawn_bonus_item(last_enemy_killed.x, last_enemy_killed.y, [BONUS_TYPE_ULT])
+		var _bonus_options = [obj_power_item]
+		
+		// waves above 3 have a 50% chance of spawning an extra ultimate
+		if (current_wave > 3) {
+			array_push(_bonus_options, obj_extra_ultimate)
+		}
+		
+		spawn_bonus_item(last_enemy_killed.x, last_enemy_killed.y, _bonus_options)
 		last_enemy_killed = undefined
 	}
 
@@ -377,7 +384,7 @@ function increase_combo(_player_id, _enemy) {
 			draw_particle_shockwave(get_player().x, get_player().y, 1, undefined, get_player_color(_player_id))
 		} else {
 			// drop an item
-			spawn_bonus_item(_enemy.x, _enemy.y, [BONUS_TYPE_ITEM])
+			spawn_bonus_item(_enemy.x, _enemy.y, [obj_power_item])
 		}
 	} else {
 		alarm[get_combo_alarm_for_player_id(_player_id)] = combo_max_alarm
@@ -388,24 +395,10 @@ function increase_combo(_player_id, _enemy) {
 /**
  * @param {Real} _x
  * @param {Real} _y
- * @param {Array<string>} _types
+ * @param {Array<Asset.GMObject>} _types
  */
 function spawn_bonus_item(_x, _y, _types) {
-	var _type = _types[irandom(array_length(_types) - 1)]
-	var _obj
-
-	switch (_type) {
-		case BONUS_TYPE_ULT:
-			_obj = obj_extra_ultimate
-			break
-
-		case BONUS_TYPE_ITEM:
-			_obj = obj_power_item
-			break
-
-		default:
-			return
-	}
+	var _obj = _types[irandom(array_length(_types) - 1)]
 	
 	// position it inside the room bounds
 	var _positions = get_draw_equation_position("", _x, _y, 0)
@@ -530,12 +523,7 @@ function is_answer_reserved(_answer) {
 }
 
 // TESTING
-function _handle_test_string(_code) {
-	if (_code == "_p") {
-		var _dir = random(360) 
-		spawn_bonus_item(global.xcenter + lengthdir_x(200, _dir), global.ycenter + lengthdir_y(200, _dir), [BONUS_TYPE_ULT])
-	}
-	
+function _handle_test_string(_code) {	
 	if (_code == "_c") {
 		increate_ult_level(get_my_steam_id_safe())
 		ultimate_charge[$ get_my_steam_id_safe()] = global.ultimate_requirement

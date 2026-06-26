@@ -87,10 +87,9 @@ function execute_hit_target() {
 	handle_enemy_hit(_target, _player_who_shot_id, 1, true)
 	
 	// if we have any turrets, we trigger them to shoot also
-	var _turrets = get_array_of_instances(obj_ult_turret_turret)
-	array_foreach(_turrets, method({_player_who_shot_id: _player_who_shot_id}, function(_t) {
-		_t.create_beam(_player_who_shot_id)
-	}))
+	with (obj_ult_turret_turret) {
+		create_beam(other._player_who_shot_id)
+	}
 	
 	rotate_towards_next_target()
 }
