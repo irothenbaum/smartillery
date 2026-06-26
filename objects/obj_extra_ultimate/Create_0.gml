@@ -53,7 +53,3 @@ function register_hit() {
 	get_game_controller().activate_extra_ultimate(last_hit_by_player_id, type)
 	instance_destroy()
 }
-
-subscribe(self, EVENT_GAME_OVER, function() {
-	instance_destroy()
-})

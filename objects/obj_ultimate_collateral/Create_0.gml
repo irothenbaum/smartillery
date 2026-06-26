@@ -74,7 +74,7 @@ function cleanup_paired_enemies() {
 	}
 }
 
-subscribe(self, EVENT_ENEMY_HIT, method(self, function(_target, _player_who_shot_id) {
+function check_hit_enemy_for_collateral_targets(_target, _player_who_shot_id) {
 	// wait 1/10th of a second before resetting recently_struck_enemies
 	alarm[1] = 0.1 * game_get_speed(gamespeed_fps)
 	if (array_contains(recently_struck_enemies, _target) || !instance_exists(_target)) {
@@ -108,9 +108,7 @@ subscribe(self, EVENT_ENEMY_HIT, method(self, function(_target, _player_who_shot
 			width: global.beam_width,
 			color: _c
 		})
-		 
-		_enemy.last_hit_by_player_id = _player_who_shot_id
-		_enemy.register_hit()
-		broadcast(EVENT_ENEMY_HIT, _enemy, _player_who_shot_id)
+		
+		handle_enemy_hit(_enemy, _player_who_shot_id, 1)
 	}))
-}))
+}

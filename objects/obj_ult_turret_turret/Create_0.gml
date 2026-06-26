@@ -11,8 +11,7 @@ image_yscale = image_scale;
 recoil_amount = 0
 max_recoil_amount = 10
 
-// Subscribe to player fire event
-subscribe(self, EVENT_PLAYER_FIRED, method(self, function(_target, _player_who_shot_id) {
+function create_beam(_player_who_shot_id) {
 	// Calculate the end point of the turret's line
 	var _target_x = x + lengthdir_x(global.bg_circle_max_radius, image_angle)
 	var _target_y = y + lengthdir_y(global.bg_circle_max_radius, image_angle)
@@ -54,8 +53,6 @@ subscribe(self, EVENT_PLAYER_FIRED, method(self, function(_target, _player_who_s
 
 	// Register hits for all enemies along the line
 	array_foreach(_hit_enemies, method({_player_who_shot_id: _player_who_shot_id}, function(_enemy) {
-		_enemy.last_hit_by_player_id = _player_who_shot_id
-		_enemy.register_hit()
-		broadcast(EVENT_ENEMY_HIT, _enemy, _player_who_shot_id)
+		handle_enemy_hit(_enemy, _player_who_shot_id, 1)
 	}))
 }))

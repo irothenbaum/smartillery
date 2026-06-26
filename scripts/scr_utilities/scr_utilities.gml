@@ -130,7 +130,7 @@ function toggle_pause(_status) {
 		global.pause_start = undefined
 	}
 	
-	broadcast(EVENT_TOGGLE_PAUSE, global.paused)
+	handle_toggle_pause()
 	
 	var _all_layers = layer_get_all()
 	var _all_instances = []

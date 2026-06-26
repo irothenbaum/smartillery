@@ -18,7 +18,6 @@ if (is_undefined(waypoints) or array_length(waypoints) == 0) {
 direction = point_direction(x, y, global.xcenter, global.ycenter)
 speed = approach_speed
 
-function register_hit(_insta_kill = false) {
+function register_hit(_damage_amount) {
 	instance_destroy()
 }
-broadcast(EVENT_ENEMY_SPAWNED, self)

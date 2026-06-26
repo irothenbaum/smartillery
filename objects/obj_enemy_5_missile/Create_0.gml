@@ -34,8 +34,6 @@ trail_particle_type = _trail.type
 trail_emit_interval = game_get_speed(gamespeed_fps) / 8
 alarm[0] = trail_emit_interval
 
-function register_hit(_insta_kill = false) {
+function register_hit(_damage_amount) {
 	instance_destroy()
 }
-
-broadcast(EVENT_ENEMY_SPAWNED, self)

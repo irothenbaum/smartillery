@@ -1,7 +1,7 @@
 player = get_player();
 leach_amount = ult_heal_get_leech_amount(level)
 
-subscribe(self, EVENT_ENEMY_HIT, method(self, function(_enemy, _player_who_shot_id) {
+function create_health_orb_on_enemy(_enemy, _player_who_shot_id) {
 	if (!instance_exists(_enemy)) {
 		debug("`ult_heal` -> EVENT_ENEMY_HIT enemy no longer exists", _enemy)
 		return
@@ -11,6 +11,6 @@ subscribe(self, EVENT_ENEMY_HIT, method(self, function(_enemy, _player_who_shot_
 		type: ORB_TYPE_HEALTH,
 		owner_player_id: _player_who_shot_id,
 	})
-}))
+}
 
 ultimate_initialize(self, ULTIMATE_HEAL)

@@ -38,7 +38,6 @@ function handle_select(_ult) {
 	
 	staged_selection = _ult
 	global.selected_ultimate[$ get_my_steam_id_safe()] = _ult
-	broadcast(EVENT_SELECT_ULTIMATE, _ult, get_my_steam_id_safe())
 }
 
 function handle_start_game() {

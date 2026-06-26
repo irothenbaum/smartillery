@@ -56,38 +56,3 @@ function size_streak_fire() {
 	part_emitter_region(streak_fire.system, streak_fire.emitter, 0, my_bounds.width, 0, 0, ps_shape_rectangle, ps_distr_linear);
 	part_system_position(streak_fire.system, my_bounds.x0, my_bounds.y1)		
 }
-
-// whenver we pause or unpause we clear the input
-subscribe(self, EVENT_TOGGLE_PAUSE, function(_status) {
-	message = ""
-	
-	if (!is_undefined(streak_fire)) {
-		pause_particle(streak_fire.system, _status)
-	}
-})
-
-subscribe(self, EVENT_GAME_OVER, function() {
-	// effectively destroy the particle system
-	broadcast(EVENT_ON_OFF_STREAK, false, owner_player_id)
-})
-
-subscribe(self, EVENT_ON_OFF_STREAK, function(_streak_count) {
-	if (_streak_count >= global.point_streak_requirement) {
-		if (is_undefined(streak_fire)) {
-			streak_fire = draw_muzzle_smoke(x, y, my_color)
-			// make it not auto draw so we can control where it gets drawn
-			part_system_automatic_draw(streak_fire.system,false);
-			size_streak_fire()
-		}
-	} else if (_streak_count == 0) {
-		// whenever our streak drops back to 0, we shake
-		shake_start = get_play_time()
-		// total_shake_time is in milliseconds
-		alarm[0] = game_get_speed(gamespeed_fps) * total_shake_time / 1000
-		if (is_undefined(streak_fire)) {
-			return
-		}
-		destroy_particle(streak_fire.system)
-		streak_fire = undefined
-	}
-}, owner_player_id)

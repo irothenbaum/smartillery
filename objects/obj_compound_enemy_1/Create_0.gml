@@ -16,7 +16,3 @@ function spawn_enemy() {
 	})
 	enemy_count--;
 }
-
-subscribe(self, EVENT_GAME_OVER, function() {
-	instance_destroy()
-})

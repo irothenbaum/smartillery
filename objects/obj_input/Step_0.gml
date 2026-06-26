@@ -10,12 +10,10 @@ if (is_controlled) {
 	if(keyboard_check_pressed(vk_enter) or keyboard_check_pressed(vk_space)) {
 		if (string_length(message) > 0) {
 			_game_controller.handle_submit_code(message)
-			broadcast(EVENT_INPUT_SUBMIT, message, owner_player_id)
 			last_guess = message
 			guess_numeric = 0
 		}
 		keyboard_string = "";
-		broadcast(EVENT_INPUT_CHANGED, "")
 	} else if(keyboard_check_pressed(vk_up)) {
 		guess_numeric = 0
 		message = string(guess_numeric)
@@ -37,7 +35,6 @@ if (is_controlled) {
 	
 		if (keyboard_string != message) {
 			message = keyboard_string
-			broadcast(EVENT_INPUT_CHANGED, message)
 		}
 
 		// if we were shaking, but the user started typing again, then stop shaking

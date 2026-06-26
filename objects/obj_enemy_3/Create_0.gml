@@ -17,13 +17,13 @@ stunned_color_arr = color_to_array(stunned_color)
 
 direction = point_direction(x, y, global.xcenter, global.ycenter)
 
-function register_hit(_insta_kill=false) {
+function register_hit(_damage_amount) {
 	var _shift_amount = 100
+	my_health -= _damage_amount
 	
 	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: draw_particle_enemy_3_damage});
-	if (my_health > 0 && !_insta_kill) {
+	if (my_health > 0) {
 		get_game_controller().release_answer(answer);
-		my_health--;
 		// pause the approach
 		speed = 0
 		// stun for 6 seconds
@@ -35,16 +35,13 @@ function register_hit(_insta_kill=false) {
 			y: y - lengthdir_y(_shift_amount, direction)
 		}
 		return
+	} else {
+		// my_health <= 0 || insta_kill
+		instance_destroy();
 	}
-	
-	// my_health <= 0 || insta_kill
-	instance_destroy();
 }
 
 function collide_with_player() {
 	get_player().execute_take_damage(global.damage_enemy_3_collision)
 	instance_destroy();
 }
-
-
-broadcast(EVENT_ENEMY_SPAWNED, self)

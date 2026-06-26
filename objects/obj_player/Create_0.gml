@@ -33,11 +33,6 @@ function rotate_towards_next_target() {
 		rotate_speed = rotate_aim_speed;
 		var _target = aiming_at_instance[0].inst 
 		rotate_to = point_direction(x, y, _target.x, _target.y)
-		
-		broadcast(EVENT_NEW_TURRET_ANGLE, {
-			rotate_to: rotate_to,
-			rotate_speed: rotate_speed,
-		})
 	} else {
 		// after a few seconds, reset to vertical postion
 		alarm[0] = game_get_speed(gamespeed_fps) * 3
@@ -89,11 +84,13 @@ function execute_hit_target() {
 	
 	recoil_amount = max_recoil_amount
 	
-	broadcast(EVENT_PLAYER_FIRED, _target, _player_who_shot_id)
+	handle_enemy_hit(_target, _player_who_shot_id, 1, true)
 	
-	_target.last_hit_by_player_id = _player_who_shot_id
-	_target.register_hit()
-	broadcast(EVENT_ENEMY_HIT, _target, _player_who_shot_id)
+	// if we have any turrets, we trigger them to shoot also
+	var _turrets = get_array_of_instances(obj_ult_turret_turret)
+	array_foreach(_turrets, method({_player_who_shot_id: _player_who_shot_id}, function(_t) {
+		_t.create_beam(_player_who_shot_id)
+	}))
 	
 	rotate_towards_next_target()
 }
@@ -139,24 +136,3 @@ function flash_hull(_color) {
 		color: _color,
 	})
 }
-
-subscribe(self, EVENT_ON_OFF_STREAK, function(_streak_count) {
-	if (_streak_count >= global.point_streak_requirement) {
-		if (is_undefined(streak_fire)) {
-			streak_fire = draw_muzzle_smoke(x, y, my_color)
-		}
-	} else {
-		// not on streak, remove the fire if we have it
-		if (is_undefined(streak_fire)) {
-			return
-		}
-		destroy_particle(streak_fire.system)
-		streak_fire = undefined
-	}
-})
-
-subscribe(self, EVENT_TOGGLE_PAUSE, function(_status) {
-	if (!is_undefined(streak_fire)) {
-		pause_particle(streak_fire.system, _status)
-	}
-})

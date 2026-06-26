@@ -37,12 +37,10 @@ function render_bomb_lands() {
 	// flash the screen
 	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_flash_screen, {duration: game_get_speed(gamespeed_fps) * 0.1})
 	
-	with(bombing_target) {
-		last_hit_by_player_id = other.owner_player_id
-		register_hit(true)
-		broadcast(EVENT_ENEMY_HIT, self, last_hit_by_player_id)
-		instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_ult_strike_explosion, {radius: 0})
-	}
+	// 10 is the strike damage, just needs to be sizable
+	// we count it as a player shot so ult effects apply
+	handle_enemy_hit(bombing_target, owner_player_id, 10, true)
+	instance_create_layer(bombing_target.x, bombing_target.y, LAYER_FG_EFFECTS, obj_ult_strike_explosion, {radius: 0})
 
 	if (strikes_launched < number_of_strikes) {
 		// if we have more to launch, reset the alarm (we support a delay, but let's just do it immediately)

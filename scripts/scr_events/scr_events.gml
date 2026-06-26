@@ -1,74 +1,129 @@
-#macro EVENT_SCORE_CHANGED "score-changed"
-#macro EVENT_INPUT_CHANGED "input-changed"
-#macro EVENT_INPUT_SUBMIT "input-submit"
-#macro EVENT_ENEMY_HIT "enemy-hit"
-#macro EVENT_ENEMY_KILLED "enemy-killed"
-#macro EVENT_TOGGLE_PAUSE "toggle-pause"
-#macro EVENT_UTLTIMATE_LEVEL_UP "ultimate-level-up"
-#macro EVENT_ON_OFF_STREAK "on-streak"
-#macro EVENT_GAME_OVER "game-gover"
-#macro EVENT_NEW_TURRET_ANGLE "new-turret-angle"
-#macro EVENT_ENEMY_SPAWNED "new-enemy-spawned"
-#macro EVENT_SUBMIT_CODE "submit-code"
-#macro EVENT_CORRECT_ANSWER_GIVEN "correct-answer"
-#macro EVENT_PLAYER_FIRED "player-fired"
-#macro EVENT_SELECT_ULTIMATE "select-ultimate"
-
-global._events = {};
-
-/**
- * @param {Id.Instance} _inst
- * @param {String} _event
- * @param {Function} _callback
- * @param {Real|Array<Real>} _steam_id
- */
-function subscribe(_inst, _event, _callback, _steam_id = undefined) {
-	if (is_undefined(_steam_id)) {
-		_steam_id = get_my_steam_id_safe()
-	} else if (is_array(_steam_id)) {
-		// if you pass an array, you'll subscribe to each of those channels
-		array_foreach(_steam_id, method({_i: _inst, _e: _event, _c: _callback}, function(_s_id) {
-			subscribe(_i, _e, _c, _s_id)
-		}))
-		return
+// from_player_shot basically means "apply to ult side effects"
+function handle_enemy_hit(_enemy, _player_id, _damage_amount, _from_player_shot = false) {
+	// trigger hit on enemy
+	with(_enemy) {
+		last_hit_by_player_id = _player_id
+		register_hit(_damage_amount)
 	}
 	
-	var _composite_event_name = string_concat(_steam_id, _event)
-    if(!struct_exists(global._events, _composite_event_name)){
-        global._events[$ _composite_event_name] = [];
-    }
-    array_push(global._events[$ _composite_event_name], {
-		instance: _inst,
-		callback: _callback
-	});
+	// increase combo for shooter
+	get_game_controller().increase_combo(_player_id, _enemy)
+	
+	if (_from_player_shot) {
+		// mark target indications as hit satisfied
+		var _assit_ult_targets = get_array_of_instances(obj_ult_assist_target)
+		array_foreach(_assit_ult_targets, method({_enemy: _enemy}, function(_t) {
+			if (_enemy == _t.target) {
+				_t.target_was_hit = true
+			}
+		}))
+		
+		// trigger collateral damage
+		var _collateral_ult = instance_find(obj_ultimate_collateral, 0)
+		if (!is_undefined(_collateral_ult)) {
+			_collateral_ult.check_hit_enemy_for_collateral_targets(_enemy, _player_id)
+		}
+		
+		// trigger leech response
+		var _heal_ult = instance_find(obj_ultimate_heal, 0)
+		if (!is_undefined(_heal_ult )) {
+			_heal_ult.create_health_orb_on_enemy(_enemy, _player_id)
+		}
+		
+		// trigger rings response
+		var _rings_ult = instance_find(obj_ultimate_rings, 0)
+		if (!is_undefined(_rings_ult )) {
+			_rings_ult.apply_damage_to_enemies_on_ring(_enemy, _player_id)
+		}
+	}
 }
 
-/**
- * @param {String} _event
- * @param {Any} _payload
- * @param {String} _steam_id
- */
-function broadcast(_event, _payload, _steam_id = undefined) {
-	if (is_undefined(_steam_id)) {
-		_steam_id = get_my_steam_id_safe()
+function handle_toggle_pause() {
+	// pause streak sparks on player
+	var _player = get_player()
+	with(_player) {
+		if (!is_undefined(streak_fire)) {
+			pause_particle(streak_fire.system, global.paused)
+		}
 	}
 	
-	var _composite_event_name = string_concat(_steam_id, _event)
-	
-	// then send to event-specific listeners
-    if(struct_exists(global._events, _composite_event_name)){
-        var _listeners = global._events[$ _composite_event_name];
-        for(var _i = 0; _i < array_length(_listeners); _i++){
-			// passes payload, the steam id, the event name, and the composite event name as params
-            var _listener_payload = _listeners[_i]
-			if (instance_exists(_listener_payload.instance)) {
-				_listener_payload.callback(_payload, _steam_id, _event, _composite_event_name)
-			} else {
-				// if the listeneing element is now gone, remove it
-				array_delete(_listeners, _i, 1)
-				global._events[$ _composite_event_name] = _listeners
-				_i--;
+	// pause slow sparks on enemies
+	for_each_enemy(function(_e) {
+		with(_e) {
+			if (!is_undefined(slow_sparks)) {
+				pause_particle(slow_sparks, global.paused)
 			}
-        }
-    }
+		}
+	})
+	
+	// pause particle effects
+	var _particles = get_array_of_instances(obj_particle_effect)
+	array_foreach(_particles, function(_p) {
+		with(_p) {
+			pause_particle(ps, global.paused)
+		}
+	})
+	
+	// reset inputs
+	var _inputs = get_array_of_instances(obj_input)
+	array_foreach(_inputs, function(_input){
+		with(_input) {
+			// message clears on pause toggle
+			message = ""
+			if (!is_undefined(streak_fire)) {
+				pause_particle(streak_fire.system, _status)
+			}
+		}
+	})
+}
+
+function handle_player_streak(_player_id, _new_streak_value) {
+	var _player = get_player()
+	var _player_input = get_input(_player_id)
+	
+	if (_new_streak_value == global.point_streak_requirement) {
+		// now on streak
+		
+		// turn on fire for player muzzle
+		with(_player)  {
+			if (is_undefined(streak_fire)) {
+				streak_fire = draw_muzzle_smoke(x, y, my_color)
+			}
+		}
+		
+		// turn on fire for player input box
+		with (_player_input) {
+			if (is_undefined(streak_fire)) {
+				streak_fire = draw_muzzle_smoke(x, y, my_color)
+				// make it not auto draw so we can control where it gets drawn
+				part_system_automatic_draw(streak_fire.system,false);
+				size_streak_fire()
+			}
+		}
+	} else if(_new_streak_value == 0) {
+		// now off streak
+		
+		// remove player fire
+		with(_player)  {
+			if (is_undefined(streak_fire)) {
+				return
+			}
+			destroy_particle(streak_fire.system)
+			streak_fire = undefined
+		}
+		
+		// remove input fire
+		with(_player_input) {
+			if (is_undefined(streak_fire)) {
+				return
+			}
+			destroy_particle(streak_fire.system)
+			streak_fire = undefined
+			
+			// also shake the box
+			shake_start = get_play_time()
+			// total_shake_time is in milliseconds
+			alarm[0] = game_get_speed(gamespeed_fps) * total_shake_time / 1000
+		}
+	}
 }

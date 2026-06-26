@@ -32,12 +32,13 @@ firing_position = {
 }
 
 
-function register_hit(_insta_kill = false) {
+function register_hit(_damage_amount) {
 	var _shift_amount = 20
+	my_health -= _damage_amount
 	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: draw_particle_enemy_2_damage});
-	if (my_health > 0 && !_insta_kill) {
+	if (my_health > 0) {
 		get_game_controller().release_answer(answer);
-		my_health--;
+
 		// pause the approach
 		speed = 0
 		shooting = false
@@ -53,11 +54,10 @@ function register_hit(_insta_kill = false) {
 			x: x + lengthdir_x(_shift_amount, _dir_to_player),
 			y: y + lengthdir_y(_shift_amount, _dir_to_player)
 		}
-		return
+	} else {
+		// my_health <= 0 || insta_kill
+		instance_destroy();
 	}
-	
-	// my_health <= 0 || insta_kill
-	instance_destroy();
 }
 
 function fire_shot() {
@@ -79,5 +79,3 @@ function get_turret_muzzle() {
 		y: y + lengthdir_y(_turret_length, image_angle)
 	}
 }
-
-broadcast(EVENT_ENEMY_SPAWNED, self)

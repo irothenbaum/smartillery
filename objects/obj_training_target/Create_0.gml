@@ -35,7 +35,7 @@ function get_current_radius() {
 	return max_radius * _size_percent
 }
 
-function register_hit(_insta_kill = false) {
+function register_hit(_damage_amount) {
 	if (is_exploded) {
 		return
 	}
@@ -74,5 +74,3 @@ function respawn() {
 	is_exploded = false
 	enemy_generate_question(self)
 }
-
-broadcast(EVENT_ENEMY_SPAWNED, self)

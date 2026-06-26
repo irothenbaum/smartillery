@@ -6,8 +6,9 @@ image_yscale = image_scale
 
 direction = point_direction(x, y, global.xcenter, global.ycenter)
 
-function register_hit(_insta_kill=false) {
-	if (_insta_kill) {
+function register_hit(_damage_amount) {
+	// if you inflict massive damage, it doesn't spawn the fragments
+	if (_damage_amount > 3) {
 		point_value = 2 * point_value
 	} else {
 		// we spawn the 3 fragments
@@ -18,5 +19,3 @@ function register_hit(_insta_kill=false) {
 	
 	instance_destroy()
 }
-
-broadcast(EVENT_ENEMY_SPAWNED, self)

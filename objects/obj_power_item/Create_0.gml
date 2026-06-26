@@ -41,7 +41,3 @@ function register_hit() {
 	debug(string_concat("ITEM HIT by ", last_hit_by_player_id))
 	instance_destroy()
 }
-
-subscribe(self, EVENT_GAME_OVER, function() {
-	instance_destroy()
-})

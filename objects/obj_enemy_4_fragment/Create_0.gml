@@ -10,8 +10,6 @@ target_direction = direction
 target_delay = (irandom_range(500,2000) / 1000) * game_get_speed(gamespeed_fps)
 alarm[0] = target_delay
 
-function register_hit(_insta_kill=false) {
+function register_hit(_damage_amount) {
 	instance_destroy();
 }
-
-broadcast(EVENT_ENEMY_SPAWNED, self)

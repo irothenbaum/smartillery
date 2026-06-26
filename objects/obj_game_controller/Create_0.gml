@@ -95,24 +95,26 @@ function end_game() {
 	if (is_game_over) {
 		return
 	}
-
-	function explode_enemy(_e, _index) {
-		with (_e) {
-			instance_destroy();
-		}
-	}
+	
+	is_game_over = true;
 
 	// this will destroy the ult
 	mark_ultimate_used();
-
-	is_game_over = true;
-	broadcast(EVENT_GAME_OVER, game_score)
 	
-	// destroy all enemies
-	for_each_enemy(explode_enemy)
+	// destroy enemies, inputs, items and power ups
+	var _items_to_destroy = array_concat(
+		get_all_enemy_instances(),
+		get_array_of_instances(obj_input),
+		get_array_of_instances(obj_power_item),
+		get_array_of_instances(obj_extra_ultimate),
+	)
+	array_foreach(_items_to_destroy, function(_i) {
+		with (_i) {
+			instance_destroy();
+		}
+	})
 	
-	// destroy the enemy controller and user input
-	instance_destroy(instance_find(obj_input, 0))
+	// destroy the enemy controller and hud
 	instance_destroy(enemy_controller)
 	enemy_controller = undefined
 	instance_destroy(instance_find(obj_hud, 0))
@@ -162,7 +164,6 @@ function handle_enemy_killed(_enemy) {
 	var _combo_bonus = combo_count[$ _player_id] >= global.minimum_combo ? combo_count[$ _player_id] : 0
 	
 	draw_point_indicators(_player_id, _enemy.x, _enemy.y, _enemy.point_value, _ult_increase, _combo_bonus)
-	broadcast(EVENT_ENEMY_KILLED, _enemy)
 }
 
 /**
@@ -209,10 +210,6 @@ function handle_point_orb_collision(_orb) {
 	} else {
 		debug("UNRECOGNIZED ORB TYPE", _orb.type)
 	}
-	
-	broadcast(EVENT_SCORE_CHANGED, {
-		game_score: game_score,
-	})
 }
 
 
@@ -331,7 +328,7 @@ function increase_streak(_player_id) {
 	
 	longest_streak[$ _player_id] = max(longest_streak[$ _player_id], streak[$ _player_id])
 	
-	broadcast(EVENT_ON_OFF_STREAK, streak[$ _player_id], _player_id)
+	handle_player_streak(_player_id, streak[$ _player_id])
 }
 
 function reset_streak(_player_id) {
@@ -347,7 +344,7 @@ function reset_streak(_player_id) {
 	combo_count[$ _player_id] = 0
 	alarm[get_combo_alarm_for_player_id(_player_id)] = -1
 	
-	broadcast(EVENT_ON_OFF_STREAK, 0, _player_id)
+	handle_player_streak(_player_id, 0)
 }
 
 /**
@@ -462,7 +459,20 @@ function increase_ult_score(_player_id, _amount = 1) {
 function increate_ult_level(_player_id) {
 	ultimate_level[$ _player_id]++
 	ultimate_experience[$ _player_id] = 0
-	broadcast(EVENT_UTLTIMATE_LEVEL_UP, ultimate_level[$ _player_id], _player_id)
+	
+	// Draw shockwave at the hud icon position
+	var _icons = get_array_of_instances(obj_hud_ultimate_icon)
+	array_foreach(_icons, method({_player_id: _player_id}, function(_i) {
+		if (_i.owner_player_id == _player_id) {
+			instance_create_layer(_i.x,_i.y, LAYER_BG_EFFECTS, obj_expanding_ring, {
+				start_radius: 80,
+				end_radius: 160,
+				color: global.ultimate_colors[$ get_player_color(_player_id)],
+				duration: 0.3,
+				stroke: 12,
+			})
+		}
+	}))
 }
 
 // --------------------------------------------------------------------
@@ -508,8 +518,6 @@ function handle_submit_answer(_answer, _player_id) {
 		_inst.handle_answer_given(_answer, _player_id)
 	}
 	
-	broadcast(EVENT_CORRECT_ANSWER_GIVEN, _answer, _player_id)
-	
 	// regardless, we return true because they had a direct hit
 	return true;
 }
@@ -533,11 +541,6 @@ function _handle_test_string(_code) {
 		ultimate_charge[$ get_my_steam_id_safe()] = global.ultimate_requirement
 	}
 }
-
-// whenever an enemy is hit, we increase the player's combo
-subscribe(self, EVENT_ENEMY_HIT, function(_enemy, _player_id) {
-	increase_combo(_player_id, _enemy)
-})
 
 
 // These combined effectively start the game

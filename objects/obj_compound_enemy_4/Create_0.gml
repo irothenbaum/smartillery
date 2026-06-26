@@ -11,7 +11,3 @@ for (var _i = 0; _i < enemy_count; _i++ ) {
 		obj_enemy_4
 	) 
 }
-
-subscribe(self, EVENT_GAME_OVER, function() {
-	instance_destroy()
-})

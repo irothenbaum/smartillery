@@ -18,12 +18,6 @@ function enemy_initialize(_e) {
 		point_value = ds_map_find_value(global.points_map, object_index)
 		slow_multiplier = 1
 		slow_sparks = undefined
-		
-		subscribe(self, EVENT_TOGGLE_PAUSE, function(_status) {
-			if (!is_undefined(slow_sparks)) {
-				pause_particle(slow_sparks, _status)
-			}
-		})
 	}
 	// must go after the initializations due to edge conditions
 	initialize_instance_has_equation(_e)
