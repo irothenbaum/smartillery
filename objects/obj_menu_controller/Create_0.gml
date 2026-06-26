@@ -7,9 +7,8 @@ reset_game_state()
 function start_game() {
 	global.is_solo = true
 	global.is_coop = false
-	var _id = get_my_steam_id_safe()
-	global.active_player_ids = [_id]
-	global.player_device_map[$ _id] = -1
+	global.active_player_ids = [0]
+	global.player_device_map[$ 0] = -1
 	room_goto(rm_select_ultimates)
 }
 
@@ -22,9 +21,8 @@ function start_coop() {
 function start_training() {
 	global.is_solo = true
 	global.is_coop = false
-	var _id = get_my_steam_id_safe()
-	global.active_player_ids = [_id]
-	global.player_device_map[$ _id] = -1
+	global.active_player_ids = [0]
+	global.player_device_map[$ 0] = -1
 	room_goto(rm_play_training)
 }
 

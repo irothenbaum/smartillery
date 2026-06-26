@@ -72,7 +72,7 @@ function get_player_color_tint(_player_id) {
  * @returns {Real}
  */
 function get_my_color() {
-	return get_player_color(get_my_steam_id_safe())
+	return get_player_color(0)
 }
 
 /**
@@ -93,7 +93,7 @@ function for_each_player(_callback, _skip_player_id) {
 	var _ret_val = []
 	var _ids = array_length(global.active_player_ids) > 0
 		? global.active_player_ids
-		: [get_my_steam_id_safe()]
+		: [0]
 	for (var _i = 0; _i < array_length(_ids); _i++) {
 		var _pid = _ids[_i]
 		if (is_undefined(_skip_player_id) || _pid != _skip_player_id) {
@@ -134,5 +134,5 @@ function get_player_id_from_num(_num) {
 	if (_num < array_length(global.active_player_ids)) {
 		return global.active_player_ids[_num]
 	}
-	return get_my_steam_id_safe()
+	return 0
 }

@@ -16,7 +16,7 @@ function debug() {
 }
 
 function get_game_controller() {
-	if (global.is_solo || is_host(get_my_steam_id_safe())) {
+	if (global.is_solo || is_host(0)) {
 		return instance_find(obj_game_controller, 0)
 	} else {
 		return instance_find(obj_guest_game_controller, 0)
@@ -34,9 +34,9 @@ function get_input(_player_id) {
 		return global._G.input_player_map[$ _player_id]
 	}
 	
-	var _input = find_instance(obj_input, function (_inst, _i, _total) {
-		return _inst.owner_player_id == get_my_steam_id_safe()
-	})
+	var _input = find_instance(obj_input, method({pid: _player_id}, function (_inst, _i, _total) {
+		return _inst.owner_player_id == pid
+	}))
 	
 	if (is_undefined(_input)) {
 		debug("Cannot find input for player ", _player_id)

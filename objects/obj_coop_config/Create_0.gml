@@ -1,6 +1,6 @@
 /// @description Local co-op join screen
 
-var _host_id = get_my_steam_id_safe()
+var _host_id = 0
 global.active_player_ids = [_host_id]
 global.player_device_map[$ _host_id] = -1  // host always uses keyboard
 
@@ -22,7 +22,7 @@ function try_join_with_device(_device_index) {
 }
 
 function handle_start() {
-	room_goto(rm_play_coop)
+	room_goto(rm_select_ultimates)
 }
 
 function handle_cancel() {

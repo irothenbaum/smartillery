@@ -1,5 +1,5 @@
-if (is_undefined(owner_player_id) || owner_player_id == NON_STEAM_PLAYER) {
-	owner_player_id = get_my_steam_id_safe()
+if (is_undefined(owner_player_id)) {
+	owner_player_id = 0
 }
 drawn_ultimate = 0
 drawn_ultimate_experience = 0

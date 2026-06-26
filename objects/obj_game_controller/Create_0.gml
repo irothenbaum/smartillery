@@ -38,7 +38,7 @@ for_each_player(function(_player_id) {
  */
 function has_point_streak(_player_id) {
 	if (is_undefined(_player_id)) {
-		_player_id = get_my_steam_id_safe()
+		_player_id = 0
 	}
 	return streak[$ _player_id] >= global.point_streak_requirement
 }
@@ -225,7 +225,7 @@ function handle_point_orb_collision(_orb) {
 /// @param {Real} _player_id
 /// @returns {Bool}
 function handle_submit_code(_code, _player_id = undefined) {
-	_player_id = is_undefined(_player_id) ? get_my_steam_id_safe() : _player_id
+	_player_id = is_undefined(_player_id) ? 0 : _player_id
 	
 	if (string_length(_code) == 0) {
 		return false;
@@ -526,8 +526,8 @@ function is_answer_reserved(_answer) {
 // TESTING
 function _handle_test_string(_code) {	
 	if (_code == "_c") {
-		increate_ult_level(get_my_steam_id_safe())
-		ultimate_charge[$ get_my_steam_id_safe()] = global.ultimate_requirement
+		increate_ult_level(0)
+		ultimate_charge[$ 0] = global.ultimate_requirement
 	}
 }
 

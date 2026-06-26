@@ -1,46 +1,58 @@
-staged_selection = undefined
-hovered_selection = undefined
-x = global.xcenter
-y = global.ycenter
+/// @description Per-player ultimate selection card
 
-hovered_scale = 0.18
-default_scale = 0.11
-
-square_size = 200
-
-icon_space = 240
-
-drawn_icon_scales = {
-	ULTIMATE_STRIKE: default_scale,
-	ULTIMATE_SLOW: default_scale,
-	ULTIMATE_HEAL: default_scale,
-	ULTIMATE_ASSIST: default_scale,
-	ULTIMATE_COLLATERAL: default_scale,
-	ULTIMATE_TURRET: default_scale,
-	ULTIMATE_RINGS: default_scale,
+if (is_undefined(owner_player_id)) {
+	owner_player_id = 0
+}
+if (is_undefined(device_index)) {
+	device_index = global.player_device_map[$ owner_player_id] ?? -1
 }
 
-drawn_icon_opacity = {
-	ULTIMATE_STRIKE: 0,
-	ULTIMATE_SLOW: 0,
-	ULTIMATE_HEAL: 0,
-	ULTIMATE_ASSIST: 0,
-	ULTIMATE_COLLATERAL: 0,
-	ULTIMATE_TURRET: 0,
-	ULTIMATE_RINGS: 0
+ultimate_names = variable_struct_get_names(global.ultimate_icons)
+current_index  = 0
+is_locked      = false
+
+var _count    = get_players_count()
+card_width     = min(280, floor(room_width / _count) - 30)
+card_half_w    = floor(card_width / 2)
+
+function get_current_ultimate() {
+	return ultimate_names[current_index]
 }
 
-function handle_select(_ult) {
-	if (staged_selection == _ult and global.is_solo) {
-		handle_start_game()
-		return
+function is_taken_by_other(_ult_name) {
+	var _ids = global.active_player_ids
+	for (var _i = 0; _i < array_length(_ids); _i++) {
+		var _pid = _ids[_i]
+		if (_pid != owner_player_id && global.selected_ultimate[$ _pid] == _ult_name) {
+			return true
+		}
 	}
-	
-	staged_selection = _ult
-	global.selected_ultimate[$ get_my_steam_id_safe()] = _ult
+	return false
 }
 
-function handle_start_game() {
+function cycle(_dir) {
+	if (is_locked) return
+	var _n = array_length(ultimate_names)
+	var _tries = 0
+	do {
+		current_index = (current_index + _dir + _n) mod _n
+		_tries++
+	} until (!is_taken_by_other(get_current_ultimate()) || _tries >= _n)
+}
+
+function confirm_selection() {
+	if (is_locked) return
+	if (is_taken_by_other(get_current_ultimate())) return
+	global.selected_ultimate[$ owner_player_id] = get_current_ultimate()
+	is_locked = true
+	_check_all_locked()
+}
+
+function _check_all_locked() {
+	var _cards = get_array_of_instances(obj_select_ultimate)
+	for (var _i = 0; _i < array_length(_cards); _i++) {
+		if (!_cards[_i].is_locked) return
+	}
 	if (global.is_coop) {
 		room_goto(rm_play_coop)
 	} else {
