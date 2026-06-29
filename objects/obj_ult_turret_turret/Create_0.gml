@@ -55,4 +55,4 @@ function create_beam(_player_who_shot_id) {
 	array_foreach(_hit_enemies, method({_player_who_shot_id: _player_who_shot_id}, function(_enemy) {
 		handle_enemy_hit(_enemy, _player_who_shot_id, 1)
 	}))
-}))
+}

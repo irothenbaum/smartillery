@@ -18,23 +18,31 @@ function handle_enemy_hit(_enemy, _player_id, _damage_amount, _from_player_shot 
 		}
 
 		// trigger collateral damage
-		var _collateral_ult = instance_find(obj_ultimate_collateral, 0)
+		var _collateral_ult = _get_first_or_undefined(obj_ultimate_collateral)
 		if (!is_undefined(_collateral_ult)) {
 			_collateral_ult.check_hit_enemy_for_collateral_targets(_enemy, _player_id)
 		}
 		
 		// trigger leech response
-		var _heal_ult = instance_find(obj_ultimate_heal, 0)
+		var _heal_ult = _get_first_or_undefined(obj_ultimate_heal)
 		if (!is_undefined(_heal_ult )) {
 			_heal_ult.create_health_orb_on_enemy(_enemy, _player_id)
 		}
 		
 		// trigger rings response
-		var _rings_ult = instance_find(obj_ultimate_rings, 0)
+		var _rings_ult = _get_first_or_undefined(obj_ultimate_rings)
 		if (!is_undefined(_rings_ult )) {
 			_rings_ult.apply_damage_to_enemies_on_ring(_enemy, _player_id)
 		}
 	}
+}
+
+function _get_first_or_undefined(_type) {
+	var _count = instance_number(_type)
+	if (_count == 0) {
+		return undefined
+	}
+	return instance_find(_type, 0)
 }
 
 function handle_toggle_pause() {

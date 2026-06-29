@@ -93,7 +93,7 @@ function for_each_player(_callback, _skip_player_id) {
 	var _ret_val = []
 	var _ids = array_length(global.active_player_ids) > 0
 		? global.active_player_ids
-		: [0]
+		: [0] // by default assume just host
 	for (var _i = 0; _i < array_length(_ids); _i++) {
 		var _pid = _ids[_i]
 		if (is_undefined(_skip_player_id) || _pid != _skip_player_id) {

@@ -1,19 +1,13 @@
 set_viewport_dimensions()
 
 function set_up_test() {
-	// Use this function to configue test criteria
+	// Use this function to configure test criteria
 	global.is_solo = true
 	global.is_coop = false
-	global.active_player_ids = [0]
-	global.player_device_map[$ 0] = -1
-	global.selected_ultimate[$ 0] = ULTIMATE_ASSIST
-	global.starting_wave = 5;
-
-	room_goto(rm_play_solo)
+	global.starting_wave = 1
+	global.selected_ultimate[$ "0"] = ULTIMATE_STRIKE
+	room_goto(rm_test)
 }
-
-
-
 
 
 // comment this out

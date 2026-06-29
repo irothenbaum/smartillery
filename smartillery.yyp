@@ -121,6 +121,7 @@
     {"id":{"name":"rm_play_solo","path":"rooms/rm_play_solo/rm_play_solo.yy",},},
     {"id":{"name":"rm_play_training","path":"rooms/rm_play_training/rm_play_training.yy",},},
     {"id":{"name":"rm_select_ultimates","path":"rooms/rm_select_ultimates/rm_select_ultimates.yy",},},
+    {"id":{"name":"rm_test","path":"rooms/rm_test/rm_test.yy",},},
     {"id":{"name":"scr_constants","path":"scripts/scr_constants/scr_constants.yy",},},
     {"id":{"name":"scr_dictionary","path":"scripts/scr_dictionary/scr_dictionary.yy",},},
     {"id":{"name":"scr_draw_helpers","path":"scripts/scr_draw_helpers/scr_draw_helpers.yy",},},
@@ -168,6 +169,7 @@
     {"roomId":{"name":"rm_play_coop","path":"rooms/rm_play_coop/rm_play_coop.yy",},},
     {"roomId":{"name":"rm_select_ultimates","path":"rooms/rm_select_ultimates/rm_select_ultimates.yy",},},
     {"roomId":{"name":"rm_play_training","path":"rooms/rm_play_training/rm_play_training.yy",},},
+    {"roomId":{"name":"rm_test","path":"rooms/rm_test/rm_test.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[

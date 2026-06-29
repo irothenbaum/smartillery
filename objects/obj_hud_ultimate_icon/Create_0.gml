@@ -1,6 +1,3 @@
-if (is_undefined(owner_player_id)) {
-	owner_player_id = 0
-}
 drawn_ultimate = 0
 drawn_ultimate_experience = 0
 selected_ultimate = global.selected_ultimate[$ owner_player_id]

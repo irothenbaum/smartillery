@@ -12,6 +12,13 @@ if (keyboard_check_pressed(vk_escape)) {
 	}
 }
 
+if (room == rm_test) {
+	var _types = global.enemy_instance_types
+	for (var _i = 0; _i < array_length(_types); _i++) {
+		with (_types[_i]) { speed = 0 }
+	}
+}
+
 if (!global.paused) {
 	// increase ult charge for each player
 	for_each_player(method(self, function(_player_id) {

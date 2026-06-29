@@ -1,9 +1,5 @@
 message = "";
 
-if (is_undefined(owner_player_id)) {
-	owner_player_id = 0
-}
-
 // device_index: -1 = keyboard, 0+ = gamepad device number (set by obj_game_controller at creation)
 if (is_undefined(device_index)) {
 	device_index = global.player_device_map[$ owner_player_id] ?? -1
