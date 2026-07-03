@@ -458,10 +458,10 @@ function increate_ult_level(_player_id) {
 	var _icons = get_array_of_instances(obj_hud_ultimate_icon)
 	array_foreach(_icons, method({_player_id: _player_id}, function(_i) {
 		if (_i.owner_player_id == _player_id) {
-			instance_create_layer(_i.x,_i.y, LAYER_BG_EFFECTS, obj_expanding_ring, {
+			instance_create_layer(_i.my_bounds.xcenter,_i.my_bounds.ycenter, LAYER_BG_EFFECTS, obj_expanding_ring, {
 				start_radius: 80,
 				end_radius: 160,
-				color: global.ultimate_colors[$ get_player_color(_player_id)],
+				color: get_player_color(_player_id),
 				duration: 0.3,
 				stroke: 12,
 			})

@@ -191,7 +191,7 @@ function ultimate_step(_obj) {
 function ultimate_draw(_obj) {
 	with (_obj) {
 		// this draws the ult icon flash over the screen when the player launches their ultimate
-		if (ult_overlay > 0) {
+		if (ult_overlay > 0  && !global.skip_ult_overlay) {
 			var _scale = 0.3 + (1 - ult_overlay ) / 2.5
 			draw_sprite_ext(global.ultimate_icons[$ ult_type], 0, global.xcenter, global.ycenter, _scale, _scale, 0, global.ultimate_colors[$ ult_type], ult_overlay)
 			// draw_rectangle_clipped(new Bounds(0, 0, global.room_width, global.room_height), global.ultimate_colors[$ global.selected_ultimate], global.ultimate_icons[$ global.selected_ultimate], _scale)

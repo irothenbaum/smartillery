@@ -88,7 +88,7 @@ function execute_hit_target() {
 	
 	// if we have any turrets, we trigger them to shoot also
 	with (obj_ult_turret_turret) {
-		create_beam(other._player_who_shot_id)
+		create_beam(_player_who_shot_id)
 	}
 	
 	rotate_towards_next_target()

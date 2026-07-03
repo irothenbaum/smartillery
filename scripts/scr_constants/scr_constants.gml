@@ -70,6 +70,8 @@ global.ultimate_icons = {
 	ULTIMATE_RINGS: spr_ult_rings
 }
 
+global.skip_ult_overlay = false
+
 // in-game configurable
 global.selected_ultimate = {};
 global.body_color = c_white;

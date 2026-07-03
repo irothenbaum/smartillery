@@ -5,7 +5,7 @@ function set_up_test() {
 	global.is_solo = true
 	global.is_coop = false
 	global.starting_wave = 1
-	global.selected_ultimate[$ "0"] = ULTIMATE_STRIKE
+	global.selected_ultimate[$ 0] = ULTIMATE_STRIKE
 	room_goto(rm_test)
 }
 

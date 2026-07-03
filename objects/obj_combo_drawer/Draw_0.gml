@@ -2,7 +2,7 @@
 // the smallest combo_count is 2 (double kill)
 if (last_combo >= global.minimum_combo and instance_exists(player_input)) {
 	// the - 1 is because arrays are indexed 0 -> n-1, the + 1 is because our first element is "n/a" for streak 1x.
-	var _phrase = global.combo_phrases[min(array_length(global.combo_phrases) - 1, other.last_combo - global.minimum_combo + 1)]
+	var _phrase = global.combo_phrases[min(array_length(global.combo_phrases) - 1, last_combo - global.minimum_combo + 1)]
 	var _input_bounds = player_input.my_bounds
 	var _combo_y = _input_bounds.y1 + global.margin_lg
 	var _combo_x = _input_bounds.x0
@@ -13,7 +13,7 @@ if (last_combo >= global.minimum_combo and instance_exists(player_input)) {
 	
 	draw_set_composite_color(_fill_color)
 	draw_set_font(fnt_large)
-	var _text_bounds = draw_text_with_alignment(_combo_x + (_combo_width / 2), _combo_y, string_concat(_phrase, " -- ", other.last_combo, "X"), ALIGN_CENTER)
+	var _text_bounds = draw_text_with_alignment(_combo_x + (_combo_width / 2), _combo_y, string_concat(_phrase, " -- ", last_combo, "X"), ALIGN_CENTER)
 	
 	var _bar_bounds = new Bounds(
 		min(_input_bounds.x0, _text_bounds.x0), 
