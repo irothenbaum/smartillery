@@ -3,5 +3,9 @@ if (!is_extra) {
 	get_game_controller().mark_ultimate_used(owner_player_id)
 }
 
-// destroy all instances
-instance_destroy(obj_ult_turret_turret)
+// only destroy the turrets this ultimate spawned, not other players' active turrets
+for (var _i = 0; _i < array_length(my_turrets); _i++) {
+	if (instance_exists(my_turrets[_i])) {
+		instance_destroy(my_turrets[_i])
+	}
+}

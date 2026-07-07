@@ -3,6 +3,7 @@ initialize_instance_has_equation(self)
 my_bounds = get_bounds_for_instance(self)
 
 radius = global.player_body_radius
+icon_scale = 0.016 // magic number matching obj_extra_ultimate, a property of the ultimate sprite sizes
 
 // Build weighted selection for type
 var _player = get_player()

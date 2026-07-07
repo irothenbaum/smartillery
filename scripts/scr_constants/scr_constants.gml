@@ -233,10 +233,13 @@ ds_map_add(global.tip_copy_map, obj_hud_ultimate_icon, function(_instance) {
 })
 ds_map_add(global.tip_copy_map, obj_input, function(_instance) {
 	var _is_on_streak = get_game_controller().has_point_streak(_instance.owner_player_id)
-	
+	var _activate_ult_copy = (_instance.device_index >= 0)
+		? "Press Y (or Triangle) to activate your ultimate."
+		: string_concat("Typing \"", global.ultimate_code, "\" will activate your ultimate.")
+
 	return {
 		title: "Answer input",
-		description: string_concat("Enter your answers here.\nTyping \"", global.ultimate_code,"\" will activate your ultimate.", _is_on_streak ? "\nYou are currently on streak! Getting kills levels up your ultimate" : "\nAnswer correctly ", global.point_streak_requirement," times in a row to get on strewak."),
+		description: string_concat("Enter your answers here.\n", _activate_ult_copy, _is_on_streak ? "\nYou are currently on streak! Getting kills levels up your ultimate" : "\nAnswer correctly ", global.point_streak_requirement," times in a row to get on strewak."),
 	}
 })
 

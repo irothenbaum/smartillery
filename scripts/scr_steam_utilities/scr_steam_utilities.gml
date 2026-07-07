@@ -69,10 +69,46 @@ function get_player_color_tint(_player_id) {
 }
 
 /**
- * @returns {Real}
+ * @returns {Array<Real>}
  */
-function get_my_color() {
-	return get_player_color(0)
+function get_streaking_player_ids() {
+	var _gc = get_game_controller()
+	return array_filter(get_player_ids(), method({_gc: _gc}, function(_pid) {
+		return _gc.has_point_streak(_pid)
+	}))
+}
+
+/**
+ * blends the colors of every player currently on a point streak.
+ * one player on streak returns their color as-is; multiple players blend evenly.
+ * @param {Array<Real>} _default_arr -- used when no player is currently on streak
+ * @returns {Array<Real>}
+ */
+function get_streak_color_array(_default_arr) {
+	var _streaking = get_streaking_player_ids()
+	var _count = array_length(_streaking)
+	if (_count == 0) {
+		return _default_arr
+	}
+
+	var _sum = [0, 0, 0]
+	for (var _i = 0; _i < _count; _i++) {
+		var _c = color_to_array(get_player_color(_streaking[_i]))
+		_sum[0] += _c[0]
+		_sum[1] += _c[1]
+		_sum[2] += _c[2]
+	}
+
+	return [_sum[0] / _count, _sum[1] / _count, _sum[2] / _count]
+}
+
+/**
+ * @param {Colour} _default_color -- used when no player is currently on streak
+ * @returns {Colour}
+ */
+function get_streak_color(_default_color) {
+	var _arr = get_streak_color_array(color_to_array(_default_color))
+	return make_color_rgb(round(_arr[0] * 255), round(_arr[1] * 255), round(_arr[2] * 255))
 }
 
 /**

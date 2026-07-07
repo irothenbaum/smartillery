@@ -13,8 +13,11 @@ if (is_controlled) {
 		var _pad_dn  = gamepad_button_check_pressed(device_index, gp_padd)
 		var _pad_lt  = gamepad_button_check_pressed(device_index, gp_padl)
 		var _pad_rt  = gamepad_button_check_pressed(device_index, gp_padr)
+		var _activate_ult = gamepad_button_check_pressed(device_index, gp_face4)
 
-		if (_submit && string_length(message) > 0) {
+		if (_activate_ult) {
+			_game_controller.activate_ultimate(owner_player_id)
+		} else if (_submit && string_length(message) > 0) {
 			_game_controller.handle_submit_code(message, owner_player_id)
 			last_guess = message
 			guess_numeric = 0

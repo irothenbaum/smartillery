@@ -36,7 +36,7 @@ function apply_damage_to_enemies_on_ring(_target, _player_who_shot_id) {
 	var _on_streak = get_game_controller().has_point_streak(_player_who_shot_id)
 	var _color = _on_streak ? get_player_color(_player_who_shot_id) : global.ultimate_colors[$ ULTIMATE_RINGS]
 
-	instance_create_layer(_target.x, _target.y, LAYER_FG_EFFECTS, obj_ult_collateral_explosion)
+	instance_create_layer(_target.x, _target.y, LAYER_FG_EFFECTS, obj_ult_collateral_explosion, {radius: 0})
 
 	// Calculate which ring the target is on
 	var _distance_to_center = point_distance(_target.x, _target.y, global.xcenter, global.ycenter)

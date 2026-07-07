@@ -6,8 +6,6 @@ hide_self = false;
 game_controller = get_game_controller()
 body_color_arr = color_to_array(global.body_color)
 turret_color_arr = color_to_array(global.turret_color)
-my_color = get_my_color()
-my_color_arr = color_to_array(my_color)
 
 rotate_aim_speed = 720 // in degrees per second
 rotate_idle_speed = 90 // in degrees per second

@@ -86,7 +86,7 @@ function check_hit_enemy_for_collateral_targets(_target, _player_who_shot_id) {
 	var _on_streak = get_game_controller().has_point_streak(_player_who_shot_id)
 	var _color = _on_streak ? get_player_color(_player_who_shot_id) : global.ultimate_colors[$ ULTIMATE_COLLATERAL]
 	
-	instance_create_layer(_target.x, _target.y, LAYER_FG_EFFECTS, obj_ult_collateral_explosion)
+	instance_create_layer(_target.x, _target.y, LAYER_FG_EFFECTS, obj_ult_collateral_explosion, {radius: 0})
 	
 	// TODO: rather than find the nearby enemies again, lets just reference the proximity map to see who should be hit
 	var _nearby_enemies = find_enemies_near_point(_target.x, _target.y, range)

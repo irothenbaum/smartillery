@@ -38,7 +38,7 @@ if (!_game_controller.is_game_over) {
 	var _turret_x = x + lengthdir_x(-recoil_amount, image_angle) + 1 // the +1 is to corect a rounding erorr when scaling the sprite
 	var _turret_y = y + lengthdir_y(-recoil_amount, image_angle) + 1
 	var _turret_scale = 1 - (recoil_amount / (max_recoil_amount * 2))
-	shader_set_uniform_f_array(_u_color, _game_controller.has_point_streak() ? my_color_arr : turret_color_arr);
+	shader_set_uniform_f_array(_u_color, get_streak_color_array(turret_color_arr));
 	draw_sprite_ext(spr_player_turret, 0, _turret_x, _turret_y, _turret_scale * image_scale, image_scale, image_angle, c_white, 1)
 }
 
