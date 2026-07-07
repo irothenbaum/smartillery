@@ -190,7 +190,39 @@ function center_bounds_in_frame(_bounds, _width = 0, _height = 0) {
  * @returns {Struct.Bounds}
  */
 
-function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_height = 1.1, _trail_run = false) {	
+/**
+ * Inserts line breaks into _text so that, drawn with the currently set font, no line
+ * exceeds _max_width. Existing "\n" breaks in the source text are preserved.
+ * @param {String} _text
+ * @param {Real} _max_width
+ * @returns {String}
+ */
+function word_wrap(_text, _max_width) {
+	var _paragraphs = string_split(_text, "\n")
+	var _wrapped = ""
+
+	for (var _p = 0; _p < array_length(_paragraphs); _p++) {
+		var _words = string_split(_paragraphs[_p], " ")
+		var _current_line = ""
+
+		for (var _i = 0; _i < array_length(_words); _i++) {
+			var _word = _words[_i]
+			var _candidate = (_current_line == "") ? _word : string_concat(_current_line, " ", _word)
+			if (string_width(_candidate) > _max_width && _current_line != "") {
+				_wrapped = (_wrapped == "") ? _current_line : string_concat(_wrapped, "\n", _current_line)
+				_current_line = _word
+			} else {
+				_current_line = _candidate
+			}
+		}
+
+		_wrapped = (_wrapped == "") ? _current_line : string_concat(_wrapped, "\n", _current_line)
+	}
+
+	return _wrapped
+}
+
+function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_height = 1.1, _trail_run = false) {
 	var _lines = string_split(_text, "\n")
 	var _final_bounds = {
 		x0: _x,

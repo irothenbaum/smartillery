@@ -70,6 +70,12 @@ global.ultimate_icons = {
 	ULTIMATE_RINGS: spr_ult_rings
 }
 
+// Optional per-ultimate preview clip for the select-ultimate screen (obj_select_ultimate).
+// Add entries as "ULTIMATE_X: "clip_filename.mp4"" once clips are imported as Included
+// Files (see notes in obj_select_ultimate's Draw event for the intended video_* wiring).
+// An ultimate with no entry here just shows the placeholder box.
+global.ultimate_video_clips = {}
+
 global.skip_ult_overlay = false
 
 // in-game configurable
@@ -197,8 +203,8 @@ global.ultimate_descriptions = {
 	ULTIMATE_STRIKE: {title: "Air strike", description: "Launch a barrage from the air that targets and eliminates your most dangerous enemies"},
 	ULTIMATE_SLOW: {title: "Time slow", description: "Reduce the approach and attack speed of enemies nearing your position"},
 	ULTIMATE_HEAL: {title: "Leech", description: "Destroying enemies repairs damage to your ship so you can stay in the fight longer"},
-	ULTIMATE_COLLATERAL: {title: "Collateral Damage", description: "Destroying an enemy will also explode nearby foes"},
-	ULTIMATE_ASSIST: {title: "Aim Assist", description: "Near misses will magically turn into direct strikes on target"},
+	ULTIMATE_COLLATERAL: {title: "Collateral", description: "Destroying an enemy will also explode nearby foes"},
+	ULTIMATE_ASSIST: {title: "Aim assist", description: "Near misses will magically turn into direct strikes on target"},
 	ULTIMATE_TURRET: {title: "Turrets", description: "Spawn turrets to bolster your attack"},
 	ULTIMATE_RINGS:  {title: "Rings", description: "Extend your strike around"},
 }

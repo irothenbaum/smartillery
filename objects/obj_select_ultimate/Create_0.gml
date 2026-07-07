@@ -12,8 +12,14 @@ current_index  = 0
 is_locked      = false
 
 var _count    = get_players_count()
-card_width     = min(280, floor(room_width / _count) - 30)
+card_width     = floor(min(280, floor(room_width / _count) - 30) * 1.2)
 card_half_w    = floor(card_width / 2)
+card_height    = floor(380 * 1.5)
+card_half_h    = floor(card_height / 2)
+
+// filled in each Draw so Step can detect clicks on the on-screen cycle arrows
+left_arrow_bounds  = undefined
+right_arrow_bounds = undefined
 
 function get_current_ultimate() {
 	return ultimate_names[current_index]
@@ -44,12 +50,7 @@ function confirm_selection() {
 	if (is_locked) return
 	if (is_taken_by_other(get_current_ultimate())) return
 
-	// silent priming read, no console output -- isolating whether touching the whole
-	// struct (not through the [$ key] accessor) before writing is what matters, or
-	// whether it was actually the debug()/console output acting as a sync point
-	variable_struct_get_names(global.selected_ultimate)
-
-	global.selected_ultimate[$ owner_player_id] = get_current_ultimate()
+	set_player_ultimate(owner_player_id, get_current_ultimate())
 	is_locked = true
 	_check_all_locked()
 }

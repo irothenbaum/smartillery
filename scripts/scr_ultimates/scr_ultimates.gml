@@ -128,10 +128,28 @@ function ult_rings_get_ring_range(_level) {
 
 /**
  * @param {String} _player_id
- * @returns {String} 
+ * @returns {String}
  */
 function get_player_ultimate(_player_id) {
-	return global.selected_ultimate[$ _player_id]
+	var _ult = global.selected_ultimate[$ _player_id]
+	// falls back instead of handing back undefined -- a room that skips the
+	// select-ultimate screen (e.g. rm_test) may not have populated this yet by the
+	// time a placed instance's Create event asks for it
+	return is_undefined(_ult) ? ULTIMATE_STRIKE : _ult
+}
+
+/**
+ * @param {String} _player_id
+ * @param {String} _ultimate
+ */
+function set_player_ultimate(_player_id, _ultimate) {
+	// silent priming read, no console output -- carried over from confirm_selection()'s
+	// original workaround for a struct-write visibility issue that was never fully
+	// isolated (see git history). Centralized here so every writer gets it, not just
+	// whichever call site happened to have it -- e.g. rm_test's bootstrap previously
+	// wrote directly to global.selected_ultimate and skipped this entirely.
+	variable_struct_get_names(global.selected_ultimate)
+	global.selected_ultimate[$ _player_id] = _ultimate
 }
 
 function is_duration_ult(_ult_type) {

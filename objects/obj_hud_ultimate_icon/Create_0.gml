@@ -1,6 +1,6 @@
 drawn_ultimate = 0
 drawn_ultimate_experience = 0
-selected_ultimate = global.selected_ultimate[$ owner_player_id]
+selected_ultimate = get_player_ultimate(owner_player_id)
 ult_sprite = global.ultimate_icons[$ selected_ultimate]
 icon_scale = 0.03
 sprite_size = sprite_get_width(ult_sprite) * icon_scale
