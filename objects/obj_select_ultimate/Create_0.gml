@@ -43,6 +43,12 @@ function cycle(_dir) {
 function confirm_selection() {
 	if (is_locked) return
 	if (is_taken_by_other(get_current_ultimate())) return
+
+	// silent priming read, no console output -- isolating whether touching the whole
+	// struct (not through the [$ key] accessor) before writing is what matters, or
+	// whether it was actually the debug()/console output acting as a sync point
+	variable_struct_get_names(global.selected_ultimate)
+
 	global.selected_ultimate[$ owner_player_id] = get_current_ultimate()
 	is_locked = true
 	_check_all_locked()

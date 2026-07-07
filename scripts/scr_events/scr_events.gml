@@ -61,7 +61,7 @@ function handle_toggle_pause() {
 		// message clears on pause toggle
 		message = ""
 		if (!is_undefined(streak_fire)) {
-			pause_particle(streak_fire.system, _status)
+			pause_particle(streak_fire.system, global.paused)
 		}
 	}
 }
