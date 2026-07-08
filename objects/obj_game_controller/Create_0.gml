@@ -538,11 +538,7 @@ reset_starting_values()
 if (room == rm_play_training) {
 	instance_create_layer(x,y,LAYER_CONTROLLERS, obj_training_controller)
 } else if (room == rm_test) {
-	// Testing mode: no waves, enemies are placed manually and frozen by Step
-	instance_create_layer(x,y, LAYER_INSTANCES, obj_enemy_1, {
-		x: global.xcenter,
-		y: global.ycenter * 0.6
-	})
+	configure_test_room()
 } else {
 	// this effectively starts the regular game
 	mark_wave_completed()

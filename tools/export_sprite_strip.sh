@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Converts a video clip into a single PNG sprite strip (frames tiled left-to-right,
-# top-to-bottom) suitable for GameMaker's Sprite Editor "import as strip" feature.
+# top-to-bottom) suitable for GameMaker's Sprite Editor "Convert to Frames" import.
 #
 # Requires: ffmpeg, ffprobe
 #
@@ -11,7 +11,11 @@
 # Options:
 #   -i, --input FILE     input video (required)
 #   -o, --output FILE    output PNG path (required)
-#   -f, --fps N          sample rate in frames per second (default: 12)
+#   -f, --fps N          sample rate in frames per second (default: 12, the project
+#                        standard for ult preview clips -- see notes/GeneratingUltCardVideos.
+#                        Passing anything else means updating video_playback_fps in
+#                        obj_select_ultimate/Create_0.gml to match, or the in-game
+#                        playback speed will be wrong for that clip)
 #   -c, --crop WxH+X+Y   crop before tiling, e.g. 400x400+100+50 (optional)
 #   -s, --scale WxH      scale each frame before tiling, e.g. 128x128 (optional)
 #   --cols N             force column count (default: auto, near-square grid)
@@ -21,7 +25,15 @@
 #       -f 15 -c 480x480+220+0 -s 128x128
 #
 # The printed frame count and grid size are what you enter into GameMaker's
-# "Image is a strip" import dialog (Columns x Rows, and total image count).
+# "Convert to Frames" dialog (Columns x Rows, and total image count).
+#
+# Why 12fps: each frame costs the same in VRAM whether animation looks smooth or not
+# (GameMaker stores sprite frames as uncompressed RGBA regardless of source PNG
+# compression), and cost scales linearly with frame count. Going from 12fps to 30fps
+# for a single ~360x510 preview clip is roughly +36MB of VRAM (~26MB -> ~62MB) for a
+# small, secondary, looping menu-screen animation -- 12fps ("on twos", same as
+# traditional 2D animation) is plenty smooth for that and isn't a place to spend
+# VRAM budget. Don't bump this without a specific reason.
 
 set -euo pipefail
 
@@ -33,7 +45,7 @@ INPUT=""
 OUTPUT=""
 
 usage() {
-	sed -n '2,25p' "$0"
+	sed -n '2,36p' "$0"
 	exit 1
 }
 
@@ -106,6 +118,12 @@ FILTERS="${FILTERS},tile=${COLS}x${ROWS}"
 
 echo "Input duration: ${DURATION}s @ requested ${FPS}fps"
 echo "Sampled frames: ${FRAME_COUNT}  ->  grid: ${COLS}x${ROWS} (${GRID_CAPACITY} cells, ${PAD_FRAMES} padded)"
+
+if [[ "$FPS" -ne 12 ]]; then
+	echo "NOTE: using ${FPS}fps, not the project standard of 12 -- remember to update" >&2
+	echo "      video_playback_fps in obj_select_ultimate/Create_0.gml to match, or" >&2
+	echo "      this clip will play back at the wrong speed in-game." >&2
+fi
 
 # -frames:v 1 stops ffmpeg as soon as the tile filter emits its first full grid --
 # this both avoids writing extra pages if the source has more frames than we need,

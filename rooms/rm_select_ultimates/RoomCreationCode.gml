@@ -2,7 +2,9 @@ set_viewport_dimensions()
 
 var _count = get_players_count()
 var _col_w = floor(room_width / _count)
-var _cy    = floor(room_height / 2) + floor(room_height * 0.2)
+// offset just enough to clear the "Select Your Ultimate" header above the card --
+// re-tune this if card_height (obj_select_ultimate/Create_0.gml) changes again
+var _cy    = floor(room_height / 2) + floor(room_height * 0.12)
 
 for (var _i = 0; _i < _count; _i++) {
 	var _pid    = get_player_id_from_num(_i)

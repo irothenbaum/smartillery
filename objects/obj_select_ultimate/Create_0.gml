@@ -14,12 +14,33 @@ is_locked      = false
 var _count    = get_players_count()
 card_width     = floor(min(280, floor(room_width / _count) - 30) * 1.2)
 card_half_w    = floor(card_width / 2)
-card_height    = floor(380 * 1.5)
+// sized to comfortably fit the fixed 240x340 video preview area (see Draw) plus the
+// label/header above it and the description/hint below it, without any of it crowding
+card_height    = 660
 card_half_h    = floor(card_height / 2)
+
+// formalized preview-clip render target -- changing this means every exported clip
+// (tools/crop_video.sh + tools/export_sprite_strip.sh output) needs to be re-cropped to match
+video_width  = 240
+video_height = 340
 
 // filled in each Draw so Step can detect clicks on the on-screen cycle arrows
 left_arrow_bounds  = undefined
 right_arrow_bounds = undefined
+
+// drives the video preview area's reveal/play/fade-back loop (see Draw and
+// global.ultimate_preview_sprites), generic across every ultimate's preview clip:
+// hold on a black + ult-icon title card for preview_hold_seconds -> fade it out over
+// preview_fade_seconds (video paused on its first frame underneath) -> play through
+// once -> fade back to black on the last frame over preview_fade_seconds -> repeat.
+// Resets whenever the selected ultimate changes -- see cycle() below.
+preview_elapsed      = 0
+preview_hold_seconds = 3
+preview_fade_seconds = 0.5
+// 12fps is the formalized standard for these clips (see notes/GeneratingUltCardVideos
+// for why) -- must match the "-f" value used when the clip was exported via
+// tools/export_sprite_strip.sh, or playback speed will be wrong for that clip
+video_playback_fps = 12
 
 function get_current_ultimate() {
 	return ultimate_names[current_index]
@@ -44,6 +65,8 @@ function cycle(_dir) {
 		current_index = (current_index + _dir + _n) mod _n
 		_tries++
 	} until (!is_taken_by_other(get_current_ultimate()) || _tries >= _n)
+	// restart the reveal sequence for whichever ultimate we landed on
+	preview_elapsed = 0
 }
 
 function confirm_selection() {

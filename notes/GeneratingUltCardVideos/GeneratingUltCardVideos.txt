@@ -1,0 +1,27 @@
+1. Set up a test room with the enemies and ult you want to record.
+2. Record video of action (full-resolution screen recording).
+3. Crop to 360x510 -- tools/crop_video.sh RAW_FILE X Y 360 510 CROPPED_FILE
+   (skip if the raw recording is already 360x510)
+4. Trim to just the segment showing the ultimate activating --
+   ffmpeg -y -i CROPPED_FILE -ss START -t DURATION TRIMMED_FILE
+5. Run tools/export_sprite_strip.sh -i TRIMMED_FILE -o STRIP.png -f 12
+   (12fps is the formalized standard for these clips -- do not change without a
+   specific reason. Each frame costs the same in VRAM whether the animation looks
+   smooth or not, since GameMaker stores frames as uncompressed RGBA regardless of
+   source PNG compression, and that cost scales linearly with frame count. Going to
+   30fps roughly doubles VRAM per clip (~26MB -> ~62MB per ~360x510 clip) for a small,
+   secondary, looping menu animation where 12fps -- "on twos", same as traditional 2D
+   animation -- already reads as smooth. If you ever do change it, you must also
+   update video_playback_fps in obj_select_ultimate/Create_0.gml to match, or that
+   clip will play back at the wrong speed in-game.)
+6. Import STRIP.png into GameMaker as a sprite:
+   - Create/import the sprite from STRIP.png (single image, not yet split into frames)
+   - Double-click the sprite to open the Sprite Editor, click "Edit Image"
+   - In the image editor's top toolbar, click "Image" -> "Convert to Frames"
+   - Use the columns/rows the export script printed
+7. Reference the new sprite in global.ultimate_preview_sprites (scr_constants.gml) so
+   obj_select_ultimate's video preview area picks it up automatically.
+
+video_width/video_height in obj_select_ultimate (currently 240x340) is the actual
+render target; 360x510 is that at 1.5x for a bit of crispness/resize headroom -- see
+obj_select_ultimate/Create_0.gml if that ratio ever changes.

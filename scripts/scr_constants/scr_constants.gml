@@ -71,10 +71,12 @@ global.ultimate_icons = {
 }
 
 // Optional per-ultimate preview clip for the select-ultimate screen (obj_select_ultimate).
-// Add entries as "ULTIMATE_X: "clip_filename.mp4"" once clips are imported as Included
-// Files (see notes in obj_select_ultimate's Draw event for the intended video_* wiring).
-// An ultimate with no entry here just shows the placeholder box.
-global.ultimate_video_clips = {}
+// Each entry is a Sprite asset imported from a recorded clip -- see
+// notes/GeneratingUltCardVideos for how to produce one. An ultimate with no entry
+// here just shows the placeholder box.
+global.ultimate_preview_sprites = {
+	ULTIMATE_STRIKE: spr_video_preview_strike,
+}
 
 global.skip_ult_overlay = false
 

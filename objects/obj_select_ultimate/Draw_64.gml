@@ -13,9 +13,6 @@ var _card_top     = y - card_half_h
 var _card_bottom  = y + card_half_h
 var _card_bounds  = new Bounds(x - card_half_w, _card_top, x + card_half_w, _card_bottom)
 var _text_x       = _card_bounds.x0 + global.margin_md
-// fixed position (rather than relative to content above) since that content varies in
-// size slightly between ultimates, which would otherwise make this jump around as you cycle
-var _desc_y       = _card_top + (card_height * 0.75)
 
 // ── Background ────────────────────────────────────────────────
 draw_set_color(is_locked ? _color : #2a2a2a)
@@ -38,11 +35,17 @@ draw_text_with_alignment(_text_x, _card_top + 14, _label, ALIGN_LEFT)
 draw_set_font(fnt_title)
 var _header_y   = _card_top + 54
 var _title_h    = string_height(_desc.title)
-// the icon is sized to roughly match the title text's height
-var _icon_size  = _title_h
-var _icon_scale = _icon_size / sprite_get_height(_spr)
-var _icon_x     = _text_x + (_icon_size / 2)
-var _title_x    = _text_x + _icon_size + global.margin_sm
+// icon is sized to match the title text's height, same visual scale for every
+// ultimate -- but that means its rendered width still varies by aspect ratio, so the
+// title instead starts at a fixed reserved column rather than at the icon's actual
+// (varying) right edge, so its x position doesn't shift as you cycle
+var _icon_height       = _title_h
+var _icon_scale        = _icon_height / sprite_get_height(_spr)
+// generous enough for the widest ultimate icon (currently spr_ult_turret, ~1.3x
+// wider than tall); the icon is left-aligned within this column, not centered in it
+var _icon_column_width = _icon_height * 1.4
+var _icon_x            = _text_x + (sprite_get_width(_spr) * _icon_scale / 2)
+var _title_x           = _text_x + _icon_column_width + global.margin_sm
 
 draw_sprite_ext(_spr, 0, _icon_x, _header_y, _icon_scale, _icon_scale, 0, _taken ? c_dkgray : _color, _taken ? 0.3 : 1)
 
@@ -50,24 +53,87 @@ draw_set_color(_taken ? c_dkgray : _color)
 draw_text_with_alignment(_title_x, _header_y, _desc.title, ALIGN_LEFT)
 
 // ── Video preview area ──────────────────────────────────────────
-// reserves the space the (now much smaller, relocated) icon used to occupy for a
-// pre-recorded clip of the ultimate in action. See scr_constants for
-// global.ultimate_video_clips -- once an entry exists for this ultimate, swap this
-// placeholder block for actual video_open()/video_draw() calls.
+// fixed-size (video_width x video_height, see Create) preview of the ultimate in
+// action. See global.ultimate_preview_sprites (scr_constants) -- an ultimate with no
+// entry there just shows the placeholder box below instead.
 var _video_top    = _header_y + (_title_h / 2) + global.margin_lg
-var _video_bottom = _desc_y - global.margin_lg
-var _video_bounds = new Bounds(_card_bounds.x0 + 50, _video_top, _card_bounds.x1 - 50, _video_bottom)
+var _video_bounds = new Bounds(x - (video_width / 2), _video_top, x + (video_width / 2), _video_top + video_height)
 
-draw_set_color(c_black)
-draw_set_alpha(0.35)
-draw_rounded_rectangle(_video_bounds, 10, 0)
-draw_set_alpha(1)
+// fixed position (rather than relative to content above) since the video box is the
+// same size for every ultimate, so this doesn't need to vary either
+var _desc_y = _video_bounds.y1 + global.margin_lg
 
-draw_set_font(fnt_title)
-draw_set_color(_taken ? c_dkgray : c_white)
-draw_set_alpha(0.5)
-draw_text_with_alignment(_video_bounds.xcenter, _video_bounds.ycenter, "▶", ALIGN_CENTER)
-draw_set_alpha(1)
+var _preview_sprite = global.ultimate_preview_sprites[$ _ult]
+
+if (is_undefined(_preview_sprite)) {
+	draw_set_color(c_black)
+	draw_set_alpha(0.35)
+	draw_roundrect_ext(_video_bounds.x0, _video_bounds.y0, _video_bounds.x1, _video_bounds.y1, 10, 10, false)
+	draw_set_alpha(1)
+
+	draw_set_font(fnt_title)
+	draw_set_color(_taken ? c_dkgray : c_white)
+	draw_set_alpha(0.5)
+	draw_text_with_alignment(_video_bounds.xcenter, _video_bounds.ycenter, "▶", ALIGN_CENTER)
+	draw_set_alpha(1)
+} else {
+	// clips are exported (see notes/GeneratingUltCardVideos) already cropped to this
+	// box's exact aspect ratio, so a uniform scale fills it exactly -- no clipping needed
+	var _frame_count   = sprite_get_number(_preview_sprite)
+	var _preview_scale = video_width / sprite_get_width(_preview_sprite)
+
+	// reveal/loop sequence (generic across every ultimate's preview clip -- see Create):
+	// hold on a black + ult-icon title card -> fade out, revealing the video paused on
+	// its first frame -> play through once -> fade back to black on the last frame ->
+	// repeat forever. Driven entirely by preview_elapsed (mod the total cycle length)
+	// instead of a separately-ticking frame counter, so there's nothing else to desync.
+	var _play_duration  = _frame_count / video_playback_fps
+	var _hold_end       = preview_hold_seconds
+	var _fade_out_end   = _hold_end + preview_fade_seconds
+	var _play_end       = _fade_out_end + _play_duration
+	var _cycle_duration = _play_end + preview_fade_seconds
+	var _cycle_t        = preview_elapsed mod _cycle_duration
+
+	var _overlay_alpha = 1
+	var _preview_frame = 0
+
+	if (_cycle_t < _hold_end) {
+		// holding on the title card
+		_overlay_alpha = 1
+		_preview_frame = 0
+	} else if (_cycle_t < _fade_out_end) {
+		// fading out, revealing the video paused on its first frame
+		_overlay_alpha = 1 - ((_cycle_t - _hold_end) / preview_fade_seconds)
+		_preview_frame = 0
+	} else if (_cycle_t < _play_end) {
+		// playing
+		_overlay_alpha = 0
+		_preview_frame = floor((_cycle_t - _fade_out_end) * video_playback_fps) mod _frame_count
+	} else {
+		// finished playing -- fade back to black on the last frame, then loop
+		_overlay_alpha = (_cycle_t - _play_end) / preview_fade_seconds
+		_preview_frame = _frame_count - 1
+	}
+	_overlay_alpha = clamp(_overlay_alpha, 0, 1)
+
+	// this sprite's origin is Top Left, not centered, so draw from the box's top-left corner
+	draw_sprite_ext(_preview_sprite, _preview_frame, _video_bounds.x0, _video_bounds.y0, _preview_scale, _preview_scale, 0, c_white, _taken ? 0.3 : 1)
+
+	if (_overlay_alpha > 0) {
+		// slightly larger than the video bounds so scaling/rounding can't leave a
+		// sliver of video peeking out around the edge of the black overlay
+		var _overlay_bounds = apply_padding_to_bounds(_video_bounds, 6, 6)
+
+		draw_set_color(c_black)
+		draw_set_alpha(_overlay_alpha)
+		draw_roundrect_ext(_overlay_bounds.x0, _overlay_bounds.y0, _overlay_bounds.x1, _overlay_bounds.y1, 10, 10, false)
+		draw_set_alpha(1)
+
+		var _reveal_icon_size  = video_width * 0.75
+		var _reveal_icon_scale = _reveal_icon_size / sprite_get_width(_spr)
+		draw_sprite_ext(_spr, 0, _video_bounds.xcenter, _video_bounds.ycenter, _reveal_icon_scale, _reveal_icon_scale, 0, _taken ? c_dkgray : _color, _overlay_alpha)
+	}
+}
 
 // ── Cycle arrows ──────────────────────────────────────────────
 if (!is_locked) {

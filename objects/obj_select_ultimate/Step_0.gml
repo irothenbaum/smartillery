@@ -1,5 +1,9 @@
 /// @description Cycle and confirm ultimate selection
 
+// drives the whole reveal/play/fade-back loop in Draw -- keeps advancing even once
+// this card is locked in
+preview_elapsed += delta_time_seconds()
+
 if (is_locked) exit
 
 if (device_index >= 0) {
