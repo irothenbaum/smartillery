@@ -74,8 +74,17 @@ global.ultimate_icons = {
 // Each entry is a Sprite asset imported from a recorded clip -- see
 // notes/GeneratingUltCardVideos for how to produce one. An ultimate with no entry
 // here just shows the placeholder box.
+// TODO: every entry below except ULTIMATE_STRIKE is a placeholder reusing the Strike
+// clip so all cards have *some* preview while the rest are still being recorded --
+// swap each one for its own sprite as clips come in (see notes/GeneratingUltCardVideos)
 global.ultimate_preview_sprites = {
 	ULTIMATE_STRIKE: spr_video_preview_strike,
+	ULTIMATE_SLOW: spr_video_preview_strike,
+	ULTIMATE_HEAL: spr_video_preview_strike,
+	ULTIMATE_TURRET: spr_video_preview_strike,
+	ULTIMATE_ASSIST: spr_video_preview_strike,
+	ULTIMATE_COLLATERAL: spr_video_preview_strike,
+	ULTIMATE_RINGS: spr_video_preview_strike,
 }
 
 global.skip_ult_overlay = false
@@ -251,4 +260,4 @@ ds_map_add(global.tip_copy_map, obj_input, function(_instance) {
 	}
 })
 
-global.debug = true
+global.show_debug = false

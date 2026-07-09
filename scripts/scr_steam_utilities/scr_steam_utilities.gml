@@ -51,8 +51,9 @@ function get_my_steam_id_safe() {
  * @returns {Colour}
  */
 function get_player_color(_player_id) {
-	if (struct_exists(global.selected_ultimate, _player_id)) {
-		return global.ultimate_colors[$ global.selected_ultimate[$ _player_id]]
+	var _ult = global.selected_ultimate[$ _player_id]
+	if (!is_undefined(_ult)) {
+		return global.ultimate_colors[$ _ult]
 	}
 	return c_white
 }
@@ -62,8 +63,9 @@ function get_player_color(_player_id) {
  * @returns {Colour}
  */
 function get_player_color_tint(_player_id) {
-	if (struct_exists(global.selected_ultimate, _player_id)) {
-		return global.ultimate_color_tints[$ global.selected_ultimate[$ _player_id]]
+	var _ult = global.selected_ultimate[$ _player_id]
+	if (!is_undefined(_ult)) {
+		return global.ultimate_color_tints[$ _ult]
 	}
 	return c_ltgrey
 }

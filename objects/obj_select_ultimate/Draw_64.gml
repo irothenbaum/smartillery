@@ -150,7 +150,7 @@ if (!is_locked) {
 }
 
 // ── Description ───────────────────────────────────────────────
-draw_set_font(fnt_base)
+draw_set_font(fnt_large)
 draw_set_color(_taken ? c_dkgray : c_white)
 var _card_inner_w = card_width - (global.margin_md * 2)
 var _wrapped_desc = word_wrap(_desc.description, _card_inner_w)

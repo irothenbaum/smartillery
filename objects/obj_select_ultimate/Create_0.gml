@@ -73,7 +73,18 @@ function confirm_selection() {
 	if (is_locked) return
 	if (is_taken_by_other(get_current_ultimate())) return
 
-	set_player_ultimate(owner_player_id, get_current_ultimate())
+	// NOTE: calling set_player_ultimate directly with get_current_ultimate() nested
+	// inline as the argument (e.g. set_player_ultimate(owner_player_id,
+	// get_current_ultimate())) reproducibly fails to enter the function -- confirmed
+	// across clean rebuilds and even a rename, so it isn't a caching/build artifact.
+	// Pre-evaluating the arguments into locals and calling through an explicit
+	// function-reference variable avoids it. Root cause not fully understood; treat
+	// this shape as load-bearing if touching this call.
+	var _pid = owner_player_id
+	var _ult = get_current_ultimate()
+	var _set_ultimate = set_player_ultimate
+	_set_ultimate(_pid, _ult)
+
 	is_locked = true
 	_check_all_locked()
 }
