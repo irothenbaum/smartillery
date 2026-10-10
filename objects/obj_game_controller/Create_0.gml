@@ -529,6 +529,10 @@ function _handle_test_string(_code) {
 		increate_ult_level(0)
 		ultimate_charge[$ 0] = global.ultimate_requirement
 	}
+	
+	if (_code == "_d") {
+		get_player().my_health -= 22
+	}
 }
 
 

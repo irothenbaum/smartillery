@@ -10,7 +10,7 @@ function set_up_test() {
 	global.is_coop     = false
 	global.active_player_ids      = [0]
 	global.player_device_map[$ 0] = -1
-	set_player_ultimate(0, ULTIMATE_STRIKE)
+	set_player_ultimate(0, ULTIMATE_HEAL)
 	global.skip_ult_overlay = true
 	room_goto(rm_test)
 }

@@ -1,5 +1,13 @@
 function configure_test_room() {
-	test_setup_ultimate_strike()
+	var _ult = get_player_ultimate(0)
+	switch(_ult) {
+		case ULTIMATE_STRIKE:
+			test_setup_ultimate_strike()
+			break
+		case ULTIMATE_HEAL:
+			test_setup_ultimate_heal()
+			break
+	}
 }
 
 function spawn_enemy_at_angle_and_distance_from_center(_angle, _distance, _enemy_type, _params = undefined) {
@@ -19,4 +27,9 @@ function test_setup_ultimate_strike() {
 	spawn_enemy_at_angle_and_distance_from_center(90, global.bg_circle_ring_width * 6, obj_enemy_1)
 	spawn_enemy_at_angle_and_distance_from_center(240, global.bg_circle_ring_width * 5, obj_enemy_1)
 	spawn_enemy_at_angle_and_distance_from_center(0, global.bg_circle_ring_width * 3, obj_enemy_1)
+}
+
+function test_setup_ultimate_heal() {
+	spawn_enemy_at_angle_and_distance_from_center(90, global.bg_circle_ring_width * 6, obj_enemy_1)
+	get_player().my_health = 10
 }

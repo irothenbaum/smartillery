@@ -1,5 +1,7 @@
 In the middle of:
 - Created obj_bonus_drop, need to create logic to spawn it, make it "targetable", and test
+- Enabled turrets should pop off everytime an AirStrike lands (right? think about it more?)
+- A rogue double spawn of a 3x "level 3" enemy is enough to end you quick. Make those way less common (increase Level 3 enemy difficulty)
 
 ------------------------------------------------------------
 BEFORE ALPHA RELEASE:
@@ -8,9 +10,6 @@ BEFORE ALPHA RELEASE:
 "Bugs" and things to fix:
 
 - Utilize the Expanding Circle instead of shockwave everywhere relevant
-- There's some race condition when trigger EVENT_ENEMY_HIT and that enemy not existing anymore? Need to rethink this pattern
-   - Sometimes it throws an error, sometimes it seems not to. I may be misunderstanding some nuance of GM instnace lifecycles
-   - It becomes apparent when stacking ults that try to strike enemies via different means
 - Confirm tutorial overlay working as intended
 - Game Over not destroying all instances
    - for example obj_ultimates stay visible
