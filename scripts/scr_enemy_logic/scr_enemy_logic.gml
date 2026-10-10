@@ -18,6 +18,8 @@ function enemy_initialize(_e) {
 		point_value = ds_map_find_value(global.points_map, object_index)
 		slow_multiplier = 1
 		slow_sparks = undefined
+		// set when the player's damage burst destroys this enemy, so it yields no rewards
+		killed_by_damage_burst = false
 	}
 	// must go after the initializations due to edge conditions
 	initialize_instance_has_equation(_e)

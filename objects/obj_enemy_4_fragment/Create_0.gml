@@ -1,4 +1,4 @@
-enemy_initlaize(self)
+enemy_initialize(self)
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale

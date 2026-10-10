@@ -106,6 +106,11 @@ function execute_take_damage(_damage_amount) {
 	game_controller.reset_streak()
 	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: draw_particle_shockwave})
 	
+	// clear out nearby enemies to give the player a moment to recover
+	if (!game_controller.is_game_over) {
+		instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_damage_burst)
+	}
+	
    with (screen_shake)
    {
       shake = true;

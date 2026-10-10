@@ -109,8 +109,13 @@ function end_game() {
 	// this will destroy the ult
 	mark_ultimate_used();
 	
-	// destroy enemies, inputs, items and power ups
+	// destroy enemies (and compound spawners that may still be spawning), inputs, items and power ups
 	var _items_to_destroy = array_concat(
+		get_array_of_instances(obj_compound_enemy_1),
+		get_array_of_instances(obj_compound_enemy_2),
+		get_array_of_instances(obj_compound_enemy_3),
+		get_array_of_instances(obj_compound_enemy_4),
+		get_array_of_instances(obj_compound_enemy_5),
 		get_all_enemy_instances(),
 		get_array_of_instances(obj_input),
 		get_array_of_instances(obj_power_item),
@@ -157,10 +162,16 @@ function handle_enemy_killed(_enemy) {
 		return 
 	}
 	
+	release_answer(_enemy.answer);
+	
+	// enemies wiped out by the player's damage burst give no points, bonuses, or end-of-wave drops
+	if (_enemy.killed_by_damage_burst) {
+		return
+	}
+	
 	last_enemy_killed = _enemy
 	
 	var _player_id = _enemy.last_hit_by_player_id
-	release_answer(_enemy.answer);
 	
 	// if the player didn't hit them (they hit the player most likely)
 	if (is_undefined(_player_id)) {

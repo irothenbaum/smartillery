@@ -97,7 +97,7 @@ global.is_math_mode = true
 global.total_paused_time = 0
 global.paused = false
 global.game_seed = randomize()
-global.starting_wave = 0
+global.starting_wave = 9
 
 // multiplayer stuff
 global.active_player_ids = []   // ordered slot list, populated before entering any game room
@@ -162,6 +162,9 @@ global.damage_enemy_3_collision = 40
 global.damage_enemy_4_collision = 50
 global.damage_enemy_4_fragment_collision = 15
 global.damage_enemy_5_missile_collision = 40
+
+// when the player takes damage, a burst clears all enemies within this many rings of the player
+global.damage_burst_ring_count = 6
 
 global.points_map = ds_map_create()
 ds_map_add(global.points_map, obj_enemy_1, 10)

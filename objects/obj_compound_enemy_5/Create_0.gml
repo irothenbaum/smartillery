@@ -11,3 +11,6 @@ for (var _i = 0; _i < enemy_count; _i++ ) {
 		obj_enemy_5
 	) 
 }
+
+// all enemies are spawned up front, so the spawner is no longer needed
+instance_destroy()
