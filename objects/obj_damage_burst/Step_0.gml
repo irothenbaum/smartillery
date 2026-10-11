@@ -3,7 +3,7 @@ if (global.paused) {
 	return
 }
 
-elapsed += delta_time_seconds()
+elapsed += step_seconds()
 
 if (elapsed < expand_duration) {
 	// ease out so the wave bursts out quickly then settles at the edge

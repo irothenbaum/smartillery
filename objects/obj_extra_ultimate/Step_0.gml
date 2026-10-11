@@ -20,5 +20,5 @@ if (pulse_scale >= max_pulse_scale) {
 	})
 } else {
 	// Slowly grow
-	pulse_scale += pulse_grow_speed * delta_time_seconds()
+	pulse_scale += pulse_grow_speed * step_seconds()
 }

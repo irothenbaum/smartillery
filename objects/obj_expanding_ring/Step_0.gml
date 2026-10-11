@@ -3,7 +3,7 @@ if (global.paused) {
 	return
 }
 
-elapsed += delta_time_seconds()
+elapsed += step_seconds()
 
 if (elapsed > duration) {
 	instance_destroy()

@@ -129,13 +129,6 @@ function get_array_of_instances(_instance_type) {
 function toggle_pause(_status) {
 	global.paused = bool(_status) ? _status : !global.paused
 	
-	if (global.paused) {
-		global.pause_start = current_time
-	} else {
-		global.total_paused_time += current_time - global.pause_start
-		global.pause_start = undefined
-	}
-	
 	handle_toggle_pause()
 	
 	var _all_layers = layer_get_all()
@@ -203,8 +196,14 @@ function toggle_pause(_status) {
 }
 
 /// @return {Real}
+/// Milliseconds of (unpaused) game time. Advanced one fixed step per frame by advance_play_time()
+/// @returns {Real}
 function get_play_time() {
-	return current_time - global.total_paused_time
+	return global.play_time_ms
+}
+
+function advance_play_time() {
+	global.play_time_ms += 1000 / game_get_speed(gamespeed_fps)
 }
 
 function round_ext(_val, _round_to) {
@@ -394,7 +393,7 @@ function initialize_player_map(_val) {
 
 function reset_game_state() {
 	global.is_math_mode = true
-	global.total_paused_time = 0
+	global.play_time_ms = 0
 	global.paused = false
 	global.game_seed = randomize()
 	global.is_solo = false
@@ -411,8 +410,11 @@ function array_copy_all(_arr) {
 	return _copy
 }
 
-function delta_time_seconds() {
-	return delta_time / 1000000; // Convert delta_time to seconds
+/// The game runs at a fixed step, so each frame advances game time by exactly 1 / fps seconds.
+/// If the game lags, everything slows down together instead of drifting out of sync.
+/// @returns {Real}
+function step_seconds() {
+	return 1 / game_get_speed(gamespeed_fps)
 }
 
 function set_viewport_dimensions() {

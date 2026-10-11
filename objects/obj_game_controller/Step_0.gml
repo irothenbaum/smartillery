@@ -20,12 +20,14 @@ if (room == rm_test) {
 }
 
 if (!global.paused) {
+	advance_play_time()
+	
 	// increase ult charge for each player
 	for_each_player(method(self, function(_player_id) {
 		// we only increase charge if the player is actively ulting
 		if (is_ulting(_player_id)) {
 			return
 		}
-		ultimate_charge[$ _player_id] = min(global.ultimate_requirement, ultimate_charge[$ _player_id] + delta_time_seconds())
+		ultimate_charge[$ _player_id] = min(global.ultimate_requirement, ultimate_charge[$ _player_id] + step_seconds())
 	}))
 }
