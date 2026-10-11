@@ -10,7 +10,7 @@ speed = starting_speed
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
-my_health = 2
+my_health = 3
 is_paused = false
 
 normal_color = c_white
