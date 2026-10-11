@@ -169,17 +169,11 @@ function enemy_generate_question(_e) {
 
 function find_enemies_near_point(_x, _y, _radius) {
 	var _nearby_enemies = []
-	for_each_enemy(function(_e, _index, _x, _y, _radius, _nearby_enemies) {
-		// make sure _e still exists
-		if (!instance_exists(_e)) {
-			debug("`find_enemies_near_point` -> Foreach enemy no longer exists", _enemy)
-			return;
+	with (obj_enemy_parent) {
+		if (point_distance(x, y, _x, _y) < _radius) {
+			array_push(_nearby_enemies, id)
 		}
-		
-		if (point_distance(_e.x, _e.y, _x, _y) < _radius) {
-			array_push(_nearby_enemies, _e)
-		}
-	}, _x, _y, _radius, _nearby_enemies)
+	}
 	return _nearby_enemies
 }
 

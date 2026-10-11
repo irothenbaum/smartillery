@@ -45,13 +45,11 @@ function handle_toggle_pause() {
 	}
 	
 	// pause slow sparks on enemies
-	for_each_enemy(function(_e) {
-		with(_e) {
-			if (!is_undefined(slow_sparks)) {
-				pause_particle(slow_sparks, global.paused)
-			}
+	with (obj_enemy_parent) {
+		if (!is_undefined(slow_sparks)) {
+			pause_particle(slow_sparks, global.paused)
 		}
-	})
+	}
 	
 	// pause particle effects
 	with (obj_particle_effect) {

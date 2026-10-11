@@ -1,5 +1,4 @@
-enemy_step(self)
-tip_step(self)
+event_inherited()
 
 if (global.paused) {
 	return

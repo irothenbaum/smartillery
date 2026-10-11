@@ -77,20 +77,11 @@ function find_instance(_instance_type, _condition) {
 	return undefined
 }
 
+/// Prefer `with (obj_enemy_parent)` for simple iteration -- use this when you need an array (sorting, pairs, etc.)
 /// @func get_all_enemy_instances()
 /// @return {Array}
 function get_all_enemy_instances() {
-	return array_reduce(global.enemy_instance_types, function(_agr, _type) {
-		return array_concat(_agr, get_array_of_instances(_type))
-	}, [])
-}
-
-/// @func count_all_enemies()
-/// @return {Real}
-function count_all_enemies() {
-	return array_reduce(global.enemy_instance_types, function(_agr, _type) {
-		return _agr + instance_number(_type)
-	}, 0)
+	return get_array_of_instances(obj_enemy_parent)
 }
 
 /**
@@ -98,18 +89,7 @@ function count_all_enemies() {
  * @return {Bool}
  */
 function instance_is_enemy(_inst) {
-	return array_contains(global.enemy_instance_types, _inst.object_index)
-}
-
-/// takes a function that receives 2 params: enemy instance, index
-function for_each_enemy() {
-	var _instances = get_all_enemy_instances()
-	var _count = array_length(_instances)
-	
-	for (var _i =0; _i < _count; _i++) {
-		// we pass any other argument back to the callback
-		script_execute(argument[0], _instances[_i], _i, argument[1], argument[2], argument[3], argument[4], argument[5], argument[6])
-	}
+	return object_is_ancestor(_inst.object_index, obj_enemy_parent)
 }
 
 /**
@@ -131,71 +111,54 @@ function toggle_pause(_status) {
 	
 	handle_toggle_pause()
 	
-	var _all_layers = layer_get_all()
-	var _all_instances = []
-	array_foreach(_all_layers, method({arr: _all_instances}, function(_l) {
-		var _instances = layer_get_all_elements(_l);
-		array_foreach(_instances, method({arr: arr}, function(_i) {
-			array_push(arr, _i)
-		}))
-	}))
-	
-	var _instance_count = array_length(_all_instances)	
-	
-	debug("Turning pause " + (global.paused ? "ON" : "OFF") + " for " + string(_instance_count) + " instances")
+	debug("Turning pause " + (global.paused ? "ON" : "OFF") + " for " + string(instance_count) + " instances")
 	var _alarm_length = 12
 	
-	for (var _i = 0; _i < _instance_count; _i++) {
-		var _inst = layer_instance_get_instance(_all_instances[_i])
-	
-		with (_inst) {
-			if (global.paused) {
-				// memoize our pre-pause values
-				paused_speed = speed
-				paused_alarms = []
-				is_paused = true
-				
-				for (var _j = 0; _j < _alarm_length; _j++) {
-					if (alarm[_j] > 0) {
-						// save the alarm state
-						paused_alarms[_j] = alarm[_j]
-						// turn off the alarm
-						alarm[_j] = -1
-					} else {
-						paused_alarms[_j] = 0
-					}
+	with (all) {
+		if (global.paused) {
+			// memoize our pre-pause values
+			paused_speed = speed
+			paused_alarms = []
+			is_paused = true
+			
+			for (var _j = 0; _j < _alarm_length; _j++) {
+				if (alarm[_j] > 0) {
+					// save the alarm state
+					paused_alarms[_j] = alarm[_j]
+					// turn off the alarm
+					alarm[_j] = -1
+				} else {
+					paused_alarms[_j] = 0
 				}
-				
-				// disable movement
-				speed = 0
-			} else {
-				// if is_paused was not set, then this object was not around when we first paused
-				// probably was an ultimate or something
-				if (!variable_instance_exists(self, "is_paused") || !is_paused) {
-					continue
-				}
-				// restore pre-pause values
-				speed = paused_speed
-				
-				if (variable_instance_exists(self, "paused_alarms")) {
-					for (var _j = 0; _j < _alarm_length; _j++) {
-						if (paused_alarms[_j] > 0) {
-							alarm[_j] = paused_alarms[_j]
-						}
-					}
-				}
-				
-				// remove all our paused states
-				paused_speed = undefined
-				paused_alarms = undefined
-				is_paused = false
 			}
+			
+			// disable movement
+			speed = 0
+		} else {
+			// if is_paused was not set, then this object was not around when we first paused
+			// probably was an ultimate or something
+			if (!variable_instance_exists(self, "is_paused") || !is_paused) {
+				continue
+			}
+			// restore pre-pause values
+			speed = paused_speed
+			
+			if (variable_instance_exists(self, "paused_alarms")) {
+				for (var _j = 0; _j < _alarm_length; _j++) {
+					if (paused_alarms[_j] > 0) {
+						alarm[_j] = paused_alarms[_j]
+					}
+				}
+			}
+			
+			// remove all our paused states
+			paused_speed = undefined
+			paused_alarms = undefined
+			is_paused = false
 		}
 	}
-
 }
 
-/// @return {Real}
 /// Milliseconds of (unpaused) game time. Advanced one fixed step per frame by advance_play_time()
 /// @returns {Real}
 function get_play_time() {

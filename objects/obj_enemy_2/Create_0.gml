@@ -1,4 +1,6 @@
-enemy_initialize(self)
+event_inherited()
+destroy_effect = draw_particle_enemy_2_destroy
+
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 shooting = false
 // fire when we reach the center of fifth innermost circle

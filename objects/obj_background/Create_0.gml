@@ -27,14 +27,6 @@ boot_up_time = 1 * game_get_speed(gamespeed_fps)
 alarm[0] = boot_up_time
 
 
-function filter_by_distance_to_player(_instance, _index, _ring_enemy_counts) {
-	var _distance_to_player = point_distance(_instance.x, _instance.y, global.xcenter, global.ycenter)
-	var _ring_number = get_ring_from_distance(_distance_to_player)
-	if (_ring_number >= 0 && _ring_number < array_length(_ring_enemy_counts)) {
-		_ring_enemy_counts[_ring_number]++ 
-	}
-}
-
 
 function get_ring_color(_i, _options) {
 	if (_options.is_ulting_strike && _options.enemies_on_ring) {

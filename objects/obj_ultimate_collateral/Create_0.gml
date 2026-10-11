@@ -91,25 +91,25 @@ function check_hit_enemy_for_collateral_targets(_target, _player_who_shot_id) {
 	// TODO: rather than find the nearby enemies again, lets just reference the proximity map to see who should be hit
 	var _nearby_enemies = find_enemies_near_point(_target.x, _target.y, range)
 	
-	// add all nearby enemies to our list of recently struck (so we can ignore them) if they still exist
-	_nearby_enemies = array_filter(_nearby_enemies, method({_target: _target, _recently_struck_enemies: recently_struck_enemies}, function(_e) {
-		if (instance_exists(_e)) {
-			array_push(_recently_struck_enemies, _e)
-			
-			// this basically removes the initial target from the list
-			return _e.id != _target.id
+	// add all nearby enemies to our list of recently struck (so we can ignore them),
+	// then strike all of them except the initial target
+	var _origin_x = _target.x
+	var _origin_y = _target.y
+	for (var _i = 0; _i < array_length(_nearby_enemies); _i++) {
+		var _enemy = _nearby_enemies[_i]
+		array_push(recently_struck_enemies, _enemy)
+
+		// an earlier hit in this loop may have destroyed it
+		if (_enemy == _target.id || !instance_exists(_enemy)) {
+			continue
 		}
-		return false
-	}))
-	
-	// we now strike all nearby enemies
-	array_foreach(_nearby_enemies, method({_origin: _target, _c: _color, _player_who_shot_id: _player_who_shot_id}, function(_enemy) {
-		instance_create_layer(_origin.x, _origin.y, LAYER_BG_EFFECTS, obj_electric_beam, {
+
+		instance_create_layer(_origin_x, _origin_y, LAYER_BG_EFFECTS, obj_electric_beam, {
 			target: _enemy,
 			width: global.beam_width,
-			color: _c
+			color: _color
 		})
-		
+
 		handle_enemy_hit(_enemy, _player_who_shot_id, 1)
-	}))
+	}
 }

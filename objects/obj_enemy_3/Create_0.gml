@@ -1,4 +1,7 @@
-enemy_initialize(self)
+event_inherited()
+collision_damage = global.damage_enemy_3_collision
+destroy_effect = draw_particle_enemy_3_destroy
+
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 max_speed = 4;
 shift_position = undefined
@@ -39,9 +42,4 @@ function register_hit(_damage_amount) {
 		// my_health <= 0 || insta_kill
 		instance_destroy();
 	}
-}
-
-function collide_with_player() {
-	get_player().execute_take_damage(global.damage_enemy_3_collision)
-	instance_destroy();
 }

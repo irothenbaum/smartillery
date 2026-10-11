@@ -188,16 +188,6 @@ ds_map_add(global.targetable_difficulty_multiplier, obj_training_target, 1)
 ds_map_add(global.targetable_difficulty_multiplier, obj_power_item, 4)
 ds_map_add(global.targetable_difficulty_multiplier, obj_extra_ultimate, 2)
 
-global.enemy_instance_types = [
-	obj_enemy_1,
-	obj_enemy_2,
-	obj_enemy_3,
-	obj_enemy_4,
-	obj_enemy_4_fragment,
-	obj_enemy_5,
-	obj_enemy_5_missile,
-	obj_training_target,
-]
 
 // effects
 global.fade_speed = 0.1

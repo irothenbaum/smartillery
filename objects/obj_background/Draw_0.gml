@@ -1,6 +1,11 @@
 var _player_health = get_player().my_health
 var _ring_enemy_counts = array_create(global.bg_number_of_circles, 0)
-for_each_enemy(filter_by_distance_to_player, _ring_enemy_counts)
+with (obj_enemy_parent) {
+	var _ring_number = get_ring_from_distance(point_distance(x, y, global.xcenter, global.ycenter))
+	if (_ring_number >= 0 && _ring_number < array_length(_ring_enemy_counts)) {
+		_ring_enemy_counts[_ring_number]++
+	}
+}
 var _skipped_rings = global.bg_number_of_circles - ceil(global.bg_number_of_circles * (booting_up ? (1 - (alarm[0] / boot_up_time)) : (_player_health / global.max_health)))
 
 drawn_skipped_rings = lerp(drawn_skipped_rings, _skipped_rings, global.fade_speed)

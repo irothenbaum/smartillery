@@ -60,6 +60,7 @@
     {"id":{"name":"obj_coop_config","path":"objects/obj_coop_config/obj_coop_config.yy",},},
     {"id":{"name":"obj_damage_burst","path":"objects/obj_damage_burst/obj_damage_burst.yy",},},
     {"id":{"name":"obj_electric_beam","path":"objects/obj_electric_beam/obj_electric_beam.yy",},},
+    {"id":{"name":"obj_enemy_parent","path":"objects/obj_enemy_parent/obj_enemy_parent.yy",},},
     {"id":{"name":"obj_enemy_1","path":"objects/obj_enemy_1/obj_enemy_1.yy",},},
     {"id":{"name":"obj_enemy_2","path":"objects/obj_enemy_2/obj_enemy_2.yy",},},
     {"id":{"name":"obj_enemy_3","path":"objects/obj_enemy_3/obj_enemy_3.yy",},},

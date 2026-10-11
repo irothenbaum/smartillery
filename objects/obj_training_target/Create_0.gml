@@ -1,4 +1,4 @@
-enemy_initialize(self)
+event_inherited()
 
 max_radius = global.player_body_radius // 52px diameter at full health
 min_radius_percent = 0.5

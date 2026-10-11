@@ -8,19 +8,12 @@ function find_enemies_on_rings(_target_ring, _ring_range) {
 	var _max_ring = _target_ring + _ring_range[1]
 	
 	var _enemies_on_rings = []
-	for_each_enemy(function(_e, _index, _min_ring, _max_ring, _enemies_on_rings) {
-		if (!instance_exists(_e)) {
-			debug("`ult_rings -> find_enemies_on_rings` -> Foreach enemy no longer exists", _enemy)
-			return;
-		}
-
-		var _distance_to_center = point_distance(_e.x, _e.y, global.xcenter, global.ycenter)
-		var _enemy_ring = get_ring_from_distance(_distance_to_center)
-
+	with (obj_enemy_parent) {
+		var _enemy_ring = get_ring_from_distance(point_distance(x, y, global.xcenter, global.ycenter))
 		if (_enemy_ring >= _min_ring && _enemy_ring <= _max_ring) {
-			array_push(_enemies_on_rings, _e)
+			array_push(_enemies_on_rings, id)
 		}
-	}, _min_ring, _max_ring, _enemies_on_rings)
+	}
 
 	return _enemies_on_rings
 }
@@ -52,25 +45,25 @@ function apply_damage_to_enemies_on_ring(_target, _player_who_shot_id) {
 		recently_struck_rings[_r] = 1
 	}
 
-	// add all nearby enemies to our list of recently struck (so we can ignore them) if they still exist
-	_nearby_enemies = array_filter(_nearby_enemies, method({_target: _target, _recently_struck_enemies: recently_struck_enemies}, function(_e) {
-		if (instance_exists(_e)) {
-			array_push(_recently_struck_enemies, _e)
+	// add all nearby enemies to our list of recently struck (so we can ignore them),
+	// then strike all of them except the initial target
+	var _origin_x = _target.x
+	var _origin_y = _target.y
+	for (var _i = 0; _i < array_length(_nearby_enemies); _i++) {
+		var _enemy = _nearby_enemies[_i]
+		array_push(recently_struck_enemies, _enemy)
 
-			// this basically removes the initial target from the list
-			return _e.id != _target.id
+		// an earlier hit in this loop may have destroyed it
+		if (_enemy == _target.id || !instance_exists(_enemy)) {
+			continue
 		}
-		return false
-	}))
 
-	// we now strike all nearby enemies
-	array_foreach(_nearby_enemies, method({_origin: _target, _c: _color, _player_who_shot_id: _player_who_shot_id}, function(_enemy) {
-		instance_create_layer(_origin.x, _origin.y, LAYER_BG_EFFECTS, obj_electric_beam, {
+		instance_create_layer(_origin_x, _origin_y, LAYER_BG_EFFECTS, obj_electric_beam, {
 			target: _enemy,
 			width: global.beam_width,
-			color: _c
+			color: _color
 		})
 
 		handle_enemy_hit(_enemy, _player_who_shot_id, 1)
-	}))
+	}
 }

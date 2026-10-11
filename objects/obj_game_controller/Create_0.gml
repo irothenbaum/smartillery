@@ -466,10 +466,9 @@ function increate_ult_level(_player_id) {
 	ultimate_experience[$ _player_id] = 0
 	
 	// Draw shockwave at the hud icon position
-	var _icons = get_array_of_instances(obj_hud_ultimate_icon)
-	array_foreach(_icons, method({_player_id: _player_id}, function(_i) {
-		if (_i.owner_player_id == _player_id) {
-			instance_create_layer(_i.my_bounds.xcenter,_i.my_bounds.ycenter, LAYER_BG_EFFECTS, obj_expanding_ring, {
+	with (obj_hud_ultimate_icon) {
+		if (owner_player_id == _player_id) {
+			instance_create_layer(my_bounds.xcenter, my_bounds.ycenter, LAYER_BG_EFFECTS, obj_expanding_ring, {
 				start_radius: 80,
 				end_radius: 160,
 				color: get_player_color(_player_id),
@@ -477,7 +476,7 @@ function increate_ult_level(_player_id) {
 				stroke: 12,
 			})
 		}
-	}))
+	}
 }
 
 // --------------------------------------------------------------------

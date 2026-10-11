@@ -1,4 +1,7 @@
-enemy_initialize(self)
+event_inherited()
+collision_damage = global.damage_enemy_4_collision
+destroy_effect = draw_particle_enemy_4_destroy
+
 speed = 1
 image_scale = 0.12
 image_xscale = image_scale

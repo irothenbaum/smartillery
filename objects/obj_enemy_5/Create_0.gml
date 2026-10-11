@@ -1,4 +1,5 @@
-enemy_initialize(self)
+event_inherited()
+destroy_effect = draw_particle_enemy_5_destroy
 
 // Shader for octagon fill as missile charges
 _u_color = shader_get_uniform(sh_octagon_fill, "u_vColor")

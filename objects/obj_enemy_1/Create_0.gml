@@ -1,4 +1,6 @@
-enemy_initialize(self)
+event_inherited()
+collision_damage = global.damage_enemy_1_collision
+destroy_effect = draw_particle_enemy_1_destroy
 
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
 image_scale = 0.12
@@ -17,7 +19,3 @@ if (is_undefined(waypoints) or array_length(waypoints) == 0) {
 
 direction = point_direction(x, y, global.xcenter, global.ycenter)
 speed = approach_speed
-
-function register_hit(_damage_amount) {
-	instance_destroy()
-}

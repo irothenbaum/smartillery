@@ -36,23 +36,18 @@ function create_beam(_player_who_shot_id) {
 	var _line_x2 = _target_x
 	var _line_y2 = _target_y
 
-	for_each_enemy(function(_enemy, _index, _line_x1, _line_y1, _line_x2, _line_y2, _hit_enemies) {
-		if (!instance_exists(_enemy)) {
-			debug("`ult_turret_turret -> EVENT_PLAYER_FIRED` -> Foreach enemy no longer exists", _enemy)
-			return
-		}
-		
-		var _dist = find_point_distance_to_line(_line_x1, _line_y1, _line_x2, _line_y2, _enemy.x, _enemy.y)
-		
+	with (obj_enemy_parent) {
+		var _dist = find_point_distance_to_line(_line_x1, _line_y1, _line_x2, _line_y2, x, y)
+
 		// this distance is overly generous because otherwise it may never strike; instead of being half width its 75%
-		var _functional_strike_distance = ceil(global.beam_width_lg / 2 + _enemy.sprite_width * 0.75)
+		var _functional_strike_distance = ceil(global.beam_width_lg / 2 + sprite_width * 0.75)
 		if (_dist <= _functional_strike_distance) {
-			array_push(_hit_enemies, _enemy)
+			array_push(_hit_enemies, id)
 		}
-	}, _line_x1, _line_y1, _line_x2, _line_y2, _hit_enemies)
+	}
 
 	// Register hits for all enemies along the line
-	array_foreach(_hit_enemies, method({_player_who_shot_id: _player_who_shot_id}, function(_enemy) {
-		handle_enemy_hit(_enemy, _player_who_shot_id, 1)
-	}))
+	for (var _i = 0; _i < array_length(_hit_enemies); _i++) {
+		handle_enemy_hit(_hit_enemies[_i], _player_who_shot_id, 1)
+	}
 }

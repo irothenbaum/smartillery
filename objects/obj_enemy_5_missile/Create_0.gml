@@ -1,4 +1,6 @@
-enemy_initialize(self)
+event_inherited()
+collision_damage = global.damage_enemy_5_missile_collision
+destroy_effect = draw_particle_enemy_5_missile_destroy
 
 // Initialize trail variables early in case of early destruction
 trail_particle_system = undefined
@@ -33,7 +35,3 @@ trail_particle_type = _trail.type
 // Start emitting trail particles (about 7-10 per second)
 trail_emit_interval = game_get_speed(gamespeed_fps) / 8
 alarm[0] = trail_emit_interval
-
-function register_hit(_damage_amount) {
-	instance_destroy()
-}

@@ -14,21 +14,15 @@ current_radius = start_radius
 
 function destroy_enemies_in_radius(_radius) {
 	var _destroyed_any = false
-	var _enemies = get_all_enemy_instances()
-	for (var _i = 0; _i < array_length(_enemies); _i++) {
-		var _e = _enemies[_i]
-		if (!instance_exists(_e) || _e.object_index == obj_training_target) {
+	with (obj_enemy_parent) {
+		if (object_index == obj_training_target || point_distance(x, y, other.x, other.y) > _radius) {
 			continue
 		}
-		if (point_distance(x, y, _e.x, _e.y) <= _radius) {
-			with (_e) {
-				// handle_enemy_killed reads this to skip all points / bonuses
-				killed_by_damage_burst = true
-				last_hit_by_player_id = undefined
-				instance_destroy()
-			}
-			_destroyed_any = true
-		}
+		// handle_enemy_killed reads this to skip all points / bonuses
+		killed_by_damage_burst = true
+		last_hit_by_player_id = undefined
+		instance_destroy()
+		_destroyed_any = true
 	}
 
 	// the turret may have been queued to fire at something we just destroyed

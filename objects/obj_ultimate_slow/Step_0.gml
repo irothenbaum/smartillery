@@ -1,6 +1,8 @@
 /// @description Scan for enemies in our radius
-for_each_enemy(function(_enemy, _index, _slow_amount) {
-	enemy_apply_slow(_enemy, _slow_amount)
-}, slow_multiplier)
+// copied to a local because enemies have their own slow_multiplier variable
+var _slow_amount = slow_multiplier
+with (obj_enemy_parent) {
+	enemy_apply_slow(id, _slow_amount)
+}
 
 ultimate_step(self)
