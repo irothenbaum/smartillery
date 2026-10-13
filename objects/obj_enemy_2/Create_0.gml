@@ -64,12 +64,20 @@ function register_hit(_damage_amount) {
 
 function fire_shot() {
 	var _player = get_player()
+	var _shield = instance_find(obj_shield, 0)
 	recoil_amount = max_recoil_amount
-	_player.execute_take_damage(global.damage_enemy_2_shot)
 	alarm[0] = 2 * game_get_speed(gamespeed_fps)
-	
-	// Muzzle Flash
 	var _muzzle = get_turret_muzzle()
+
+	// an active shield absorbs the shot before it reaches the player
+	if (_shield != noone) {
+		var _impact = _shield.get_impact_point(x, y)
+		instance_create_layer(_muzzle.x, _muzzle.y, LAYER_BG_EFFECTS, obj_muzzle_flash, {target_x: _impact.x, target_y: _impact.y, width: 4, color: c_red})
+		_shield.absorb_hit()
+		return
+	}
+
+	_player.execute_take_damage(global.damage_enemy_2_shot)
 	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_BG_EFFECTS, obj_muzzle_flash, {target: _player, width: 4, color: c_red})
 }
 

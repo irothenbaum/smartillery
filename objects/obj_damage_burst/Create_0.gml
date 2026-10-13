@@ -13,25 +13,9 @@ end_radius = get_radius_for_ring(global.bg_number_of_circles - global.damage_bur
 current_radius = start_radius
 
 function destroy_enemies_in_radius(_radius) {
-	var _destroyed_any = false
 	with (obj_enemy_parent) {
-		if (object_index == obj_training_target || point_distance(x, y, other.x, other.y) > _radius) {
-			continue
-		}
-		// handle_enemy_killed reads this to skip all points / bonuses
-		killed_by_damage_burst = true
-		last_hit_by_player_id = undefined
-		instance_destroy()
-		_destroyed_any = true
-	}
-
-	// the turret may have been queued to fire at something we just destroyed
-	if (_destroyed_any) {
-		with (get_player()) {
-			aiming_at_instance = array_filter(aiming_at_instance, function(_entry) {
-				return instance_exists(_entry.inst)
-			})
-			rotate_towards_next_target()
+		if (object_index != obj_training_target && point_distance(x, y, other.x, other.y) <= _radius) {
+			enemy_destroy_without_reward(id)
 		}
 	}
 }

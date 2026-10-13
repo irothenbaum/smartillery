@@ -166,6 +166,13 @@ global.damage_enemy_5_missile_collision = 40
 // when the player takes damage, a burst clears all enemies within this many rings of the player
 global.damage_burst_ring_count = 6
 
+// power items
+global.shield_ring_from_center = 3 // which ring (counting out from the player) the shield sits on
+global.shield_color = #2f7bff
+global.stationary_turret_range = 300 // px
+global.stationary_turret_fire_interval = 1 // seconds between shots
+global.stationary_turret_duration = 20 // seconds before the turret disappears
+
 global.points_map = ds_map_create()
 ds_map_add(global.points_map, obj_enemy_1, 10)
 ds_map_add(global.points_map, obj_enemy_2, 20)

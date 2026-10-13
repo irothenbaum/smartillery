@@ -18,8 +18,8 @@ function enemy_initialize(_e) {
 		point_value = ds_map_find_value(global.points_map, object_index)
 		slow_multiplier = 1
 		slow_sparks = undefined
-		// set when the player's damage burst destroys this enemy, so it yields no rewards
-		killed_by_damage_burst = false
+		// set by enemy_destroy_without_reward (damage burst, shield), so the kill yields no rewards
+		killed_without_reward = false
 	}
 	// must go after the initializations due to edge conditions
 	initialize_instance_has_equation(_e)
@@ -34,6 +34,34 @@ function enemy_handle_destroy(_e) {
 		if (!is_undefined(slow_sparks)) {
 			destroy_particle(slow_sparks)
 		}
+	}
+
+	// something other than the player's own shot may have killed an enemy the player was queued to fire at
+	// (damage burst, shield, stationary turret, ults), so drop it from the queue before the turret aims at it
+	var _player = get_player()
+	if (instance_exists(_player)) {
+		with (_player) {
+			var _queue_length = array_length(aiming_at_instance)
+			aiming_at_instance = array_filter(aiming_at_instance, method({_e: _e}, function(_entry) {
+				return _entry.inst != _e.id
+			}))
+			if (array_length(aiming_at_instance) != _queue_length) {
+				rotate_towards_next_target()
+			}
+		}
+	}
+}
+
+/**
+ * Destroys an enemy without granting points, streak, combo, or any other benefit
+ * @param {Id.Instance} _e
+ */
+function enemy_destroy_without_reward(_e) {
+	with (_e) {
+		// handle_enemy_killed reads this to skip all rewards
+		killed_without_reward = true
+		last_hit_by_player_id = undefined
+		instance_destroy()
 	}
 }
 

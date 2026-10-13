@@ -8,11 +8,12 @@ icon_scale = 0.016 // magic number matching obj_extra_ultimate, a property of th
 // Build weighted selection for type
 var _player = get_player()
 var _missing_health = global.max_health - _player.my_health
-var _shield_count = instance_number(obj_shield)
+var _shield = instance_find(obj_shield, 0)
+var _shield_health = _shield == noone ? 0 : _shield.shield_health
 
 // Calculate weights for each type
 var _weights = {}
-_weights[$ BONUS_ITEM_SHIELD] = 1 / power(2, _shield_count)
+_weights[$ BONUS_ITEM_SHIELD] = 1 / power(2, _shield_health)
 _weights[$ BONUS_ITEM_LEVEL_UP] = 1
 _weights[$ BONUS_ITEM_HEALTH] = (_missing_health > 0) ? power(2, floor(_missing_health / 20)) : 1
 _weights[$ BONUS_ITEM_POINTS] = 1
@@ -39,6 +40,27 @@ for (var _i = 0; _i < array_length(_types); _i++) {
 
 function register_hit() {
 	get_game_controller().release_answer(answer)
-	debug(string_concat("ITEM HIT by ", last_hit_by_player_id))
+	debug(string_concat("ITEM \"", type, "\" HIT by ", last_hit_by_player_id))
+
+	switch (type) {
+		case BONUS_ITEM_SHIELD:
+			// shields stack: a second shield item adds health to the existing shield
+			var _shield = instance_find(obj_shield, 0)
+			if (_shield != noone) {
+				_shield.add_health(1)
+			} else {
+				instance_create_layer(global.xcenter, global.ycenter, LAYER_BG_EFFECTS, obj_shield)
+			}
+			break
+
+		case BONUS_ITEM_TURRET:
+			instance_create_layer(x, y, LAYER_BG_EFFECTS, obj_stationary_turret, {owner_player_id: last_hit_by_player_id})
+			break
+
+		default:
+			// TODO: health, points, and level-up items
+			break
+	}
+
 	instance_destroy()
 }

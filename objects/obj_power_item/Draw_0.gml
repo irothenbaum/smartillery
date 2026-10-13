@@ -21,19 +21,16 @@ switch (type) {
 		_label = "SH"
 		break
 	case BONUS_ITEM_TURRET:
-		_color = global.ultimate_colors[$ ULTIMATE_TURRET]
+		// placeholder until proper sprite assets are made
+		_color = c_white
 		break
 }
 
 draw_set_color(_color)
 draw_circle(x, y, radius, false)
 
-if (type == BONUS_ITEM_TURRET) {
-	draw_sprite_ext(spr_ult_turret, 0, x, y, icon_scale, icon_scale, 0, c_white, 1)
-} else {
-	draw_set_font(fnt_small)
-	draw_set_color(c_white)
-	draw_text_with_alignment(x, y, _label, ALIGN_CENTER)
-}
+draw_set_font(fnt_small)
+draw_set_color(c_white)
+draw_text_with_alignment(x, y, _label, ALIGN_CENTER)
 
 reset_composite_color()

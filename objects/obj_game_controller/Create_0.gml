@@ -120,6 +120,8 @@ function end_game() {
 		get_array_of_instances(obj_input),
 		get_array_of_instances(obj_power_item),
 		get_array_of_instances(obj_extra_ultimate),
+		get_array_of_instances(obj_shield),
+		get_array_of_instances(obj_stationary_turret),
 	)
 	array_foreach(_items_to_destroy, function(_i) {
 		with (_i) {
@@ -164,8 +166,8 @@ function handle_enemy_killed(_enemy) {
 	
 	release_answer(_enemy.answer);
 	
-	// enemies wiped out by the player's damage burst give no points, bonuses, or end-of-wave drops
-	if (_enemy.killed_by_damage_burst) {
+	// enemies wiped out by the damage burst or shield give no points, bonuses, or end-of-wave drops
+	if (_enemy.killed_without_reward) {
 		return
 	}
 	

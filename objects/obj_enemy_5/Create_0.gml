@@ -15,7 +15,7 @@ var _spawn_angle = point_direction(global.xcenter, global.ycenter, x, y)
 x = global.xcenter + lengthdir_x(_spawn_distance, _spawn_angle)
 y = global.ycenter + lengthdir_y(_spawn_distance, _spawn_angle)
 
-my_health = 4
+my_health = 5
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
@@ -51,7 +51,6 @@ function register_hit(_damage_amount) {
 
 	if (my_health > 0) {
 		get_game_controller().release_answer(answer);
-		my_health--;
 
 		// Generate new equation
 		enemy_generate_question(self)
