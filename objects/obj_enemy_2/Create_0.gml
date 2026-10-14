@@ -70,7 +70,7 @@ function fire_shot() {
 	var _muzzle = get_turret_muzzle()
 
 	// an active shield absorbs the shot before it reaches the player
-	if (_shield != noone) {
+	if (_shield != noone && !_shield.collapsing) {
 		var _impact = _shield.get_impact_point(x, y)
 		instance_create_layer(_muzzle.x, _muzzle.y, LAYER_BG_EFFECTS, obj_muzzle_flash, {target_x: _impact.x, target_y: _impact.y, width: 4, color: c_red})
 		_shield.absorb_hit()

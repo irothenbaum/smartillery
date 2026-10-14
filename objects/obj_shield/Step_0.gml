@@ -3,6 +3,18 @@ if (global.paused) {
 	return
 }
 
+if (collapsing) {
+	collapse_elapsed += step_seconds()
+	// ease in so it snaps shut quickly at the end
+	var _progress = min(1, collapse_elapsed / collapse_duration)
+	drawn_thickness = lerp(thickness, collapse_min_thickness, _progress * _progress)
+
+	if (collapse_elapsed >= collapse_duration + collapse_hold_duration) {
+		instance_destroy()
+	}
+	return
+}
+
 with (obj_enemy_parent) {
 	if (object_index == obj_training_target) {
 		continue
@@ -17,7 +29,7 @@ with (obj_enemy_parent) {
 	enemy_destroy_without_reward(id)
 	other.absorb_hit()
 
-	if (!instance_exists(other)) {
+	if (other.collapsing) {
 		break
 	}
 }

@@ -196,7 +196,8 @@ function ultimate_step(_obj) {
 		if (is_duration_ult(ult_type)) {
 			game_controller.ultimate_charge[$ owner_player_id] = max(0, global.ultimate_requirement * alarm[0] / starting_duration)
 		} else {
-			game_controller.ultimate_charge[$ owner_player_id] = lerp(0, game_controller.ultimate_charge, global.fade_speed)
+			// drain the charge meter while the ultimate runs
+			game_controller.ultimate_charge[$ owner_player_id] = lerp(game_controller.ultimate_charge[$ owner_player_id], 0, global.fade_speed)
 		}
 	}
 }

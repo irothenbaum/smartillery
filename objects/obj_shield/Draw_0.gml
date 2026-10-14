@@ -1,6 +1,6 @@
 /// @description Draw shield ring
 draw_set_color(color)
-draw_arc(x, y, radius, 360, 0, thickness)
+draw_arc(x, y, radius, 360, 0, drawn_thickness)
 
 // health is shown as (health - 1) thin white lines spaced evenly across the ring's thickness
 draw_set_color(c_white)

@@ -21,7 +21,8 @@ if (global.paused) {
 
 if (fade_out) {
 	image_alpha = lerp(image_alpha, 0, global.fade_speed)
-	if (image_alpha == 0) {
+	// lerp only approaches 0, so snap once it's invisible
+	if (image_alpha < 0.01) {
 		instance_destroy()
 	}
 } else if (image_alpha < 1) {

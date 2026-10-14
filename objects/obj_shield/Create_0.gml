@@ -11,12 +11,26 @@ outer_radius = get_radius_for_ring(_ring_index)
 inner_radius = get_radius_for_ring(_ring_index + 1)
 radius = (outer_radius + inner_radius) / 2
 thickness = outer_radius - inner_radius
+drawn_thickness = thickness
 color = global.shield_color
+
+// when health runs out the shield doesn't vanish immediately: it collapses down to a thin line, then disappears.
+// A collapsing shield no longer blocks anything
+collapsing = false
+collapse_elapsed = 0 // seconds
+collapse_duration = 0.15 // seconds to shrink to a thin line
+collapse_hold_duration = 0.1 // seconds the thin line stays before disappearing
+collapse_min_thickness = 2
 
 /**
  * @param {Real} _amount
  */
 function add_health(_amount) {
+	// a new shield item caught mid-collapse brings it back at full thickness
+	if (collapsing) {
+		collapsing = false
+		drawn_thickness = thickness
+	}
 	shield_health += _amount
 	flash()
 }
@@ -25,7 +39,8 @@ function absorb_hit() {
 	shield_health--
 	flash()
 	if (shield_health <= 0) {
-		instance_destroy()
+		collapsing = true
+		collapse_elapsed = 0
 	}
 }
 
