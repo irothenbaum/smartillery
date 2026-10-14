@@ -10,6 +10,10 @@ var _skipped_rings = global.bg_number_of_circles - ceil(global.bg_number_of_circ
 
 drawn_skipped_rings = lerp(drawn_skipped_rings, _skipped_rings, global.fade_speed)
 
+// glitter only covers the healthy rings. Uses the target (not the animated value) so a hit clears the glitter once, not every frame of the animation
+set_background_glitter_radius(glitter, get_radius_for_ring(_skipped_rings))
+background_glitter_step(glitter)
+
 var _rings_ult = instance_find(obj_ultimate_rings, 0)
 var _options = {
 	is_ulting_strike: game_controller.is_ult_active(ULTIMATE_STRIKE),
@@ -19,7 +23,9 @@ var _options = {
 	// from 210 for full health to 255 for 0 health
 	health_hue: 255 - (_player_health / global.max_health) * 45,
 	skipped_rings: _skipped_rings,
-	rounded_skipped_rings: round(drawn_skipped_rings)
+	rounded_skipped_rings: round(drawn_skipped_rings),
+	// the rings get redder as health drops -- darken that red as they do, so low health reads as dim rather than vivid
+	low_health_color: new CompositeColor(merge_color(c_black, low_health_color.c, lerp(low_health_min_brightness, 1, clamp(_player_health / global.max_health, 0, 1))), 1),
 }
 
 for(var _i = 0; _i < global.bg_number_of_circles; _i++) {	

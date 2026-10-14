@@ -4,6 +4,7 @@ y = global.ycenter
 idle_color = new CompositeColor(global.bg_color, 1)
 no_health_color = new CompositeColor(c_black, 1)
 low_health_color = new CompositeColor(#bf1d1d, 1)
+low_health_min_brightness = 0.4 // how bright the low health red is at 0 health (1 = full #bf1d1d)
 
 grid_color = c_white
 
@@ -26,6 +27,9 @@ booting_up = true
 boot_up_time = 1 * game_get_speed(gamespeed_fps)
 alarm[0] = boot_up_time
 
+// ambient sparkle over the healthy (non-black) rings -- resized in Draw, destroyed in Clean Up (particle systems outlive their room otherwise)
+glitter = create_background_glitter()
+
 
 
 function get_ring_color(_i, _options) {
@@ -36,7 +40,7 @@ function get_ring_color(_i, _options) {
 	var _ret_val = _i < _options.rounded_skipped_rings ? no_health_color : idle_color
 	
 	if (_options.player_health < global.max_health && _i >= _options.rounded_skipped_rings) {
-		_ret_val = blend_composite_colors(low_health_color, _ret_val, _options.player_health / global.max_health)
+		_ret_val = blend_composite_colors(_options.low_health_color, _ret_val, _options.player_health / global.max_health)
 	}
 	
 	if (_options.is_ulting_rings && !is_undefined(_options.rings_ult_instance)) {
