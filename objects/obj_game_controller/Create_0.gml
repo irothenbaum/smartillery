@@ -473,7 +473,8 @@ function increate_ult_level(_player_id) {
 	
 	// Draw shockwave at the hud icon position
 	with (obj_hud_ultimate_icon) {
-		if (owner_player_id == _player_id) {
+		// my_bounds is only known once the icon has drawn at least once
+		if (owner_player_id == _player_id && !is_undefined(my_bounds)) {
 			instance_create_layer(my_bounds.xcenter, my_bounds.ycenter, LAYER_BG_EFFECTS, obj_expanding_ring, {
 				start_radius: 80,
 				end_radius: 160,

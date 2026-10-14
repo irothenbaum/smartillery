@@ -28,29 +28,15 @@ function get_player() {
 	return _player
 }
 
-global._G.input_player_map = {}
 function get_input(_player_id) {
-	if (struct_exists(global._G.input_player_map, _player_id)) {
-		return global._G.input_player_map[$ _player_id]
-	}
-	
-	var _input = undefined
-	var _count = instance_number(obj_input)
-	for (var _i = 0; _i < _count; _i++) {
-		var _inst = instance_find(obj_input, _i)
-		if (_inst.owner_player_id == _player_id) {
-			_input = _inst
-			break
+	with (obj_input) {
+		if (owner_player_id == _player_id) {
+			return id
 		}
 	}
 	
-	if (is_undefined(_input)) {
-		debug("Cannot find input for player ", _player_id)
-	}
-	
-	global._G.input_player_map[$ _player_id] = _input
-	
-	return _input
+	debug("Cannot find input for player ", _player_id)
+	return undefined
 }
 
 /// returns {Real}
