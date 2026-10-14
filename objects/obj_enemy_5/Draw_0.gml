@@ -9,7 +9,7 @@ if (spawn_phase >= total_spawn_phases) {
 	// Calculate how close we are to firing (0 = just reset, 1 = about to fire)
 	// alarm[0] returns -1 when not running, so treat that as 0 progress
 	var _alarm_remaining = max(0, alarm[0])
-	var _actual_delay = missile_delay * slow_multiplier
+	var _actual_delay = missile_delay / slow_multiplier
 	var _fire_progress = 1 - (_alarm_remaining / _actual_delay)
 	_fire_progress = clamp(_fire_progress, 0, 1)
 

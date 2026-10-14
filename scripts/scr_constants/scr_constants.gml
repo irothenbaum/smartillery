@@ -172,6 +172,7 @@ global.shield_color = #2f7bff
 global.stationary_turret_range = 300 // px
 global.stationary_turret_fire_interval = 1 // seconds between shots
 global.stationary_turret_duration = 20 // seconds before the turret disappears
+global.health_item_amount = 25
 
 global.points_map = ds_map_create()
 ds_map_add(global.points_map, obj_enemy_1, 10)
@@ -236,7 +237,20 @@ ds_map_add(global.tip_copy_map, obj_extra_ultimate, function(_instance) {
 		description: _ult_desc.description
 	}
 })	
-ds_map_add(global.tip_copy_map, obj_power_item, {title: "Power Item", description: "Activate this item when you're in a pinch."})	
+global.power_item_descriptions = {
+	BONUS_ITEM_SHIELD: {title: "Shield", description: "Raises a shield around you that blocks one enemy or shot. Stacks with other shields."},
+	BONUS_ITEM_TURRET: {title: "Stationary Turret", description: "Deploys a turret right here that fires once at every enemy that enters its range."},
+	BONUS_ITEM_HEALTH: {title: "Repair", description: string_concat("Restores ", global.health_item_amount, " health.")},
+	BONUS_ITEM_POINTS: {title: "Bonus Points", description: "Grants 10 points for every wave you've reached."},
+	BONUS_ITEM_LEVEL_UP: {title: "Level Up", description: "Levels up your ultimate and fully charges it."},
+}
+ds_map_add(global.tip_copy_map, obj_power_item, function(_instance) {
+	var _desc = global.power_item_descriptions[$ _instance.type]
+	return {
+		title: string_concat("Power Item: ", _desc.title),
+		description: _desc.description
+	}
+})	
 ds_map_add(global.tip_copy_map, obj_shield, {title: "Defensive Shield", description: "A last resort to protect yourself if an enemy makes it past your gun."})
 ds_map_add(global.tip_copy_map, obj_stationary_turret, {title: "Stationary Turret", description: "A temporary turret spawns to help defend against the horde."})
 ds_map_add(global.tip_copy_map, obj_hud_ultimate_icon, function(_instance) {

@@ -3,7 +3,6 @@ initialize_instance_has_equation(self)
 my_bounds = get_bounds_for_instance(self)
 
 radius = global.player_body_radius
-icon_scale = 0.016 // magic number matching obj_extra_ultimate, a property of the ultimate sprite sizes
 
 // Build weighted selection for type
 var _player = get_player()
@@ -38,6 +37,13 @@ for (var _i = 0; _i < array_length(_types); _i++) {
 	}
 }
 
+// placeholder label until proper sprite assets are made: the type's initials (e.g. "level-up" -> "LU")
+var _words = string_split(type, "-")
+label = ""
+for (var _i = 0; _i < array_length(_words); _i++) {
+	label += string_upper(string_char_at(_words[_i], 1))
+}
+
 function register_hit() {
 	get_game_controller().release_answer(answer)
 	debug(string_concat("ITEM \"", type, "\" HIT by ", last_hit_by_player_id))
@@ -57,8 +63,31 @@ function register_hit() {
 			instance_create_layer(x, y, LAYER_BG_EFFECTS, obj_stationary_turret, {owner_player_id: last_hit_by_player_id})
 			break
 
-		default:
-			// TODO: health, points, and level-up items
+		case BONUS_ITEM_HEALTH:
+			// fly a health orb to the player, same as the leech ultimate
+			instance_create_layer(x, y, LAYER_BG_EFFECTS, obj_orb_score_increase, {
+				amount: global.health_item_amount,
+				type: ORB_TYPE_HEALTH,
+				owner_player_id: last_hit_by_player_id,
+			})
+			break
+
+		case BONUS_ITEM_POINTS:
+			instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_orb_score_increase, {
+				amount: 10 * get_current_wave_number(),
+				type: ORB_TYPE_SCORE,
+				owner_player_id: last_hit_by_player_id,
+			})
+			break
+
+		case BONUS_ITEM_LEVEL_UP:
+			// only the player who hit the item levels up
+			var _game_controller = get_game_controller()
+			_game_controller.increate_ult_level(last_hit_by_player_id)
+			// an active ultimate drives its own charge meter (counting down), so only fill it when not ulting
+			if (!_game_controller.is_ulting(last_hit_by_player_id)) {
+				_game_controller.ultimate_charge[$ last_hit_by_player_id] = global.ultimate_requirement
+			}
 			break
 	}
 

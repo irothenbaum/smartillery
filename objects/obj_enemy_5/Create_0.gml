@@ -47,7 +47,7 @@ function register_hit(_damage_amount) {
 	my_health -= _damage_amount
 
 	// Reset missile spawn timer when hit
-	alarm[0] = missile_delay * slow_multiplier
+	alarm[0] = missile_delay / slow_multiplier
 
 	if (my_health > 0) {
 		get_game_controller().release_answer(answer);
@@ -65,5 +65,5 @@ function fire_shot() {
 	instance_create_layer(x, y, LAYER_INSTANCES, obj_enemy_5_missile)
 
 	// Wait before next shot
-	alarm[0] = missile_delay * slow_multiplier
+	alarm[0] = missile_delay / slow_multiplier
 }

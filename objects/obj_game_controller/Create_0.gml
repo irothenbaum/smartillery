@@ -360,6 +360,10 @@ function reset_streak(_player_id) {
 	}
 	
 	var _had_sreak = has_point_streak(_player_id)
+	if (_had_sreak) {
+		// TEMP: diagnosing streaks lost on ultimate activation -- the callstack shows what triggered the reset
+		debug("STREAK LOST for player", _player_id, "streak was", streak[$ _player_id], "callstack:", debug_get_callstack())
+	}
 	// this was simply an inccorect submission, streak goes to 0
 	streak[$ _player_id] = 0
 	combo_count[$ _player_id] = 0

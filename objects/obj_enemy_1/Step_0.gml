@@ -25,11 +25,11 @@ if (array_length(waypoints) > 0) {
 } else {
 	direction -= angle_difference(direction, point_direction(x, y, global.xcenter, global.ycenter)) * 0.05;
 	// accelerate to speed 5
-	speed = lerp(speed, 5, 0.03)
+	speed = lerp(speed, 5 * slow_multiplier, 0.03)
 	rotate_speed = lerp(rotate_speed, 12, 0.08)
 	
 	// as a failsafe, we'll aim directly for the player 3 seconds after making our final turn
 	if (!(alarm[0] > 0)) {
-		alarm[0] = 3 * game_get_speed(gamespeed_fps)
+		alarm[0] = 3 * game_get_speed(gamespeed_fps) / slow_multiplier
 	}
 }

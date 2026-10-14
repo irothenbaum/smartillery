@@ -13,6 +13,7 @@ if (point_distance(spawn_x, spawn_y, x, y) >= straight_travel_distance) {
 image_angle = direction
 
 // Accelerate up to max speed
-if (speed < max_speed) {
-	speed = min(speed + acceleration * slow_multiplier, max_speed)
+var _max_speed = max_speed * slow_multiplier
+if (speed < _max_speed) {
+	speed = min(speed + acceleration * slow_multiplier, _max_speed)
 }

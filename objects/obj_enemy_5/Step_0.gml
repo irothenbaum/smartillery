@@ -40,7 +40,7 @@ if (spawn_phase < total_spawn_phases) {
 		} else if (spawn_phase == 4) {
 			// Spawn animation complete - start missile delay
 			blackhole_radius = 0
-			alarm[0] = missile_delay
+			alarm[0] = missile_delay / slow_multiplier
 		}
 	}
 }

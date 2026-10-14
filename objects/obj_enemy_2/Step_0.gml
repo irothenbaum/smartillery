@@ -4,7 +4,7 @@ if (global.paused) {
 }
 
 if (recoil_amount > 0.01) {
-	recoil_amount = recoil_amount * 0.85 * slow_multiplier
+	recoil_amount = recoil_amount * (1 - 0.15 * slow_multiplier)
 } else {
 	recoil_amount = 0
 }
@@ -23,7 +23,7 @@ if(shooting || _distance_to_firing < 10) {
 	if (!shooting) {
 		speed = 0
 		shooting = true
-		alarm[0] = 2 * game_get_speed(gamespeed_fps) * slow_multiplier
+		alarm[0] = 2 * game_get_speed(gamespeed_fps) / slow_multiplier
 	}
 	
 	var _diff = angle_difference(image_angle + 90, direction);

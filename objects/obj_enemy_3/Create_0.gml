@@ -30,7 +30,7 @@ function register_hit(_damage_amount) {
 		// pause the approach
 		speed = 0
 		// stun for 6 seconds
-		alarm[0] = 6 * game_get_speed(gamespeed_fps)
+		alarm[0] = 6 * game_get_speed(gamespeed_fps) / slow_multiplier
 		enemy_generate_question(self)
 		shift_position = {
 			// we do - instead of + so it goes backwards

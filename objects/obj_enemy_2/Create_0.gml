@@ -49,7 +49,7 @@ function register_hit(_damage_amount) {
 		enemy_generate_question(self)
 
 		// restart approach in 3 seconds
-		alarm[1] = 3 * game_get_speed(gamespeed_fps)
+		alarm[1] = 3 * game_get_speed(gamespeed_fps) / slow_multiplier
 		alarm[0] = -1;
 		var _dir_to_player = point_direction(global.xcenter, global.ycenter, x,y)
 		shift_position = {
@@ -66,7 +66,7 @@ function fire_shot() {
 	var _player = get_player()
 	var _shield = instance_find(obj_shield, 0)
 	recoil_amount = max_recoil_amount
-	alarm[0] = 2 * game_get_speed(gamespeed_fps)
+	alarm[0] = 2 * game_get_speed(gamespeed_fps) / slow_multiplier
 	var _muzzle = get_turret_muzzle()
 
 	// an active shield absorbs the shot before it reaches the player

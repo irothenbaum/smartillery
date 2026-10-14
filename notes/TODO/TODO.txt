@@ -1,7 +1,5 @@
 In the middle of:
-- Created obj_bonus_drop, need to create logic to spawn it, make it "targetable", and test
 - Enabled turrets should pop off everytime an AirStrike lands (right? think about it more?)
-- A rogue double spawn of a 3x "level 3" enemy is enough to end you quick. Make those way less common (increase Level 3 enemy difficulty)
 
 ------------------------------------------------------------
 BEFORE ALPHA RELEASE:
