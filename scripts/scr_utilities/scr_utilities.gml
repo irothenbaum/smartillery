@@ -91,11 +91,48 @@ function get_array_of_instances(_instance_type) {
 	return _instances
 }
 
-/// @param {Bool} [_status] 
-function toggle_pause(_status) {
-	global.paused = bool(_status) ? _status : !global.paused
+
+/**
+ * @param {Bool} _status
+ */
+function set_paused(_status) {
+	var _next_paused = bool(_status)
 	
-	handle_toggle_pause()
+	if (_next_paused == global.paused) {
+		return
+	}
+	
+	global.paused = _next_paused
+	
+	set_audio_paused(global.paused)
+
+	// pause streak sparks on player
+	var _player = get_player()
+	with(_player) {
+		if (!is_undefined(streak_fire)) {
+			pause_particle(streak_fire.system, global.paused)
+		}
+	}
+	
+	// pause slow sparks on enemies
+	with (obj_enemy_parent) {
+		if (!is_undefined(slow_sparks)) {
+			pause_particle(slow_sparks, global.paused)
+		}
+	}
+	
+	// pause particle effects
+	with (obj_particle_effect) {
+		pause_particle(ps, global.paused)
+	}
+	
+	// message clears on pause toggle
+	with (obj_input) {
+		message = ""
+		if (!is_undefined(streak_fire)) {
+			pause_particle(streak_fire.system, global.paused)
+		}
+	}
 	
 	debug("Turning pause " + (global.paused ? "ON" : "OFF") + " for " + string(instance_count) + " instances")
 	var _alarm_length = 12
@@ -143,6 +180,10 @@ function toggle_pause(_status) {
 			is_paused = false
 		}
 	}
+}
+ 
+function toggle_pause() {
+	set_paused(!global.paused)
 }
 
 /// Milliseconds of (unpaused) game time. Advanced one fixed step per frame by advance_play_time()
@@ -341,6 +382,9 @@ function initialize_player_map(_val) {
 }
 
 function reset_game_state() {
+	// quitting while paused would otherwise leave sfx paused forever and the music muffled
+	set_audio_paused(false)
+	stop_all_sfx(0)
 	global.is_math_mode = true
 	global.play_time_ms = 0
 	global.paused = false

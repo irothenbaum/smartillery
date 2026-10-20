@@ -14,7 +14,7 @@ libsteam_api.so
 *.apk
 *.ipa
 *.pck
-*.ogg
+# *.ogg -- commit ogg files
 *.log
 *.tmp
 .cache/

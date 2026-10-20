@@ -35,36 +35,6 @@ function handle_enemy_hit(_enemy, _player_id, _damage_amount, _from_player_shot 
 	}
 }
 
-function handle_toggle_pause() {
-	// pause streak sparks on player
-	var _player = get_player()
-	with(_player) {
-		if (!is_undefined(streak_fire)) {
-			pause_particle(streak_fire.system, global.paused)
-		}
-	}
-	
-	// pause slow sparks on enemies
-	with (obj_enemy_parent) {
-		if (!is_undefined(slow_sparks)) {
-			pause_particle(slow_sparks, global.paused)
-		}
-	}
-	
-	// pause particle effects
-	with (obj_particle_effect) {
-		pause_particle(ps, global.paused)
-	}
-	
-	with (obj_input) {
-		// message clears on pause toggle
-		message = ""
-		if (!is_undefined(streak_fire)) {
-			pause_particle(streak_fire.system, global.paused)
-		}
-	}
-}
-
 function handle_player_streak(_player_id, _new_streak_value) {
 	var _player = get_player()
 	var _player_input = get_input(_player_id)
