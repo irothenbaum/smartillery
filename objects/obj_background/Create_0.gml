@@ -8,6 +8,32 @@ low_health_min_brightness = 0.4 // how bright the low health red is at 0 health 
 
 grid_color = c_white
 
+// when the player's health goes up (e.g. a health orb lands), the health rings fade to green, hold, then fade back
+heal_flash_color = new CompositeColor(global.ultimate_colors[$ ULTIMATE_HEAL], 1) // same green as health orbs
+heal_flash_fade_in = 0.10 // in seconds
+heal_flash_hold = 0.25 // in seconds
+heal_flash_fade_out = 0.4 // in seconds
+heal_flash_elapsed = infinity // in seconds since the flash started (infinity = not flashing)
+heal_flash_amount = 0 // [0,1] how green the health rings are right now
+last_player_health = undefined
+
+function start_heal_flash() {
+	// if we're already partway green, pick up the fade in from that point instead of dropping back to 0
+	heal_flash_elapsed = heal_flash_fade_in * heal_flash_amount
+}
+
+function update_heal_flash() {
+	heal_flash_elapsed += step_seconds()
+	var _hold_end = heal_flash_fade_in + heal_flash_hold
+	if (heal_flash_elapsed < heal_flash_fade_in) {
+		heal_flash_amount = heal_flash_elapsed / heal_flash_fade_in
+	} else if (heal_flash_elapsed < _hold_end) {
+		heal_flash_amount = 1
+	} else {
+		heal_flash_amount = max(0, 1 - (heal_flash_elapsed - _hold_end) / heal_flash_fade_out)
+	}
+}
+
 // sections of the active-ultimates ring (see draw_active_ultimates_ring), animated as ultimates start and end
 ult_ring_sections = new AnimatedSections()
 
@@ -44,6 +70,11 @@ function get_ring_color(_i, _options) {
 	
 	if (_options.player_health < global.max_health && _i >= _options.rounded_skipped_rings) {
 		_ret_val = blend_composite_colors(_options.low_health_color, _ret_val, _options.player_health / global.max_health)
+	}
+
+	// heal flash only tints the rings that represent remaining health
+	if (_options.heal_flash_amount > 0 && _i >= _options.rounded_skipped_rings) {
+		_ret_val = blend_composite_colors(_ret_val, heal_flash_color, _options.heal_flash_amount / 3)
 	}
 	
 	if (_options.is_ulting_rings && !is_undefined(_options.rings_ult_instance)) {

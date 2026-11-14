@@ -1,4 +1,11 @@
 var _player_health = get_player().my_health
+
+// heal flash: fade the health rings to green, hold, then fade back (applied in get_ring_color)
+if (!is_undefined(last_player_health) && _player_health > last_player_health) {
+	start_heal_flash()
+}
+last_player_health = _player_health
+update_heal_flash()
 var _ring_enemy_counts = array_create(global.bg_number_of_circles, 0)
 with (obj_enemy_parent) {
 	var _ring_number = get_ring_from_distance(point_distance(x, y, global.xcenter, global.ycenter))
@@ -20,6 +27,7 @@ var _options = {
 	is_ulting_rings: game_controller.is_ult_active(ULTIMATE_RINGS),
 	rings_ult_instance: _rings_ult,
 	player_health: _player_health,
+	heal_flash_amount: heal_flash_amount,
 	// from 210 for full health to 255 for 0 health
 	health_hue: 255 - (_player_health / global.max_health) * 45,
 	skipped_rings: _skipped_rings,
