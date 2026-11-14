@@ -111,6 +111,97 @@ function get_contrast_color(_background_color) {
 }
 
 /**
+ * Splits a span (e.g. a ring's sweep, or a ring's thickness) into keyed sections and animates each section's
+ * share as sections are added (grow in from 0) or removed (shrink out to 0), instead of snapping to the new layout.
+ * Call update() once per frame with the keys that should exist now, then read get_layout().
+ * @param {Real} _speed -- lerp amount per frame
+ */
+function AnimatedSections(_speed = 0.15) constructor {
+	speed = _speed
+	// {key, weight, target, data} in display order. weight animates toward target (1 = present, 0 = removed)
+	entries = []
+
+	/**
+	 * @param {Array} _keys -- the sections that should exist now, in display order
+	 * @param {Array} _data -- (optional) one payload per key. It's kept on the entry, so a removed section can still be drawn while it shrinks out
+	 */
+	static update = function(_keys, _data = undefined) {
+		for (var _i = 0; _i < array_length(entries); _i++) {
+			entries[_i].target = 0
+		}
+
+		// new keys are inserted right after the previous key's entry, so they grow in at the right spot
+		var _insert_at = 0
+		for (var _k = 0; _k < array_length(_keys); _k++) {
+			var _index = find_entry_index(_keys[_k])
+			if (_index < 0) {
+				_index = _insert_at
+				array_insert(entries, _index, {key: _keys[_k], weight: 0, target: 1, data: undefined})
+			}
+			var _entry = entries[_index]
+			_entry.target = 1
+			if (!is_undefined(_data)) {
+				_entry.data = _data[_k]
+			}
+			_insert_at = _index + 1
+		}
+
+		for (var _i = array_length(entries) - 1; _i >= 0; _i--) {
+			var _entry = entries[_i]
+			_entry.weight = lerp(_entry.weight, _entry.target, speed)
+			if (abs(_entry.weight - _entry.target) < 0.001) {
+				_entry.weight = _entry.target
+			}
+			if (_entry.target == 0 && _entry.weight == 0) {
+				array_delete(entries, _i, 1)
+			}
+		}
+	}
+
+	/**
+	 * @param {Any} _key
+	 * @returns {Real} -1 if not found
+	 */
+	static find_entry_index = function(_key) {
+		for (var _i = 0; _i < array_length(entries); _i++) {
+			if (entries[_i].key == _key) {
+				return _i
+			}
+		}
+		return -1
+	}
+
+	/**
+	 * Sum of all section weights -- roughly how many sections are showing. 1 or more means the span is fully used
+	 * @returns {Real}
+	 */
+	static get_total_weight = function() {
+		var _total = 0
+		for (var _i = 0; _i < array_length(entries); _i++) {
+			_total += entries[_i].weight
+		}
+		return _total
+	}
+
+	/**
+	 * start and size are fractions [0,1] of the span. While the total weight is under 1 (the first section growing in,
+	 * or the last one shrinking out) the sections don't fill the whole span
+	 * @returns {Array<Struct>} {key, data, start, size}
+	 */
+	static get_layout = function() {
+		var _scale = 1 / max(1, get_total_weight())
+		var _layout = []
+		var _start = 0
+		for (var _i = 0; _i < array_length(entries); _i++) {
+			var _size = entries[_i].weight * _scale
+			array_push(_layout, {key: entries[_i].key, data: entries[_i].data, start: _start, size: _size})
+			_start += _size
+		}
+		return _layout
+	}
+}
+
+/**
  * @param {Real} _x
  * @param {Real} _y
  * @param {Real} _x1

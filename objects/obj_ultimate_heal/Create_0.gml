@@ -6,6 +6,7 @@ function create_health_orb_on_enemy(_enemy, _player_who_shot_id) {
 		debug("`ult_heal` -> EVENT_ENEMY_HIT enemy no longer exists", _enemy)
 		return
 	}
+	debug("[LEECH] create_health_orb_on_enemy enemy:", _enemy, "at", _enemy.x, _enemy.y, "amount:", leach_amount, "shooter:", _player_who_shot_id)
 	instance_create_layer(_enemy.x, _enemy.y, LAYER_BG_EFFECTS, obj_orb_score_increase, {
 		amount: leach_amount,
 		type: ORB_TYPE_HEALTH,

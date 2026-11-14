@@ -225,7 +225,9 @@ function handle_point_orb_collision(_orb) {
 		game_score += _orb.amount
 		increase_ult_score(_orb.owner_player_id, _orb.amount)
 	} else if (_orb.type == ORB_TYPE_HEALTH) {
+		var _health_before = get_player().my_health
 		get_player().increase_health(_orb.amount)
+		debug("[LEECH] health orb collected:", _orb.id, "amount:", _orb.amount, "health:", _health_before, "->", get_player().my_health, "max:", global.max_health)
 	} else if (_orb.type == ORB_TYPE_SCORE) {
 		game_score += _orb.amount
 	} else {
@@ -278,6 +280,7 @@ function activate_ultimate(_player_id) {
 	
 	var _ult_obj = global._G.ultimate_object_map[$ get_player_ultimate(_player_id)]
 	inst_ultimate[$ _player_id] = instance_create_layer(x, y, LAYER_HUD, _ult_obj, {level: ultimate_level[$ _player_id], owner_player_id: _player_id})
+	debug("[LEECH] activate_ultimate player:", _player_id, "ult type:", get_player_ultimate(_player_id), "object:", object_get_name(_ult_obj), "level:", ultimate_level[$ _player_id], "inst:", inst_ultimate[$ _player_id])
 	cached_ultimate_level[$ _player_id] = ultimate_level[$ _player_id]
 }
 

@@ -52,3 +52,6 @@ for(var _i = 0; _i < global.bg_number_of_circles; _i++) {
 	draw_circle(x,y, ring_radius[_i], true)
 	reset_composite_color()
 }
+
+// active ultimates (drawn here so it sits with the rings it occupies)
+draw_active_ultimates_ring(x, y, ult_ring_sections)

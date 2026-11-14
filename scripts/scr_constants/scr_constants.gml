@@ -168,6 +168,7 @@ global.damage_burst_ring_count = 6
 
 // power items
 global.shield_ring_from_center = 3 // which ring (counting out from the player) the shield sits on
+global.ult_ring_from_center = global.shield_ring_from_center - 1 // active ultimates are shown on the ring just inside the shield's
 global.shield_color = #2f7bff
 global.stationary_turret_range = 300 // px
 global.stationary_turret_fire_interval = 1 // seconds between shots

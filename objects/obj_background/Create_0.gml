@@ -8,6 +8,9 @@ low_health_min_brightness = 0.4 // how bright the low health red is at 0 health 
 
 grid_color = c_white
 
+// sections of the active-ultimates ring (see draw_active_ultimates_ring), animated as ultimates start and end
+ult_ring_sections = new AnimatedSections()
+
 drawn_ring_line_alpha = array_create(global.bg_number_of_circles, 0)
 drawn_ring_color = array_create(global.bg_number_of_circles, idle_color)
 

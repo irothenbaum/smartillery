@@ -14,6 +14,9 @@ thickness = outer_radius - inner_radius
 drawn_thickness = thickness
 color = global.shield_color
 
+// one band per health point across the ring's thickness (divided by thin white lines), animated as health changes
+health_bands = new AnimatedSections()
+
 // when health runs out the shield doesn't vanish immediately: it collapses down to a thin line, then disappears.
 // A collapsing shield no longer blocks anything
 collapsing = false

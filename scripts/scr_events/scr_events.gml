@@ -4,6 +4,8 @@ function handle_enemy_hit(_enemy, _player_id, _damage_amount, _from_player_shot 
 	// _enemy immediately and they all bail out via instance_exists(_enemy) checks otherwise
 	get_game_controller().increase_combo(_player_id, _enemy)
 
+	debug("[LEECH] handle_enemy_hit enemy:", _enemy, "player:", _player_id, "from_player_shot:", _from_player_shot, "heal ults active:", instance_number(obj_ultimate_heal), "on streak:", get_game_controller().has_point_streak(_player_id))
+
 	if (_from_player_shot) {
 		// mark target indications as hit satisfied
 		with(obj_ult_assist_target) {

@@ -12,9 +12,11 @@ if (display_range > 0) {
 // body + turret, tinted white the same way the player is
 shader_set(sh_hue_shift)
 shader_set_uniform_f_array(_u_color, color_arr)
-draw_sprite_ext(spr_player_body, 0, x, y, body_scale, body_scale, 0, c_white, 1)
+var _body_scale = body_scale * sprite_scale
+var _turret_scale = turret_scale * sprite_scale
+draw_sprite_ext(spr_player_body, 0, x, y, _body_scale, _body_scale, 0, c_white, 1)
 
 var _turret_x = x + lengthdir_x(-recoil_amount, image_angle)
 var _turret_y = y + lengthdir_y(-recoil_amount, image_angle)
-draw_sprite_ext(spr_enemy2_turret, 0, _turret_x, _turret_y, turret_scale, turret_scale, image_angle, c_white, 1)
+draw_sprite_ext(spr_enemy2_turret, 0, _turret_x, _turret_y, _turret_scale, _turret_scale, image_angle, c_white, 1)
 shader_reset()

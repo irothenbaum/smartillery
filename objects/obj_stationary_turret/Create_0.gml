@@ -15,6 +15,16 @@ range_grow_duration = 0.5 // in seconds
 range_grow_progress = 0 // [0,1]
 display_range = 0
 
+// despawn animation (reverse of the spawn): when the lifetime alarm fires, the range collapses to 0,
+// then -- after a short pause -- the turret sprite shrinks to 0 and the instance is destroyed
+is_despawning = false
+despawn_elapsed = 0 // in seconds
+despawn_start_range = 0 // display_range when the despawn began (in case it hadn't finished growing)
+range_shrink_duration = range_grow_duration // in seconds
+sprite_shrink_delay = 0.1 // in seconds, after the range has fully collapsed
+sprite_shrink_duration = 0.25 // in seconds
+sprite_scale = 1 // multiplier on body_scale / turret_scale
+
 // rotation: spin slowly while idle, turn quickly (same as the player's turret) toward a target
 rotate_idle_speed = 360 / 3 // in degrees per second
 var _player = get_player()

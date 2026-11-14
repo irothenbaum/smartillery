@@ -230,6 +230,124 @@ I don't want to draw the circle around the player anymore
 	}
 }
 
+// -------------------------------------------------------------------------------------------
+// ACTIVE ULTIMATES RING
+// The single place that shows which ultimates are active: one background ring (just inside the shield's),
+// split into an equal section per active ultimate. Each section is drawn in its ultimate's color and its
+// colored sweep shrinks (like a pie chart) as the duration runs out, leaving the consumed part black.
+// Drawn by obj_background so it sits with the other rings -- individual ultimates don't draw any of this.
+// -------------------------------------------------------------------------------------------
+
+// fixed order so sections don't shuffle around as ultimates start and end
+// only time-based ultimates are shown (see is_duration_ult) -- air strike has no duration to count down
+#macro ULT_RING_ORDER [ULTIMATE_SLOW, ULTIMATE_HEAL, ULTIMATE_ASSIST, ULTIMATE_TURRET, ULTIMATE_COLLATERAL, ULTIMATE_RINGS]
+#macro ULT_RING_SECTION_GAP 2 // in degrees, between sections when more than one ultimate is active
+#macro ULT_RING_START_ANGLE 90 // sections are laid out starting from the top of the ring
+#macro ULT_RING_FULL_BUFFER 0.5 // in seconds -- a section shows full for this long before it starts shrinking (covers its grow-in animation)
+#macro ULT_RING_HEAD_WIDTH 3 // the white line marking where the remaining (colored) sweep meets the consumed (black) part
+
+/**
+ * Every active time-based ultimate instance (including extras), in ULT_RING_ORDER
+ * @returns {Array<Id.Instance>}
+ */
+function get_active_ultimate_instances() {
+	var _instances = []
+	var _order = ULT_RING_ORDER
+	for (var _i = 0; _i < array_length(_order); _i++) {
+		if (!is_duration_ult(_order[_i])) {
+			continue
+		}
+		with (global._G.ultimate_object_map[$ _order[_i]]) {
+			array_push(_instances, id)
+		}
+	}
+	return _instances
+}
+
+/**
+ * How much of a time-based ultimate's duration is left
+ * @param {Id.Instance} _ult
+ * @param {Real} _full_buffer -- in seconds: the ratio stays at 1 for this long after the ult starts, then counts down over the rest of the duration
+ * @returns {Real} [0,1]
+ */
+function ultimate_get_remaining_ratio(_ult, _full_buffer = 0) {
+	with (_ult) {
+		if (starting_duration <= 0) {
+			return 1
+		}
+		// while paused the lifetime alarm is turned off and its value is held in paused_alarms (see set_paused)
+		var _remaining = (variable_instance_exists(id, "is_paused") && is_paused) ? paused_alarms[0] : alarm[0]
+		var _countdown_frames = max(1, starting_duration - _full_buffer * game_get_speed(gamespeed_fps))
+		return clamp(_remaining / _countdown_frames, 0, 1)
+	}
+	return 0
+}
+
+/**
+ * @param {Real} _x
+ * @param {Real} _y
+ * @param {Struct.AnimatedSections} _sections -- persistent per drawer, so section sizes animate as ultimates start and end
+ */
+function draw_active_ultimates_ring(_x, _y, _sections) {
+	var _ults = get_active_ultimate_instances()
+	// snapshot what each section needs, so a section can keep drawing while it shrinks out after its ult is destroyed
+	var _data = []
+	for (var _i = 0; _i < array_length(_ults); _i++) {
+		array_push(_data, {
+			color: global.ultimate_colors[$ _ults[_i].ult_type],
+			remaining: ultimate_get_remaining_ratio(_ults[_i], ULT_RING_FULL_BUFFER),
+		})
+	}
+	_sections.update(_ults, _data)
+
+	var _layout = _sections.get_layout()
+	if (array_length(_layout) == 0) {
+		return
+	}
+
+	// fill the ring exactly (rings are indexed from the outside in)
+	var _ring_index = global.bg_number_of_circles - global.ult_ring_from_center
+	var _outer_radius = get_radius_for_ring(_ring_index)
+	var _inner_radius = get_radius_for_ring(_ring_index + 1)
+	var _radius = (_outer_radius + _inner_radius) / 2
+	var _thickness = _outer_radius - _inner_radius
+
+	// the gap between sections fades in as a second section grows in (and out as it leaves)
+	var _gap = ULT_RING_SECTION_GAP * clamp(_sections.get_total_weight() - 1, 0, 1)
+
+	for (var _i = 0; _i < array_length(_layout); _i++) {
+		var _section = _layout[_i]
+		var _start = ULT_RING_START_ANGLE + _section.start * 360 + _gap / 2
+		var _sweep_degrees = _section.size * 360 - _gap
+		if (_sweep_degrees <= 0.5) {
+			continue
+		}
+
+		// the whole section starts black, then the remaining duration is drawn over it in the ult's color
+		draw_set_color(c_black)
+		draw_arc(_x, _y, _radius, _sweep_degrees, _start, _thickness)
+
+		var _remaining_degrees = _sweep_degrees * _section.data.remaining
+		if (_remaining_degrees > 0.5) {
+			draw_set_color(_section.data.color)
+			draw_arc(_x, _y, _radius, _remaining_degrees, _start, _thickness)
+		}
+
+		// the head: a white radial line where the colored sweep meets the black. Hidden while the section is still full
+		if (_section.data.remaining < 1) {
+			var _head_angle = _start + _remaining_degrees
+			draw_set_color(c_white)
+			draw_line_width(
+				_x + lengthdir_x(_inner_radius, _head_angle), _y + lengthdir_y(_inner_radius, _head_angle),
+				_x + lengthdir_x(_outer_radius, _head_angle), _y + lengthdir_y(_outer_radius, _head_angle),
+				ULT_RING_HEAD_WIDTH
+			)
+		}
+	}
+
+	reset_composite_color()
+}
+
 // TOOD: This needs to contorl more ultimate types
 global._G.ultimate_object_map = {
 	ULTIMATE_STRIKE: obj_ultimate_strike,

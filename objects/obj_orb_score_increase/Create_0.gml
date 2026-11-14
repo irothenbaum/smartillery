@@ -1,3 +1,4 @@
+debug("[LEECH] orb created:", id, "type:", type, "amount:", amount, "owner:", owner_player_id, "at", x, y)
 direction = point_direction(x,y, global.xcenter, global.ycenter)
 // since orbs can be created during Air Strike, we need to check if we're currently paused or not
 paused_speed = 2
