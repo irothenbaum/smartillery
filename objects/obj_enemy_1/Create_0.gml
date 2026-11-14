@@ -19,3 +19,5 @@ if (is_undefined(waypoints) or array_length(waypoints) == 0) {
 
 direction = point_direction(x, y, global.xcenter, global.ycenter)
 speed = approach_speed
+
+play_sfx(snd_enemy_1_spawn)

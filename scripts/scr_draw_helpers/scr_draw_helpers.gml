@@ -99,6 +99,18 @@ function get_composite_from_color(_color) {
 }
 
 /**
+ * Returns black or white, whichever is more readable on top of the given background color
+ * @param {Struct.CompositeColor|Real|Constant.Color} _background_color
+ * @returns {Constant.Color}
+ */
+function get_contrast_color(_background_color) {
+	var _c = get_color_from_composite(_background_color)
+	// perceived brightness (ITU-R BT.601 luma), normalized to [0,1]
+	var _luminance = (0.299 * color_get_red(_c) + 0.587 * color_get_green(_c) + 0.114 * color_get_blue(_c)) / 255
+	return _luminance > 0.5 ? c_black : c_white
+}
+
+/**
  * @param {Real} _x
  * @param {Real} _y
  * @param {Real} _x1

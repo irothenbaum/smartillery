@@ -1,4 +1,22 @@
 function configure_test_room() {
+	get_game_controller().current_wave = 10
+	instance_create_layer(100, 100, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(100, 200, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(100, 300, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(100, 400, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(200, 100, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(200, 200, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(200, 300, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(200, 400, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(300, 100, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(300, 200, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(300, 300, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(300, 400, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(400, 100, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(400, 200, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(400, 300, LAYER_INSTANCES, obj_power_item)
+	instance_create_layer(400, 400, LAYER_INSTANCES, obj_power_item)
+	return
 	var _ult = get_player_ultimate(0)
 	switch(_ult) {
 		case ULTIMATE_STRIKE:
@@ -17,7 +35,11 @@ function spawn_enemy_at_angle_and_distance_from_center(_angle, _distance, _enemy
 	if (is_undefined(_params)) {
 		_params = {}
 	}
-	
+	// test setup enemies stay put so ultimates can be tested against them
+	if (!struct_exists(_params, "frozen")) {
+		_params.frozen = true
+	}
+
 	instance_create_layer(_x, _y, LAYER_INSTANCES, _enemy_type, _params)
 }
 

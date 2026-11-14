@@ -10,6 +10,17 @@ turret_scale = 0.12 // matches enemy_2's turret
 turret_length = 20 // matches enemy_2's get_turret_muzzle
 range = global.stationary_turret_range
 
+// the range indicator grows from 0 to full size when the turret spawns (purely visual -- targeting uses the full range)
+range_grow_duration = 0.5 // in seconds
+range_grow_progress = 0 // [0,1]
+display_range = 0
+
+// rotation: spin slowly while idle, turn quickly (same as the player's turret) toward a target
+rotate_idle_speed = 360 / 3 // in degrees per second
+var _player = get_player()
+rotate_aim_speed = instance_exists(_player) ? _player.rotate_aim_speed : 720 // in degrees per second
+aim_tolerance = 1 // in degrees -- how close we need to be facing the target before firing
+
 recoil_amount = 0
 max_recoil_amount = 8
 
@@ -51,7 +62,6 @@ function find_target() {
  */
 function fire_at(_target) {
 	array_push(shot_enemies, _target)
-	image_angle = point_direction(x, y, _target.x, _target.y)
 	recoil_amount = max_recoil_amount
 
 	instance_create_layer(x + lengthdir_x(turret_length, image_angle), y + lengthdir_y(turret_length, image_angle), LAYER_BG_EFFECTS, obj_muzzle_flash, {

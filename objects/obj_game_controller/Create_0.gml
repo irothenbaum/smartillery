@@ -550,6 +550,19 @@ function _handle_test_string(_code) {
 	if (_code == "_d") {
 		get_player().my_health -= 22
 	}
+	
+	if (_code == "_e") {
+		var _spawn_position = get_enemy_spawn_position()
+		var _next_enemy = get_enemy_to_spawn(10)
+		
+		var _new_enemy =  instance_create_layer(
+			_spawn_position.x,
+			_spawn_position.y, 
+			LAYER_INSTANCES, 
+			_next_enemy.type, 
+			_next_enemy.params
+		);
+	}
 }
 
 
@@ -559,7 +572,8 @@ reset_starting_values()
 if (room == rm_play_training) {
 	instance_create_layer(x,y,LAYER_CONTROLLERS, obj_training_controller)
 } else if (room == rm_test) {
-	configure_test_room()
+	// defer one frame so every room instance (e.g. obj_player) has run its Create event first
+	call_later(1, time_source_units_frames, configure_test_room)
 } else {
 	// this effectively starts the regular game
 	mark_wave_completed()

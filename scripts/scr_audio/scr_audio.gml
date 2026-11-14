@@ -16,14 +16,18 @@ function __audio() {
 		return global.audio
 	}
 
+	show_debug_message("[AUDIO DBG] 1 creating buses")
 	var _sfx_bus = audio_bus_create()
 	var _music_bus = audio_bus_create()
+	show_debug_message("[AUDIO DBG] 2 creating LPF effect")
 	// muffles music while paused -- bypassed during normal play
 	_music_bus.effects[0] = audio_effect_create(AudioEffectType.LPF2, {cutoff: 700, q: 1, bypass: true})
 
+	show_debug_message("[AUDIO DBG] 3 creating emitters")
 	var _sfx_emitter = audio_emitter_create()
 	var _ui_emitter = audio_emitter_create()
 	var _music_emitter = audio_emitter_create()
+	show_debug_message("[AUDIO DBG] 4 routing emitters to buses")
 	audio_emitter_bus(_sfx_emitter, _sfx_bus)
 	audio_emitter_bus(_ui_emitter, _sfx_bus)
 	audio_emitter_bus(_music_emitter, _music_bus)
@@ -50,7 +54,9 @@ function __audio() {
 		current_music_asset: undefined,
 	}
 
+	show_debug_message("[AUDIO DBG] 5 loading settings")
 	load_audio_settings()
+	show_debug_message("[AUDIO DBG] 6 setup done")
 	return global.audio
 }
 

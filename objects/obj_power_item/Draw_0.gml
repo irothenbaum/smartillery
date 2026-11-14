@@ -25,7 +25,7 @@ draw_set_color(_color)
 draw_circle(x, y, radius, false)
 
 draw_set_font(fnt_small)
-draw_set_color(_color == c_white ? c_black : c_white)
+draw_set_color(get_contrast_color(_color))
 draw_text_with_alignment(x, y, label, ALIGN_CENTER)
 
 reset_composite_color()

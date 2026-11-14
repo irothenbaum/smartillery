@@ -1,11 +1,13 @@
 /// @description Draw range, body, and turret
 // range indicator
-draw_set_circle_precision(get_circle_precision_from_radius_and_degrees(range, 360))
-draw_set_color(c_white)
-draw_set_alpha(0.3)
-draw_circle(x, y, range, false)
-draw_set_alpha(1)
-draw_circle(x, y, range, true)
+if (display_range > 0) {
+	draw_set_circle_precision(get_circle_precision_from_radius_and_degrees(display_range, 360))
+	draw_set_color(c_white)
+	draw_set_alpha(0.12)
+	draw_circle(x, y, display_range, false)
+	draw_set_alpha(1)
+	draw_circle(x, y, display_range, true)
+}
 
 // body + turret, tinted white the same way the player is
 shader_set(sh_hue_shift)

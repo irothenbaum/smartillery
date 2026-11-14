@@ -13,7 +13,12 @@ if (keyboard_check_pressed(vk_escape)) {
 }
 
 if (room == rm_test) {
-	with (obj_enemy_parent) { speed = 0 }
+	// only hold still the enemies placed by configure_test_room -- ones spawned via test words (e.g. "_e") move normally
+	with (obj_enemy_parent) {
+		if (frozen) {
+			speed = 0
+		}
+	}
 }
 
 if (!global.paused) {

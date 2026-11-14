@@ -20,6 +20,11 @@ function enemy_initialize(_e) {
 		slow_sparks = undefined
 		// set by enemy_destroy_without_reward (damage burst, shield), so the kill yields no rewards
 		killed_without_reward = false
+		// test room only: frozen enemies are held in place by the game controller.
+		// may be passed in on creation (instance_create_layer params are applied before Create), so don't overwrite it
+		if (!variable_instance_exists(self, "frozen")) {
+			frozen = false
+		}
 	}
 	// must go after the initializations due to edge conditions
 	initialize_instance_has_equation(_e)
@@ -267,5 +272,83 @@ function enemy_apply_slow(_enemy, _multiplier) {
 		if (!is_undefined(slow_sparks)) {
 			part_system_position(slow_sparks, x, y)
 		}
+	}
+}
+
+/**
+ * @returns {{x: Real, y: Real}}
+ */
+function get_enemy_spawn_position() {
+	var _rotation = irandom(360)
+	var _pos_x = global.xcenter + lengthdir_x(global.bg_circle_max_radius, _rotation)
+	var _pos_y = global.ycenter + lengthdir_x(global.bg_circle_max_radius, _rotation)
+	
+	// the no spawn zone is the middle 33%, so if pos_x is in that range, we shift it
+	var _no_spawn_marker = global.room_width * 0.33
+	if (_pos_x > _no_spawn_marker && _pos_x < _no_spawn_marker * 2) {
+		var _distance_to_center = _pos_x - global.xcenter
+		// if _distance_to_center is negative, then pos_x is to the right of center, in the middle 33%.
+		// this basically shifts our x position back into either the first or 3rd swction respctive to its position in the second
+		_pos_x = _distance_to_center < 0 ? 2 * (_no_spawn_marker + abs(_distance_to_center)) : _no_spawn_marker - (_distance_to_center * 2)
+	}
+	
+	// quad 1 is TOP, 2 is RIGHT, 3 is BOTTOM, 0 is LEFT
+	var _quad = irandom(3)
+	
+	_pos_y = _quad == 1 ? -global.oob_margin : (_quad == 3 ? global.room_height + global.oob_margin : _pos_y);
+	_pos_x = _quad == 0 ? -global.oob_margin : (_quad == 2 ? global.room_width + global.oob_margin : _pos_x);
+	
+	return {
+		x: _pos_x,
+		y: _pos_y,
+	}
+}
+
+/**
+ * @param {Real} _wave
+ * @returns {{type: Id.Instance, params: Struct}}
+ */
+function get_enemy_to_spawn(_wave) {
+	var _enemy_order = [
+		obj_enemy_1,
+		obj_enemy_2,
+		obj_compound_enemy_1,
+		obj_enemy_3,
+		obj_compound_enemy_2,
+		obj_enemy_4,
+		// obj_enemy_5, not working right
+	]
+	
+	var _max_enemy = floor(_wave / global.wave_difficulty_step)
+	
+	var _next_enemy_type = undefined
+	var _next_enemy_params = {}
+	do {
+		if (_max_enemy == 0 || flip_coin(max(2, (_max_enemy) * 10 - _wave))) {
+			_next_enemy_type = _enemy_order[_max_enemy]
+		} else {
+			_max_enemy--
+		}
+	} until (!is_undefined(_next_enemy_type))
+	
+	
+	// JUST FOR TESTING:
+	// _next_enemy_type = obj_enemy_5
+	// -----
+	
+	switch(_next_enemy_type) {
+		case obj_compound_enemy_1:
+			_next_enemy_params.enemy_count = 4 + floor(_wave / global.wave_difficulty_step)
+			_next_enemy_params.waypoint_count = floor(_next_enemy_params.enemy_count / 3)
+			break
+		
+		case obj_compound_enemy_2:
+			_next_enemy_params.enemy_count = 3 + floor(_wave / global.wave_difficulty_step)
+			break
+	}
+
+	return {
+		type: _next_enemy_type,
+		params: _next_enemy_params
 	}
 }
