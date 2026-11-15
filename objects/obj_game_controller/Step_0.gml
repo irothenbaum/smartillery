@@ -1,3 +1,4 @@
+if (!variable_global_exists("boot_steps")) { global.boot_steps = 0 } if (global.boot_steps < 5) { global.boot_steps++; var _boot_msg = "BOOT 7: controller step " + string(global.boot_steps); show_debug_message(_boot_msg); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, _boot_msg); file_text_writeln(_boot_f); file_text_close(_boot_f) } // BOOT-DEBUG
 if (keyboard_check_pressed(vk_escape)) {
 	if (instance_number(obj_ultimate_strike) == 0 && !is_game_over) {
 		toggle_pause()
@@ -23,6 +24,9 @@ if (room == rm_test) {
 
 if (!global.paused) {
 	advance_play_time()
+
+	// assign power items / extra ultimates their evenly spaced orbit slots (they move themselves in orbiter_step)
+	update_orbit_formation()
 	
 	// increase ult charge for each player
 	for_each_player(method(self, function(_player_id) {

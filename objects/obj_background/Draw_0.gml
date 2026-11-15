@@ -1,3 +1,4 @@
+if (!variable_global_exists("boot_draws")) { global.boot_draws = 0 } if (global.boot_draws < 3) { global.boot_draws++; show_debug_message("BOOT 9: background draw " + string(global.boot_draws)); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 9: background draw " + string(global.boot_draws)); file_text_writeln(_boot_f); file_text_close(_boot_f) } // BOOT-DEBUG
 var _player_health = get_player().my_health
 
 // heal flash: fade the health rings to green, hold, then fade back (applied in get_ring_color)

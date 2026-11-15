@@ -14,7 +14,7 @@
     "name":"items",
     "path":"folders/Objects/items.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{"name":"obj_bonus_item_parent","path":"objects/obj_bonus_item_parent/obj_bonus_item_parent.yy",},
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,

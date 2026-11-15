@@ -8,8 +8,12 @@ var _rotate_step = rotate_speed / game_get_speed(gamespeed_fps)
 
 image_angle += sign(_angle_dif) * (_abs_angle_dif < _rotate_step ? _abs_angle_dif : _rotate_step)
 
-// start the fire animation if we're within 5 degrees of our target
-if (array_length(aiming_at_instance) > 0 && _abs_angle_dif < 1) {
+if (tap_cooldown > 0) {
+	tap_cooldown--
+}
+
+// start the fire animation if we're within 5 degrees of our target (and not mid-pause between tap shots)
+if (array_length(aiming_at_instance) > 0 && _abs_angle_dif < 1 && tap_cooldown <= 0) {
 	execute_hit_target()
 }
 

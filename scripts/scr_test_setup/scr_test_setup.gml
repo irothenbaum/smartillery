@@ -16,6 +16,7 @@ function configure_test_room() {
 	instance_create_layer(400, 200, LAYER_INSTANCES, obj_power_item)
 	instance_create_layer(400, 300, LAYER_INSTANCES, obj_power_item)
 	instance_create_layer(400, 400, LAYER_INSTANCES, obj_power_item)
+	show_debug_message("BOOT 8: test room configured"); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 8: test room configured"); file_text_writeln(_boot_f); file_text_close(_boot_f) // BOOT-DEBUG
 	return
 	var _ult = get_player_ultimate(0)
 	switch(_ult) {

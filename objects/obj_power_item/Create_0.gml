@@ -1,6 +1,5 @@
 /// @description Initialize settings
-initialize_instance_has_equation(self)
-my_bounds = get_bounds_for_instance(self)
+event_inherited()
 
 radius = global.player_body_radius
 
@@ -45,7 +44,7 @@ for (var _i = 0; _i < array_length(_words); _i++) {
 }
 
 function register_hit() {
-	get_game_controller().release_answer(answer)
+	// (the answer is released by obj_bonus_item_parent's Destroy)
 	debug(string_concat("ITEM \"", type, "\" HIT by ", last_hit_by_player_id))
 
 	switch (type) {

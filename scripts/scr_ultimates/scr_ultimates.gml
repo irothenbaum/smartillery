@@ -233,15 +233,14 @@ I don't want to draw the circle around the player anymore
 // -------------------------------------------------------------------------------------------
 // ACTIVE ULTIMATES RING
 // The single place that shows which ultimates are active: one background ring (just inside the shield's),
-// split into an equal section per active ultimate. Each section is drawn in its ultimate's color and its
-// colored sweep shrinks (like a pie chart) as the duration runs out, leaving the consumed part black.
+// split across its thickness into an equal band per active ultimate (like the shield's health bands). Each band is
+// a full circle in its ultimate's color whose sweep shrinks (like a pie chart) as the duration runs out, leaving the consumed part black.
 // Drawn by obj_background so it sits with the other rings -- individual ultimates don't draw any of this.
 // -------------------------------------------------------------------------------------------
 
 // fixed order so sections don't shuffle around as ultimates start and end
 // only time-based ultimates are shown (see is_duration_ult) -- air strike has no duration to count down
 #macro ULT_RING_ORDER [ULTIMATE_SLOW, ULTIMATE_HEAL, ULTIMATE_ASSIST, ULTIMATE_TURRET, ULTIMATE_COLLATERAL, ULTIMATE_RINGS]
-#macro ULT_RING_SECTION_GAP 2 // in degrees, between sections when more than one ultimate is active
 #macro ULT_RING_START_ANGLE 90 // sections are laid out starting from the top of the ring
 #macro ULT_RING_FULL_BUFFER 0.5 // in seconds -- a section shows full for this long before it starts shrinking (covers its grow-in animation)
 #macro ULT_RING_HEAD_WIDTH 3 // the white line marking where the remaining (colored) sweep meets the consumed (black) part
@@ -271,16 +270,8 @@ function get_active_ultimate_instances() {
  * @returns {Real} [0,1]
  */
 function ultimate_get_remaining_ratio(_ult, _full_buffer = 0) {
-	with (_ult) {
-		if (starting_duration <= 0) {
-			return 1
-		}
-		// while paused the lifetime alarm is turned off and its value is held in paused_alarms (see set_paused)
-		var _remaining = (variable_instance_exists(id, "is_paused") && is_paused) ? paused_alarms[0] : alarm[0]
-		var _countdown_frames = max(1, starting_duration - _full_buffer * game_get_speed(gamespeed_fps))
-		return clamp(_remaining / _countdown_frames, 0, 1)
-	}
-	return 0
+	// the lifetime alarm (alarm[0]) is started at starting_duration in ultimate_initialize
+	return get_alarm_remaining_ratio(_ult, _ult.starting_duration, _full_buffer)
 }
 
 /**
@@ -312,37 +303,44 @@ function draw_active_ultimates_ring(_x, _y, _sections) {
 	var _radius = (_outer_radius + _inner_radius) / 2
 	var _thickness = _outer_radius - _inner_radius
 
-	// the gap between sections fades in as a second section grows in (and out as it leaves)
-	var _gap = ULT_RING_SECTION_GAP * clamp(_sections.get_total_weight() - 1, 0, 1)
+	// the whole ring starts black, then each band's remaining duration is drawn over it in the ult's color
+	draw_set_color(c_black)
+	draw_arc(_x, _y, _radius, 360, 0, _thickness)
 
+	// each active ult gets a full-circle band across the ring's thickness (like the shield's health bands), so every
+	// countdown sweeps the whole circumference side by side with the others
 	for (var _i = 0; _i < array_length(_layout); _i++) {
 		var _section = _layout[_i]
-		var _start = ULT_RING_START_ANGLE + _section.start * 360 + _gap / 2
-		var _sweep_degrees = _section.size * 360 - _gap
-		if (_sweep_degrees <= 0.5) {
+		var _band_inner = _inner_radius + _section.start * _thickness
+		var _band_thickness = _section.size * _thickness
+		if (_band_thickness <= 0.5) {
 			continue
 		}
+		var _band_outer = _band_inner + _band_thickness
+		var _band_radius = _band_inner + _band_thickness / 2
 
-		// the whole section starts black, then the remaining duration is drawn over it in the ult's color
-		draw_set_color(c_black)
-		draw_arc(_x, _y, _radius, _sweep_degrees, _start, _thickness)
-
-		var _remaining_degrees = _sweep_degrees * _section.data.remaining
+		var _remaining_degrees = 360 * _section.data.remaining
 		if (_remaining_degrees > 0.5) {
 			draw_set_color(_section.data.color)
-			draw_arc(_x, _y, _radius, _remaining_degrees, _start, _thickness)
+			draw_arc(_x, _y, _band_radius, _remaining_degrees, ULT_RING_START_ANGLE, _band_thickness)
 		}
 
-		// the head: a white radial line where the colored sweep meets the black. Hidden while the section is still full
+		// the head: a white radial line where the colored sweep meets the black. Hidden while the band is still full
 		if (_section.data.remaining < 1) {
-			var _head_angle = _start + _remaining_degrees
+			var _head_angle = ULT_RING_START_ANGLE + _remaining_degrees
 			draw_set_color(c_white)
 			draw_line_width(
-				_x + lengthdir_x(_inner_radius, _head_angle), _y + lengthdir_y(_inner_radius, _head_angle),
-				_x + lengthdir_x(_outer_radius, _head_angle), _y + lengthdir_y(_outer_radius, _head_angle),
+				_x + lengthdir_x(_band_inner, _head_angle), _y + lengthdir_y(_band_inner, _head_angle),
+				_x + lengthdir_x(_band_outer, _head_angle), _y + lengthdir_y(_band_outer, _head_angle),
 				ULT_RING_HEAD_WIDTH
 			)
 		}
+	}
+
+	// thin white lines separate the bands, same as the shield. They slide to their new spacing as bands grow in and out
+	draw_set_color(c_white)
+	for (var _i = 1; _i < array_length(_layout); _i++) {
+		draw_arc(_x, _y, _inner_radius + _thickness * _layout[_i].start, 360, 0, 2)
 	}
 
 	reset_composite_color()

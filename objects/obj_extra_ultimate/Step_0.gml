@@ -1,10 +1,8 @@
-/// @description tip_step
-tip_step(self)
+/// @description Pulse animation
+event_inherited() // tip + orbit
 if (global.paused) {
 	return
 }
-
-my_bounds = get_bounds_for_instance(self)
 
 // Update pulse animation
 if (pulse_scale >= max_pulse_scale) {

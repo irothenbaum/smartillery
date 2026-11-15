@@ -481,3 +481,32 @@ function find_point_distance_to_line(_line_x1, _line_y1, _line_x2, _line_y2, _po
 		
 		return _dist
 }
+/**
+ * How much of an alarm's countdown is left, for showing timers (ultimates ring, stationary turret, ...).
+ * Reads the paused value while paused, since set_paused turns alarms off and holds them in paused_alarms
+ * @param {Id.Instance} _inst
+ * @param {Real} _total_frames -- what the alarm was started at
+ * @param {Real} _full_buffer -- in seconds: the ratio stays at 1 for this long after the alarm starts, then counts down over the rest
+ * @param {Real} _alarm_index
+ * @returns {Real} [0,1]
+ */
+function get_alarm_remaining_ratio(_inst, _total_frames, _full_buffer = 0, _alarm_index = 0) {
+	if (_total_frames <= 0) {
+		return 1
+	}
+	with (_inst) {
+		var _remaining = (variable_instance_exists(id, "is_paused") && is_paused) ? paused_alarms[_alarm_index] : alarm[_alarm_index]
+		var _countdown_frames = max(1, _total_frames - _full_buffer * game_get_speed(gamespeed_fps))
+		return clamp(_remaining / _countdown_frames, 0, 1)
+	}
+	return 0
+}
+
+/**
+ * How many more hits a targetable can take. Enemies with more than 1 health track it in my_health; everything else dies in 1 hit
+ * @param {Id.Instance} _inst
+ * @returns {Real}
+ */
+function get_instance_health(_inst) {
+	return variable_instance_exists(_inst, "my_health") ? _inst.my_health : 1
+}

@@ -97,7 +97,7 @@ global.is_math_mode = true
 global.play_time_ms = 0
 global.paused = false
 global.game_seed = randomize()
-global.starting_wave = 9
+global.starting_wave = 0 // 0 is default
 
 // multiplayer stuff
 global.active_player_ids = []   // ordered slot list, populated before entering any game room
@@ -164,11 +164,15 @@ global.damage_enemy_4_fragment_collision = 15
 global.damage_enemy_5_missile_collision = 40
 
 // when the player takes damage, a burst clears all enemies within this many rings of the player
-global.damage_burst_ring_count = 6
+// keep this below enemy 2's firing ring (5, see obj_enemy_2 fire_distance) so the burst doesn't reach parked shooters
+global.damage_burst_ring_count = 4
 
 // power items
 global.shield_ring_from_center = 3 // which ring (counting out from the player) the shield sits on
 global.ult_ring_from_center = global.shield_ring_from_center - 1 // active ultimates are shown on the ring just inside the shield's
+global.bonus_item_orbit_ring_from_center = 8 // power items and extra ultimates orbit the player on this ring
+global.bonus_item_orbit_period = 12 // in seconds, for one full orbit
+global.recent_answer_grace_period = 1 // in seconds: a guess matching an answer someone just got right isn't penalized
 global.shield_color = #2f7bff
 global.stationary_turret_range = 300 // px
 global.stationary_turret_fire_interval = 1 // seconds between shots
@@ -276,3 +280,4 @@ ds_map_add(global.tip_copy_map, obj_input, function(_instance) {
 })
 
 global.show_debug = false
+show_debug_message("BOOT 1: scr_constants globals initialized"); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 1: scr_constants globals initialized"); file_text_writeln(_boot_f); file_text_close(_boot_f) // BOOT-DEBUG

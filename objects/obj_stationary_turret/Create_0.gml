@@ -1,7 +1,8 @@
 /// @description Initialize stationary turret
 // Spawned by the turret power item, at the item's position. owner_player_id (passed in on creation)
 // is the player who activated it -- they get credit for its hits.
-// It shoots each enemy that enters its range exactly once, at most once per fire interval.
+// It fires at most once per fire interval, spreading its shots across fresh enemies first and only coming back
+// to finish off enemies it already shot when nothing new is in range (see find_target).
 _u_color = shader_get_uniform(sh_hue_shift, "u_vColor")
 color_arr = color_to_array(c_white)
 
@@ -37,41 +38,55 @@ max_recoil_amount = 8
 // start facing away from the player
 image_angle = point_direction(global.xcenter, global.ycenter, x, y)
 
-// every enemy we've fired at -- each enemy only ever gets shot once
+// every enemy we've fired at -- fresh enemies are preferred over these (see find_target)
 shot_enemies = []
 can_fire = true
 
 var _body_radius = sprite_get_width(spr_player_body) * body_scale / 2
 my_bounds = new Bounds(x - _body_radius, y - _body_radius, x + _body_radius, y + _body_radius)
 
-// lifetime
-alarm[0] = global.stationary_turret_duration * game_get_speed(gamespeed_fps)
+// lifetime -- shown by the range fill sweeping down to 0 (like the active-ultimates ring)
+lifetime_frames = global.stationary_turret_duration * game_get_speed(gamespeed_fps)
+alarm[0] = lifetime_frames
+lifetime_full_buffer = range_grow_duration // in seconds: the fill stays full while the range grows in, then counts down
+lifetime_start_angle = 90 // the sweep starts (and ends) at the top, like the ultimates ring
+lifetime_head_width = 2 // the white line where the fill meets the empty part
 
 /**
- * The enemy closest to the player that's in range and hasn't been shot yet
+ * The in-range enemy closest to the player, preferring ones we haven't shot yet. Enemies we've already shot
+ * (but that survived, e.g. enemy_2 with 2 health) are only targeted when no fresh enemy is in range
  * @returns {Id.Instance}
  */
 function find_target() {
-	var _target = noone
-	var _target_distance = infinity
+	var _fresh_target = noone
+	var _fresh_distance = infinity
+	var _repeat_target = noone
+	var _repeat_distance = infinity
 	with (obj_enemy_parent) {
-		if (point_distance(x, y, other.x, other.y) > other.range || array_contains(other.shot_enemies, id)) {
+		if (point_distance(x, y, other.x, other.y) > other.range) {
 			continue
 		}
 		var _distance_to_player = point_distance(x, y, global.xcenter, global.ycenter)
-		if (_distance_to_player < _target_distance) {
-			_target = id
-			_target_distance = _distance_to_player
+		if (array_contains(other.shot_enemies, id)) {
+			if (_distance_to_player < _repeat_distance) {
+				_repeat_target = id
+				_repeat_distance = _distance_to_player
+			}
+		} else if (_distance_to_player < _fresh_distance) {
+			_fresh_target = id
+			_fresh_distance = _distance_to_player
 		}
 	}
-	return _target
+	return _fresh_target != noone ? _fresh_target : _repeat_target
 }
 
 /**
  * @param {Id.Instance} _target
  */
 function fire_at(_target) {
-	array_push(shot_enemies, _target)
+	if (!array_contains(shot_enemies, _target)) {
+		array_push(shot_enemies, _target)
+	}
 	recoil_amount = max_recoil_amount
 
 	instance_create_layer(x + lengthdir_x(turret_length, image_angle), y + lengthdir_y(turret_length, image_angle), LAYER_BG_EFFECTS, obj_muzzle_flash, {

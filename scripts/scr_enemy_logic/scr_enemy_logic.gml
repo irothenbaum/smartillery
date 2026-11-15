@@ -176,10 +176,12 @@ function enemy_generate_question(_e) {
 		answer = ""
 
 		var _attempts = 10;
+		var _failed_attempts = 0;
+		var _max_multiplier = 1;
 		do {
 			try {
 				_attempts--;
-				var _values = global.is_math_mode ? generate_equation_and_answer(_functional_wave) : generate_text_and_answer(_functional_wave)
+				var _values = global.is_math_mode ? generate_equation_and_answer(_functional_wave, _max_multiplier) : generate_text_and_answer(_functional_wave)
 				get_game_controller().reserve_answer(_values.answer, self)
 				equation = _values.equation
 				answer = _values.answer
@@ -188,6 +190,11 @@ function enemy_generate_question(_e) {
 				if (_err != "Answer in use") {
 					debug("ENCOUNTERED ERROR:", _err)
 					throw _err
+				}
+				_failed_attempts++;
+				// every 3 collisions, double the max answer to widen the pool of possible answers
+				if (_failed_attempts % 3 == 0) {
+					_max_multiplier *= 2;
 				}
 			}
 		} until (equation != "" || _attempts <= 0)
@@ -350,5 +357,88 @@ function get_enemy_to_spawn(_wave) {
 	return {
 		type: _next_enemy_type,
 		params: _next_enemy_params
+	}
+}
+
+// -------------------------------------------------------------------------------------------
+// BONUS ITEM ORBIT
+// Bonus items (obj_bonus_item_parent: power items, extra ultimates) orbit the player on one ring, spaced evenly. The game controller is the
+// central authority: update_orbit_formation() assigns every orbiter its slot once per step, and each orbiter
+// eases toward its slot in orbiter_step(). New items glide in from where they spawned instead of snapping,
+// and the formation re-spaces smoothly whenever an item is added or removed.
+// -------------------------------------------------------------------------------------------
+
+#macro ORBIT_EASE 0.04 // per-frame lerp toward the orbit ring and toward an orbiter's slot
+
+/**
+ * The middle of the orbit ring
+ * @returns {Real}
+ */
+function get_orbit_radius() {
+	// rings are indexed from the outside in
+	var _ring_index = global.bg_number_of_circles - global.bonus_item_orbit_ring_from_center
+	return (get_radius_for_ring(_ring_index) + get_radius_for_ring(_ring_index + 1)) / 2
+}
+
+/**
+ * Starts the orbiter at its spawn position (polar, around the center) so it eases into orbit from there
+ * @param {Id.Instance} _inst
+ */
+function orbiter_initialize(_inst) {
+	with (_inst) {
+		orbit_angle = point_direction(global.xcenter, global.ycenter, x, y)
+		orbit_radius = point_distance(global.xcenter, global.ycenter, x, y)
+		orbit_target_angle = orbit_angle
+	}
+}
+
+/**
+ * Assigns every orbiter an evenly spaced slot. Orbiters keep their current order around the circle, and the
+ * formation's rotation is the one closest to where they already are -- so nobody crosses paths or jumps
+ */
+function update_orbit_formation() {
+	var _orbiters = get_array_of_instances(obj_bonus_item_parent)
+	var _count = array_length(_orbiters)
+	if (_count == 0) {
+		return
+	}
+
+	// sign() matters: array_sort treats the comparator's result as an integer, so a raw float difference under 1
+	// (two items < 1 degree apart) reads as "equal" inconsistently, which can crash the runner's native sort
+	array_sort(_orbiters, function(_a, _b) {
+		return sign(_a.orbit_angle - _b.orbit_angle)
+	})
+
+	// the formation's phase is the circular mean of each orbiter's offset from its slot
+	var _spacing = 360 / _count
+	var _sum_x = 0
+	var _sum_y = 0
+	for (var _i = 0; _i < _count; _i++) {
+		var _offset = _orbiters[_i].orbit_angle - _i * _spacing
+		_sum_x += dcos(_offset)
+		_sum_y += dsin(_offset)
+	}
+	var _phase = darctan2(_sum_y, _sum_x)
+
+	for (var _i = 0; _i < _count; _i++) {
+		_orbiters[_i].orbit_target_angle = _phase + _i * _spacing
+	}
+}
+
+/**
+ * Rotates the orbiter and eases it toward its slot on the orbit ring
+ * @param {Id.Instance} _inst
+ */
+function orbiter_step(_inst) {
+	with (_inst) {
+		var _rotate_step = 360 / global.bonus_item_orbit_period * step_seconds()
+		// the slot rotates too, so easing toward it doesn't lag behind the orbit
+		orbit_target_angle += _rotate_step
+		orbit_angle += _rotate_step + angle_difference(orbit_target_angle, orbit_angle) * ORBIT_EASE
+		orbit_angle = ((orbit_angle mod 360) + 360) mod 360
+		orbit_radius = lerp(orbit_radius, get_orbit_radius(), ORBIT_EASE)
+
+		x = global.xcenter + lengthdir_x(orbit_radius, orbit_angle)
+		y = global.ycenter + lengthdir_y(orbit_radius, orbit_angle)
 	}
 }

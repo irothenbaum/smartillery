@@ -85,8 +85,12 @@ function math_determine_max_from_wave(_wave) {
 	return global.starting_max_answer + (2 * _wave)
 }
 
-function generate_equation_and_answer(_wave) {
-	var _max = math_determine_max_from_wave(_wave)
+/**
+ * @param {Real} _wave
+ * @param {Real} [_max_multiplier] scales the max answer value, used to widen the range of options when answers collide
+ */
+function generate_equation_and_answer(_wave, _max_multiplier = 1) {
+	var _max = math_determine_max_from_wave(_wave) * _max_multiplier
 	var _difficulty = min(global.max_math_difficulty, floor(_wave / global.wave_difficulty_step))
 	var _answer = generate_answer(_max)
 	return generate_equation(_answer, _max, _difficulty)

@@ -278,7 +278,7 @@ function create_background_glitter() {
 
 	// occasional brighter twinkles
 	var _twinkle = part_type_create()
-	part_type_shape(_twinkle, pt_shape_star) // hard edged (pt_shape_flare is a soft blur)
+	part_type_shape(_twinkle, pt_shape_square)
 	part_type_size(_twinkle, 0.08, 0.2, 0, 0)
 	part_type_orientation(_twinkle, 0, 359, 0.33, 0, false)
 	part_type_color_mix(_twinkle, c_white, #ffd6fa)

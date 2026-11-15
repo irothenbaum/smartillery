@@ -5,7 +5,7 @@
 //  - currently active (a player's own, or one triggered by another extra-ultimate item)
 //  - already offered by another extra-ultimate item on the board
 // This guarantees no player can ever have 2 instances of the same ultimate running.
-// This happens before initialize_instance_has_equation so the fallback below doesn't reserve an answer it never releases
+// This happens before event_inherited() (which reserves an answer) so the fallback below doesn't reserve one it doesn't need
 var _all_ultimates = [ULTIMATE_STRIKE, ULTIMATE_SLOW, ULTIMATE_HEAL, ULTIMATE_ASSIST, ULTIMATE_COLLATERAL, ULTIMATE_TURRET, ULTIMATE_RINGS]
 var _game_controller = get_game_controller()
 var _taken_ultimates = {}
@@ -41,8 +41,7 @@ if (array_length(_available) == 0) {
 
 type = _available[irandom(array_length(_available) - 1)]
 
-initialize_instance_has_equation(self)
-my_bounds = get_bounds_for_instance(self)
+event_inherited()
 
 radius = global.player_body_radius * 0.8
 icon_scale = 0.016 // this is a magic number, a property of the ultimate sprite sizes and the radius
@@ -54,7 +53,7 @@ max_pulse_scale = 1.2
 pulse_grow_speed = (max_pulse_scale - pulse_scale) / 3
 
 function register_hit() {
-	get_game_controller().release_answer(answer)
+	// (the answer is released by obj_bonus_item_parent's Destroy)
 	debug(string_concat("EXTRA ULTIMATE \"", type, "\" activated by ", last_hit_by_player_id))
 	get_game_controller().activate_extra_ultimate(last_hit_by_player_id, type)
 	instance_destroy()

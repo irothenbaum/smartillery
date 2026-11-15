@@ -1,3 +1,4 @@
+show_debug_message("BOOT 2: main menu room creation code"); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 2: main menu room creation code"); file_text_writeln(_boot_f); file_text_close(_boot_f) // BOOT-DEBUG
 set_viewport_dimensions()
 
 
@@ -15,4 +16,4 @@ function set_up_test() {
 	room_goto(rm_test)
 }
 
-set_up_test()
+// set_up_test()

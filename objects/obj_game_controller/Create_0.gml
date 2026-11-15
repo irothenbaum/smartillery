@@ -1,3 +1,4 @@
+show_debug_message("BOOT 3: controller create start"); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 3: controller create start"); file_text_writeln(_boot_f); file_text_close(_boot_f) // BOOT-DEBUG
 draw_set_halign(fa_left);
 
 random_set_seed(global.game_seed);
@@ -118,8 +119,7 @@ function end_game() {
 		get_array_of_instances(obj_compound_enemy_5),
 		get_all_enemy_instances(),
 		get_array_of_instances(obj_input),
-		get_array_of_instances(obj_power_item),
-		get_array_of_instances(obj_extra_ultimate),
+		get_array_of_instances(obj_bonus_item_parent),
 		get_array_of_instances(obj_shield),
 		get_array_of_instances(obj_stationary_turret),
 	)
@@ -152,6 +152,8 @@ function reset_starting_values() {
 	ultimate_level = initialize_player_map(1)
 	cached_ultimate_level = initialize_player_map(undefined)
 	inst_ultimate = initialize_player_map(undefined)
+	// expiry times are in play time, which restarts with the game
+	recently_guessed_answers = {}
 	random_set_seed(global.game_seed);
 }
 
@@ -264,7 +266,13 @@ function handle_submit_code(_code, _player_id = undefined) {
 			return true
 		}
 	}
-	
+
+	// another player got this answer in just before us -- not a mistake, so don't penalize it
+	if (was_answer_recently_guessed(_code)) {
+		debug("Answer", _code, "from player", _player_id, "was recently guessed by someone else -- no penalty")
+		return false
+	}
+
 	reset_streak(_player_id)
 	return false
 }
@@ -512,6 +520,50 @@ function reserve_answer(_ans, _inst) {
 /// @return {undefined}
 function release_answer(_ans) {
 	struct_remove(active_answers, _ans)
+	// a correctly guessed answer is usually released when the shot lands, a moment after the guess. Restart its
+	// grace period from here so a slower player who typed the same answer still has the full window
+	if (struct_exists(recently_guessed_answers, _ans)) {
+		mark_answer_recently_guessed(_ans)
+	}
+}
+
+/// Bonus items (power items, extra ultimates) are selected with "launch codes" (001, 002, ...) instead of equations.
+/// Reserves the lowest code not currently in use -- "000" is the ultimate code, so codes start at 001
+/// @param {Id.Instance} _inst
+/// @return {String} the reserved code
+function reserve_lowest_launch_code(_inst) {
+	var _n = 1
+	var _code = string_replace_all(string_format(_n, 3, 0), " ", "0")
+	while (is_answer_reserved(_code)) {
+		_n++
+		_code = string_replace_all(string_format(_n, 3, 0), " ", "0")
+	}
+	reserve_answer(_code, _inst)
+	return _code
+}
+
+// Multiplayer fairness: when two players type the same correct answer, the slower one shouldn't lose their streak
+// just because the target was already destroyed. Correctly guessed answers are remembered here for a short grace
+// period, and a guess matching one of them is ignored (no reward, no penalty) instead of counting as incorrect.
+// answer -> play time (ms) the grace period ends
+recently_guessed_answers = {}
+
+/// @param {String} _ans
+function mark_answer_recently_guessed(_ans) {
+	recently_guessed_answers[$ _ans] = get_play_time() + global.recent_answer_grace_period * 1000
+}
+
+/// @param {String} _ans
+/// @returns {Bool}
+function was_answer_recently_guessed(_ans) {
+	if (!struct_exists(recently_guessed_answers, _ans)) {
+		return false
+	}
+	if (get_play_time() > recently_guessed_answers[$ _ans]) {
+		struct_remove(recently_guessed_answers, _ans)
+		return false
+	}
+	return true
 }
 
 /// @func handle_submit_answer(_answer)
@@ -524,8 +576,22 @@ function handle_submit_answer(_answer, _player_id) {
 	}
 	
 	var _instance = active_answers[$ _answer];
-	get_player().fire_at_instance(_instance, _player_id);
-	
+	var _player = get_player()
+
+	// Multi-player "tap": the answer stays reserved until the shot lands, so other players can answer the same target
+	// in the meantime. Each *different* player adds a back-to-back shot (Double Tap, Triple Tap, ...), capped at the
+	// target's health. A repeat from the same player, or a tap past the cap, is ignored: returning false here lands in
+	// handle_submit_code's recently-guessed check, so it's neither rewarded nor penalized
+	var _queued_shots = _player.count_queued_shots(_instance)
+	if (_queued_shots > 0) {
+		if (_player.has_queued_shot_from(_instance, _player_id) || _queued_shots >= get_instance_health(_instance)) {
+			return false
+		}
+	}
+
+	_player.fire_at_instance(_instance, _player_id);
+	mark_answer_recently_guessed(_answer)
+
 	if (is_ult_active(ULTIMATE_ASSIST)) {
 		var _inst = instance_find(obj_ultimate_assist, 0)
 		// don't care about the return value here because, see below
@@ -569,6 +635,7 @@ function _handle_test_string(_code) {
 }
 
 
+show_debug_message("BOOT 4: controller create functions defined, starting game"); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 4: controller create functions defined, starting game"); file_text_writeln(_boot_f); file_text_close(_boot_f) // BOOT-DEBUG
 // These combined effectively start the game
 reset_starting_values()
 
@@ -581,3 +648,4 @@ if (room == rm_play_training) {
 	// this effectively starts the regular game
 	mark_wave_completed()
 }
+show_debug_message("BOOT 5: controller create end"); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 5: controller create end"); file_text_writeln(_boot_f); file_text_close(_boot_f) // BOOT-DEBUG

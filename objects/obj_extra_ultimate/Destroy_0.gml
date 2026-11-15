@@ -1,4 +1,5 @@
 /// @description Particle effect
+event_inherited() // releases the answer
 // type is unset when Create fell back to spawning a regular power item
 if (!struct_exists(global.ultimate_colors, type)) {
 	exit

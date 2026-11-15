@@ -465,6 +465,23 @@ function get_circle_precision_from_radius_and_degrees(_radius, _degrees) {
 	return floor(log2(max(1, ceil(_radius / 10))) * 10 * (_degrees / 360))
 }
 
+/**
+ * A filled pie slice (sector) from the center out to _radius
+ * @param {Real} _x
+ * @param {Real} _y
+ * @param {Real} _radius
+ * @param {Real} _degrees -- sweep
+ * @param {Real} _start -- angle the sweep starts at
+ */
+function draw_pie(_x, _y, _radius, _degrees, _start = 0) {
+	if (_degrees <= 0) {
+		return
+	}
+	var _segments = max(3, get_circle_precision_from_radius_and_degrees(_radius, _degrees))
+	// width 0 so the slice's edge sits exactly at _radius
+	__draw_circle_ext(_x, _y, _radius, _segments, _start, _degrees, 0, false)
+}
+
 function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1, _segment_override = 0) {
 	var _segments = _segment_override > 0 ? _segment_override : get_circle_precision_from_radius_and_degrees(_radius, _degrees)
 	
