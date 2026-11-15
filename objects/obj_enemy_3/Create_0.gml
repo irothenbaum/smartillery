@@ -2,7 +2,7 @@ event_inherited()
 collision_damage = global.damage_enemy_3_collision
 destroy_effect = draw_particle_enemy_3_destroy
 
-_u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
+enemy_attack_color_init(self)
 max_speed = 4;
 shift_position = undefined
 starting_speed = 0.1
@@ -13,9 +13,7 @@ image_yscale = image_scale
 my_health = 3
 is_paused = false
 
-normal_color = c_white
 stunned_color = c_red
-normal_color_arr = color_to_array(normal_color)
 stunned_color_arr = color_to_array(stunned_color)
 
 direction = point_direction(x, y, global.xcenter, global.ycenter)

@@ -6,7 +6,7 @@ _u_color = shader_get_uniform(sh_octagon_fill, "u_vColor")
 _u_sections = shader_get_uniform(sh_octagon_fill, "u_sections")
 _u_rotation = shader_get_uniform(sh_octagon_fill, "u_rotation")
 _u_uvs = shader_get_uniform(sh_octagon_fill, "u_uvs")
-attack_color = c_fuchsia
+attack_color = global.enemy_attack_color
 attack_color_arr = color_to_array(attack_color)
 
 // Teleport to the a closer location, at same angle from center

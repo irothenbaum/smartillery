@@ -37,6 +37,8 @@
 // colors
 global.bg_color = #1a031a
 global.combo_color = #ff0000
+// enemies turn this color once they commit to attacking (enemy 1's final approach, enemy 2 in firing position)
+global.enemy_attack_color = c_fuchsia
 global.beam_color = c_white
 
 global.ultimate_colors = {
@@ -203,7 +205,11 @@ ds_map_add(global.targetable_difficulty_multiplier, obj_extra_ultimate, 2)
 
 
 // effects
-global.fade_speed = 0.1
+// the shared base timing for every fade in the game: a fade is 99% of the way to its target after this many seconds
+global.fade_seconds = 0.7
+// fades are done as `value = lerp(value, target, global.fade_speed)` once per frame, so this is the per-frame step
+// that lands at 99% after global.fade_seconds -- derived from the frame rate so fades take the same time at any fps
+global.fade_speed = 1 - power(0.01, 1 / (global.fade_seconds * game_get_speed(gamespeed_fps)))
 global.scene_transition_duration = 2
 global.bg_number_of_circles = 24
 global.bg_circle_max_radius = ceil(sqrt(power(global.room_width, 2) + power(global.room_height, 2)) / 2)

@@ -2,6 +2,7 @@ event_inherited()
 collision_damage = global.damage_enemy_4_fragment_collision
 destroy_effect = draw_particle_enemy_4_fragment_destroy
 
+enemy_attack_color_init(self)
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale

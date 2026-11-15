@@ -9,6 +9,8 @@ image_yscale = image_scale
 
 direction = point_direction(x, y, global.xcenter, global.ycenter)
 
+enemy_attack_color_init(self)
+
 function register_hit(_damage_amount) {
 	// if you inflict massive damage, it doesn't spawn the fragments
 	if (_damage_amount > 3) {

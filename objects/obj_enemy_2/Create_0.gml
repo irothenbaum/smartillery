@@ -1,7 +1,7 @@
 event_inherited()
 destroy_effect = draw_particle_enemy_2_destroy
 
-_u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
+enemy_attack_color_init(self)
 shooting = false
 // fire when we reach the center of fifth innermost circle
 fire_distance = get_radius_for_ring(global.bg_number_of_circles - 5) - global.bg_circle_ring_width / 2
@@ -16,9 +16,7 @@ max_recoil_amount = 10
 shift_position = undefined
 speed = approach_speed;
 
-normal_color = c_white
 stunned_color = c_red
-normal_color_arr = color_to_array(normal_color)
 stunned_color_arr = color_to_array(stunned_color)
 
 // here we establish where we'll be heading and firing from

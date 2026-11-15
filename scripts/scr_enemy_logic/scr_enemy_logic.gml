@@ -70,6 +70,45 @@ function enemy_destroy_without_reward(_e) {
 	}
 }
 
+// -------------------------------------------------------------------------------------------
+// ATTACK COLOR
+// Enemies fade to global.enemy_attack_color once they commit to attacking (enemy 1's final approach, enemy 2 in
+// firing position, enemy 3 at top speed, enemy 4 fragments homing in), and back if they stop (e.g. stunned).
+// Call enemy_attack_color_init in Create, then enemy_get_attack_color once per Draw.
+// -------------------------------------------------------------------------------------------
+
+/**
+ * @param {Id.Instance} _e
+ * @param {Constant.Color} _normal_color -- the color drawn when not attacking
+ */
+function enemy_attack_color_init(_e, _normal_color = c_white) {
+	with (_e) {
+		_u_color = shader_get_uniform(sh_hue_shift, "u_vColor")
+		normal_color = _normal_color
+		attack_blend = 0 // 0 = normal_color, 1 = global.enemy_attack_color
+	}
+}
+
+/**
+ * Moves the enemy's color toward (or away from) the attack color by global.fade_speed, and returns the current color
+ * @param {Id.Instance} _e
+ * @param {Bool} _is_attacking
+ * @returns {Struct} {color: Constant.Color, color_arr: Array<Real>} -- color_arr is for sh_hue_shift's u_vColor
+ */
+function enemy_get_attack_color(_e, _is_attacking) {
+	with (_e) {
+		if (!global.paused) {
+			attack_blend = lerp(attack_blend, _is_attacking ? 1 : 0, global.fade_speed)
+			// snap the tail of the fade so it settles exactly
+			if (abs(attack_blend - (_is_attacking ? 1 : 0)) < 0.01) {
+				attack_blend = _is_attacking ? 1 : 0
+			}
+		}
+		var _color = merge_color(normal_color, global.enemy_attack_color, attack_blend)
+		return {color: _color, color_arr: color_to_array(_color)}
+	}
+}
+
 /**
  * @param {Id.Instance} _e
  */

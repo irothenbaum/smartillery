@@ -3,8 +3,10 @@ if (!is_undefined(shift_position)) {
 	y = (y + shift_position.y) / 2
 }
 
-var _draw_color = normal_color
-var _draw_color_arr = normal_color_arr
+// at top speed we fade to the attack color (the Step snaps speed to exactly the max once it gets there)
+var _color = enemy_get_attack_color(self, speed > 0 && speed >= max_speed * slow_multiplier)
+var _draw_color = _color.color
+var _draw_color_arr = _color.color_arr
 var _shadows_to_draw = floor(speed)
 if (!is_paused && speed == 0 && floor(get_play_time() % 400) < 200) {
 	_draw_color = stunned_color

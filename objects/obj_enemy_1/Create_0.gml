@@ -2,15 +2,13 @@ event_inherited()
 collision_damage = global.damage_enemy_1_collision
 destroy_effect = draw_particle_enemy_1_destroy
 
-_u_color = shader_get_uniform(sh_hue_shift, "u_vColor");
+// #7f7f7f is the body sprite's own gray, so drawing it through the shader looks the same as drawing it plain
+enemy_attack_color_init(self, #7f7f7f)
 image_scale = 0.12
 image_xscale = image_scale
 image_yscale = image_scale
 approach_speed = 1.6
 rotate_speed = (irandom(1) == 0 ? -1 : 1) * (irandom(20) + 5) / 10
-
-attack_color = c_fuchsia
-attack_color_arr = color_to_array(attack_color)
 
 // if waypoints wasn't set for us, we initialize
 if (is_undefined(waypoints) or array_length(waypoints) == 0) {	

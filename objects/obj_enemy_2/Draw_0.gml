@@ -8,8 +8,10 @@ var _turret_y = y + lengthdir_y(-recoil_amount, image_angle)
 var _turret_scale = 1 - (recoil_amount / (max_recoil_amount * 2))
 
 
-var _draw_color = normal_color
-var _draw_color_arr = normal_color_arr
+// in firing position we fade to the attack color
+var _color = enemy_get_attack_color(self, shooting)
+var _draw_color = _color.color
+var _draw_color_arr = _color.color_arr
 if (equation == "" && floor(get_play_time() % 400) < 200) {
 	_draw_color = stunned_color
 	_draw_color_arr = stunned_color_arr

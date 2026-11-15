@@ -107,9 +107,17 @@ function end_game() {
 	
 	is_game_over = true;
 
-	// this will destroy the ult
+	// this will destroy each player's own ult
 	mark_ultimate_used();
-	
+	// ...but ults started from extra-ultimate items aren't tracked per player, so sweep up every active ult too.
+	// Their sections in the active-ultimates ring then shrink out like any ult that ends
+	var _ult_types = struct_get_names(global._G.ultimate_object_map)
+	for (var _i = 0; _i < array_length(_ult_types); _i++) {
+		with (global._G.ultimate_object_map[$ _ult_types[_i]]) {
+			instance_destroy()
+		}
+	}
+
 	// destroy enemies (and compound spawners that may still be spawning), inputs, items and power ups
 	var _items_to_destroy = array_concat(
 		get_array_of_instances(obj_compound_enemy_1),
