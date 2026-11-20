@@ -207,7 +207,9 @@ function get_draw_equation_position(_string, _x, _y, _offset_override) {
 }
 
 function enemy_generate_question(_e) {
-	var _wave = get_current_wave_number()
+	// an instance can set its own difficulty_wave (e.g. obj_training_target, which levels up on its own);
+	// everything else uses the game's current wave
+	var _wave = variable_instance_exists(_e, "difficulty_wave") ? _e.difficulty_wave : get_current_wave_number()
 	var _functional_wave = ceil(_wave / ds_map_find_value(global.targetable_difficulty_multiplier, _e.object_index))
 	
 	with (_e) {
@@ -542,10 +544,11 @@ function enemy_1_movement_step(_e) {
  * @returns {{x: Real, y: Real}}
  */
 function get_menu_enemy_spawn_position() {
-	var _view_x0 = 0
-	var _view_y0 = global.room_height * (1 - MENU_ZOOM)
-	var _view_x1 = global.room_width * MENU_ZOOM
-	var _view_y1 = global.room_height
+	var _cam = view_camera[0]
+	var _view_x0 = camera_get_view_x(_cam)
+	var _view_y0 = camera_get_view_y(_cam)
+	var _view_x1 = _view_x0 + camera_get_view_width(_cam)
+	var _view_y1 = _view_y0 + camera_get_view_height(_cam)
 
 	if (flip_coin()) {
 		// left edge

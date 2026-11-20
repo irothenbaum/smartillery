@@ -22,10 +22,14 @@ function try_join_with_device(_device_index) {
 }
 
 function handle_start() {
-	room_goto(rm_select_ultimates)
+	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
+	if (is_room_transitioning()) return
+	transition_to_room(rm_select_ultimates)
 }
 
 function handle_cancel() {
+	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
+	if (is_room_transitioning()) return
 	reset_game_state()
-	room_goto(rm_main_menu)
+	transition_to_room(rm_main_menu)
 }

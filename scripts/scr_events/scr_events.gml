@@ -80,9 +80,7 @@ function handle_player_streak(_player_id, _new_streak_value) {
 			streak_fire = undefined
 			
 			// also shake the box
-			shake_start = get_play_time()
-			// total_shake_time is in milliseconds
-			alarm[0] = game_get_speed(gamespeed_fps) * total_shake_time / 1000
+			start_shake()
 		}
 	}
 }

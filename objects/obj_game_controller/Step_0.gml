@@ -1,12 +1,11 @@
 if (!variable_global_exists("boot_steps")) { global.boot_steps = 0 } if (global.boot_steps < 5) { global.boot_steps++; var _boot_msg = "BOOT 7: controller step " + string(global.boot_steps); show_debug_message(_boot_msg); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, _boot_msg); file_text_writeln(_boot_f); file_text_close(_boot_f) } // BOOT-DEBUG
 if (keyboard_check_pressed(vk_escape)) {
-	if (instance_number(obj_ultimate_strike) == 0 && !is_game_over) {
-		toggle_pause()
-		
+	// no pausing/unpausing during a room fade (e.g. after Quit, which leaves the game paused while it fades out)
+	if (instance_number(obj_ultimate_strike) == 0 && !is_game_over && !instance_exists(obj_room_transition)) {
 		if (global.paused) {
-			pause_overlay = instance_create_layer(x,y, LAYER_HUD, obj_pause_overlay)
+			resume_game()
 		} else {
-			instance_destroy(pause_overlay)
+			pause_game()
 		}
 	} else {
 		debug("Cannot pause during ult or selection or game over")

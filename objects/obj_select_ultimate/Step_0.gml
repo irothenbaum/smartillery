@@ -4,6 +4,12 @@
 // this card is locked in
 preview_elapsed += step_seconds()
 
+// Escape goes back a screen (like rm_coop_setup's cancel). Only player 0's card handles it, so it fires once
+if (owner_player_id == 0 && keyboard_check_pressed(vk_escape)) {
+	go_back()
+	exit
+}
+
 if (is_locked) exit
 
 if (device_index >= 0) {

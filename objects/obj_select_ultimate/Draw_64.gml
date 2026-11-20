@@ -178,6 +178,10 @@ if (owner_player_id == 0) {
 	draw_set_font(fnt_title)
 	draw_set_color(c_white)
 	draw_text_with_alignment(global.room_width / 2, global.room_height * 0.1, "Select Your Ultimate", ALIGN_CENTER)
+
+	// same style as rm_coop_setup's "Escape  —  Cancel"
+	draw_set_font(fnt_base)
+	draw_text_with_alignment(global.room_width / 2, global.room_height - 30, "Escape  —  Back", ALIGN_CENTER)
 }
 
 reset_composite_color()

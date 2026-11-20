@@ -26,7 +26,8 @@ target = noone
 shot_interval = 2 // in seconds between unprovoked shots
 shot_interval_jitter = 0.6 // in seconds, +/- so the rhythm doesn't feel mechanical
 shot_timer = shot_interval // in seconds until the next unprovoked shot
-threat_radius = global.room_height * 0.22 // enemies inside this get shot right away
+// enemies inside this get shot right away. Matches the player's distance from the top/right of the view
+threat_radius = MENU_PLAYER_MARGIN
 idle_delay = 3 // in seconds with no target before the turret eases back to vertical
 idle_timer = 0
 
@@ -72,6 +73,62 @@ function fire_at_target() {
 	target = noone
 	shot_timer = shot_interval + random_range(-shot_interval_jitter, shot_interval_jitter)
 	idle_timer = 0
+}
+
+// a menu item the player typed: the turret drops whatever it was doing, shoots the item, and the item's
+// on_click runs menu_trigger_delay seconds after the shot so the hit reads first
+menu_item = noone
+menu_item_hit = false
+menu_trigger_delay = 0.2 // in seconds
+menu_trigger_timer = 0
+
+/**
+ * @param {Id.Instance} _inst -- an obj_menu_button, obj_menu_toggle, or obj_menu_number_input
+ */
+function shoot_menu_item(_inst) {
+	// one at a time -- ignore anything typed while a menu shot is in flight
+	if (menu_item != noone) {
+		return
+	}
+	menu_item = _inst
+	menu_item_hit = false
+	target = noone
+}
+
+/**
+ * Menu items draw on the GUI layer, so aim at the room position under the middle of the item
+ * @returns {{x: Real, y: Real}}
+ */
+function get_menu_item_world_position() {
+	var _bounds = menu_item.bounds
+	return is_undefined(_bounds) ? gui_to_world(menu_item.x, menu_item.y) : gui_to_world(_bounds.xcenter, _bounds.ycenter)
+}
+
+function fire_at_menu_item() {
+	var _hit = get_menu_item_world_position()
+	var _muzzle = get_turret_muzzle()
+	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_BG_EFFECTS, obj_muzzle_flash, {
+		target: noone,
+		target_x: _hit.x,
+		target_y: _hit.y,
+		width: global.beam_width,
+		color: global.beam_color,
+	})
+	instance_create_layer(_hit.x, _hit.y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: draw_particle_shockwave})
+	recoil_amount = max_recoil_amount
+	menu_item_hit = true
+	menu_trigger_timer = menu_trigger_delay
+}
+
+function trigger_menu_item() {
+	var _item = menu_item
+	menu_item = noone
+	menu_item_hit = false
+	shot_timer = shot_interval
+	idle_timer = 0
+	if (instance_exists(_item)) {
+		_item.on_click(_item)
+	}
 }
 
 function get_turret_muzzle() {

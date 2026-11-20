@@ -639,3 +639,47 @@ function draw_rectangle_clipped(_bounds, _color, _spr, _scale) {
 	shader_reset();
 
 }
+/**
+ * Draws a menu item (obj_menu_button, obj_menu_number_input, obj_menu_toggle): its label centered in a rounded
+ * outline box. Uses the current font, color, and alpha.
+ * @param {Real} _x -- the box's left edge for ALIGN_LEFT, its center for ALIGN_CENTER
+ * @param {Real} _y -- the box's vertical center
+ * @param {String} _message
+ * @param {String} _align -- ALIGN_LEFT or ALIGN_CENTER
+ * @param {Real} _min_width -- the box is at least this wide (not counting padding), so a group of items can match
+ * @param {Bool} _filled -- also fill the box (at a quarter of the current alpha), e.g. a selected toggle
+ * @returns {Struct.Bounds} the box's bounds, for click testing
+ */
+function draw_menu_box(_x, _y, _message, _align = ALIGN_CENTER, _min_width = 0, _filled = false) {
+	var _pad_x = 12
+	var _content_width = max(string_width(_message), _min_width)
+	var _x0 = _align == ALIGN_LEFT ? _x : _x - (_content_width / 2) - _pad_x
+	var _x1 = _x0 + _content_width + (_pad_x * 2)
+
+	var _text_bounds = draw_text_with_alignment((_x0 + _x1) / 2, _y, _message, ALIGN_CENTER)
+	var _box = new Bounds(_x0, _text_bounds.y0 - 8, _x1, _text_bounds.y1 + 6)
+	var _corner = _box.height / 2
+	draw_roundrect_ext(_box.x0, _box.y0, _box.x1, _box.y1, _corner, _corner, true)
+	if (_filled) {
+		var _alpha = draw_get_alpha()
+		draw_set_alpha(_alpha * 0.25)
+		draw_roundrect_ext(_box.x0, _box.y0, _box.x1, _box.y1, _corner, _corner, false)
+		draw_set_alpha(_alpha)
+	}
+	return _box
+}
+
+/**
+ * The width to pass as min_box_width so a group of menu items all draw the same size
+ * @param {Array<String>} _messages -- every label the group will show (use the longest expected value for inputs)
+ * @param {Asset.GMFont} _font -- the font the items draw with
+ * @returns {Real}
+ */
+function get_menu_box_group_width(_messages, _font = fnt_title) {
+	draw_set_font(_font)
+	var _width = 0
+	for (var _i = 0; _i < array_length(_messages); _i++) {
+		_width = max(_width, string_width(_messages[_i]))
+	}
+	return _width
+}

@@ -5,9 +5,12 @@
 #macro LAYER_BG_EFFECTS "BG_Effects"
 #macro LAYER_FG_EFFECTS "FG_Effects"
 
-// main menu background scene: the camera shows this fraction of the world, pinned to its lower-left corner,
-// so the player (world center) sits in the top-right of the screen and the menu fits in the lower-left
+// main menu background scene: the camera shows this fraction of the world, so the player (world center) sits in
+// the top-right of the screen and the menu fits in the lower-left
 #macro MENU_ZOOM 0.6
+// in room px: how far the menu player is from the top and right edges of the view, which is also the radius
+// inside which it shoots enemies right away. The same value so the player can always see the threats it reacts to
+#macro MENU_PLAYER_MARGIN 190
 
 #macro ALIGN_CENTER "center"
 #macro ALIGN_LEFT "left"

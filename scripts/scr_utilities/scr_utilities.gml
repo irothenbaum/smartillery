@@ -421,10 +421,16 @@ function set_viewport_dimensions() {
 	view_visible[0] = true;
 }
 
-/// Main menu only: like set_viewport_dimensions, but the camera shows a MENU_ZOOM-sized window of the world
-/// pinned to its lower-left corner, scaled up to fill the full port. The GUI layer is unaffected.
-function set_menu_viewport_dimensions(_zoom = MENU_ZOOM) {
-	var _cam = camera_create_view(0, global.room_height * (1 - _zoom), global.room_width * _zoom, global.room_height * _zoom);
+/// Main menu only: like set_viewport_dimensions, but the camera shows a MENU_ZOOM-sized window of the world,
+/// scaled up to fill the full port. It's placed so the player (world center) is _margin room px from both the
+/// top and right edges of the view. The GUI layer is unaffected.
+function set_menu_viewport_dimensions(_zoom = MENU_ZOOM, _margin = MENU_PLAYER_MARGIN) {
+	var _view_w = global.room_width * _zoom
+	var _view_h = global.room_height * _zoom
+	var _view_x = global.xcenter + _margin - _view_w
+	var _view_y = global.ycenter - _margin
+
+	var _cam = camera_create_view(_view_x, _view_y, _view_w, _view_h);
 	view_set_camera(0, _cam);
 
 	view_set_wport(0, global.room_width);
@@ -432,6 +438,34 @@ function set_menu_viewport_dimensions(_zoom = MENU_ZOOM) {
 
 	view_enabled = true;
 	view_visible[0] = true;
+}
+
+/**
+ * Converts a room position to where it appears on the GUI layer, through view 0's camera
+ * @param {Real} _x
+ * @param {Real} _y
+ * @returns {{x: Real, y: Real}}
+ */
+function world_to_gui(_x, _y) {
+	var _cam = view_camera[0]
+	return {
+		x: (_x - camera_get_view_x(_cam)) * display_get_gui_width() / camera_get_view_width(_cam),
+		y: (_y - camera_get_view_y(_cam)) * display_get_gui_height() / camera_get_view_height(_cam),
+	}
+}
+
+/**
+ * Converts a GUI-layer position to the room position drawn there, through view 0's camera
+ * @param {Real} _x
+ * @param {Real} _y
+ * @returns {{x: Real, y: Real}}
+ */
+function gui_to_world(_x, _y) {
+	var _cam = view_camera[0]
+	return {
+		x: camera_get_view_x(_cam) + _x * camera_get_view_width(_cam) / display_get_gui_width(),
+		y: camera_get_view_y(_cam) + _y * camera_get_view_height(_cam) / display_get_gui_height(),
+	}
 }
 
 // this takes an angle from a point at the center of a rectangle and returns the position along the boundary that it intersects
@@ -522,4 +556,56 @@ function get_alarm_remaining_ratio(_inst, _total_frames, _full_buffer = 0, _alar
  */
 function get_instance_health(_inst) {
 	return variable_instance_exists(_inst, "my_health") ? _inst.my_health : 1
+}
+
+/**
+ * A new struct with every key of _a, then every key of _b (so _b wins on conflicts). Neither input is changed.
+ * @param {Struct} _a
+ * @param {Struct} _b
+ * @returns {Struct}
+ */
+function merge_structs(_a, _b) {
+	var _result = {}
+	var _sources = [_a, _b]
+	for (var _s = 0; _s < 2; _s++) {
+		var _names = variable_struct_get_names(_sources[_s])
+		for (var _i = 0; _i < array_length(_names); _i++) {
+			_result[$ _names[_i]] = _sources[_s][$ _names[_i]]
+		}
+	}
+	return _result
+}
+
+/**
+ * Fades the screen to black, changes to _room (or restarts, if _room is the current room), then fades back in.
+ * Use this instead of room_goto / room_restart. While a fade out is underway, further calls are ignored, so a
+ * double click or double submit can't start a second transition.
+ * @param {Asset.GMRoom} _room
+ */
+function transition_to_room(_room) {
+	var _existing = instance_find(obj_room_transition, 0)
+	if (instance_exists(_existing)) {
+		with (_existing) {
+			// already leaving -- ignore. If it's still fading the new room in, turn around from the current alpha
+			if (!is_fading_out) {
+				start(_room)
+			}
+		}
+		return
+	}
+	var _transition = instance_create_depth(0, 0, -10000, obj_room_transition)
+	_transition.start(_room)
+}
+
+/**
+ * @returns {Bool} whether we're fading out toward another room (see transition_to_room). Check this before
+ * changing global state on the way out, since a second transition_to_room call during the fade is ignored
+ */
+function is_room_transitioning() {
+	with (obj_room_transition) {
+		if (is_fading_out) {
+			return true
+		}
+	}
+	return false
 }

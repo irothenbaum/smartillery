@@ -12,6 +12,13 @@ draw_circle(x, y, lerp_radius, false)
 draw_set_alpha(1)
 draw_arc(x, y, lerp_radius, 360, 0, outline_thickness)
 
+// this target's own difficulty, above it (the equation draws below, since targets sit in the top half)
+draw_set_font(fnt_base)
+draw_set_color(c_white)
+draw_set_alpha(is_exploded ? 0.5 : 1)
+draw_text_with_alignment(x, y - max_radius - global.margin_md, "Difficulty " + string(difficulty_level), ALIGN_CENTER)
+draw_set_alpha(1)
+
 // Only draw equation if not exploded
 if (!is_exploded) {
 	instance_draw_equation(self)

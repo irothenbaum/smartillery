@@ -70,6 +70,8 @@ function cycle(_dir) {
 }
 
 function confirm_selection() {
+	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
+	if (is_room_transitioning()) return
 	if (is_locked) return
 	if (is_taken_by_other(get_current_ultimate())) return
 
@@ -95,8 +97,20 @@ function _check_all_locked() {
 		if (!_cards[_i].is_locked) return
 	}
 	if (global.is_coop) {
-		room_goto(rm_play_coop)
+		transition_to_room(rm_play_coop)
 	} else {
-		room_goto(rm_play_solo)
+		transition_to_room(rm_play_solo)
+	}
+}
+
+// back to where we came from: co-op returns to the join screen (which resets the joined players), solo to the menu
+function go_back() {
+	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
+	if (is_room_transitioning()) return
+	if (global.is_coop) {
+		transition_to_room(rm_coop_setup)
+	} else {
+		reset_game_state()
+		transition_to_room(rm_main_menu)
 	}
 }

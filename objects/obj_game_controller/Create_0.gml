@@ -6,6 +6,32 @@ random_set_seed(global.game_seed);
 pause_overlay = undefined;
 enemy_controller = undefined;
 
+// Pausing is the same in every play room (solo, co-op, training): Escape toggles it, and the overlay
+// (obj_pause_overlay) shows Resume and Quit buttons
+function pause_game() {
+	set_paused(true)
+	pause_overlay = instance_create_layer(x, y, LAYER_HUD, obj_pause_overlay)
+}
+
+function resume_game() {
+	// quitting fades out with the pause screen still up, so don't let Resume unpause the game mid-fade
+	if (is_room_transitioning()) return
+	set_paused(false)
+	if (!is_undefined(pause_overlay) && instance_exists(pause_overlay)) {
+		instance_destroy(pause_overlay)
+	}
+	pause_overlay = undefined
+}
+
+function quit_to_menu() {
+	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
+	if (is_room_transitioning()) return
+	// stay paused, with the pause screen up, while it fades out (resume_game ignores the Resume button mid-fade).
+	// The menu's reset_game_state unpauses (including audio) once we arrive
+	reset_starting_values()
+	transition_to_room(rm_main_menu)
+}
+
 current_wave = global.starting_wave
 game_score = 0
 
@@ -282,6 +308,15 @@ function handle_submit_code(_code, _player_id = undefined) {
 	if (was_answer_recently_guessed(_code)) {
 		debug("Answer", _code, "from player", _player_id, "was recently guessed by someone else -- no penalty")
 		return false
+	}
+
+	// training has no other penalty, so make a wrong answer visible: the input turns red and shakes
+	// (in the other modes it only shakes when the wrong answer costs a streak, see handle_player_streak)
+	if (room == rm_play_training) {
+		var _input = get_input(_player_id)
+		if (!is_undefined(_input) && instance_exists(_input)) {
+			_input.start_shake()
+		}
 	}
 
 	reset_streak(_player_id)

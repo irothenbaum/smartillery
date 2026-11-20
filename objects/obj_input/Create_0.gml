@@ -54,3 +54,10 @@ function size_streak_fire() {
 	part_emitter_region(streak_fire.system, streak_fire.emitter, 0, my_bounds.width, 0, 0, ps_shape_rectangle, ps_distr_linear);
 	part_system_position(streak_fire.system, my_bounds.x0, my_bounds.y1)		
 }
+
+// turns the box red and shakes it (see Step/Draw); Alarm 0 stops it
+function start_shake() {
+	shake_start = get_play_time()
+	// total_shake_time is in milliseconds
+	alarm[0] = game_get_speed(gamespeed_fps) * total_shake_time / 1000
+}

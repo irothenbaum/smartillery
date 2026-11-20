@@ -1,3 +1,8 @@
+// each target has its own difficulty, which goes up every time it's destroyed. Set before event_inherited,
+// since that generates the first question (enemy_generate_question reads difficulty_wave)
+difficulty_level = 1
+difficulty_wave = 1
+
 event_inherited()
 
 max_radius = global.player_body_radius // 52px diameter at full health
@@ -62,8 +67,8 @@ function register_hit(_damage_amount) {
 		instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: method(self, function(_x, _y) { return draw_particle_sparks(_x, _y, 12, damaged_color) })})
 		instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_particle_effect, {effect: function(_x, _y) { return draw_particle_sparks(_x, _y, 12) }})
 		alarm[0] = respawn_time
-		// gets harder everytime you destroy a target
-		instance_find(obj_training_controller, 0).increase_difficulty()
+		// this target gets harder every time you destroy it (the new question is generated on respawn)
+		increase_difficulty()
 	} else {
 		enemy_generate_question(self)
 	}
@@ -73,4 +78,10 @@ function respawn() {
 	my_health = max_health
 	is_exploded = false
 	enemy_generate_question(self)
+}
+
+function increase_difficulty() {
+	difficulty_level++
+	// each level is one step up in question difficulty (see global.wave_difficulty_step)
+	difficulty_wave = 1 + (difficulty_level - 1) * global.wave_difficulty_step
 }
