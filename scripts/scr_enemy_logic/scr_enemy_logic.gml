@@ -491,3 +491,72 @@ function orbiter_step(_inst) {
 		y = global.ycenter + lengthdir_y(_draw_radius, orbit_angle)
 	}
 }
+
+// -------------------------------------------------------------------------------------------
+// ENEMY 1 MOVEMENT
+// Shared by obj_enemy_1 and the main menu's obj_menu_enemy_1. Reads/writes: waypoints, direction, speed,
+// image_angle, rotate_speed, slow_multiplier, alarm[0] (the "give up and aim at the player" failsafe)
+// -------------------------------------------------------------------------------------------
+
+/**
+ * @param {Id.Instance} _e
+ */
+function enemy_1_movement_step(_e) {
+	with (_e) {
+		image_angle += rotate_speed * slow_multiplier
+
+		if (array_length(waypoints) > 0) {
+			var _target = waypoints[0]
+			var _dist = point_direction(x, y, _target.x, _target.y)
+
+			// Add curve offset based on distance to waypoint
+			// Use waypoint position as seed for deterministic curve direction
+			var _curve_seed = floor(_target.x + _target.y * 1000)
+			var _curve_dir = ((_curve_seed mod 2) == 0) ? 1 : -1
+			var _distance_to_target = point_distance(x, y, _target.x, _target.y)
+			var _curve_strength = min(1, _distance_to_target / 200) * 25 * _curve_dir
+
+			direction -= angle_difference(direction, _dist + _curve_strength) * 0.05;
+
+			// when we're close to a waypoint, we shift it off
+			if (_distance_to_target < global.margin_md) {
+				array_shift(waypoints)
+			}
+		} else {
+			direction -= angle_difference(direction, point_direction(x, y, global.xcenter, global.ycenter)) * 0.05;
+			// accelerate to speed 5
+			speed = lerp(speed, 5 * slow_multiplier, 0.03)
+			rotate_speed = lerp(rotate_speed, 12, 0.08)
+
+			// as a failsafe, we'll aim directly for the player 3 seconds after making our final turn
+			if (!(alarm[0] > 0)) {
+				alarm[0] = 3 * game_get_speed(gamespeed_fps) / slow_multiplier
+			}
+		}
+	}
+}
+
+/**
+ * Main menu only: a spawn point just outside the left or bottom edge of the zoomed menu camera (see
+ * set_menu_viewport_dimensions), so menu enemies cross the visible area on their way to the player
+ * @returns {{x: Real, y: Real}}
+ */
+function get_menu_enemy_spawn_position() {
+	var _view_x0 = 0
+	var _view_y0 = global.room_height * (1 - MENU_ZOOM)
+	var _view_x1 = global.room_width * MENU_ZOOM
+	var _view_y1 = global.room_height
+
+	if (flip_coin()) {
+		// left edge
+		return {
+			x: _view_x0 - global.oob_margin,
+			y: random_range(_view_y0, _view_y1),
+		}
+	}
+	// bottom edge
+	return {
+		x: random_range(_view_x0, _view_x1),
+		y: _view_y1 + global.oob_margin,
+	}
+}

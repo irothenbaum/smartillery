@@ -5,6 +5,10 @@
 #macro LAYER_BG_EFFECTS "BG_Effects"
 #macro LAYER_FG_EFFECTS "FG_Effects"
 
+// main menu background scene: the camera shows this fraction of the world, pinned to its lower-left corner,
+// so the player (world center) sits in the top-right of the screen and the menu fits in the lower-left
+#macro MENU_ZOOM 0.6
+
 #macro ALIGN_CENTER "center"
 #macro ALIGN_LEFT "left"
 #macro ALIGN_RIGHT "right"

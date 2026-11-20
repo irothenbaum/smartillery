@@ -1,8 +1,14 @@
-x = global.xcenter
-y = global.ycenter
+// the menu sits in the lower-left quadrant, over the darkest part of obj_menu_scene's dim
+// (the player is up in the top-right, see set_menu_viewport_dimensions). The items below span y-80 to y+160,
+// so shift up by 40 to center them on the quadrant
+x = global.room_width * 0.25
+y = global.room_height * 0.75 - 40
 
 // Menu controller should always reset the game state on start
 reset_game_state()
+
+// the live background scene (must come after reset_game_state)
+instance_create_layer(0, 0, LAYER_INSTANCES, obj_menu_scene)
 
 function start_game() {
 	global.is_solo = true

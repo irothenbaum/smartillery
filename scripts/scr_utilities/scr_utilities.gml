@@ -421,6 +421,19 @@ function set_viewport_dimensions() {
 	view_visible[0] = true;
 }
 
+/// Main menu only: like set_viewport_dimensions, but the camera shows a MENU_ZOOM-sized window of the world
+/// pinned to its lower-left corner, scaled up to fill the full port. The GUI layer is unaffected.
+function set_menu_viewport_dimensions(_zoom = MENU_ZOOM) {
+	var _cam = camera_create_view(0, global.room_height * (1 - _zoom), global.room_width * _zoom, global.room_height * _zoom);
+	view_set_camera(0, _cam);
+
+	view_set_wport(0, global.room_width);
+	view_set_hport(0, global.room_height);
+
+	view_enabled = true;
+	view_visible[0] = true;
+}
+
 // this takes an angle from a point at the center of a rectangle and returns the position along the boundary that it intersects
 /// @param {Struct.Bounds} _bounds 
 /// @param {Real} _angle // in degrees

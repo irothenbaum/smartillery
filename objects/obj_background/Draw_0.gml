@@ -1,5 +1,7 @@
 if (!variable_global_exists("boot_draws")) { global.boot_draws = 0 } if (global.boot_draws < 3) { global.boot_draws++; show_debug_message("BOOT 9: background draw " + string(global.boot_draws)); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 9: background draw " + string(global.boot_draws)); file_text_writeln(_boot_f); file_text_close(_boot_f) } // BOOT-DEBUG
-var _player_health = get_player().my_health
+// the main menu has no obj_player (it uses obj_menu_player), so draw full health there
+var _player = get_player()
+var _player_health = instance_exists(_player) ? _player.my_health : global.max_health
 
 // heal flash: fade the health rings to green, hold, then fade back (applied in get_ring_color)
 if (!is_undefined(last_player_health) && _player_health > last_player_health) {
@@ -14,6 +16,13 @@ with (obj_enemy_parent) {
 		_ring_enemy_counts[_ring_number]++
 	}
 }
+// obj_menu_enemy_1 isn't an obj_enemy_parent (it skips equations and the game controller), so count it too
+with (obj_menu_enemy_1) {
+	var _ring_number = get_ring_from_distance(point_distance(x, y, global.xcenter, global.ycenter))
+	if (_ring_number >= 0 && _ring_number < array_length(_ring_enemy_counts)) {
+		_ring_enemy_counts[_ring_number]++
+	}
+}
 var _skipped_rings = global.bg_number_of_circles - ceil(global.bg_number_of_circles * (booting_up ? (1 - (alarm[0] / boot_up_time)) : (_player_health / global.max_health)))
 
 drawn_skipped_rings = lerp(drawn_skipped_rings, _skipped_rings, global.fade_speed)
@@ -23,9 +32,11 @@ set_background_glitter_radius(glitter, get_radius_for_ring(_skipped_rings))
 background_glitter_step(glitter)
 
 var _rings_ult = instance_find(obj_ultimate_rings, 0)
+// no game controller on the main menu
+var _has_game_controller = instance_exists(game_controller)
 var _options = {
-	is_ulting_strike: game_controller.is_ult_active(ULTIMATE_STRIKE),
-	is_ulting_rings: game_controller.is_ult_active(ULTIMATE_RINGS),
+	is_ulting_strike: _has_game_controller && game_controller.is_ult_active(ULTIMATE_STRIKE),
+	is_ulting_rings: _has_game_controller && game_controller.is_ult_active(ULTIMATE_RINGS),
 	rings_ult_instance: _rings_ult,
 	player_health: _player_health,
 	heal_flash_amount: heal_flash_amount,
