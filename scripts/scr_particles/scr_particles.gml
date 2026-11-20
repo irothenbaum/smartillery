@@ -1,6 +1,6 @@
 function draw_particle_sparkle(x, y, _color, _radius) {
 	//par_healing_sparkle
-	var _ps = part_system_create();
+	var _ps = create_particle_system();
 	part_system_draw_order(_ps, true);
 
 	//Emitter
@@ -30,7 +30,7 @@ function draw_particle_sparkle(x, y, _color, _radius) {
 // scale 1 = ~100
 function draw_particle_shockwave(x,y, _scale = 1, _sprite_override = pt_shape_circle, _color = c_white) {
 	//par_shockwave
-	var _ps = part_system_create();
+	var _ps = create_particle_system();
 	part_system_draw_order(_ps, true);
 
 	//Emitter
@@ -58,7 +58,7 @@ function draw_particle_shockwave(x,y, _scale = 1, _sprite_override = pt_shape_ci
 
 function draw_particle_debirs(x,y, _number = 3) {
 	//par_debris
-	var _ps = part_system_create();
+	var _ps = create_particle_system();
 	part_system_draw_order(_ps, true);
 
 	//Emitter
@@ -86,7 +86,7 @@ function draw_particle_debirs(x,y, _number = 3) {
 
 function draw_particle_sparks(x,y, _number = 12, _color = c_white, _direction=0, _sweep = 360) {
 	//par_sparks
-	var _ps = part_system_create();
+	var _ps = create_particle_system();
 	part_system_draw_order(_ps, true);
 	
 	var _half_sweep = _sweep / 2
@@ -117,7 +117,7 @@ function draw_particle_sparks(x,y, _number = 12, _color = c_white, _direction=0,
 
 function draw_muzzle_smoke(x, y, _color) {
 	//par_muzzle_smoke
-	var _ps = part_system_create();
+	var _ps = create_particle_system();
 	part_system_draw_order(_ps, true);
 
 	//Emitter
@@ -155,8 +155,55 @@ function destroy_particle(_p) {
 	if (is_array(_p)) {
 		array_foreach(_p, destroy_particle)
 	} else {
-		part_system_destroy(_p)
+		// it may already be gone, e.g. destroy_all_particles ran on a room change before this owner cleaned up
+		if (part_system_exists(_p)) {
+			part_system_destroy(_p)
+		}
+		variable_struct_remove(__get_particle_registry(), string(_p))
 	}
+}
+
+// ---------------------------------------------------------
+// REGISTRY
+// Particle systems made with part_system_create aren't tied to a room, so any still alive when the room changes
+// (e.g. an enemy's death debris, whose obj_particle_effect only frees it after 10 seconds) would keep drawing in
+// the next room. Every effect system is created through create_particle_system so destroy_all_particles can clear
+// them on a room change (see obj_room_transition). Layer-based systems like the background glitter aren't tracked;
+// their owners clean them up.
+
+/**
+ * @returns {Struct} every live tracked particle system, keyed by string(system)
+ */
+function __get_particle_registry() {
+	if (!variable_global_exists("__particle_systems")) {
+		global.__particle_systems = {}
+	}
+	return global.__particle_systems
+}
+
+/**
+ * part_system_create, plus tracking so destroy_all_particles can clean it up
+ * @returns {Id.ParticleSystem}
+ */
+function create_particle_system() {
+	var _ps = part_system_create()
+	__get_particle_registry()[$ string(_ps)] = _ps
+	return _ps
+}
+
+/**
+ * Destroys every tracked particle system (and so every particle in them). Call when leaving a room
+ */
+function destroy_all_particles() {
+	var _registry = __get_particle_registry()
+	var _keys = variable_struct_get_names(_registry)
+	for (var _i = 0; _i < array_length(_keys); _i++) {
+		var _ps = _registry[$ _keys[_i]]
+		if (part_system_exists(_ps)) {
+			part_system_destroy(_ps)
+		}
+	}
+	global.__particle_systems = {}
 }
 
 
@@ -212,7 +259,7 @@ function draw_particle_extra_ultimate_destroy(x, y, _ult_color) {
 }
 
 function draw_missile_trail() {
-	var _ps = part_system_create();
+	var _ps = create_particle_system();
 	part_system_draw_order(_ps, true);
 
 	// Growing circle that fades out
