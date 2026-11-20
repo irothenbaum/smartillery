@@ -58,7 +58,9 @@ function is_taken_by_other(_ult_name) {
 }
 
 function cycle(_dir) {
-	if (is_locked) return
+	if (is_locked) {
+		return
+	}
 	var _n = array_length(ultimate_names)
 	var _tries = 0
 	do {
@@ -71,21 +73,16 @@ function cycle(_dir) {
 
 function confirm_selection() {
 	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
-	if (is_room_transitioning()) return
-	if (is_locked) return
-	if (is_taken_by_other(get_current_ultimate())) return
+	if (is_room_transitioning()) {
+		return
+	}
+	// braced on purpose: in GML a bare `return` at the end of a line takes the next line as its return value,
+	// which once swallowed the set_player_ultimate call below whenever the guard was false
+	if (is_locked || is_taken_by_other(get_current_ultimate())) {
+		return
+	}
 
-	// NOTE: calling set_player_ultimate directly with get_current_ultimate() nested
-	// inline as the argument (e.g. set_player_ultimate(owner_player_id,
-	// get_current_ultimate())) reproducibly fails to enter the function -- confirmed
-	// across clean rebuilds and even a rename, so it isn't a caching/build artifact.
-	// Pre-evaluating the arguments into locals and calling through an explicit
-	// function-reference variable avoids it. Root cause not fully understood; treat
-	// this shape as load-bearing if touching this call.
-	var _pid = owner_player_id
-	var _ult = get_current_ultimate()
-	var _set_ultimate = set_player_ultimate
-	_set_ultimate(_pid, _ult)
+	set_player_ultimate(owner_player_id, get_current_ultimate())
 
 	is_locked = true
 	_check_all_locked()
@@ -106,7 +103,9 @@ function _check_all_locked() {
 // back to where we came from: co-op returns to the join screen (which resets the joined players), solo to the menu
 function go_back() {
 	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
-	if (is_room_transitioning()) return
+	if (is_room_transitioning()) {
+		return
+	}
 	if (global.is_coop) {
 		transition_to_room(rm_coop_setup)
 	} else {

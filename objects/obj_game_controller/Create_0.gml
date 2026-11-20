@@ -15,7 +15,9 @@ function pause_game() {
 
 function resume_game() {
 	// quitting fades out with the pause screen still up, so don't let Resume unpause the game mid-fade
-	if (is_room_transitioning()) return
+	if (is_room_transitioning()) {
+		return
+	}
 	set_paused(false)
 	if (!is_undefined(pause_overlay) && instance_exists(pause_overlay)) {
 		instance_destroy(pause_overlay)
@@ -25,7 +27,9 @@ function resume_game() {
 
 function quit_to_menu() {
 	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
-	if (is_room_transitioning()) return
+	if (is_room_transitioning()) {
+		return
+	}
 	// stay paused, with the pause screen up, while it fades out (resume_game ignores the Resume button mid-fade).
 	// The menu's reset_game_state unpauses (including audio) once we arrive
 	reset_starting_values()

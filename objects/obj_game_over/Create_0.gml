@@ -19,7 +19,9 @@ function draw_buttons() {
 		label: "Menu",
 		image_alpha: 0,
 		on_click: function() {
-			if (is_room_transitioning()) return
+			if (is_room_transitioning()) {
+				return
+			}
 			get_game_controller().reset_starting_values()
 			transition_to_room(rm_main_menu)
 		}
@@ -29,7 +31,9 @@ function draw_buttons() {
 		label: "Play Again",
 		image_alpha: 0,
 		on_click: function() {
-			if (is_room_transitioning()) return
+			if (is_room_transitioning()) {
+				return
+			}
 			get_game_controller().reset_starting_values()
 			transition_to_room(room)
 		}

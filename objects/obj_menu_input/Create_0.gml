@@ -20,7 +20,7 @@ placeholder = "type selection"
 placeholder_alpha = 0.6
 // the placeholder starts empty, then "types" itself out one character at a time
 placeholder_start_delay = 5 // in seconds before the first character
-placeholder_type_duration = 2 // in seconds to type the whole thing, roughly
+placeholder_type_duration = 1 // in seconds to type the whole thing, roughly
 placeholder_type_jitter = 0.4 // each character's delay varies by up to +/- this fraction of the average
 placeholder_chars = 0 // how many characters are typed so far
 placeholder_timer = placeholder_start_delay // in seconds until the next character

@@ -12,7 +12,9 @@ instance_create_layer(0, 0, LAYER_INSTANCES, obj_menu_scene)
 
 function start_game() {
 	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
-	if (is_room_transitioning()) return
+	if (is_room_transitioning()) {
+		return
+	}
 	global.is_solo = true
 	global.is_coop = false
 	global.active_player_ids = [0]
@@ -22,7 +24,9 @@ function start_game() {
 
 function start_coop() {
 	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
-	if (is_room_transitioning()) return
+	if (is_room_transitioning()) {
+		return
+	}
 	global.is_coop = true
 	global.is_solo = false
 	transition_to_room(rm_coop_setup)
@@ -30,7 +34,9 @@ function start_coop() {
 
 function start_training() {
 	// a room fade is already underway (e.g. a second click) -- don't change any state for a room we're not going to
-	if (is_room_transitioning()) return
+	if (is_room_transitioning()) {
+		return
+	}
 	global.is_solo = true
 	global.is_coop = false
 	global.active_player_ids = [0]
