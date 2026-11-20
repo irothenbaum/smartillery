@@ -428,6 +428,9 @@ function orbiter_initialize(_inst) {
 		orbit_angle = point_direction(global.xcenter, global.ycenter, x, y)
 		orbit_radius = point_distance(global.xcenter, global.ycenter, x, y)
 		orbit_target_angle = orbit_angle
+		// each item wiggles at its own rate and offset so the formation stays disorganized
+		wiggle_period = random_range(global.bonus_item_wiggle_period_min, global.bonus_item_wiggle_period_max)
+		wiggle_phase = random(360)
 	}
 }
 
@@ -477,7 +480,14 @@ function orbiter_step(_inst) {
 		orbit_angle = ((orbit_angle mod 360) + 360) mod 360
 		orbit_radius = lerp(orbit_radius, get_orbit_radius(), ORBIT_EASE)
 
-		x = global.xcenter + lengthdir_x(orbit_radius, orbit_angle)
-		y = global.ycenter + lengthdir_y(orbit_radius, orbit_angle)
+		// wave-like wiggle: a radial in-and-out offset at this item's own period and phase, so items ripple
+		// independently rather than tracing a shared shape. It's applied only to the final position so the eased
+		// orbit_radius stays clean.
+		var _ring_width = global.bg_circle_magnitude / global.bg_number_of_circles
+		wiggle_phase = (wiggle_phase + 360 / wiggle_period * step_seconds()) mod 360
+		var _draw_radius = orbit_radius + dsin(wiggle_phase) * _ring_width * global.bonus_item_wiggle_amplitude
+
+		x = global.xcenter + lengthdir_x(_draw_radius, orbit_angle)
+		y = global.ycenter + lengthdir_y(_draw_radius, orbit_angle)
 	}
 }

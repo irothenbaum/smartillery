@@ -138,8 +138,11 @@ function end_game() {
 	})
 	
 	// destroy the enemy controller and hud
-	instance_destroy(enemy_controller)
-	enemy_controller = undefined
+	// the controller can be undefined here (e.g. the player dies before the first wave's controller is created)
+	if (!is_undefined(enemy_controller)) {
+		instance_destroy(enemy_controller)
+		enemy_controller = undefined
+	}
 	instance_destroy(instance_find(obj_hud, 0))
 	
 	var _game_over_message = instance_create_layer(x, y, LAYER_HUD, obj_game_over)

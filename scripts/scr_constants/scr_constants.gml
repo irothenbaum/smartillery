@@ -174,10 +174,14 @@ global.shield_ring_from_center = 3 // which ring (counting out from the player) 
 global.ult_ring_from_center = global.shield_ring_from_center - 1 // active ultimates are shown on the ring just inside the shield's
 global.bonus_item_orbit_ring_from_center = 8 // power items and extra ultimates orbit the player on this ring
 global.bonus_item_orbit_period = 12 // in seconds, for one full orbit
+global.bonus_item_wiggle_amplitude = 1 // radial wiggle, as a fraction of the ring's width (under 0.5 keeps items inside their ring)
+global.bonus_item_wiggle_period_min = 0.8 // in seconds: each item picks its own wiggle period in this range,
+global.bonus_item_wiggle_period_max = 2.2 // so the formation never settles into a regular shape
 global.recent_answer_grace_period = 1 // in seconds: a guess matching an answer someone just got right isn't penalized
 global.shield_color = #2f7bff
 global.stationary_turret_range = 300 // px
 global.stationary_turret_fire_interval = 1 // seconds between shots
+global.stationary_turret_lifetime_refund = 0.1 // fraction of its total lifetime a stationary turret regains per shot
 global.stationary_turret_duration = 20 // seconds before the turret disappears
 global.health_item_amount = 25
 

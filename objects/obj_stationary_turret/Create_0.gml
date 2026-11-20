@@ -96,6 +96,11 @@ function fire_at(_target) {
 	})
 	handle_enemy_hit(_target, owner_player_id, 1)
 
+	// each shot wins back some lifetime, capped at what the range fill shows as full (the lifetime minus the
+	// full buffer -- capping at lifetime_frames would leave the fill stuck at full for a moment)
+	var _full_frames = lifetime_frames - lifetime_full_buffer * game_get_speed(gamespeed_fps)
+	alarm[0] = min(alarm[0] + lifetime_frames * global.stationary_turret_lifetime_refund, max(alarm[0], _full_frames))
+
 	can_fire = false
 	alarm[1] = global.stationary_turret_fire_interval * game_get_speed(gamespeed_fps)
 }
