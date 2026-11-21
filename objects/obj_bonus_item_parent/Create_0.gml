@@ -4,6 +4,7 @@
 // an answer is reserved (see obj_extra_ultimate) -- then override register_hit() with their effect.
 // bonus items use launch codes (001, 002, ...) rather than equations: the code is both what's drawn and what's typed
 draw_equation_position = undefined
+equation_angle = undefined
 last_hit_by_player_id = undefined
 answer = get_game_controller().reserve_lowest_launch_code(self)
 equation = answer

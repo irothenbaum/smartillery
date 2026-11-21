@@ -3,6 +3,7 @@
  */
 function initialize_instance_has_equation(_e) {
 	draw_equation_position = undefined
+	equation_angle = undefined
 	equation = "";
 	last_hit_by_player_id = undefined
 	
@@ -124,7 +125,11 @@ function enemy_step(_e) {
 function instance_draw_equation(_e) {
 	with (_e) {
 		var _string = global.paused ? " " : equation
-		var _positions = get_draw_equation_position(_string, x, y)
+		if (!variable_instance_exists(id, "equation_angle")) {
+			equation_angle = undefined
+		}
+		equation_angle = step_equation_angle(equation_angle, x, y)
+		var _positions = get_draw_equation_position(_string, x, y, undefined, equation_angle)
 		var _actual_position = _positions[0]
 		var _target_position = _positions[1]
 				
@@ -143,19 +148,88 @@ function instance_draw_equation(_e) {
 	}
 }
 
+#macro EQUATION_ANGLE_ABOVE 90
+#macro EQUATION_ANGLE_BELOW 270
+#macro EQUATION_ROTATE_MIN_SPEED 90 // degrees per second, so the eased rotation doesn't crawl at the end
+
+/**
+ * Equations sit above targets in the lower half of the room and below targets in the upper half (always on the side
+ * toward the player). When a target crosses the midline, the equation doesn't jump across: it swings around the
+ * target, passing the side that faces the room center -- e.g. a target on the left rising past the midline swings
+ * its equation clockwise, from the top, around the right side, to the bottom.
+ * Returns the new angle (degrees around the target, 90 = above) after one frame of easing toward the right side.
+ * @param {Real} _angle -- the current angle, or undefined to start at the target angle
+ * @param {Real} _x -- the target's position
+ * @param {Real} _y
+ * @returns {Real}
+ */
+function step_equation_angle(_angle, _x, _y) {
+	var _target = _y > global.ycenter ? EQUATION_ANGLE_ABOVE : EQUATION_ANGLE_BELOW
+	if (is_undefined(_angle)) {
+		return _target
+	}
+	if (global.paused) {
+		return _angle
+	}
+
+	_angle = ((_angle mod 360) + 360) mod 360
+	// the counter-clockwise arc (angles increasing) from here to the target
+	var _ccw_arc = ((_target - _angle) mod 360 + 360) mod 360
+	if (_ccw_arc == 0) {
+		return _target
+	}
+
+	// take the shorter way round. Starting a swing from straight above/below, both ways are equal (180), so go the
+	// way that passes the side facing the room center (0 = right, 180 = left). Once moving, the shorter way keeps
+	// the same direction -- and if the target crosses back mid-swing, the equation just swings back
+	var _direction
+	if (abs(_ccw_arc - 180) < 0.001) {
+		var _center_side = _x < global.xcenter ? 0 : 180
+		var _to_center_side = ((_center_side - _angle) mod 360 + 360) mod 360
+		_direction = _to_center_side <= _ccw_arc ? 1 : -1
+	} else {
+		_direction = _ccw_arc < 180 ? 1 : -1
+	}
+	var _remaining = _direction == 1 ? _ccw_arc : 360 - _ccw_arc
+
+	// ease out: cover a fraction of what's left each frame (the game's standard fade rate), but never slower than
+	// the minimum speed. The last step snaps exactly onto the target so the next swing starts from a clean 90/270
+	var _step = max(_remaining * global.fade_speed, EQUATION_ROTATE_MIN_SPEED * step_seconds())
+	if (_step >= _remaining) {
+		return _target
+	}
+	return _angle + _direction * _step
+}
+
 /**
  * @param {String} _string
  * @param {Real} _x
  * @param {Real} _y
+ * @param {Real} _offset_override -- a fixed vertical offset from the target (ignores _angle)
+ * @param {Real} _angle -- where around the target to place it (90 = above); defaults to above/below by room half
  * Returns a tuple. The first value is always within room bounds, the second is where it would like to render under or over the target
  */
-function get_draw_equation_position(_string, _x, _y, _offset_override) {
+function get_draw_equation_position(_string, _x, _y, _offset_override = undefined, _angle = undefined) {
 	draw_set_font(fnt_large);
 	draw_set_color(c_white);
 	var _string_height = string_height(_string)
 	var _string_width = string_width(_string)
-	// we use player_body_radius a proxy that basically indicates half an emey sprite size
-	var _offset_y = is_undefined(_offset_override) ? (_y > global.ycenter ? -1 : 1) * (global.player_body_radius + _string_height) : _offset_override
+	// we use player_body_radius a proxy that basically indicates half an emey sprite size.
+	// The equation sits on an ellipse around the target: tall enough to clear the sprite above/below (as before), and
+	// wide enough that the text clears the sprite when it's swung around to the side
+	var _offset_x = 0
+	var _offset_y = 0
+	if (!is_undefined(_offset_override)) {
+		_offset_y = _offset_override
+	} else {
+		if (is_undefined(_angle)) {
+			_angle = _y > global.ycenter ? EQUATION_ANGLE_ABOVE : EQUATION_ANGLE_BELOW
+		}
+		var _radius_x = global.player_body_radius + _string_width / 2 + 8 // 8px gap between the sprite and the text
+		var _radius_y = global.player_body_radius + _string_height
+		_offset_x = dcos(_angle) * _radius_x
+		_offset_y = -dsin(_angle) * _radius_y
+	}
 		
 	// this logic is going to draw the equation within the game bounds even if the enemy us out of screen
 	var _string_directional_bounds = new Bounds(
@@ -166,7 +240,7 @@ function get_draw_equation_position(_string, _x, _y, _offset_override) {
 	)
 		
 	var _target_position = {
-		x: _x,
+		x: _x + _offset_x,
 		y: _y + _offset_y
 	}
 	var _actual_position = _target_position
