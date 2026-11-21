@@ -11,7 +11,7 @@
     "name":"items",
     "path":"folders/Objects/items.yy",
   },
-  "parentObjectId":{"name":"obj_power_item","path":"objects/obj_power_item/obj_power_item.yy",},
+  "parentObjectId":{"name":"obj_power_item_orb_cluster","path":"objects/obj_power_item_orb_cluster/obj_power_item_orb_cluster.yy",},
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,

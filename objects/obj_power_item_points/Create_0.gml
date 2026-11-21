@@ -1,16 +1,12 @@
 /// @description Points power item
+// A cluster of score orbs (see obj_power_item_orb_cluster)
 event_inherited()
 
-color = c_yellow
-label = "P"
+orb_type = ORB_TYPE_SCORE
+orb_layer = LAYER_FG_EFFECTS
 
-function register_hit() {
-	// (the answer is released by obj_bonus_item_parent's Destroy)
-	debug("POINTS ITEM HIT by", last_hit_by_player_id)
-	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_orb_score_increase, {
-		amount: 10 * get_current_wave_number(),
-		type: ORB_TYPE_SCORE,
-		owner_player_id: last_hit_by_player_id,
-	})
-	instance_destroy()
+function get_orb_amount() {
+	return 10 * get_current_wave_number()
 }
+
+sync_cluster()

@@ -4,22 +4,28 @@ direction = point_direction(x,y, global.xcenter, global.ycenter)
 paused_speed = 2
 is_paused = global.paused
 speed = is_paused ? 0 : paused_speed
-max_orb_value = 7
 
 orbs = []
-cloud_radius = 30
+cloud_radius = ORB_CLOUD_RADIUS
 
-color = type == ORB_TYPE_HEALTH ? global.ultimate_color_tints[$ ULTIMATE_HEAL] : ((type == ORB_TYPE_ULT || type == ORB_TYPE_COMBO) ? get_player_color(owner_player_id) : c_white);
+color = get_orb_color(type, owner_player_id)
 
-var _amount_copy = amount
-do {
-	var _this_orb = min(max_orb_value, _amount_copy)
+var _values = split_orb_amount(amount)
+for (var _i = 0; _i < array_length(_values); _i++) {
 	array_push(orbs, {
 		x_diff: 0,
 		y_diff: 0,
 		x_target: irandom_range(-cloud_radius, cloud_radius),
 		y_target: irandom_range(-cloud_radius, cloud_radius),
-		value: _this_orb,
+		value: _values[_i],
 	})
-	_amount_copy -= _this_orb
-} until(_amount_copy <= 0)
+}
+
+// optional start_offsets ([{x, y}], passed in on creation): where the first orbs start relative to x/y, so something
+// that was already drawing orbs (e.g. the points power item's cluster) hands them off without a jump
+if (variable_instance_exists(id, "start_offsets")) {
+	for (var _i = 0; _i < min(array_length(start_offsets), array_length(orbs)); _i++) {
+		orbs[_i].x_diff = start_offsets[_i].x
+		orbs[_i].y_diff = start_offsets[_i].y
+	}
+}

@@ -96,6 +96,7 @@
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
     {"id":{"name":"obj_power_item_health","path":"objects/obj_power_item_health/obj_power_item_health.yy",},},
     {"id":{"name":"obj_power_item_level_up","path":"objects/obj_power_item_level_up/obj_power_item_level_up.yy",},},
+    {"id":{"name":"obj_power_item_orb_cluster","path":"objects/obj_power_item_orb_cluster/obj_power_item_orb_cluster.yy",},},
     {"id":{"name":"obj_power_item_points","path":"objects/obj_power_item_points/obj_power_item_points.yy",},},
     {"id":{"name":"obj_power_item_shield","path":"objects/obj_power_item_shield/obj_power_item_shield.yy",},},
     {"id":{"name":"obj_power_item_turret","path":"objects/obj_power_item_turret/obj_power_item_turret.yy",},},

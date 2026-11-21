@@ -632,3 +632,52 @@ function draw_shield_ring(_x, _y, _scale) {
 	draw_set_color(global.shield_color)
 	draw_arc(_x, _y, _geometry.radius * _scale, 360, 0, _geometry.thickness * _scale)
 }
+
+// -------------------------------------------------------------------------------------------
+// POINT / HEALTH ORBS
+// Shared by obj_orb_score_increase (the orbs that fly to the player) and obj_power_item_orb_cluster (the power
+// items drawn as a cluster of those same orbs), so the item shows exactly the orbs it will pay out
+// -------------------------------------------------------------------------------------------
+
+#macro ORB_MAX_VALUE 15 // an amount is split into orbs worth at most this much each
+#macro ORB_CLOUD_RADIUS 30 // px, how far flying orbs spread from their cloud's center
+
+/**
+ * Splits an amount into orb values, largest first (e.g. 25 -> [7, 7, 7, 4])
+ * @param {Real} _amount
+ * @returns {Array<Real>}
+ */
+function split_orb_amount(_amount) {
+	var _values = []
+	do {
+		var _value = min(ORB_MAX_VALUE, _amount)
+		array_push(_values, _value)
+		_amount -= _value
+	} until (_amount <= 0)
+	return _values
+}
+
+/**
+ * @param {Real} _value
+ * @returns {Real}
+ */
+function get_orb_draw_radius(_value) {
+	return 4 + (_value / 3)
+}
+
+/**
+ * @param {String} _type -- ORB_TYPE_*
+ * @param {Real} _owner_player_id -- only used by player-colored types (ult, combo)
+ * @returns {Constant.Color}
+ */
+function get_orb_color(_type, _owner_player_id = undefined) {
+	switch (_type) {
+		case ORB_TYPE_HEALTH:
+			return global.ultimate_color_tints[$ ULTIMATE_HEAL]
+		case ORB_TYPE_ULT:
+		case ORB_TYPE_COMBO:
+			return get_player_color(_owner_player_id)
+		default:
+			return c_white
+	}
+}

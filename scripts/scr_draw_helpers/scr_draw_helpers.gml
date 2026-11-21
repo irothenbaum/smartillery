@@ -365,6 +365,11 @@ function draw_text_with_alignment(_x, _y, _text, _align = ALIGN_LEFT, _line_heig
 				break
 		}
 	
+		// snap to whole pixels: centering (and callers' own math) often lands on .5, and with pixel interpolation off
+		// each glyph then rounds to a pixel on its own -- some up, some down -- so the text looks jagged
+		_line_bounds.x0 = round(_line_bounds.x0)
+		_line_bounds.y0 = round(_line_bounds.y0)
+
 		_line_bounds.x1 = _line_bounds.x0 + _str_width
 		_line_bounds.y1 = _line_bounds.y0 + _str_height
 	

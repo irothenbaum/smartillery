@@ -257,7 +257,7 @@ ds_map_add(global.tip_copy_map, obj_extra_ultimate, function(_instance) {
 	}
 })	
 ds_map_add(global.tip_copy_map, obj_power_item_shield, {title: "Power Item: Shield", description: "Raises a shield around you that blocks one enemy or shot. Stacks with other shields."})
-ds_map_add(global.tip_copy_map, obj_power_item_turret, {title: "Power Item: Stationary Turret", description: "Deploys a turret right here that fires once at every enemy that enters its range."})
+ds_map_add(global.tip_copy_map, obj_power_item_turret, {title: "Power Item: Stationary Turret", description: "Deploys a turret right here that fires at enemies within its range."})
 ds_map_add(global.tip_copy_map, obj_power_item_health, {title: "Power Item: Repair", description: string_concat("Restores ", global.health_item_amount, " health.")})
 ds_map_add(global.tip_copy_map, obj_power_item_points, {title: "Power Item: Bonus Points", description: "Grants 10 points for every wave you've reached."})
 ds_map_add(global.tip_copy_map, obj_power_item_level_up, {title: "Power Item: Level Up", description: "Levels up your ultimate and fully charges it."})
