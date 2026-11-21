@@ -20,6 +20,21 @@ if (display_range > 0) {
 	draw_circle(x, y, display_range, true)
 }
 
+// feet, drawn under the body so they poke out from beneath its border. Each is spr_pixel stretched into a bar
+// running radially from just inside the border to its tip. They're drawn as a sprite (not draw_line_width) so they
+// rasterize the same way as the body sprite -- primitives land a pixel or so off from sprites, which made the feet
+// look off-center. spr_pixel's origin is its middle-left, so the bar starts at the inner point, centered on the
+// radial line. Everything scales with sprite_scale so they shrink on despawn
+var _feet_scale = sprite_scale
+var _foot_inner = (body_radius - foot_inset) * _feet_scale
+var _foot_outer = (body_radius + lerp(foot_min_length, foot_length, feet_extend)) * _feet_scale
+var _foot_xscale = (_foot_outer - _foot_inner) / sprite_get_width(spr_pixel)
+var _foot_yscale = foot_width * _feet_scale / sprite_get_height(spr_pixel)
+for (var _i = 0; _i < 4; _i++) {
+	var _angle = feet_angle + _i * 90
+	draw_sprite_ext(spr_pixel, 0, x + lengthdir_x(_foot_inner, _angle), y + lengthdir_y(_foot_inner, _angle), _foot_xscale, _foot_yscale, _angle, c_white, 1)
+}
+
 // body + turret, tinted white the same way the player is
 shader_set(sh_hue_shift)
 shader_set_uniform_f_array(_u_color, color_arr)

@@ -1,6 +1,6 @@
 /// @description Initialize stationary turret
 // Spawned by the turret power item, at the item's position (the item already looks like this turret's body, so
-// the turret takes over in place: the barrel extends out of the body, then the range grows in).
+// the turret takes over in place: its feet plant, the barrel extends out of the body, then the range grows in).
 // owner_player_id (passed in on creation) is the player who activated it -- they get credit for its hits.
 // It fires at most once per fire interval, spreading its shots across fresh enemies first and only coming back
 // to finish off enemies it already shot when nothing new is in range (see find_target).
@@ -12,8 +12,22 @@ turret_scale = 0.12 // matches enemy_2's turret
 turret_length = 20 // matches enemy_2's get_turret_muzzle
 range = global.stationary_turret_range
 
-// deploy: the barrel first extends lengthwise out of the body, then the range grows in. The turret doesn't
-// target or fire until the barrel is fully out
+body_radius = sprite_get_width(spr_player_body) * body_scale / 2 // the body sprite's disc fills the whole sprite
+
+// feet: four short rectangles poking out from under the body at 90 degree intervals. The set is turned 45 degrees off
+// the line to the player, so the turret faces the player squarely between two feet (an X, not a +).
+// They start as thin slivers along the body's border and grow outward as the first step of the spawn animation
+feet_angle = point_direction(x, y, global.xcenter, global.ycenter) + 45
+foot_width = 7 // px, along the body's border
+foot_length = 5 // px, how far a fully grown foot sticks out past the border
+foot_min_length = 1.5 // px, the thin sliver a foot starts as
+foot_inset = 2 // px, how far a foot tucks under the body so there's no gap at the border
+feet_grow_duration = 0.15 // in seconds
+feet_grow_progress = 0 // [0,1]
+feet_extend = 0 // [0,1]
+
+// deploy: once the feet are planted, the barrel extends lengthwise out of the body, then the range grows in.
+// The turret doesn't target or fire until the barrel is fully out
 barrel_grow_duration = 0.2 // in seconds
 barrel_grow_progress = 0 // [0,1]
 barrel_extend = 0 // [0,1] multiplier on the barrel's length
@@ -49,13 +63,12 @@ image_angle = point_direction(global.xcenter, global.ycenter, x, y)
 shot_enemies = []
 can_fire = true
 
-var _body_radius = sprite_get_width(spr_player_body) * body_scale / 2
-my_bounds = new Bounds(x - _body_radius, y - _body_radius, x + _body_radius, y + _body_radius)
+my_bounds = new Bounds(x - body_radius, y - body_radius, x + body_radius, y + body_radius)
 
 // lifetime -- shown by the range fill sweeping down to 0 (like the active-ultimates ring)
 lifetime_frames = global.stationary_turret_duration * game_get_speed(gamespeed_fps)
 alarm[0] = lifetime_frames
-lifetime_full_buffer = barrel_grow_duration + range_grow_duration // in seconds: the fill stays full while deploying, then counts down
+lifetime_full_buffer = feet_grow_duration + barrel_grow_duration + range_grow_duration // in seconds: the fill stays full while deploying, then counts down
 lifetime_start_angle = 90 // the sweep starts (and ends) at the top, like the ultimates ring
 lifetime_head_width = 2 // the white line where the fill meets the empty part
 

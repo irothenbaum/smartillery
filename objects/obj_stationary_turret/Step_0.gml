@@ -30,6 +30,13 @@ if (is_despawning) {
 	return
 }
 
+// plant the feet (ease out so they decelerate into their full length)
+if (feet_grow_progress < 1) {
+	feet_grow_progress = min(1, feet_grow_progress + step_seconds() / feet_grow_duration)
+	feet_extend = 1 - power(1 - feet_grow_progress, 3)
+	return
+}
+
 // extend the barrel out of the body (ease out so it decelerates into its full length), then hold off on
 // everything else until it's out
 if (barrel_grow_progress < 1) {
