@@ -100,7 +100,7 @@ function mark_wave_completed() {
 	}
 	
 	if (!is_undefined(last_enemy_killed)) {
-		var _bonus_options = [obj_power_item]
+		var _bonus_options = [pick_power_item_object()]
 		
 		// waves above 3 have a 50% chance of spawning an extra ultimate
 		if (current_wave > 3) {
@@ -159,6 +159,7 @@ function end_game() {
 		get_array_of_instances(obj_input),
 		get_array_of_instances(obj_bonus_item_parent),
 		get_array_of_instances(obj_shield),
+		get_array_of_instances(obj_shield_pickup),
 		get_array_of_instances(obj_stationary_turret),
 	)
 	array_foreach(_items_to_destroy, function(_i) {
@@ -463,7 +464,7 @@ function increase_combo(_player_id, _enemy) {
 			draw_particle_shockwave(get_player().x, get_player().y, 1, undefined, get_player_color(_player_id))
 		} else {
 			// drop an item
-			spawn_bonus_item(_enemy.x, _enemy.y, [obj_power_item])
+			spawn_bonus_item(_enemy.x, _enemy.y, [pick_power_item_object()])
 		}
 	} else {
 		alarm[get_combo_alarm_for_player_id(_player_id)] = combo_max_alarm

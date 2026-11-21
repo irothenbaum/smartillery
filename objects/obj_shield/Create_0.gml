@@ -5,12 +5,12 @@ x = global.xcenter
 y = global.ycenter
 shield_health = 1
 
-// the shield fills one background ring exactly (rings are indexed from the outside in)
-var _ring_index = global.bg_number_of_circles - global.shield_ring_from_center
-outer_radius = get_radius_for_ring(_ring_index)
-inner_radius = get_radius_for_ring(_ring_index + 1)
-radius = (outer_radius + inner_radius) / 2
-thickness = outer_radius - inner_radius
+// the shield fills one background ring exactly
+var _geometry = get_shield_geometry()
+outer_radius = _geometry.outer_radius
+inner_radius = _geometry.inner_radius
+radius = _geometry.radius
+thickness = _geometry.thickness
 drawn_thickness = thickness
 color = global.shield_color
 

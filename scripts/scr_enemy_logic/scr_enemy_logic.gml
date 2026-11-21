@@ -563,3 +563,72 @@ function get_menu_enemy_spawn_position() {
 		y: _view_y1 + global.oob_margin,
 	}
 }
+
+// -------------------------------------------------------------------------------------------
+// POWER ITEMS
+// Each power item type is its own child of obj_power_item. obj_power_item itself is never spawned directly --
+// pick_power_item_object() chooses which child to spawn, weighted by what the player needs most right now.
+// -------------------------------------------------------------------------------------------
+
+/**
+ * @returns {Asset.GMObject}
+ */
+function pick_power_item_object() {
+	var _player = get_player()
+	var _missing_health = global.max_health - _player.my_health
+	var _shield = instance_find(obj_shield, 0)
+	// shields still flying in from a pickup count too, so a burst of shield items doesn't keep rolling shields
+	var _shield_health = (_shield == noone ? 0 : _shield.shield_health) + instance_number(obj_shield_pickup)
+
+	var _options = [
+		{obj: obj_power_item_shield, weight: 1 / power(2, _shield_health)},
+		{obj: obj_power_item_level_up, weight: 1},
+		{obj: obj_power_item_health, weight: (_missing_health > 0) ? power(2, floor(_missing_health / 20)) : 1},
+		{obj: obj_power_item_points, weight: 1},
+		{obj: obj_power_item_turret, weight: 1},
+	]
+
+	var _total_weight = 0
+	for (var _i = 0; _i < array_length(_options); _i++) {
+		_total_weight += _options[_i].weight
+	}
+
+	var _roll = random(_total_weight)
+	var _cumulative = 0
+	for (var _i = 0; _i < array_length(_options); _i++) {
+		_cumulative += _options[_i].weight
+		if (_roll < _cumulative) {
+			return _options[_i].obj
+		}
+	}
+	return _options[0].obj
+}
+
+/**
+ * The shield fills one background ring exactly (rings are indexed from the outside in). Shared by obj_shield and
+ * everything that draws a scaled-down copy of it (the shield power item and its fly-in pickup)
+ * @returns {Struct}
+ */
+function get_shield_geometry() {
+	var _ring_index = global.bg_number_of_circles - global.shield_ring_from_center
+	var _outer_radius = get_radius_for_ring(_ring_index)
+	var _inner_radius = get_radius_for_ring(_ring_index + 1)
+	return {
+		outer_radius: _outer_radius,
+		inner_radius: _inner_radius,
+		radius: (_outer_radius + _inner_radius) / 2,
+		thickness: _outer_radius - _inner_radius,
+	}
+}
+
+/**
+ * Draws the shield ring at _scale of its real size, centered on (_x, _y)
+ * @param {Real} _x
+ * @param {Real} _y
+ * @param {Real} _scale
+ */
+function draw_shield_ring(_x, _y, _scale) {
+	var _geometry = get_shield_geometry()
+	draw_set_color(global.shield_color)
+	draw_arc(_x, _y, _geometry.radius * _scale, 360, 0, _geometry.thickness * _scale)
+}

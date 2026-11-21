@@ -30,14 +30,6 @@
 #macro ORB_TYPE_HEALTH "health"
 #macro ORB_TYPE_COMBO "combo"
 
-#macro BONUS_ITEM_SHIELD "shield"
-#macro BONUS_ITEM_LEVEL_UP "level-up"
-#macro BONUS_ITEM_HEALTH "health"
-#macro BONUS_ITEM_POINTS "points"
-#macro BONUS_ITEM_TURRET "turret"
-
-
-
 #macro TAU (2 * pi)
 
 
@@ -211,7 +203,11 @@ ds_map_add(global.targetable_difficulty_multiplier, obj_enemy_4_fragment, 1)
 ds_map_add(global.targetable_difficulty_multiplier, obj_enemy_5, 2)
 ds_map_add(global.targetable_difficulty_multiplier, obj_enemy_5_missile, 5)
 ds_map_add(global.targetable_difficulty_multiplier, obj_training_target, 1)
-ds_map_add(global.targetable_difficulty_multiplier, obj_power_item, 4)
+// every power item type shares the same difficulty
+global.power_item_objects = [obj_power_item_shield, obj_power_item_turret, obj_power_item_health, obj_power_item_points, obj_power_item_level_up]
+for (var _i = 0; _i < array_length(global.power_item_objects); _i++) {
+	ds_map_add(global.targetable_difficulty_multiplier, global.power_item_objects[_i], 4)
+}
 ds_map_add(global.targetable_difficulty_multiplier, obj_extra_ultimate, 2)
 
 
@@ -259,20 +255,11 @@ ds_map_add(global.tip_copy_map, obj_extra_ultimate, function(_instance) {
 		description: _ult_desc.description
 	}
 })	
-global.power_item_descriptions = {
-	BONUS_ITEM_SHIELD: {title: "Shield", description: "Raises a shield around you that blocks one enemy or shot. Stacks with other shields."},
-	BONUS_ITEM_TURRET: {title: "Stationary Turret", description: "Deploys a turret right here that fires once at every enemy that enters its range."},
-	BONUS_ITEM_HEALTH: {title: "Repair", description: string_concat("Restores ", global.health_item_amount, " health.")},
-	BONUS_ITEM_POINTS: {title: "Bonus Points", description: "Grants 10 points for every wave you've reached."},
-	BONUS_ITEM_LEVEL_UP: {title: "Level Up", description: "Levels up your ultimate and fully charges it."},
-}
-ds_map_add(global.tip_copy_map, obj_power_item, function(_instance) {
-	var _desc = global.power_item_descriptions[$ _instance.type]
-	return {
-		title: string_concat("Power Item: ", _desc.title),
-		description: _desc.description
-	}
-})	
+ds_map_add(global.tip_copy_map, obj_power_item_shield, {title: "Power Item: Shield", description: "Raises a shield around you that blocks one enemy or shot. Stacks with other shields."})
+ds_map_add(global.tip_copy_map, obj_power_item_turret, {title: "Power Item: Stationary Turret", description: "Deploys a turret right here that fires once at every enemy that enters its range."})
+ds_map_add(global.tip_copy_map, obj_power_item_health, {title: "Power Item: Repair", description: string_concat("Restores ", global.health_item_amount, " health.")})
+ds_map_add(global.tip_copy_map, obj_power_item_points, {title: "Power Item: Bonus Points", description: "Grants 10 points for every wave you've reached."})
+ds_map_add(global.tip_copy_map, obj_power_item_level_up, {title: "Power Item: Level Up", description: "Levels up your ultimate and fully charges it."})
 ds_map_add(global.tip_copy_map, obj_shield, {title: "Defensive Shield", description: "A last resort to protect yourself if an enemy makes it past your gun."})
 ds_map_add(global.tip_copy_map, obj_stationary_turret, {title: "Stationary Turret", description: "A temporary turret spawns to help defend against the horde."})
 ds_map_add(global.tip_copy_map, obj_hud_ultimate_icon, function(_instance) {

@@ -16,4 +16,4 @@ function set_up_test() {
 	room_goto(rm_test)
 }
 
-// set_up_test()
+set_up_test()

@@ -34,7 +34,7 @@ for (var _i = 0; _i < array_length(_all_ultimates); _i++) {
 
 // If no ultimates are available, spawn a regular power item instead
 if (array_length(_available) == 0) {
-	instance_create_layer(x, y, LAYER_FG_EFFECTS, obj_power_item)
+	instance_create_layer(x, y, LAYER_FG_EFFECTS, pick_power_item_object())
 	instance_destroy()
 	exit
 }
