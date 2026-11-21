@@ -30,6 +30,14 @@ if (is_despawning) {
 	return
 }
 
+// extend the barrel out of the body (ease out so it decelerates into its full length), then hold off on
+// everything else until it's out
+if (barrel_grow_progress < 1) {
+	barrel_grow_progress = min(1, barrel_grow_progress + step_seconds() / barrel_grow_duration)
+	barrel_extend = 1 - power(1 - barrel_grow_progress, 3)
+	return
+}
+
 // grow the range indicator (ease out so it decelerates into its full size)
 if (range_grow_progress < 1) {
 	range_grow_progress = min(1, range_grow_progress + step_seconds() / range_grow_duration)

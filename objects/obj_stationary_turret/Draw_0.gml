@@ -29,5 +29,6 @@ draw_sprite_ext(spr_player_body, 0, x, y, _body_scale, _body_scale, 0, c_white, 
 
 var _turret_x = x + lengthdir_x(-recoil_amount, image_angle)
 var _turret_y = y + lengthdir_y(-recoil_amount, image_angle)
-draw_sprite_ext(spr_enemy2_turret, 0, _turret_x, _turret_y, _turret_scale, _turret_scale, image_angle, c_white, 1)
+// the barrel's origin is at its back end, so scaling only its length makes it extend out of the body
+draw_sprite_ext(spr_enemy2_turret, 0, _turret_x, _turret_y, _turret_scale * barrel_extend, _turret_scale, image_angle, c_white, 1)
 shader_reset()

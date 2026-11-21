@@ -179,6 +179,7 @@ global.bonus_item_wiggle_period_max = 2.2 // so the formation never settles into
 global.recent_answer_grace_period = 1 // in seconds: a guess matching an answer someone just got right isn't penalized
 global.shield_color = #2f7bff
 global.stationary_turret_range = 300 // px
+global.stationary_turret_body_scale = 0.1 // of spr_player_body -- shared by the turret and its power item, which looks like its body
 global.stationary_turret_fire_interval = 1 // seconds between shots
 global.stationary_turret_lifetime_refund = 0.1 // fraction of its total lifetime a stationary turret regains per shot
 global.stationary_turret_duration = 20 // seconds before the turret disappears
