@@ -1,4 +1,10 @@
 if (!variable_global_exists("boot_draws")) { global.boot_draws = 0 } if (global.boot_draws < 3) { global.boot_draws++; show_debug_message("BOOT 9: background draw " + string(global.boot_draws)); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 9: background draw " + string(global.boot_draws)); file_text_writeln(_boot_f); file_text_close(_boot_f) } // BOOT-DEBUG
+// follow global.bg_color live (e.g. switching Mode on the main menu, see set_game_mode) -- the rings lerp toward
+// their target color each frame, so they fade over instead of snapping
+if (idle_color.c != global.bg_color) {
+	idle_color = new CompositeColor(global.bg_color, 1)
+}
+
 // the main menu has no obj_player (it uses obj_menu_player), so draw full health there
 var _player = get_player()
 var _player_health = instance_exists(_player) ? _player.my_health : global.max_health

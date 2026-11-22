@@ -669,8 +669,12 @@ function draw_rectangle_clipped(_bounds, _color, _spr, _scale) {
  * @param {Bool} _inverted -- a solid box in the current color with black text (e.g. a button strobing as it's chosen)
  * @returns {Struct.Bounds} the box's bounds, for click testing
  */
+#macro MENU_BOX_PAD_X 12 // px between the text and the box's sides
+#macro MENU_BOX_PAD_TOP 8 // px above the text
+#macro MENU_BOX_PAD_BOTTOM 6 // px below the text
+
 function draw_menu_box(_x, _y, _message, _align = ALIGN_CENTER, _min_width = 0, _filled = false, _inverted = false) {
-	var _pad_x = 12
+	var _pad_x = MENU_BOX_PAD_X
 	var _content_width = max(string_width(_message), _min_width)
 	var _x0 = _align == ALIGN_LEFT ? _x : _x - (_content_width / 2) - _pad_x
 	var _x1 = _x0 + _content_width + (_pad_x * 2)
@@ -678,7 +682,7 @@ function draw_menu_box(_x, _y, _message, _align = ALIGN_CENTER, _min_width = 0, 
 
 	// measure first, so an inverted box can be filled before its text is drawn on top
 	var _text_bounds = draw_text_with_alignment(_text_x, _y, _message, ALIGN_CENTER, undefined, true)
-	var _box = new Bounds(_x0, _text_bounds.y0 - 8, _x1, _text_bounds.y1 + 6)
+	var _box = new Bounds(_x0, _text_bounds.y0 - MENU_BOX_PAD_TOP, _x1, _text_bounds.y1 + MENU_BOX_PAD_BOTTOM)
 	var _corner = _box.height / 2
 
 	if (_inverted) {
@@ -699,6 +703,24 @@ function draw_menu_box(_x, _y, _message, _align = ALIGN_CENTER, _min_width = 0, 
 		draw_set_alpha(_alpha)
 	}
 	return _box
+}
+
+/**
+ * The size of the box draw_menu_box would draw, for laying items out before they're drawn
+ * @param {String} _message
+ * @param {Real} _min_width -- same as draw_menu_box's
+ * @param {Asset.GMFont} _font -- the font the item draws with
+ * @returns {{width: Real, height: Real, below: Real}} below is how far the box reaches below the y it's drawn at
+ * (draw_menu_box's y is the text's vertical center)
+ */
+function get_menu_box_size(_message, _min_width = 0, _font = fnt_title) {
+	draw_set_font(_font)
+	var _text_height = string_height(_message)
+	return {
+		width: max(string_width(_message), _min_width) + MENU_BOX_PAD_X * 2,
+		height: _text_height + MENU_BOX_PAD_TOP + MENU_BOX_PAD_BOTTOM,
+		below: _text_height / 2 + MENU_BOX_PAD_BOTTOM,
+	}
 }
 
 /**

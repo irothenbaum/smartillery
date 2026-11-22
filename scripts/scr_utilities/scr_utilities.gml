@@ -385,7 +385,7 @@ function reset_game_state() {
 	// quitting while paused would otherwise leave sfx paused forever and the music muffled
 	set_audio_paused(false)
 	stop_all_sfx(0)
-	global.is_math_mode = true
+	// global.is_math_mode is left alone: the mode picked on the main menu sticks until it's changed there
 	global.play_time_ms = 0
 	global.paused = false
 	randomize_game_seed()
@@ -654,4 +654,33 @@ function set_game_seed(_text) {
 function randomize_game_seed() {
 	global.game_seed = randomize()
 	global.game_seed_text = string(global.game_seed)
+}
+
+/**
+ * Switches between Math mode (enemies show equations) and Typing mode (enemies show words), along with the
+ * colors that go with each. Takes effect for things created afterward (e.g. the next play room's background)
+ * @param {Bool} _is_math
+ */
+function set_game_mode(_is_math) {
+	global.is_math_mode = _is_math
+	global.bg_color = _is_math ? MATH_BACKGROUND_COLOR : TYPING_BACKGROUND_COLOR
+	global.world_color = _is_math ? MATH_WORLD_COLOR : TYPING_WORLD_COLOR
+	apply_bg_color_to_room()
+}
+
+/**
+ * Colors the current room's background layer(s) with global.bg_color. The rooms' Background layers are a fixed
+ * color in the room editor, so this keeps the backdrop (e.g. around the training court, or behind the main menu's
+ * rings while they boot up) in step with the game mode's colors. Called at the start of the menu and play rooms,
+ * and again whenever the mode changes
+ */
+function apply_bg_color_to_room() {
+	var _layers = layer_get_all()
+	for (var _i = 0; _i < array_length(_layers); _i++) {
+		var _bg = layer_background_get_id(_layers[_i])
+		// colour-only backgrounds (no sprite) are drawn in their blend color
+		if (_bg != -1) {
+			layer_background_blend(_bg, global.bg_color)
+		}
+	}
 }

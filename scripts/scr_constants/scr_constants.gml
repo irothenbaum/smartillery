@@ -35,14 +35,15 @@
 
 #macro TAU (2 * pi)
 
-#macro TYPING_WORLD_COLOR #c418c4
-#macro TYPING_BACKGROUND_COLOR #1a031a
+#macro TYPING_WORLD_COLOR #85c418
+#macro TYPING_BACKGROUND_COLOR #111a03
 #macro MATH_WORLD_COLOR #c418c4
 #macro MATH_BACKGROUND_COLOR #1a031a
 
 // colors
-global.bg_color = TYPING_BACKGROUND_COLOR
-global.world_color = TYPING_WORLD_COLOR 
+// both follow the game mode -- set_game_mode switches them between the MATH_ and TYPING_ colors
+global.bg_color = MATH_BACKGROUND_COLOR
+global.world_color = MATH_WORLD_COLOR
 // enemies turn this color once they commit to attacking (enemy 1's final approach, enemy 2 in firing position)
 global.enemy_attack_color = #ff0000
 global.beam_color = c_white
@@ -136,6 +137,7 @@ global.margin_sm = 12
 global.margin_md = 20
 global.margin_lg = 32
 global.margin_xl = 60
+global.margin_xxl = 100
  
 // these match the font settings
 global.font_size_sm = 8

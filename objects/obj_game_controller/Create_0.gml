@@ -692,6 +692,9 @@ function _handle_test_string(_code) {
 
 
 show_debug_message("BOOT 4: controller create functions defined, starting game"); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 4: controller create functions defined, starting game"); file_text_writeln(_boot_f); file_text_close(_boot_f) // BOOT-DEBUG
+// the room's backdrop (e.g. around the training court) follows the game mode's colors
+apply_bg_color_to_room()
+
 // These combined effectively start the game
 reset_starting_values()
 
