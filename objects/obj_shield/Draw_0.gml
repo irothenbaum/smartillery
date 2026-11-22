@@ -1,4 +1,6 @@
 /// @description Draw shield ring
+// shiny: the shine band lights up the ring (and its band lines) as it sweeps past
+shader_set_shine(x, y, outer_radius * 2)
 draw_set_color(color)
 draw_arc(x, y, radius, 360, 0, drawn_thickness)
 
@@ -15,3 +17,4 @@ draw_set_color(c_white)
 for (var _i = 1; _i < array_length(_bands); _i++) {
 	draw_arc(x, y, inner_radius + thickness * _bands[_i].start, 360, 0, 2)
 }
+shader_reset()

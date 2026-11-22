@@ -35,12 +35,16 @@
 
 #macro TAU (2 * pi)
 
+#macro TYPING_WORLD_COLOR #c418c4
+#macro TYPING_BACKGROUND_COLOR #1a031a
+#macro MATH_WORLD_COLOR #c418c4
+#macro MATH_BACKGROUND_COLOR #1a031a
 
 // colors
-global.bg_color = #1a031a
-global.combo_color = #ff0000
+global.bg_color = TYPING_BACKGROUND_COLOR
+global.world_color = TYPING_WORLD_COLOR 
 // enemies turn this color once they commit to attacking (enemy 1's final approach, enemy 2 in firing position)
-global.enemy_attack_color = c_fuchsia
+global.enemy_attack_color = #ff0000
 global.beam_color = c_white
 
 global.ultimate_colors = {
@@ -184,6 +188,13 @@ global.bonus_item_wiggle_period_min = 0.8 // in seconds: each item picks its own
 global.bonus_item_wiggle_period_max = 2.2 // so the formation never settles into a regular shape
 global.recent_answer_grace_period = 1 // in seconds: a guess matching an answer someone just got right isn't penalized
 global.shield_color = #2f7bff
+// shine (see shader_set_shine): every shine_interval seconds of game time a thin white band sweeps across the room,
+// lighting up anything drawn as "shiny" as it passes. One shared band, so it reads as one light crossing the screen
+global.shine_enabled = true // false turns every shine off (shiny things draw normally)
+global.shine_interval = 4 // in seconds between sweeps
+global.shine_sweep_duration = 1 // in seconds for the band to cross the whole room
+global.shine_width = 90 // px -- on something shine_reference_size across; scaled for anything that passes its size (see shader_set_shine)
+global.shine_angle = 130 // in degrees (GameMaker angles, counter-clockwise): the direction the band travels -- up-left here
 global.stationary_turret_range = 300 // px
 global.stationary_turret_body_scale = 0.1 // of spr_player_body -- shared by the turret and its power item, which looks like its body
 global.stationary_turret_fire_interval = 1 // seconds between shots
@@ -230,6 +241,9 @@ global.bg_circle_max_radius = ceil(sqrt(power(global.room_width, 2) + power(glob
 global.bg_cicle_min_radius = global.turret_length
 global.bg_circle_magnitude = global.bg_circle_max_radius - global.bg_cicle_min_radius
 global.bg_circle_ring_width = global.bg_circle_magnitude / global.bg_number_of_circles
+// the shine band is global.shine_width on something this many px across (see shader_set_shine): the shield's outer
+// diameter, since that's what the width was tuned on. Same math as get_shield_geometry / get_radius_for_ring
+global.shine_reference_size = 2 * (global.bg_circle_max_radius - ((global.bg_number_of_circles - global.shield_ring_from_center) / global.bg_number_of_circles) * global.bg_circle_magnitude)
 
 
 // this is a dynamic global variable lookup

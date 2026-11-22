@@ -751,6 +751,8 @@ function get_orb_color(_type, _owner_player_id = undefined) {
 		case ORB_TYPE_ULT:
 		case ORB_TYPE_COMBO:
 			return get_player_color(_owner_player_id)
+		case ORB_TYPE_SCORE:
+			return global.world_color
 		default:
 			return c_white
 	}

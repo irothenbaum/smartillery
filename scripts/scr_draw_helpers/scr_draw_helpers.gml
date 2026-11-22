@@ -487,6 +487,19 @@ function draw_pie(_x, _y, _radius, _degrees, _start = 0) {
 	__draw_circle_ext(_x, _y, _radius, _segments, _start, _degrees, 0, false)
 }
 
+/**
+ * A filled circle built from our own triangle fan. Use this instead of the built-in draw_circle for anything drawn
+ * under a custom shader (e.g. shader_set_shine): the built-in draw_circle doesn't draw at all under sh_shine, while
+ * primitives we build ourselves (like draw_arc's) work fine
+ * @param {Real} _x
+ * @param {Real} _y
+ * @param {Real} _radius
+ * @param {Real} _segments -- 24 matches draw_circle's default precision
+ */
+function draw_circle_filled(_x, _y, _radius, _segments = 24) {
+	__draw_circle_ext(_x, _y, _radius, _segments, 0, 360, 0, false)
+}
+
 function draw_arc(_x, _y, _radius, _degrees, _start = 0, _thickness = 1, _segment_override = 0) {
 	var _segments = _segment_override > 0 ? _segment_override : get_circle_precision_from_radius_and_degrees(_radius, _degrees)
 	
@@ -701,4 +714,76 @@ function get_menu_box_group_width(_messages, _font = fnt_title) {
 		_width = max(_width, string_width(_messages[_i]))
 	}
 	return _width
+}
+
+// -------------------------------------------------------------------------------------------
+// SHINE
+// -------------------------------------------------------------------------------------------
+
+/**
+ * Sets sh_shine for drawing something "shiny": while it's set, whatever is drawn (sprites or primitives) turns
+ * white where the shared shine band is passing. Call shader_reset() when done. Timed off game time, so the band
+ * freezes while paused. Can't be combined with sh_hue_shift (only one shader at a time).
+ * Note: the built-in draw_circle draws nothing under this shader -- use draw_circle_filled / draw_arc / draw_pie
+ *
+ * Scaling: global.shine_width is the band's width on something global.shine_reference_size across (the shield).
+ * Pass a thing's center and size and the band is scaled to it around its center -- both its width and how far it
+ * moves -- so a small thing gets a proportionally thin band that crosses it at the same pace the full band crosses
+ * the shield (instead of being swallowed whole by it, which reads as a flash). Everything still lights up as the
+ * one shared band passes it, so it still reads as one light crossing the screen. Leave them out for the unscaled band
+ * @param {Real} _x -- the thing's center
+ * @param {Real} _y
+ * @param {Real} _size -- px across
+ * @param {Bool} _textured -- true when drawing sprites/text; false (default) for primitives (draw_circle_filled,
+ * draw_arc, ...), which have no texture bound to sample
+ */
+function shader_set_shine(_x = undefined, _y = undefined, _size = undefined, _textured = false) {
+	if (!global.shine_enabled) {
+		return
+	}
+	if (!shader_is_compiled(sh_shine)) {
+		debug("sh_shine isn't compiled -- drawing without shine")
+		return
+	}
+	static _u_dir = shader_get_uniform(sh_shine, "u_vDir")
+	static _u_band_pos = shader_get_uniform(sh_shine, "u_fBandPos")
+	static _u_half_width = shader_get_uniform(sh_shine, "u_fHalfWidth")
+	static _u_textured = shader_get_uniform(sh_shine, "u_fTextured")
+
+	var _dir_x = lengthdir_x(1, global.shine_angle)
+	var _dir_y = lengthdir_y(1, global.shine_angle)
+
+	// the room's extent along the travel direction: the band starts just before it and ends just past it
+	var _start = infinity
+	var _end = -infinity
+	var _corners = [[0, 0], [global.room_width, 0], [0, global.room_height], [global.room_width, global.room_height]]
+	for (var _i = 0; _i < 4; _i++) {
+		var _d = _corners[_i][0] * _dir_x + _corners[_i][1] * _dir_y
+		_start = min(_start, _d)
+		_end = max(_end, _d)
+	}
+	_start -= global.shine_width
+	_end += global.shine_width
+
+	// sweep once at the start of each interval; the rest of the interval it sits past the end, out of sight
+	var _seconds = get_play_time() / 1000
+	var _progress = (_seconds mod global.shine_interval) / global.shine_sweep_duration
+	var _band_pos = lerp(_start, _end, min(_progress, 1))
+	var _half_width = global.shine_width / 2
+
+	// scale the band around the thing's center: its offset from the center and its width both shrink (or grow) by
+	// the same factor, so it lines up with the shared band's timing (centered when the shared band is) but sized
+	// to the thing. While the shared band is parked off-room, the scaled one is still clear of the thing
+	if (!is_undefined(_size)) {
+		var _scale = _size / global.shine_reference_size
+		var _center = _x * _dir_x + _y * _dir_y
+		_band_pos = _center + (_band_pos - _center) * _scale
+		_half_width *= _scale
+	}
+
+	shader_set(sh_shine)
+	shader_set_uniform_f(_u_dir, _dir_x, _dir_y)
+	shader_set_uniform_f(_u_band_pos, _band_pos)
+	shader_set_uniform_f(_u_half_width, _half_width)
+	shader_set_uniform_f(_u_textured, _textured ? 1 : 0)
 }
