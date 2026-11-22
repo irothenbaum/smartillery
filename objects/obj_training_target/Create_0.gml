@@ -69,8 +69,24 @@ function register_hit(_damage_amount) {
 		alarm[0] = respawn_time
 		// this target gets harder every time you destroy it (the new question is generated on respawn)
 		increase_difficulty()
+		check_all_targets_exploded()
 	} else {
 		enemy_generate_question(self)
+	}
+}
+
+// Achievement: every training target is exploded at the same time. Only checked at the moment a target
+// explodes, since that's the only time the condition can become true (respawns can only make it false).
+function check_all_targets_exploded() {
+	var _all_exploded = true
+	with (obj_training_target) {
+		if (!is_exploded) {
+			_all_exploded = false
+			break
+		}
+	}
+	if (_all_exploded && instance_number(obj_training_target) > 1) {
+		unlock_achievement(ACH_TRAINING_DOUBLE_DOWN)
 	}
 }
 
