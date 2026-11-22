@@ -54,3 +54,14 @@ buttons = [
 		},
 	})),
 ]
+
+// a menu input above the buttons, same as the main menu's: type a button's name to choose it.
+// It takes the keyboard while paused -- the game input's in-progress guess is set aside and handed back on close
+saved_keyboard_string = keyboard_string
+saved_focused_input = global.focused_input
+// only set once some menu input has been created (e.g. the main menu's), so it may not exist yet
+saved_default_focused_input = variable_global_exists("default_focused_input") ? global.default_focused_input : undefined
+keyboard_string = ""
+menu_input = instance_create_depth(global.xcenter, _button_y - 90, depth - 1, obj_menu_input, {
+	hint_offset_y: -80, // above the input, clear of the buttons below it
+})

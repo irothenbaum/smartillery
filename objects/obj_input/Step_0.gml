@@ -2,7 +2,11 @@ var _game_controller = get_game_controller()
 
 if (is_controlled) {
 	if (global.paused) {
-		keyboard_string = message
+		// hold the in-progress guess while paused -- unless the pause screen's menu input is taking the keyboard
+		// (it hands the guess back when it closes, see obj_pause_overlay)
+		if (!instance_exists(obj_menu_input)) {
+			keyboard_string = message
+		}
 		return
 	}
 

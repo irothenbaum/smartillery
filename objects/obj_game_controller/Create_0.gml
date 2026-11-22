@@ -226,7 +226,7 @@ function handle_enemy_killed(_enemy) {
 	
 	
 	var _ult_increase = (has_point_streak(_player_id)) ? _enemy.point_value / 2 : 0;
-	var _combo_bonus = combo_count[$ _player_id] >= global.minimum_combo ? combo_count[$ _player_id] : 0
+	var _combo_bonus = combo_count[$ _player_id] >= global.minimum_combo ? combo_count[$ _player_id] * global.combo_bonus_multiplier : 0
 	
 	draw_point_indicators(_player_id, _enemy.x, _enemy.y, _enemy.point_value, _ult_increase, _combo_bonus)
 }
@@ -453,19 +453,19 @@ function increase_combo(_player_id, _enemy) {
 	
 	// Max combo is how every many phrases we support
 	var _max_combo = array_length(global.combo_phrases)
-	// if we surpass it, fully charge ultimate and reset
+	// if we surpass it, fully charge ultimate, drop a power item, and reset
 	if (combo_count[$ _player_id] > _max_combo) {
 		combo_count[$ _player_id] = 0
 		
-		// can only full charge if not currently popping ult
+		// can only full charge if not currently popping ult (and there's nothing to do if it's already full)
 		if (ultimate_charge[$ _player_id] < global.ultimate_requirement && !is_ulting(_player_id)) {
 			ultimate_charge[$ _player_id] = global.ultimate_requirement
 			// Spawn level up particle effect
 			draw_particle_shockwave(get_player().x, get_player().y, 1, undefined, get_player_color(_player_id))
-		} else {
-			// drop an item
-			spawn_bonus_item(_enemy.x, _enemy.y, [pick_power_item_object()])
 		}
+
+		// always drop an item, charged or not
+		spawn_bonus_item(_enemy.x, _enemy.y, [pick_power_item_object()])
 	} else {
 		alarm[get_combo_alarm_for_player_id(_player_id)] = combo_max_alarm
 		longest_combo[$ _player_id] = max(longest_combo[$ _player_id], combo_count[$ _player_id])
@@ -478,6 +478,11 @@ function increase_combo(_player_id, _enemy) {
  * @param {Array<Asset.GMObject>} _types
  */
 function spawn_bonus_item(_x, _y, _types) {
+	// training is just for practicing answers -- no power items (or extra ultimates), even from a full combo
+	if (room == rm_play_training) {
+		return
+	}
+
 	var _obj = _types[irandom(array_length(_types) - 1)]
 	
 	// position it inside the room bounds
@@ -696,7 +701,8 @@ if (room == rm_play_training) {
 	// defer one frame so every room instance (e.g. obj_player) has run its Create event first
 	call_later(1, time_source_units_frames, configure_test_room)
 } else {
-	// this effectively starts the regular game
-	mark_wave_completed()
+	// this effectively starts the regular game: after a short beat on the empty board, the WAVE 1 banner shows and
+	// spawning begins (see Alarm 6). An alarm, so pausing during the wait holds the countdown too (see set_paused)
+	alarm[6] = global.game_start_delay * game_get_speed(gamespeed_fps)
 }
 show_debug_message("BOOT 5: controller create end"); var _boot_f = file_text_open_append("boot_log.txt"); file_text_write_string(_boot_f, "BOOT 5: controller create end"); file_text_writeln(_boot_f); file_text_close(_boot_f) // BOOT-DEBUG

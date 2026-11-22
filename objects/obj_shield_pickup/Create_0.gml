@@ -14,7 +14,7 @@ function land() {
 	if (_shield != noone) {
 		_shield.add_health(1)
 	} else {
-		instance_create_layer(global.xcenter, global.ycenter, LAYER_BG_EFFECTS, obj_shield)
+		instance_create_depth(global.xcenter, global.ycenter, DEPTH_SHIELD, obj_shield)
 	}
 	instance_destroy()
 }

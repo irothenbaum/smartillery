@@ -126,9 +126,7 @@ function trigger_menu_item() {
 	menu_item_hit = false
 	shot_timer = shot_interval
 	idle_timer = 0
-	if (instance_exists(_item)) {
-		_item.on_click(_item)
-	}
+	activate_menu_item(_item)
 }
 
 function get_turret_muzzle() {

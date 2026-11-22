@@ -1,7 +1,6 @@
 message = "";
-// drawn on the GUI layer just below the player (see update_position), so it isn't scaled by the zoomed menu camera
-x = global.xcenter
-y = global.ycenter
+// drawn on the GUI layer. On the main menu it follows just below the player (see update_position), so it isn't
+// scaled by the zoomed menu camera; anywhere else (e.g. the pause screen) it stays where it was created
 
 function update_position() {
 	var _player = instance_find(obj_menu_player, 0)
@@ -19,7 +18,10 @@ min_box_width = 40
 placeholder = "type selection"
 placeholder_alpha = 0.6
 // the placeholder starts empty, then "types" itself out one character at a time
-placeholder_start_delay = 5 // in seconds before the first character
+// optional creation param: placeholder_start_delay
+if (!variable_instance_exists(self, "placeholder_start_delay")) {
+	placeholder_start_delay = 5 // in seconds before the first character
+}
 placeholder_type_duration = 1 // in seconds to type the whole thing, roughly
 placeholder_type_jitter = 0.4 // each character's delay varies by up to +/- this fraction of the average
 placeholder_chars = 0 // how many characters are typed so far
@@ -50,6 +52,10 @@ last_guess = "" // shown in red while shaking, since message is cleared on submi
 // the "Enter a menu item to select it" hint shown on an invalid entry
 hint = noone
 hint_fade_duration = 2 // in seconds, starting once the shake is done
+// optional creation param: hint_offset_y -- where the hint goes relative to the input (negative = above it)
+if (!variable_instance_exists(self, "hint_offset_y")) {
+	hint_offset_y = 80
+}
 
 function start_shake(_guess) {
 	last_guess = _guess
@@ -90,7 +96,7 @@ function select_button_by_label() {
 			if (instance_exists(_player)) {
 				_player.shoot_menu_item(_inst)
 			} else {
-				_inst.on_click()
+				activate_menu_item(_inst)
 			}
 			return true
 		}

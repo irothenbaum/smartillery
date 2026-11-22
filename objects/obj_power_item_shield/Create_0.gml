@@ -12,7 +12,7 @@ icon_scale = radius / get_shield_geometry().outer_radius
 function register_hit() {
 	// (the answer is released by obj_bonus_item_parent's Destroy)
 	debug("SHIELD ITEM HIT by", last_hit_by_player_id)
-	var _pickup = instance_create_layer(x, y, LAYER_BG_EFFECTS, obj_shield_pickup, {start_scale: icon_scale})
+	var _pickup = instance_create_depth(x, y, DEPTH_SHIELD, obj_shield_pickup, {start_scale: icon_scale})
 	fade_out_label(_pickup)
 	instance_destroy()
 }

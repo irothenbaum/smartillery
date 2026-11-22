@@ -4,6 +4,9 @@
 #macro LAYER_HUD "HUD"
 #macro LAYER_BG_EFFECTS "BG_Effects"
 #macro LAYER_FG_EFFECTS "FG_Effects"
+// the shield ring (and its fly-in pickup) sits between the Background (500) and BG_Effects (400) layers, so beams,
+// turrets, enemies and every other effect draw over it
+#macro DEPTH_SHIELD 450
 
 // main menu background scene: the camera shows this fraction of the world, so the player (world center) sits in
 // the top-right of the screen and the menu fits in the lower-left
@@ -98,7 +101,9 @@ global.is_math_mode = true
 global.play_time_ms = 0
 global.paused = false
 global.game_seed = randomize()
+global.game_seed_text = string(global.game_seed) // what the menu's Seed box shows (see set_game_seed)
 global.starting_wave = 0 // 0 is default
+global.game_start_delay = 3 // in seconds after a play room starts before the first wave (and its banner) begins
 
 // multiplayer stuff
 global.active_player_ids = []   // ordered slot list, populated before entering any game room
@@ -138,6 +143,7 @@ global.font_size_xl = 24
 global.point_streak_requirement = 3
 global.combo_delay_ms = 1200
 global.minimum_combo = 2
+global.combo_bonus_multiplier = 3 // a combo orb is worth the combo count times this (added to score and ultimate progress)
 // we keep combo 1 even though it's not used because we want array_length to = longest combo count
 global.combo_phrases = ["N/A", "Double tap", "Hat trick", "Connect four", "Cinco de Mayhem"]
 global.ultimate_requirement = 30 // how many seconds until your charge is ready
@@ -181,7 +187,7 @@ global.shield_color = #2f7bff
 global.stationary_turret_range = 300 // px
 global.stationary_turret_body_scale = 0.1 // of spr_player_body -- shared by the turret and its power item, which looks like its body
 global.stationary_turret_fire_interval = 1 // seconds between shots
-global.stationary_turret_lifetime_refund = 0.1 // fraction of its total lifetime a stationary turret regains per shot
+global.stationary_turret_lifetime_refund = 0.1 // fraction of its total lifetime a stationary turret regains per kill
 global.stationary_turret_duration = 20 // seconds before the turret disappears
 global.health_item_amount = 25
 

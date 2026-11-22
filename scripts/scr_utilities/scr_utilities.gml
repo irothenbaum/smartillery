@@ -388,7 +388,7 @@ function reset_game_state() {
 	global.is_math_mode = true
 	global.play_time_ms = 0
 	global.paused = false
-	global.game_seed = randomize()
+	randomize_game_seed()
 	global.is_solo = false
 	global.is_coop = false
 	global.is_training = false
@@ -608,4 +608,50 @@ function is_room_transitioning() {
 		}
 	}
 	return false
+}
+
+/**
+ * Triggers a menu item (obj_menu_button, obj_menu_toggle, obj_menu_number_input), however it was chosen -- clicked,
+ * typed into an obj_menu_input, or shot by the main menu's turret. Buttons go through activate() so they can react
+ * (e.g. strobe when they start a room transition); everything else just runs on_click
+ * @param {Id.Instance} _inst
+ */
+function activate_menu_item(_inst) {
+	if (!instance_exists(_inst)) {
+		return
+	}
+	if (_inst.object_index == obj_menu_button) {
+		_inst.activate()
+	} else {
+		_inst.on_click(_inst)
+	}
+}
+
+/**
+ * Sets the game seed from what was typed in the menu's Seed box. All digits is used as the number itself ("1234"
+ * is seed 1234); anything else is hashed (FNV-1a, 31-bit) so the same text always plays the same way.
+ * Empty picks a new random seed
+ * @param {String} _text
+ */
+function set_game_seed(_text) {
+	if (string_length(_text) == 0) {
+		randomize_game_seed()
+		return
+	}
+	if (string_digits(_text) == _text) {
+		global.game_seed = real(_text)
+	} else {
+		var _hash = 2166136261
+		for (var _i = 1; _i <= string_length(_text); _i++) {
+			_hash = _hash ^ ord(string_char_at(_text, _i))
+			_hash = (_hash * 16777619) & 0xFFFFFFFF
+		}
+		global.game_seed = _hash & 0x7FFFFFFF
+	}
+	global.game_seed_text = _text
+}
+
+function randomize_game_seed() {
+	global.game_seed = randomize()
+	global.game_seed_text = string(global.game_seed)
 }

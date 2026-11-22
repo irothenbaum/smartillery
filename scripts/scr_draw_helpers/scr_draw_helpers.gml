@@ -653,17 +653,31 @@ function draw_rectangle_clipped(_bounds, _color, _spr, _scale) {
  * @param {String} _align -- ALIGN_LEFT or ALIGN_CENTER
  * @param {Real} _min_width -- the box is at least this wide (not counting padding), so a group of items can match
  * @param {Bool} _filled -- also fill the box (at a quarter of the current alpha), e.g. a selected toggle
+ * @param {Bool} _inverted -- a solid box in the current color with black text (e.g. a button strobing as it's chosen)
  * @returns {Struct.Bounds} the box's bounds, for click testing
  */
-function draw_menu_box(_x, _y, _message, _align = ALIGN_CENTER, _min_width = 0, _filled = false) {
+function draw_menu_box(_x, _y, _message, _align = ALIGN_CENTER, _min_width = 0, _filled = false, _inverted = false) {
 	var _pad_x = 12
 	var _content_width = max(string_width(_message), _min_width)
 	var _x0 = _align == ALIGN_LEFT ? _x : _x - (_content_width / 2) - _pad_x
 	var _x1 = _x0 + _content_width + (_pad_x * 2)
+	var _text_x = (_x0 + _x1) / 2
 
-	var _text_bounds = draw_text_with_alignment((_x0 + _x1) / 2, _y, _message, ALIGN_CENTER)
+	// measure first, so an inverted box can be filled before its text is drawn on top
+	var _text_bounds = draw_text_with_alignment(_text_x, _y, _message, ALIGN_CENTER, undefined, true)
 	var _box = new Bounds(_x0, _text_bounds.y0 - 8, _x1, _text_bounds.y1 + 6)
 	var _corner = _box.height / 2
+
+	if (_inverted) {
+		draw_roundrect_ext(_box.x0, _box.y0, _box.x1, _box.y1, _corner, _corner, false)
+		var _color = draw_get_color()
+		draw_set_color(c_black)
+		draw_text_with_alignment(_text_x, _y, _message, ALIGN_CENTER)
+		draw_set_color(_color)
+		return _box
+	}
+
+	draw_text_with_alignment(_text_x, _y, _message, ALIGN_CENTER)
 	draw_roundrect_ext(_box.x0, _box.y0, _box.x1, _box.y1, _corner, _corner, true)
 	if (_filled) {
 		var _alpha = draw_get_alpha()

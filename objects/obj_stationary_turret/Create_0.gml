@@ -65,12 +65,16 @@ can_fire = true
 
 my_bounds = new Bounds(x - body_radius, y - body_radius, x + body_radius, y + body_radius)
 
-// lifetime -- shown by the range fill sweeping down to 0 (like the active-ultimates ring)
+// lifetime -- shown by the range fill shrinking toward the turret
 lifetime_frames = global.stationary_turret_duration * game_get_speed(gamespeed_fps)
 alarm[0] = lifetime_frames
 lifetime_full_buffer = feet_grow_duration + barrel_grow_duration + range_grow_duration // in seconds: the fill stays full while deploying, then counts down
-lifetime_start_angle = 90 // the sweep starts (and ends) at the top, like the ultimates ring
-lifetime_head_width = 2 // the white line where the fill meets the empty part
+range_fill_alpha = 0.08
+range_outline_alpha = 0.5
+
+// the white pulse sent out to the range outline on every kill
+kill_pulse_duration = 0.4 // in seconds
+kill_pulse_stroke = 6 // px at the start -- it thins to 1px as it reaches the outline
 
 /**
  * The in-range enemy closest to the player, preferring ones we haven't shot yet. Enemies we've already shot
@@ -101,6 +105,25 @@ function find_target() {
 }
 
 /**
+ * Each kill wins back some lifetime and sends a white pulse out to the range outline
+ */
+function register_kill() {
+	// capped at what the range fill shows as full (the lifetime minus the full buffer -- capping at lifetime_frames
+	// would leave the fill stuck at full for a moment)
+	var _full_frames = lifetime_frames - lifetime_full_buffer * game_get_speed(gamespeed_fps)
+	alarm[0] = min(alarm[0] + lifetime_frames * global.stationary_turret_lifetime_refund, max(alarm[0], _full_frames))
+
+	instance_create_layer(x, y, LAYER_BG_EFFECTS, obj_expanding_ring, {
+		start_radius: body_radius,
+		end_radius: range,
+		color: c_white,
+		duration: kill_pulse_duration,
+		stroke: kill_pulse_stroke,
+		fade: true,
+	})
+}
+
+/**
  * @param {Id.Instance} _target
  */
 function fire_at(_target) {
@@ -116,10 +139,10 @@ function fire_at(_target) {
 	})
 	handle_enemy_hit(_target, owner_player_id, 1)
 
-	// each shot wins back some lifetime, capped at what the range fill shows as full (the lifetime minus the
-	// full buffer -- capping at lifetime_frames would leave the fill stuck at full for a moment)
-	var _full_frames = lifetime_frames - lifetime_full_buffer * game_get_speed(gamespeed_fps)
-	alarm[0] = min(alarm[0] + lifetime_frames * global.stationary_turret_lifetime_refund, max(alarm[0], _full_frames))
+	// a killing blow destroys the enemy immediately, so if it's gone, this shot was a kill
+	if (!instance_exists(_target)) {
+		register_kill()
+	}
 
 	can_fire = false
 	alarm[1] = global.stationary_turret_fire_interval * game_get_speed(gamespeed_fps)

@@ -29,7 +29,8 @@ if (global.focused_input == self) {
 				instance_destroy(hint)
 			}
 			// shown while the box shakes, then fades out
-			hint = instance_create_layer(_hint_x, y + 80, LAYER_INSTANCES, obj_text_title, {
+			// at the input's own depth, so it draws wherever the input does (e.g. over the pause screen's dimming)
+			hint = instance_create_depth(_hint_x, y + hint_offset_y, depth, obj_text_title, {
 				message: _hint,
 				duration: total_shake_time / 1000,
 				fade_duration: hint_fade_duration,
