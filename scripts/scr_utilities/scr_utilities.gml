@@ -78,6 +78,13 @@ function instance_is_enemy(_inst) {
 	return object_is_ancestor(_inst.object_index, obj_enemy_parent)
 }
 
+/// Power items and extra ultimates -- the things selected with "0XX" launch codes
+/// @param {Id.Instance} _inst
+/// @returns {Bool}
+function instance_is_bonus_item(_inst) {
+	return instance_exists(_inst) && object_is_ancestor(_inst.object_index, obj_bonus_item_parent)
+}
+
 /**
  * @param {Asset.GMObject} _instance_type
  * @returns {Array<Id.Instance>}
@@ -654,6 +661,27 @@ function set_game_seed(_text) {
 function randomize_game_seed() {
 	global.game_seed = randomize()
 	global.game_seed_text = string(global.game_seed)
+}
+
+/**
+ * Mixes any number of values into one well-scrambled seed for random_set_seed. Seeds that sit close together or in a
+ * regular pattern (e.g. game_seed + wave * 10000) can give GameMaker's generator similar first rolls, so seed separate
+ * purposes through this instead -- e.g. random_set_seed(hash_seed(global.game_seed, current_wave, _count))
+ * @returns {Real} a non-negative 31-bit seed
+ */
+function hash_seed() {
+	// FNV-1a over each value, kept in 32 bits
+	var _hash = int64(2166136261)
+	for (var _i = 0; _i < argument_count; _i++) {
+		_hash = ((_hash ^ (int64(argument[_i]) & 0xFFFFFFFF)) * 16777619) & 0xFFFFFFFF
+	}
+	// final avalanche (murmur3's fmix32) so changing any input flips about half of the output bits
+	_hash = _hash ^ (_hash >> 16)
+	_hash = (_hash * 0x85ebca6b) & 0xFFFFFFFF
+	_hash = _hash ^ (_hash >> 13)
+	_hash = (_hash * 0xc2b2ae35) & 0xFFFFFFFF
+	_hash = _hash ^ (_hash >> 16)
+	return _hash & 0x7FFFFFFF
 }
 
 /**

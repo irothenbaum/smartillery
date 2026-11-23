@@ -100,14 +100,7 @@ function mark_wave_completed() {
 	}
 	
 	if (!is_undefined(last_enemy_killed)) {
-		var _bonus_options = [pick_power_item_object()]
-		
-		// waves above 3 have a 50% chance of spawning an extra ultimate
-		if (current_wave > 3) {
-			array_push(_bonus_options, obj_extra_ultimate)
-		}
-		
-		spawn_bonus_item(last_enemy_killed.x, last_enemy_killed.y, _bonus_options)
+		spawn_bonus_item(last_enemy_killed.x, last_enemy_killed.y, [pick_bonus_item_object()])
 		last_enemy_killed = undefined
 	}
 
@@ -196,6 +189,8 @@ function reset_starting_values() {
 	inst_ultimate = initialize_player_map(undefined)
 	// expiry times are in play time, which restarts with the game
 	recently_guessed_answers = {}
+	// see pick_bonus_item_object
+	bonus_drops_rolled = 0
 	random_set_seed(global.game_seed);
 }
 
@@ -338,6 +333,9 @@ function activate_ultimate(_player_id) {
 	
 	var _ult_obj = global._G.ultimate_object_map[$ get_player_ultimate(_player_id)]
 	inst_ultimate[$ _player_id] = instance_create_layer(x, y, LAYER_HUD, _ult_obj, {level: ultimate_level[$ _player_id], owner_player_id: _player_id})
+	// the charge is spent up front. It stays empty while the ultimate runs (Step skips the passive recharge while
+	// ulting); only a level up item refills it meanwhile, and that charge waits until this one ends
+	ultimate_charge[$ _player_id] = 0
 	debug("[LEECH] activate_ultimate player:", _player_id, "ult type:", get_player_ultimate(_player_id), "object:", object_get_name(_ult_obj), "level:", ultimate_level[$ _player_id], "inst:", inst_ultimate[$ _player_id])
 	cached_ultimate_level[$ _player_id] = ultimate_level[$ _player_id]
 }
@@ -365,7 +363,8 @@ function mark_ultimate_used(_player_id) {
 	if (!is_undefined(inst_ultimate[$ _player_id])) {
 		instance_destroy(inst_ultimate[$ _player_id])
 	}
-	ultimate_charge[$ _player_id] = 0
+	// the charge was already spent on activation -- leave it alone, since a level up item may have refilled it
+	// while the ultimate was running
 	inst_ultimate[$ _player_id] = undefined
 	cached_ultimate_level[$ _player_id] = undefined
 }
@@ -464,7 +463,7 @@ function increase_combo(_player_id, _enemy) {
 		}
 
 		// always drop an item, charged or not
-		spawn_bonus_item(_enemy.x, _enemy.y, [pick_power_item_object()])
+		spawn_bonus_item(_enemy.x, _enemy.y, [pick_bonus_item_object()])
 	} else {
 		alarm[get_combo_alarm_for_player_id(_player_id)] = combo_max_alarm
 		longest_combo[$ _player_id] = max(longest_combo[$ _player_id], combo_count[$ _player_id])
@@ -489,6 +488,25 @@ function spawn_bonus_item(_x, _y, _types) {
 	var _actual_position = _positions[0]
 
 	instance_create_layer(_actual_position.x, _actual_position.y, LAYER_FG_EFFECTS, _obj)
+}
+
+/**
+ * Picks what a bonus drop (end of wave, or a maxed-out combo) should be: from wave 4 on it's a 50/50 between a power
+ * item and an extra ultimate, otherwise a power item.
+ * Each drop is rolled from its own seed (game seed + wave + how many drops have been rolled this game), so it's
+ * deterministic for a given seed but independent of everything else -- the enemy controller reseeds the generator on
+ * every spawn attempt, and rolling straight after one of those made this pick land the same way wave after wave
+ * @returns {Asset.GMObject}
+ */
+function pick_bonus_item_object() {
+	random_set_seed(hash_seed(global.game_seed, current_wave, bonus_drops_rolled))
+	bonus_drops_rolled++
+
+	var _options = [pick_power_item_object()]
+	if (current_wave > 3) {
+		array_push(_options, obj_extra_ultimate)
+	}
+	return _options[irandom(array_length(_options) - 1)]
 }
 
 function get_combo_alarm_for_player_id(_player_id) {
@@ -647,7 +665,8 @@ function handle_submit_answer(_answer, _player_id) {
 	_player.fire_at_instance(_instance, _player_id);
 	mark_answer_recently_guessed(_answer)
 
-	if (is_ult_active(ULTIMATE_ASSIST)) {
+	// selecting an item isn't an answer to an enemy, so Aim Assist doesn't look for near-matches
+	if (is_ult_active(ULTIMATE_ASSIST) && !instance_is_bonus_item(_instance)) {
 		var _inst = instance_find(obj_ultimate_assist, 0)
 		// don't care about the return value here because, see below
 		_inst.handle_answer_given(_answer, _player_id)

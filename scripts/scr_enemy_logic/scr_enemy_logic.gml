@@ -8,7 +8,7 @@ function initialize_instance_has_equation(_e) {
 	last_hit_by_player_id = undefined
 	// whether a kill by last_hit_by_player_id gives ult charge (see handle_enemy_hit's grants_ult_charge)
 	last_hit_grants_ult_charge = true
-	
+
 	enemy_generate_question(_e)
 }
 
@@ -150,7 +150,11 @@ function enemy_step(_e) {
  */
 function instance_draw_equation(_e) {
 	with (_e) {
-		var _string = global.paused ? " " : equation
+		// nothing at all while paused -- no box and no equation/code (the pause tooltips take over)
+		if (global.paused) {
+			return
+		}
+		var _string = equation
 		if (!variable_instance_exists(id, "equation_angle")) {
 			equation_angle = undefined
 		}
@@ -857,9 +861,19 @@ function pick_power_item_object() {
 	// shields still flying in from a pickup count too, so a burst of shield items doesn't keep rolling shields
 	var _shield_health = (_shield == noone ? 0 : _shield.shield_health) + instance_number(obj_shield_pickup)
 
+	// level up items get rarer as ultimates level up: weight 1 / (1 + 0.5 * (level - 1)), using the highest ultimate
+	// level of any player (items are shared, so whoever is furthest along sets the odds). With the other items at
+	// their base weights that's roughly 20% at level 1, 14% at level 2, 11% at level 3, 8% at level 5, 4% at level 10
+	var _highest_ult_level = 1
+	var _ult_levels = get_game_controller().ultimate_level
+	var _player_ids = get_player_ids()
+	for (var _i = 0; _i < array_length(_player_ids); _i++) {
+		_highest_ult_level = max(_highest_ult_level, _ult_levels[$ _player_ids[_i]] ?? 1)
+	}
+
 	var _options = [
 		{obj: obj_power_item_shield, weight: 1 / power(2, _shield_health)},
-		{obj: obj_power_item_level_up, weight: 1},
+		{obj: obj_power_item_level_up, weight: 1 / (1 + 0.5 * (_highest_ult_level - 1))},
 		{obj: obj_power_item_health, weight: (_missing_health > 0) ? power(2, floor(_missing_health / 20)) : 1},
 		{obj: obj_power_item_points, weight: 1},
 		{obj: obj_power_item_turret, weight: 1},

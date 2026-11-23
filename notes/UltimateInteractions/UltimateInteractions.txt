@@ -12,6 +12,7 @@ Collateral chain                  no       yes     yes       yes          yes   
 Rings                             no       yes     yes       yes          yes        no
 Stationary turret (power item)    no       no      yes       no           no         no
 Ship explosion (taking damage)    no       no      no        no           no         no
+Shooting your own item (0XX)      +1       yes     n/a       n/a          no         no   (no turret shots or Aim Assist either)
 Leech, Time Slow                  (don't damage enemies)
 
 

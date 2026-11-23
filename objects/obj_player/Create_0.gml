@@ -143,8 +143,12 @@ function execute_hit_target() {
 		color: _on_streak ? get_player_color(_player_who_shot_id) : global.beam_color
 	}
 	instance_create_layer(_muzzle.x, _muzzle.y, LAYER_BG_EFFECTS, obj_muzzle_flash, _flash_variables)
-	
-	if (game_controller.is_ult_active(ULTIMATE_COLLATERAL)) {
+
+	// shooting one of your own items (power items, extra ultimates) is just picking it up: no ultimate reacts to it
+	// (no collateral, leech, rings or turret shots)
+	var _is_bonus_item = instance_is_bonus_item(_target)
+
+	if (!_is_bonus_item && game_controller.is_ult_active(ULTIMATE_COLLATERAL)) {
 		// override color, default to ult color if not fired by a player on streak
 		_flash_variables.color = _on_streak ? get_player_color(_player_who_shot_id) : global.ultimate_colors[$ ULTIMATE_COLLATERAL]
 		instance_create_layer(_muzzle.x, _muzzle.y, LAYER_BG_EFFECTS, obj_electric_beam, _flash_variables)
@@ -152,11 +156,15 @@ function execute_hit_target() {
 	
 	recoil_amount = max_recoil_amount
 	
-	handle_enemy_hit(_target, _player_who_shot_id, 1, {from_player_shot: true})
-	
-	// if we have any turrets, we trigger them to shoot also
-	with (obj_ult_turret_turret) {
-		create_beam(_player_who_shot_id)
+	if (_is_bonus_item) {
+		handle_enemy_hit(_target, _player_who_shot_id, 1, {from_player_shot: false, triggers_leech: false})
+	} else {
+		handle_enemy_hit(_target, _player_who_shot_id, 1, {from_player_shot: true})
+
+		// if we have any turrets, we trigger them to shoot also
+		with (obj_ult_turret_turret) {
+			create_beam(_player_who_shot_id)
+		}
 	}
 	
 	rotate_towards_next_target()

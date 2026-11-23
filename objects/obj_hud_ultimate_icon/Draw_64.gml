@@ -19,8 +19,18 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	
 	var _circle_radius = half_sprite_size + (global.margin_md / 2)
 	
-	// draw the ultimate circle progress if we have any charge
-	if (game_controller.ultimate_charge[$ owner_player_id] > 0) {
+	var _is_ulting = game_controller.is_ulting(owner_player_id)
+
+	if (_is_ulting) {
+		// while the ultimate runs, the circle throbs in its color (it doesn't track the remaining duration -- the
+		// active ultimates ring around the player does that)
+		var _pulse = 0.5 + 0.5 * dsin(360 * get_play_time() / ULT_ICON_PULSE_PERIOD_MS)
+		var _pulse_radius = _circle_radius * (1 + ULT_ICON_PULSE_GROWTH * _pulse)
+		draw_set_composite_color(new CompositeColor(_ultimate_color, lerp(0.55, 1, _pulse)))
+		draw_circle_color(_xcenter, _ycenter, _pulse_radius, _ultimate_color, _ultimate_color, false)
+		reset_composite_color()
+	} else if (game_controller.ultimate_charge[$ owner_player_id] > 0) {
+		// draw the ultimate circle progress if we have any charge
 		var _visible_height = ceil((_circle_radius * 2) * game_controller.ultimate_charge[$ owner_player_id] / global.ultimate_requirement)
 		
 		// Turn on clipping
@@ -51,7 +61,7 @@ if (instance_exists(input) && !is_undefined(input.my_bounds)) {
 	}
 	
 	// draw the sprite on top
-	draw_sprite_ext(ult_sprite, 0, _xcenter, _ycenter, icon_scale, icon_scale, 0, c_white, _player_has_ultimate ? 1 : 0.5)
+	draw_sprite_ext(ult_sprite, 0, _xcenter, _ycenter, icon_scale, icon_scale, 0, c_white, (_player_has_ultimate || _is_ulting) ? 1 : 0.5)
 	
 	// last we draw the level
 	var _level_center = {

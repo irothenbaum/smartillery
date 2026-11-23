@@ -77,7 +77,13 @@ ds_map_add(_enemy_compound_maps, obj_enemy_4, obj_compound_enemy_4)
 ds_map_add(_enemy_compound_maps, obj_enemy_5, obj_compound_enemy_5)
 
 
-function attempt_spawn() {	
+function attempt_spawn() {
+	// the wave's enemies have all spawned. Without this, attempts kept running (and reseeding the random generator
+	// every time) until the wave ended, and could spawn an extra enemy or two past enemy_count
+	if (spawned_count >= enemy_count) {
+		return
+	}
+
 	var _min_value = ds_map_find_value(_enemy_weights_map, obj_enemy_1)
 	var _value_dif = max_value - current_value
 	

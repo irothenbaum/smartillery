@@ -10,3 +10,7 @@ game_controller = get_game_controller()
 color_shadow = new CompositeColor(c_black, 0.4)
 color_shadow_dark = new CompositeColor(c_black, 0.8)
 my_bounds = undefined
+
+// while the ultimate is active the icon's circle throbs in the ultimate's color (see Draw GUI)
+#macro ULT_ICON_PULSE_PERIOD_MS 700 // one throb
+#macro ULT_ICON_PULSE_GROWTH 0.15 // how much bigger the circle gets at the peak of a throb

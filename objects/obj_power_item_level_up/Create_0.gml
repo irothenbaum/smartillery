@@ -10,9 +10,8 @@ function register_hit() {
 	// only the player who hit the item levels up
 	var _game_controller = get_game_controller()
 	_game_controller.increate_ult_level(last_hit_by_player_id)
-	// an active ultimate drives its own charge meter (counting down), so only fill it when not ulting
-	if (!_game_controller.is_ulting(last_hit_by_player_id)) {
-		_game_controller.ultimate_charge[$ last_hit_by_player_id] = global.ultimate_requirement
-	}
+	// always fully recharge. If their ultimate is running, the charge waits: it can't be launched until the current
+	// one ends (has_ultimate checks is_ulting), and it doesn't extend the current one's duration
+	_game_controller.ultimate_charge[$ last_hit_by_player_id] = global.ultimate_requirement
 	instance_destroy()
 }

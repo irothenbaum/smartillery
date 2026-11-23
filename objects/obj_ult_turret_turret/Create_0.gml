@@ -16,13 +16,20 @@ if (!variable_instance_exists(id, "bobble_phase")) {
 // complete an orbit every 4 seconds (at 1x speed)
 orbit_speed = orbit_direction * orbit_speed_multiplier * 360 / (4 * game_get_speed(gamespeed_fps))
 
-// bob in and out from the orbit radius
-bobble_amplitude = global.bg_circle_ring_width * 0.15 // px
-bobble_speed = 360 / (1.5 * game_get_speed(gamespeed_fps)) // degrees per frame, one bob every 1.5 seconds
+// wave-like bobble: as the turret travels its orbit it weaves in and out of the ring, tracing a wavy circle with
+// bobble_waves_per_orbit crests. The wave also drifts around on its own (bobble_speed) so it rotates like the bonus
+// items' orbit, and bobble_phase offsets each turret's wave so they don't move in lockstep
+bobble_amplitude = global.bg_circle_ring_width * 0.25 // px
+bobble_waves_per_orbit = 3
+bobble_speed = 360 / (2 * game_get_speed(gamespeed_fps)) // degrees per frame, the wave drifts a full cycle every 2 seconds
 
 image_scale = 0.06
-image_xscale = image_scale;
-image_yscale = image_scale;
+
+// spawn animation: start at the center at scale 0, then grow and move out to the orbit together (see Step)
+spawn_duration = 0.5 // in seconds
+spawn_progress = 0 // [0,1]
+image_xscale = 0
+image_yscale = 0
 recoil_amount = 0
 max_recoil_amount = 10
 

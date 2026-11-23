@@ -117,9 +117,9 @@ function ult_turret_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-// this will return a number indicating how many turrets should be in orbit
+// this will return a number indicating how many turrets should be in orbit: 2 at level 1, +1 per level after that
 function ult_turret_get_turret_count(_level) {
-	return _level * 2
+	return _level + 1
 }
 
 
@@ -208,17 +208,8 @@ function ultimate_step(_obj) {
 			ult_overlay = 0
 		}
 
-		if (is_extra) {
-			// extras don't animate the player charge icon
-			return
-		}
-
-		if (is_duration_ult(ult_type)) {
-			game_controller.ultimate_charge[$ owner_player_id] = max(0, global.ultimate_requirement * alarm[0] / starting_duration)
-		} else {
-			// drain the charge meter while the ultimate runs
-			game_controller.ultimate_charge[$ owner_player_id] = lerp(game_controller.ultimate_charge[$ owner_player_id], 0, global.fade_speed)
-		}
+		// the charge meter no longer tracks the remaining duration: it's emptied on activation (see activate_ultimate)
+		// and the HUD icon throbs while the ultimate runs (see obj_hud_ultimate_icon)
 	}
 }
 
@@ -420,6 +411,16 @@ function get_ultimate_stats(_ultimate, _level) {
 			_range = ult_rings_get_ring_range(_level)
 			array_push(_stats, string_concat("Strike nearby rings range: -", round(_range[0]), " and +", _range[1]))
 			array_push(_stats, string_concat("Duration: ", round((ult_rings_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
+			break
+
+		case ULTIMATE_TURRET:
+			array_push(_stats, string_concat("Turrets in orbit: ", ult_turret_get_turret_count(_level)))
+			array_push(_stats, string_concat("Duration: ", round((ult_turret_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
+			break
+
+		default:
+			// every ultimate needs a case above, or its tooltips show headers with no stats
+			debug("get_ultimate_stats: no stats for ultimate", _ultimate)
 			break
 	}
 	
