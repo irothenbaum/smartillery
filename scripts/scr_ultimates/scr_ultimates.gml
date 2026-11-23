@@ -3,10 +3,10 @@
 // -------------------------------------------------------------------------------------------
 
 #macro ULT_BASE_DURATION 20
-#macro ULT_DURATION_INCREMENT 1
-// in frames
+#macro ULT_DURATION_INCREMENT 1.5
+// in frames. Level 1 lasts exactly ULT_BASE_DURATION seconds, +ULT_DURATION_INCREMENT seconds per level after that
 function ult_base_get_duration(_level) {
-	return (ULT_BASE_DURATION + (_level * ULT_DURATION_INCREMENT)) * game_get_speed(gamespeed_fps)
+	return (ULT_BASE_DURATION + ((_level - 1) * ULT_DURATION_INCREMENT)) * game_get_speed(gamespeed_fps)
 }
 
 function get_experience_needed_for_next_level(_curent_level) {
@@ -45,10 +45,22 @@ function ult_strike_get_count(_level) {
 // TIME SLOW
 // -------------------------------------------------------------------------------------------
 
-#macro SLOW_BASE_MULTIPLIER 0.8
-#macro SLOW_MULTIPLIER_INCREMENR 0.5
+// enemies move at 60% speed at level 1, dropping 4.5% per level to ~20% at level 10, never below 10%
+#macro SLOW_BASE_MULTIPLIER 0.6
+#macro SLOW_MULTIPLIER_INCREMENT 0.045
+#macro SLOW_MIN_MULTIPLIER 0.1
 function ult_slow_get_speed_multiplier(_level) {
-	return max(0.1, SLOW_BASE_MULTIPLIER - (SLOW_MULTIPLIER_INCREMENR * _level))
+	return max(SLOW_MIN_MULTIPLIER, SLOW_BASE_MULTIPLIER - (SLOW_MULTIPLIER_INCREMENT * (_level - 1)))
+}
+
+/// The strongest (lowest) speed multiplier from any running time slow ultimate, or 1 if none are running
+/// @returns {Real}
+function get_active_slow_multiplier() {
+	var _multiplier = 1
+	with (obj_ultimate_slow) {
+		_multiplier = min(_multiplier, slow_multiplier)
+	}
+	return _multiplier
 }
 
 // in frames
@@ -64,22 +76,22 @@ function ult_assist_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-// this will return a range (numbers above and numbers below a target) based on level
-// e.g., if you are level 4, the range would be [2,1], and guess number 10 you'd apply range to include numbers 8 (10 - 2) through 11 (10 + 1)
+// this will return a range (numbers below and numbers above a target) based on level, covering _level extra answers
+// e.g., if you are level 3, the range would be [2,1], and guess number 10 you'd apply range to include numbers 8 (10 - 2) through 11 (10 + 1)
 function ult_assist_get_range(_level) {
 	return [
-		// min number 
-		floor(_level / 2),
+		// min number
+		ceil(_level / 2),
 		// max number
-		floor((_level-1) / 2)
+		floor(_level / 2)
 	]
 }
 
 // Typing mode equivalent of the range: the highest mistake score (see word_mistake_score) another enemy's word can
-// have compared to the typed word and still get hit. Level 1 = 0 (no effect, same as the math range), level 2 = 1
-// (any single mistake), level 3 = 2 (two different kinds of mistakes), level 4 = 3 (two of the same kind), etc
+// have compared to the typed word and still get hit. Level 1 = 1 (any single mistake), level 2 = 2 (two different
+// kinds of mistakes), level 3 = 3 (two of the same kind), etc
 function ult_assist_get_max_mistake_score(_level) {
-	return _level - 1
+	return _level
 }
 
 // -------------------------------------------------------------------------------------------
@@ -91,7 +103,7 @@ function ult_collateral_get_duration(_level) {
 }
 
 #macro COLLATERAL_BASE_RADIUS global.bg_circle_ring_width * 1.5 // base should be the rings above and below your target. Which means 1 above + target ring + 1 below = 3, 3 / 2 = 1.5
-#macro COLLATERAL_RADIUS_INCREMENT_STEP 30
+#macro COLLATERAL_RADIUS_INCREMENT_STEP 24
 // in pixels
 function ult_collateral_get_radius(_level) {
 	return COLLATERAL_BASE_RADIUS + (_level - 1) * COLLATERAL_RADIUS_INCREMENT_STEP
@@ -119,13 +131,14 @@ function ult_rings_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-// this will return a range (rings above and rings below a target) based on level
-// e.g., if you are level 4, the range would be [2,1], and strike ring 3 you'd apply range to include rings 1 (3 - 2) through 4 (3 + 1)
+// this will return a range (rings below and rings above a target) based on level, covering _level extra rings
+// e.g., if you are level 3, the range would be [2,1], and strike ring 3 you'd apply range to include rings 1 (3 - 2) through 4 (3 + 1)
 function ult_rings_get_ring_range(_level) {
 	return [
-		// min ring 
-		floor(_level / 2),
-		floor((_level-1) / 2)
+		// min ring
+		ceil(_level / 2),
+		// max ring
+		floor(_level / 2)
 	]
 }
 
@@ -384,7 +397,7 @@ function get_ultimate_stats(_ultimate, _level) {
 			break
 		
 		case ULTIMATE_SLOW:
-			array_push(_stats, string_concat("Slow amount: ", round(ult_slow_get_speed_multiplier(_level) * 100), "%"))
+			array_push(_stats, string_concat("Enemies slowed by: ", round((1 - ult_slow_get_speed_multiplier(_level)) * 100), "%"))
 			array_push(_stats, string_concat("Duration: ", round((ult_slow_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
 			break
 			
@@ -410,8 +423,7 @@ function get_ultimate_stats(_ultimate, _level) {
 			break
 	}
 	
-	return array_reduce(_stats, function(_agr, _s) {
-		return string_join(_agr, "\n", _s)
-	}, "")
+	// one stat per line
+	return string_join_ext("\n", _stats)
 	
 }

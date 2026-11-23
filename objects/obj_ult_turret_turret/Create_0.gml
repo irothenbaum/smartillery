@@ -3,7 +3,22 @@
 // Orbit parameters
 // orbit_angle = 0  // Will be set by parent object
 // orbit_radius = global.bg_cicle_min_radius // will be set by parent
-orbit_speed = 360 / (4 * game_get_speed(gamespeed_fps)) // complete an orbit every 4 seconds
+// orbit_direction (1 = clockwise, -1 = counter-clockwise), orbit_speed_multiplier and bobble_phase may be set by parent
+if (!variable_instance_exists(id, "orbit_direction")) {
+	orbit_direction = 1
+}
+if (!variable_instance_exists(id, "orbit_speed_multiplier")) {
+	orbit_speed_multiplier = 1
+}
+if (!variable_instance_exists(id, "bobble_phase")) {
+	bobble_phase = 0
+}
+// complete an orbit every 4 seconds (at 1x speed)
+orbit_speed = orbit_direction * orbit_speed_multiplier * 360 / (4 * game_get_speed(gamespeed_fps))
+
+// bob in and out from the orbit radius
+bobble_amplitude = global.bg_circle_ring_width * 0.15 // px
+bobble_speed = 360 / (1.5 * game_get_speed(gamespeed_fps)) // degrees per frame, one bob every 1.5 seconds
 
 image_scale = 0.06
 image_xscale = image_scale;

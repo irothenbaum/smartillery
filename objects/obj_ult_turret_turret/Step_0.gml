@@ -1,11 +1,13 @@
 /// @description Update orbit position
 // Update orbit angle
 direction = (direction - orbit_speed) % 360
-        
+bobble_phase = (bobble_phase + bobble_speed) % 360
+
 var _player = get_player()
 // Calculate position around player
-x = _player.x + lengthdir_x(orbit_radius - recoil_amount, direction)
-y = _player.y + lengthdir_y(orbit_radius - recoil_amount, direction)
+var _radius = orbit_radius + dsin(bobble_phase) * bobble_amplitude - recoil_amount
+x = _player.x + lengthdir_x(_radius, direction)
+y = _player.y + lengthdir_y(_radius, direction)
 
 image_angle = direction
 

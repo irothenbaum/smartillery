@@ -68,6 +68,9 @@ my_bounds = new Bounds(x - body_radius, y - body_radius, x + body_radius, y + bo
 // lifetime -- shown by the range fill shrinking toward the turret
 lifetime_frames = global.stationary_turret_duration * game_get_speed(gamespeed_fps)
 alarm[0] = lifetime_frames
+// the time slow ultimate slows the lifetime countdown too. Alarms tick in whole frames, so the fraction of a frame
+// we owe back each step builds up here until it's worth a whole frame (see Step)
+lifetime_slow_carry = 0
 lifetime_full_buffer = feet_grow_duration + barrel_grow_duration + range_grow_duration // in seconds: the fill stays full while deploying, then counts down
 range_fill_alpha = 0.08
 range_outline_alpha = 0.5

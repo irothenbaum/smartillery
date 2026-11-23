@@ -28,7 +28,12 @@ function set_hovered_instance(_i) {
 		tip_copy = _tip_copy_entry
 	}
 
-	tip_copy.position = {x: _i.x, y: _i.y}
+	// point at the center of the element's hover bounds -- HUD elements (e.g. obj_hud_ultimate_icon) are drawn
+	// somewhere computed in their Draw event, so their x/y doesn't reflect where they actually appear
+	var _bounds = variable_instance_exists(_i, "my_bounds") ? _i.my_bounds : undefined
+	tip_copy.position = is_undefined(_bounds)
+		? {x: _i.x, y: _i.y}
+		: {x: _bounds.xcenter, y: _bounds.ycenter}
 	alarm[0] = fade_duration
 }
 

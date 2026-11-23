@@ -34,6 +34,11 @@ for (var _i = 0; _i < turret_count; _i++) {
 	var _start_angle = _my_orbital_position * _angle_step + (_current_orbital * _orbital_angle_shift) + _player_angle_offset
 	var _turret = instance_create_layer(_player.x, _player.y, LAYER_INSTANCES, obj_ult_turret_turret, {
 		direction: _start_angle,
+		// neighbors orbit in opposite directions, each at a slightly different speed (0.9x - 1.1x) and bobbing out of
+		// sync. Derived from _i rather than random() so visuals don't consume the seeded RNG
+		orbit_direction: (_i % 2 == 0) ? 1 : -1,
+		orbit_speed_multiplier: 1 + (((_i * 3) % 5) - 2) * 0.05,
+		bobble_phase: (_i * 137.5) % 360,
 		// we had half a ring width so that the turrets align with the ring center
 		orbit_radius: global.bg_cicle_min_radius + (global.bg_circle_ring_width * (_current_orbital + 0.5))
 	})

@@ -1,0 +1,40 @@
+ULTIMATE STATS BY LEVEL
+Source of truth: scripts/scr_ultimates. Update this note when those formulas change.
+
+Duration (every ult except Air Strike): 20s at level 1, +1.5s per level
+
+                                  L1      L2      L3      L4      L5      L10     L20
+------------------------------------------------------------------------------------------
+Air Strike    strikes             4       5       6       7       8       13      23
+Leech         health per strike   +3      +4      +5      +6      +7      +12     +22
+Time Slow     enemy speed         60%     55.5%   51%     46.5%   42%     19.5%   10%
+Aim Assist    math range (-/+)    1/0     1/1     2/1     2/2     3/2     5/5     10/10
+              typing max score    1       2       3       4       5       10      20
+Collateral    chain radius (px)   51.5    75.5    99.5    123.5   147.5   267.5   507.5
+Turret        turrets in orbit    2       4       6       8       10      20      40
+Rings         rings (below/above) 1/0     1/1     2/1     2/2     3/2     5/5     10/10
+All but       duration            20s     21.5s   23s     24.5s   26s     33.5s   48.5s
+Air Strike
+
+
+FORMULAS
+- Duration:      20 + 1.5 * (level - 1) seconds
+- Air Strike:    4 + (level - 1) strikes
+- Leech:         3 + (level - 1) health per strike
+- Time Slow:     enemy speed = max(10%, 60% - 4.5% * (level - 1)). Hits the 10% floor at level 13
+- Aim Assist:    math range = [ceil(level / 2) below, floor(level / 2) above], so it covers `level` extra answers
+                 typing max score = level (see word_mistake_score)
+- Collateral:    1.5 ring widths (~51.5px) + 24px * (level - 1)
+- Turret:        2 * level turrets, max 7 per orbital
+- Rings:         same as the Aim Assist math range, but in rings
+
+TYPING SCORE CHEAT SHEET (Aim Assist)
+Mistake kinds: extra/missing letter, swapped neighbor letters, wrong letter.
+Each kind with n mistakes is worth 3^(n-1), and the score is the sum of the kinds.
+- 1 mistake                             = 1   (home -> homes, hoem, hime)
+- 2 mistakes, different kinds           = 2   (home -> hoems)
+- 2 mistakes, same kind                 = 3   (home -> came, ohem)
+- 3 mistakes, all different kinds       = 3
+- 2 of one kind + 1 of another          = 4
+- 3 of the same kind                    = 9
+Scores of 10 or 20 at high levels match almost any two short words.

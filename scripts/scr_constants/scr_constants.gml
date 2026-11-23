@@ -273,9 +273,31 @@ ds_map_add(global.tip_copy_map, obj_enemy_5_missile, {title: "Missile", descript
 ds_map_add(global.tip_copy_map, obj_training_target, {title: "Dummy Target", description: "Take your time and hone your skills."})	
 ds_map_add(global.tip_copy_map, obj_extra_ultimate, function(_instance) {
 	var _ult_desc = global.ultimate_descriptions[$ _instance.type]
+	var _ultimate_level = get_game_controller().ultimate_level
+	var _player_ids = get_player_ids()
+
+	// a bonus ultimate fires at the level of whoever activates it, so show the stats at your current level.
+	// In co-op, players at different levels each get their own section
+	var _all_same_level = true
+	for (var _i = 1; _i < array_length(_player_ids); _i++) {
+		if (_ultimate_level[$ _player_ids[_i]] != _ultimate_level[$ _player_ids[0]]) {
+			_all_same_level = false
+			break
+		}
+	}
+
+	var _sections = []
+	for (var _i = 0; _i < (_all_same_level ? 1 : array_length(_player_ids)); _i++) {
+		var _level = _ultimate_level[$ _player_ids[_i]]
+		var _header = _all_same_level
+			? string_concat("Level: ", _level)
+			: string_concat("Player ", get_player_number(_player_ids[_i]) + 1, " (Level: ", _level, ")")
+		array_push(_sections, string_concat(_header, "\n", get_ultimate_stats(_instance.type, _level)))
+	}
+
 	return {
 		title: string_concat("Bonus Ultimate: ", _ult_desc.title),
-		description: _ult_desc.description
+		description: string_concat(_ult_desc.description, "\n\n", string_join_ext("\n\n", _sections))
 	}
 })	
 ds_map_add(global.tip_copy_map, obj_power_item_shield, {title: "Power Item: Shield", description: "Raises a shield around you that blocks one enemy or shot. Stacks with other shields."})

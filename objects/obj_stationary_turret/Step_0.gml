@@ -30,6 +30,17 @@ if (is_despawning) {
 	return
 }
 
+// time slow: the lifetime alarm should only count down at the slowed rate, so give back the part of this frame's
+// tick that the slow cancels out (e.g. at 60% speed, 0.4 frames per step)
+if (alarm[0] > 0) {
+	lifetime_slow_carry += 1 - get_active_slow_multiplier()
+	if (lifetime_slow_carry >= 1) {
+		var _frames_back = floor(lifetime_slow_carry)
+		alarm[0] += _frames_back
+		lifetime_slow_carry -= _frames_back
+	}
+}
+
 // plant the feet (ease out so they decelerate into their full length)
 if (feet_grow_progress < 1) {
 	feet_grow_progress = min(1, feet_grow_progress + step_seconds() / feet_grow_duration)

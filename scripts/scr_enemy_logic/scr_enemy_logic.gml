@@ -140,11 +140,15 @@ function instance_draw_equation(_e) {
 		// trial run
 		var _text_bounds = draw_text_with_alignment(draw_equation_position.x, draw_equation_position.y, _string, ALIGN_CENTER, undefined, true);
 		var _box_bounds = apply_padding_to_bounds(_text_bounds, 2, 12)
-		draw_set_composite_color(new CompositeColor(c_black, 0.6))
+		// bonus items are selected with "0XX" launch codes rather than equations -- draw those inverted (white box,
+		// black text) so they stand out from enemy equations
+		var _is_launch_code = object_is_ancestor(object_index, obj_bonus_item_parent)
+		draw_set_composite_color(_is_launch_code ? new CompositeColor(c_white, 1) : new CompositeColor(c_black, 0.6))
 		draw_rectangle(_box_bounds.x0, _box_bounds.y0, _box_bounds.x1, _box_bounds.y1, false)
-		reset_composite_color()
+		draw_set_composite_color(new CompositeColor(_is_launch_code ? c_black : c_white, 1))
 		// draw again so it's on top
 		draw_text_with_alignment(draw_equation_position.x, draw_equation_position.y, _string, ALIGN_CENTER);
+		reset_composite_color()
 	}
 }
 
