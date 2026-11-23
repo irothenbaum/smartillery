@@ -75,6 +75,13 @@ function ult_assist_get_range(_level) {
 	]
 }
 
+// Typing mode equivalent of the range: the highest mistake score (see word_mistake_score) another enemy's word can
+// have compared to the typed word and still get hit. Level 1 = 0 (no effect, same as the math range), level 2 = 1
+// (any single mistake), level 3 = 2 (two different kinds of mistakes), level 4 = 3 (two of the same kind), etc
+function ult_assist_get_max_mistake_score(_level) {
+	return _level - 1
+}
+
 // -------------------------------------------------------------------------------------------
 // COLLATERAL DAMAGE
 // -------------------------------------------------------------------------------------------
@@ -387,8 +394,12 @@ function get_ultimate_stats(_ultimate, _level) {
 			break
 			
 		case ULTIMATE_ASSIST:
-			_range = ult_assist_get_range(_level)
-			array_push(_stats, string_concat("Include answers range: -", round(_range[0]), " and +", _range[1]))
+			if (global.is_math_mode) {
+				_range = ult_assist_get_range(_level)
+				array_push(_stats, string_concat("Include answers range: -", round(_range[0]), " and +", _range[1]))
+			} else {
+				array_push(_stats, string_concat("Include words with a typo score up to ", ult_assist_get_max_mistake_score(_level)))
+			}
 			array_push(_stats, string_concat("Duration: ", round((ult_assist_get_duration(_level) / _frames_to_seconds) * 10) / 10, " seconds"))
 			break
 			

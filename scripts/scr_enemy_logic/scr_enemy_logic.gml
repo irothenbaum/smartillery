@@ -368,6 +368,179 @@ function find_enemies_near_answer(_answer, _range_min, _range_max) {
 	return _enemies
 }
 
+/// Typing-mode counterpart to find_enemies_near_answer: returns every enemy whose word has a mistake score (see
+/// word_mistake_score) of at most _max_score compared to _answer. Both the letters AND their positions matter, and
+/// the score is an absolute amount, so longer words don't get an advantage.
+/// @param {String} _answer the word the player just typed (already handled by the game controller)
+/// @param {Real} _max_score
+/// @return {Array<Id.Instance>}
+function find_enemies_with_similar_word(_answer, _max_score) {
+	var _enemies = []
+	if (_max_score <= 0) {
+		return _enemies
+	}
+
+	var _gc = get_game_controller()
+	var _keys = struct_get_names(_gc.active_answers)
+
+	for (var _i = 0; _i < array_length(_keys); _i++) {
+		var _key = _keys[_i]
+		if (_key == _answer) {
+			// it was already handled by game controller
+			continue
+		}
+
+		var _instance = _gc.active_answers[$ _key]
+		// skips launch codes, the ultimate code, etc
+		if (!instance_is_enemy(_instance)) {
+			continue
+		}
+
+		if (word_mistake_score(_answer, _key, _max_score) <= _max_score) {
+			array_push(_enemies, _instance)
+		}
+	}
+
+	return _enemies
+}
+
+// indexes into a mistake-count triple
+#macro MISTAKE_EXTRA_OR_MISSING 0
+#macro MISTAKE_TRANSPOSED 1
+#macro MISTAKE_WRONG_LETTER 2
+
+/// How badly _a was mistyped as _b (case-insensitive). Every mistake falls into one of three categories:
+///   - extra/missing letter        ("home" -> "homes", "home" -> "hom")
+///   - transposed neighbor letters ("home" -> "hoem")
+///   - wrong letter                ("home" -> "hime")
+/// Each category with n > 0 mistakes is worth 3^(n - 1), and the score is the sum of the categories, so repeated
+/// mistakes of the same kind get punished harshly: 1 mistake = 1, 2 different kinds = 2, 2 of the same kind = 3,
+/// 3 of the same kind = 9, etc. A typo can often be explained more than one way, so this finds the explanation with
+/// the lowest score.
+/// @param {String} _a
+/// @param {String} _b
+/// @param {Real} [_give_up_after] optional: once the score is known to exceed this, stop and return _give_up_after + 1
+/// @return {Real}
+function word_mistake_score(_a, _b, _give_up_after = infinity) {
+	_a = string_lower(_a)
+	_b = string_lower(_b)
+	var _len_a = string_length(_a)
+	var _len_b = string_length(_b)
+	var _too_high = _give_up_after + 1
+
+	// every letter of length difference is at least one extra/missing letter
+	if (mistake_counts_score([abs(_len_a - _len_b), 0, 0]) > _give_up_after) {
+		return _too_high
+	}
+
+	// Because the score isn't a simple sum, each cell [i][j] (first i letters of _a vs first j letters of _b) keeps
+	// every mistake-count triple that could still turn out best: ones that aren't worse in all three categories than
+	// another triple, and whose score is still within _give_up_after. An empty cell means "can't get here cheaply".
+	// We only need the current row and the two before it (the transposition check looks back two letters).
+	var _prev2 = undefined
+	var _prev = array_create(_len_b + 1)
+	for (var _j = 0; _j <= _len_b; _j++) {
+		_prev[_j] = []
+		mistake_front_add(_prev[_j], [_j, 0, 0], _give_up_after)
+	}
+
+	for (var _i = 1; _i <= _len_a; _i++) {
+		var _curr = array_create(_len_b + 1)
+		_curr[0] = []
+		mistake_front_add(_curr[0], [_i, 0, 0], _give_up_after)
+		var _row_reachable = array_length(_curr[0]) > 0
+		var _char_a = string_char_at(_a, _i)
+
+		for (var _j = 1; _j <= _len_b; _j++) {
+			var _char_b = string_char_at(_b, _j)
+			var _front = []
+
+			// a letter of _a missing from _b, or an extra letter in _b
+			mistake_front_extend(_front, _prev[_j], MISTAKE_EXTRA_OR_MISSING, _give_up_after)
+			mistake_front_extend(_front, _curr[_j - 1], MISTAKE_EXTRA_OR_MISSING, _give_up_after)
+			// letters line up: either correct, or a wrong letter
+			mistake_front_extend(_front, _prev[_j - 1], (_char_a == _char_b) ? -1 : MISTAKE_WRONG_LETTER, _give_up_after)
+			// two neighboring letters swapped
+			if (_i > 1 && _j > 1
+				&& _char_a != _char_b
+				&& _char_a == string_char_at(_b, _j - 1)
+				&& string_char_at(_a, _i - 1) == _char_b
+			) {
+				mistake_front_extend(_front, _prev2[_j - 2], MISTAKE_TRANSPOSED, _give_up_after)
+			}
+
+			_curr[_j] = _front
+			_row_reachable = _row_reachable || array_length(_front) > 0
+		}
+
+		// a transposition can jump over one row, so we can only bail once two rows in a row are unreachable
+		if (!_row_reachable && !mistake_row_reachable(_prev)) {
+			return _too_high
+		}
+
+		_prev2 = _prev
+		_prev = _curr
+	}
+
+	var _best = _too_high
+	var _final = _prev[_len_b]
+	for (var _k = 0; _k < array_length(_final); _k++) {
+		_best = min(_best, mistake_counts_score(_final[_k]))
+	}
+	return _best
+}
+
+/// @param {Array<Real>} _counts [extra/missing, transposed, wrong letter]
+/// @return {Real}
+function mistake_counts_score(_counts) {
+	var _score = 0
+	for (var _c = 0; _c < 3; _c++) {
+		if (_counts[_c] > 0) {
+			_score += power(3, _counts[_c] - 1)
+		}
+	}
+	return _score
+}
+
+/// Adds every triple in _from to _front, with one more mistake in _category (or unchanged if _category is -1)
+function mistake_front_extend(_front, _from, _category, _give_up_after) {
+	for (var _k = 0; _k < array_length(_from); _k++) {
+		var _counts = [_from[_k][0], _from[_k][1], _from[_k][2]]
+		if (_category >= 0) {
+			_counts[_category]++
+		}
+		mistake_front_add(_front, _counts, _give_up_after)
+	}
+}
+
+/// Adds _counts to _front unless it's over budget or no better than a triple already there, and drops any triples
+/// that _counts beats
+function mistake_front_add(_front, _counts, _give_up_after) {
+	if (mistake_counts_score(_counts) > _give_up_after) {
+		return
+	}
+	for (var _k = array_length(_front) - 1; _k >= 0; _k--) {
+		var _other = _front[_k]
+		if (_other[0] <= _counts[0] && _other[1] <= _counts[1] && _other[2] <= _counts[2]) {
+			// already have something at least as good
+			return
+		}
+		if (_counts[0] <= _other[0] && _counts[1] <= _other[1] && _counts[2] <= _other[2]) {
+			array_delete(_front, _k, 1)
+		}
+	}
+	array_push(_front, _counts)
+}
+
+function mistake_row_reachable(_row) {
+	for (var _j = 0; _j < array_length(_row); _j++) {
+		if (array_length(_row[_j]) > 0) {
+			return true
+		}
+	}
+	return false
+}
+
 function enemy_remove_slow(_enemy) {
 	enemy_apply_slow(_enemy, 1)
 }
