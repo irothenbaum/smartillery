@@ -117,9 +117,9 @@ function ult_turret_get_duration(_level) {
 	return ult_base_get_duration(_level)
 }
 
-// this will return a number indicating how many turrets should be in orbit: 2 at level 1, +1 per level after that
+// this will return a number indicating how many turrets should be in orbit: 4 at level 1, +1 per level after that
 function ult_turret_get_turret_count(_level) {
-	return _level + 1
+	return _level + 3
 }
 
 
