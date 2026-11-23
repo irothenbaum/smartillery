@@ -1,8 +1,30 @@
-// from_player_shot basically means "apply to ult side effects"
-function handle_enemy_hit(_enemy, _player_id, _damage_amount, _from_player_shot = false) {
+/// Who gets what from each damage source is documented in the UltimateInteractions note -- keep it in sync
+/// @param {Id.Instance} _enemy
+/// @param {String} _player_id who gets credit for the hit (points on a kill)
+/// @param {Real} _damage_amount
+/// @param {Struct} [_options] any of:
+///   from_player_shot:    a shot from the player's gun (incl. Aim Assist and Air Strike) -- marks Aim Assist targets
+///                        and triggers Collateral and Rings (default false)
+///   counts_toward_combo: adds to the player's combo while on streak (default true)
+///   triggers_leech:      an active Leech drops a health orb (default: from_player_shot)
+///   grants_ult_charge:   a kill gives ult charge while on streak (default true)
+function handle_enemy_hit(_enemy, _player_id, _damage_amount, _options = {}) {
+	var _from_player_shot = _options[$ "from_player_shot"] ?? false
+	var _counts_toward_combo = _options[$ "counts_toward_combo"] ?? true
+	var _triggers_leech = _options[$ "triggers_leech"] ?? _from_player_shot
+	var _grants_ult_charge = _options[$ "grants_ult_charge"] ?? true
+
 	// these reactions need to run before register_hit, since a killing blow destroys
 	// _enemy immediately and they all bail out via instance_exists(_enemy) checks otherwise
-	get_game_controller().increase_combo(_player_id, _enemy)
+	if (_counts_toward_combo) {
+		get_game_controller().increase_combo(_player_id, _enemy)
+	}
+
+	if (_triggers_leech) {
+		with (obj_ultimate_heal) {
+			create_health_orb_on_enemy(_enemy, _player_id)
+		}
+	}
 
 	debug("[LEECH] handle_enemy_hit enemy:", _enemy, "player:", _player_id, "from_player_shot:", _from_player_shot, "heal ults active:", instance_number(obj_ultimate_heal), "on streak:", get_game_controller().has_point_streak(_player_id))
 
@@ -19,11 +41,6 @@ function handle_enemy_hit(_enemy, _player_id, _damage_amount, _from_player_shot 
 			check_hit_enemy_for_collateral_targets(_enemy, _player_id)
 		}
 
-		// trigger leech response
-		with (obj_ultimate_heal) {
-			create_health_orb_on_enemy(_enemy, _player_id)
-		}
-
 		// trigger rings response
 		with (obj_ultimate_rings) {
 			apply_damage_to_enemies_on_ring(_enemy, _player_id)
@@ -33,6 +50,8 @@ function handle_enemy_hit(_enemy, _player_id, _damage_amount, _from_player_shot 
 	// trigger hit on enemy (may destroy _enemy if this is a killing blow)
 	with(_enemy) {
 		last_hit_by_player_id = _player_id
+		// read by handle_enemy_killed if this turns out to be the killing blow
+		last_hit_grants_ult_charge = _grants_ult_charge
 		register_hit(_damage_amount)
 	}
 }
@@ -78,8 +97,9 @@ function handle_player_streak(_player_id, _new_streak_value) {
 			}
 			destroy_particle(streak_fire.system)
 			streak_fire = undefined
-			
-			// also shake the box
+
+			// also shake the box (a wrong answer already shook it in handle_submit_code -- this covers losing the
+			// streak to damage. Restarting the same shake is harmless)
 			start_shake()
 		}
 	}

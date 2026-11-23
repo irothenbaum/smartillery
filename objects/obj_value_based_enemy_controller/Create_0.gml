@@ -29,10 +29,12 @@ function init_wave() {
 
 // The minimum level the enemy is allowed to spawn on
 _enemy_levels_map = ds_map_create()
+// offset from the math difficulty steps (waves 5, 10, 15 -- see global.wave_difficulty_step) so a new enemy and a
+// new operation never arrive on the same wave
 ds_map_add(_enemy_levels_map, 0, obj_enemy_1)
-ds_map_add(_enemy_levels_map, 5, obj_enemy_2)
-ds_map_add(_enemy_levels_map, 10, obj_enemy_3)
-ds_map_add(_enemy_levels_map, 15, obj_enemy_4)
+ds_map_add(_enemy_levels_map, 4, obj_enemy_2)
+ds_map_add(_enemy_levels_map, 8, obj_enemy_3)
+ds_map_add(_enemy_levels_map, 12, obj_enemy_4)
 
 // The minimum value needed to spawn an enemy of this type
 _enemy_weights_map = ds_map_create()
@@ -40,6 +42,25 @@ ds_map_add(_enemy_weights_map, obj_enemy_1, 10)
 ds_map_add(_enemy_weights_map, obj_enemy_2, 20)
 ds_map_add(_enemy_weights_map, obj_enemy_3, 30)
 ds_map_add(_enemy_weights_map, obj_enemy_4, 40)
+
+// Spawning slows down when the player falls behind: the value reservoir only refills while the enemies alive are
+// worth less than this fraction of max_value. At 1, a full reservoir's worth of enemies can be alive at once (e.g.
+// 12 strikers or 4 rams on wave 10) -- enough to stop an endless pile-up, but not so forgiving that falling behind
+// stops being dangerous
+#macro ENEMY_ALIVE_VALUE_CAP 1
+
+/// The total spawn value of every enemy currently alive. Enemies not in _enemy_weights_map (e.g. frag shards,
+/// missiles) count as the cheapest enemy
+/// @returns {Real}
+function get_alive_enemy_value() {
+	var _default_value = ds_map_find_value(_enemy_weights_map, obj_enemy_1)
+	var _weights = _enemy_weights_map
+	var _total = 0
+	with (obj_enemy_parent) {
+		_total += ds_map_find_value(_weights, object_index) ?? _default_value
+	}
+	return _total
+}
 
 // The mapping between single enemy and the compound spawner
 // If an enemy of `key` type is selected, and there exists enough additional value in the 
@@ -112,7 +133,8 @@ function get_compound_spawn_details(_single_enemy_type, _value_diff = 0) {
 	}
 	var _cost = _params.enemy_count * _single_value
 
-	switch(_single_enemy_type) {
+	// switch on the compound type (not the single type passed in), otherwise these cases can never match
+	switch(_type) {
 		case obj_compound_enemy_1:
 			
 			// this a magic number, just feels like a good scaling factor

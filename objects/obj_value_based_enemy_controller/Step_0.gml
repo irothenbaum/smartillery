@@ -8,8 +8,11 @@ if (spawned_count < enemy_count) {
 	// the player waiting on an empty screen
 	var _slow_multiplier = instance_number(obj_enemy_parent) > 0 ? get_active_slow_multiplier() : 1
 
-	// reduce our value by value_per_second
-	current_value = max(0, current_value - (value_per_second * _slow_multiplier * step_seconds()))
+	// hold off refilling while the player is too far behind (see ENEMY_ALIVE_VALUE_CAP)
+	if (get_alive_enemy_value() < max_value * ENEMY_ALIVE_VALUE_CAP) {
+		// reduce our value by value_per_second
+		current_value = max(0, current_value - (value_per_second * _slow_multiplier * step_seconds()))
+	}
 } else if (instance_number(obj_enemy_parent) == 0) {
 	get_game_controller().mark_wave_completed()
 }

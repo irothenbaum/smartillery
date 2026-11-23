@@ -6,6 +6,8 @@ function initialize_instance_has_equation(_e) {
 	equation_angle = undefined
 	equation = "";
 	last_hit_by_player_id = undefined
+	// whether a kill by last_hit_by_player_id gives ult charge (see handle_enemy_hit's grants_ult_charge)
+	last_hit_grants_ult_charge = true
 	
 	enemy_generate_question(_e)
 }
@@ -68,6 +70,30 @@ function enemy_destroy_without_reward(_e) {
 		killed_without_reward = true
 		last_hit_by_player_id = undefined
 		instance_destroy()
+	}
+}
+
+/**
+ * Hits an enemy for _damage_amount without granting points, streak, combo, or any other benefit -- it reacts like any
+ * other hit (knockback, stun, a new equation, ...) and dies normally if the hit is a killing blow, but a kill rewards
+ * no one. Doesn't trigger any ultimate side effects (leech, collateral, rings)
+ * @param {Id.Instance} _e
+ * @param {Real} _damage_amount
+ */
+function enemy_hit_without_reward(_e, _damage_amount) {
+	with (_e) {
+		// in case this is a killing blow: handle_enemy_killed reads these to skip all rewards
+		var _previous_hit_by = last_hit_by_player_id
+		killed_without_reward = true
+		last_hit_by_player_id = undefined
+
+		register_hit(_damage_amount)
+
+		// it survived: put things back so a later kill by a player is still rewarded
+		if (instance_exists(id)) {
+			killed_without_reward = false
+			last_hit_by_player_id = _previous_hit_by
+		}
 	}
 }
 

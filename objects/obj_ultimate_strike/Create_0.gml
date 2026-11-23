@@ -45,7 +45,7 @@ function render_bomb_lands() {
 
 		// 10 is the strike damage, just needs to be sizable
 		// we count it as a player shot so ult effects apply
-		handle_enemy_hit(bombing_target, owner_player_id, 10, true)
+		handle_enemy_hit(bombing_target, owner_player_id, 10, {from_player_shot: true})
 	}
 
 	if (strikes_launched < number_of_strikes) {

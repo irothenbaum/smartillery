@@ -152,7 +152,7 @@ function execute_hit_target() {
 	
 	recoil_amount = max_recoil_amount
 	
-	handle_enemy_hit(_target, _player_who_shot_id, 1, true)
+	handle_enemy_hit(_target, _player_who_shot_id, 1, {from_player_shot: true})
 	
 	// if we have any turrets, we trigger them to shoot also
 	with (obj_ult_turret_turret) {

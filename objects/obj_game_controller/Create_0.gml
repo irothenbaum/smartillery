@@ -225,7 +225,9 @@ function handle_enemy_killed(_enemy) {
 	}
 	
 	
-	var _ult_increase = (has_point_streak(_player_id)) ? _enemy.point_value / 2 : 0;
+	// some damage sources (e.g. the stationary turret) give points but no ult charge -- see handle_enemy_hit
+	var _grants_ult_charge = variable_instance_exists(_enemy, "last_hit_grants_ult_charge") ? _enemy.last_hit_grants_ult_charge : true
+	var _ult_increase = (has_point_streak(_player_id) && _grants_ult_charge) ? _enemy.point_value / 2 : 0;
 	var _combo_bonus = combo_count[$ _player_id] >= global.minimum_combo ? combo_count[$ _player_id] * global.combo_bonus_multiplier : 0
 	
 	draw_point_indicators(_player_id, _enemy.x, _enemy.y, _enemy.point_value, _ult_increase, _combo_bonus)
@@ -315,13 +317,10 @@ function handle_submit_code(_code, _player_id = undefined) {
 		return false
 	}
 
-	// training has no other penalty, so make a wrong answer visible: the input turns red and shakes
-	// (in the other modes it only shakes when the wrong answer costs a streak, see handle_player_streak)
-	if (room == rm_play_training) {
-		var _input = get_input(_player_id)
-		if (!is_undefined(_input) && instance_exists(_input)) {
-			_input.start_shake()
-		}
+	// make every wrong answer visible: the input turns red and shakes
+	var _input = get_input(_player_id)
+	if (!is_undefined(_input) && instance_exists(_input)) {
+		_input.start_shake()
 	}
 
 	reset_streak(_player_id)

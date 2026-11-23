@@ -6,7 +6,7 @@ do {
 	var _last_waypoint = waypoints[array_length(waypoints) - 1]
 	array_push(waypoints, get_tangent_point(_last_waypoint.x, _last_waypoint.y, global.xcenter, global.ycenter, global.room_height * 0.4))
 	waypoint_count--
-} until(waypoint_count == 0) 
+} until(waypoint_count <= 0)
 
 alarm[0] = 1
 

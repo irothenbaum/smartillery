@@ -64,6 +64,7 @@ function apply_damage_to_enemies_on_ring(_target, _player_who_shot_id) {
 			color: _color
 		})
 
-		handle_enemy_hit(_enemy, _player_who_shot_id, 1)
+		// not a player shot (so it can't chain into more rings or collateral), but it does feed an active leech
+		handle_enemy_hit(_enemy, _player_who_shot_id, 1, {triggers_leech: true})
 	}
 }

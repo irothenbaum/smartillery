@@ -1,0 +1,43 @@
+WHAT EACH DAMAGE SOURCE GIVES YOU
+Source of truth: handle_enemy_hit (scripts/scr_events) and its callers. Update this note when those change.
+
+                                  Streak   Combo   Points    Ult charge   Triggers   Triggers
+                                                   on kill   on kill      Leech      Collateral + Rings
+---------------------------------------------------------------------------------------------------------
+Your typed answer                 +1       yes     yes       yes          yes        yes
+Aim Assist extra targets          no       yes     yes       yes          yes        yes
+Air Strike bombs                  no       yes     yes       yes          yes        yes
+Turret ult beams                  no       yes     yes       yes          yes        no
+Collateral chain                  no       yes     yes       yes          yes        no
+Rings                             no       yes     yes       yes          yes        no
+Stationary turret (power item)    no       no      yes       no           no         no
+Ship explosion (taking damage)    no       no      no        no           no         no
+Leech, Time Slow                  (don't damage enemies)
+
+
+RULES
+- Streak only goes up when your typed answer hits its target directly (handle_submit_code -> increase_streak).
+  A wrong answer resets it, unless Aim Assist finds a near-match (then the streak is left unchanged).
+- Combo only counts while you're on streak. It counts HITS, not kills (a Ram is 3 hits), and every hit restarts the
+  combo timer. Maxing out the combo fully charges your ult (not while ulting) and always drops a power item.
+- Points go to whoever hit the enemy last (last_hit_by_player_id). Ult charge too, only while on streak, and only if
+  the killing blow's source grants it (last_hit_grants_ult_charge).
+- Air Strike counts as a player shot on purpose, so its bombs set off Collateral and Rings.
+- Collateral and Rings hits aren't "player shots", so they can't chain into more Collateral or Rings.
+- The ship explosion hits each enemy once for 1 damage (knockback/stun as normal). A kill from it rewards no one,
+  and an enemy it doesn't kill keeps its last hitter (enemy_hit_without_reward).
+
+
+HANDLE_ENEMY_HIT OPTIONS (4th argument, a struct)
+  from_player_shot      marks Aim Assist targets + triggers Collateral and Rings   (default false)
+  counts_toward_combo   adds to combo while on streak                             (default true)
+  triggers_leech        drops a Leech health orb                                  (default: from_player_shot)
+  grants_ult_charge     a kill gives ult charge while on streak                   (default true)
+
+Callers:
+  obj_player fire_at_instance (typed answers + Aim Assist)   {from_player_shot: true}
+  obj_ultimate_strike                                         {from_player_shot: true}
+  obj_ult_turret_turret                                       {triggers_leech: true}
+  obj_ultimate_collateral                                     {triggers_leech: true}
+  obj_ultimate_rings                                          {triggers_leech: true}
+  obj_stationary_turret                                       {counts_toward_combo: false, triggers_leech: false, grants_ult_charge: false}

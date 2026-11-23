@@ -63,6 +63,6 @@ function create_beam(_player_who_shot_id) {
 
 	// Register hits for all enemies along the line
 	for (var _i = 0; _i < array_length(_hit_enemies); _i++) {
-		handle_enemy_hit(_hit_enemies[_i], _player_who_shot_id, 1)
+		handle_enemy_hit(_hit_enemies[_i], _player_who_shot_id, 1, {triggers_leech: true})
 	}
 }

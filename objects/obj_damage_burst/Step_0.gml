@@ -13,7 +13,7 @@ if (elapsed < expand_duration) {
 	current_radius = end_radius
 }
 
-destroy_enemies_in_radius(current_radius)
+hit_enemies_in_radius(current_radius)
 
 if (elapsed > expand_duration + fade_duration) {
 	instance_destroy()

@@ -110,6 +110,7 @@ function check_hit_enemy_for_collateral_targets(_target, _player_who_shot_id) {
 			color: _color
 		})
 
-		handle_enemy_hit(_enemy, _player_who_shot_id, 1)
+		// not a player shot (so it can't chain into more collateral or rings), but it does feed an active leech
+		handle_enemy_hit(_enemy, _player_who_shot_id, 1, {triggers_leech: true})
 	}
 }

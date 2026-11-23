@@ -9,21 +9,40 @@ function get_allowed_operations_for_answer(_answer, _max) {
 	]
 }
 
-function generate_equation(_answer, _max, _difficulty = 0) {
+/**
+ * @param {Real} _answer
+ * @param {Real} _max
+ * @param {Real} [_difficulty] index into global.operations_order of the hardest operation allowed
+ * @param {Real} [_newest_operation_weight] how likely the hardest operation is compared to the others (1 = equally
+ *   likely). Used to ease a newly unlocked operation in over a few waves (see generate_equation_and_answer)
+ */
+function generate_equation(_answer, _max, _difficulty = 0, _newest_operation_weight = 1) {
 	_difficulty = min(_difficulty, array_length(global.operations_order) - 1)
-	var _dice = undefined
 	var _allowed_operations = get_allowed_operations_for_answer(_answer, _max)
-	
-	var _breaker = 10;
-	do {
-		 _breaker --
-		 if (_breaker == 0) {
-			 // just use addition I guess
-			_dice = 0
+
+	// weighted pick among the allowed operations up to _difficulty. Addition is always allowed, so there's always
+	// at least one option
+	var _weights = array_create(_difficulty + 1, 0)
+	var _total_weight = 0
+	for (var _i = 0; _i <= _difficulty; _i++) {
+		if (_allowed_operations[_i]) {
+			_weights[_i] = (_i == _difficulty) ? _newest_operation_weight : 1
+			_total_weight += _weights[_i]
 		}
-		
-		_dice = irandom(_difficulty)
-	} until (_allowed_operations[_dice])
+	}
+
+	var _dice = 0
+	var _roll = random(_total_weight)
+	for (var _i = 0; _i <= _difficulty; _i++) {
+		if (_weights[_i] <= 0) {
+			continue
+		}
+		_dice = _i
+		_roll -= _weights[_i]
+		if (_roll < 0) {
+			break
+		}
+	}
 	
 	var _term1 = undefined;
 	var _term2 = undefined;
@@ -77,6 +96,9 @@ function generate_equation(_answer, _max, _difficulty = 0) {
 	}
 }
 
+// how many waves a newly unlocked math operation takes to become as common as the others
+#macro OPERATION_EASE_IN_WAVES 4
+
 function generate_answer(_max) {
 	return irandom(_max - 1) + 1;
 }
@@ -91,9 +113,19 @@ function math_determine_max_from_wave(_wave) {
  */
 function generate_equation_and_answer(_wave, _max_multiplier = 1) {
 	var _max = math_determine_max_from_wave(_wave) * _max_multiplier
-	var _difficulty = min(global.max_math_difficulty, floor(_wave / global.wave_difficulty_step))
+	var _unlocked_difficulty = floor(_wave / global.wave_difficulty_step)
+	var _difficulty = min(global.max_math_difficulty, _unlocked_difficulty)
+
+	// ease a newly unlocked operation in: it grows to equal footing with the others over OPERATION_EASE_IN_WAVES
+	// waves, starting the wave it unlocks (with 4: 25%, 50%, 75%, then 100% as likely as each older operation)
+	var _newest_operation_weight = 1
+	if (_unlocked_difficulty > 0 && _unlocked_difficulty < array_length(global.operations_order)) {
+		var _waves_since_unlock = _wave - (_unlocked_difficulty * global.wave_difficulty_step)
+		_newest_operation_weight = min(1, (_waves_since_unlock + 1) / OPERATION_EASE_IN_WAVES)
+	}
+
 	var _answer = generate_answer(_max)
-	return generate_equation(_answer, _max, _difficulty)
+	return generate_equation(_answer, _max, _difficulty, _newest_operation_weight)
 }
 
 function get_max_word_length_from_wave(_wave) {

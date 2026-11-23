@@ -140,7 +140,8 @@ function fire_at(_target) {
 		width: global.beam_width_sm,
 		color: c_white,
 	})
-	handle_enemy_hit(_target, owner_player_id, 1)
+	// it's a power item, not the player: kills give points, but no combo, ult charge or leech
+	handle_enemy_hit(_target, owner_player_id, 1, {counts_toward_combo: false, triggers_leech: false, grants_ult_charge: false})
 
 	// a killing blow destroys the enemy immediately, so if it's gone, this shot was a kill
 	if (!instance_exists(_target)) {
